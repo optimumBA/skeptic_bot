@@ -20,6 +20,10 @@ if System.get_env("PHX_SERVER") do
   config :skeptic_bot, SkepticBotWeb.Endpoint, server: true
 end
 
+config :skeptic_bot, :transcription,
+  batch_size: String.to_integer(System.get_env("TRANSCRIPTION_BATCH_SIZE", "4")),
+  repo: {:hf, System.get_env("TRANSCRIPTION_MODEL", "openai/whisper-tiny")}
+
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||

@@ -9,7 +9,7 @@ import Config
 
 config :skeptic_bot,
   ecto_repos: [SkepticBot.Repo],
-  generators: [timestamp_type: :utc_datetime]
+  generators: [binary_id: true, timestamp_type: :utc_datetime]
 
 # Configures the endpoint
 config :skeptic_bot, SkepticBotWeb.Endpoint,
@@ -60,6 +60,13 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :skeptic_bot, Oban,
+  engine: Oban.Engines.Basic,
+  queues: [downloading: 3, transcoding: 3, transcribing: 1],
+  repo: SkepticBot.Repo
+
+config :nx, default_backend: EXLA.Backend
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

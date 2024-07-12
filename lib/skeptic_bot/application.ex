@@ -17,7 +17,9 @@ defmodule SkepticBot.Application do
       # Start a worker by calling: SkepticBot.Worker.start_link(arg)
       # {SkepticBot.Worker, arg},
       # Start to serve requests, typically the last entry
-      SkepticBotWeb.Endpoint
+      SkepticBotWeb.Endpoint,
+      {Nx.Serving, name: SkepticBot.Transcription, serving: SkepticBot.Transcription.serving()},
+      {Oban, Application.fetch_env!(:skeptic_bot, Oban)}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
