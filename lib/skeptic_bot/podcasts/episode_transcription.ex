@@ -6,6 +6,7 @@ defmodule SkepticBot.Podcasts.EpisodeTranscription do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "podcast_episode_transcriptions" do
+    field :embedding, Pgvector.Ecto.Vector
     belongs_to :podcast_episode, SkepticBot.Podcasts.Episode
     field :timestamp, EctoInterval
     field :transcription, :string
@@ -16,7 +17,7 @@ defmodule SkepticBot.Podcasts.EpisodeTranscription do
   @doc false
   def changeset(podcast_episode_transcription, attrs) do
     podcast_episode_transcription
-    |> cast(attrs, [:podcast_episode_id, :timestamp, :transcription])
+    |> cast(attrs, [:embedding, :podcast_episode_id, :timestamp, :transcription])
     |> validate_required([:podcast_episode_id, :timestamp, :transcription])
   end
 end

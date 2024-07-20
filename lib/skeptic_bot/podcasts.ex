@@ -59,4 +59,112 @@ defmodule SkepticBot.Podcasts do
   """
   def episode_exists?(id),
     do: Repo.exists?(from e in Episode, where: e.external_id == ^id)
+
+  @doc """
+  Gets a podcast_episode.
+
+  ## Examples
+
+      iex> get_episode(existing_id)
+      %Podcasts.Episode{}
+
+      iex> get_episode(non_existing_id)
+      nil
+
+  """
+  def get_episode(id), do: Repo.get(Episode, id)
+
+  @doc """
+  Gets all transcriptions for an episode.
+
+  ## Examples
+
+      iex> get_episode_transcriptions(episode_id)
+      {:ok, episode_transcriptions}
+
+  """
+  def get_episode_transcriptions(episode_id) do
+    transformation = fn ->
+      EpisodeTranscription
+      |> where([et], et.podcast_episode_id == ^episode_id)
+      |> order_by([et], asc: et.timestamp)
+      |> Repo.stream()
+      |> Stream.map(& &1.transcription)
+      |> Enum.join("\n")
+    end
+
+    Repo.transaction(transformation, timeout: :infinity)
+  end
+
+  @doc """
+  Updates a podcast_episode.
+
+  ## Examples
+
+      iex> {:ok, episode} = Podcasts.create_episode()
+      ...>
+      ...> result =
+      ...>   Podcasts.update_episode(episode, %{
+      ...>     transcription: "updated transcription"
+      ...>   })
+      ...>
+      ...> with {:ok, %Podcasts.Episode{}} <- result, do: :ok
+      :ok
+
+  """
+  def update_episode(%Episode{} = episode, attrs) do
+    episode
+    |> Episode.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Updates a podcast_episode_transcription.
+
+  ## Examples
+
+      iex> {:ok, episode_transcription} = Podcasts.create_episode_transcription()
+      ...>
+      ...> result =
+      ...>   Podcasts.update_episode_transcription(episode_transcription, %{
+      ...>     transcription: "updated transcription"
+      ...>   })
+      ...>
+      ...> with {:ok, %Podcasts.EpisodeTranscription{}} <- result, do: :ok
+      :ok
+
+  """
+  def update_episode_transcription(%EpisodeTranscription{} = episode_transcription, attrs) do
+    episode_transcription
+    |> EpisodeTranscription.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Processes episode transcriptions in chunks.
+
+  ## Examples
+
+      iex> Podcasts.while_streaming_episode_transcriptions(
+      ...>   episode_id,
+      ...>   10,
+      ...>   fn episode_transcriptions ->
+      ...>     IO.inspect(episode_transcriptions)
+      ...>   end
+      ...> )
+      :ok
+
+  """
+  def while_streaming_episode_transcriptions(episode_id, chunk_size, callback_fun) do
+    transformation = fn ->
+      EpisodeTranscription
+      |> where([et], et.podcast_episode_id == ^episode_id)
+      |> Repo.stream()
+      |> Stream.chunk_every(chunk_size)
+      |> Stream.each(&callback_fun.(&1))
+      |> Stream.run()
+    end
+
+    Repo.transaction(transformation, timeout: :infinity)
+  end
 end

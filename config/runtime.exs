@@ -20,10 +20,6 @@ if System.get_env("PHX_SERVER") do
   config :skeptic_bot, SkepticBotWeb.Endpoint, server: true
 end
 
-config :skeptic_bot, :transcription,
-  batch_size: String.to_integer(System.get_env("TRANSCRIPTION_BATCH_SIZE", "4")),
-  repo: {:hf, System.get_env("TRANSCRIPTION_MODEL", "openai/whisper-tiny")}
-
 if config_env() == :prod do
   database_url =
     System.get_env("DATABASE_URL") ||
@@ -118,4 +114,56 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+
+  transcription_batch_size =
+    System.get_env("TRANSCRIPTION_BATCH_SIZE") ||
+      raise """
+      environment variable TRANSCRIPTION_BATCH_SIZE is missing.
+      For example: 64
+      """
+
+  transcription_model =
+    System.get_env("TRANSCRIPTION_MODEL") ||
+      raise """
+      environment variable TRANSCRIPTION_MODEL is missing.
+      For example: openai/whisper-large-v3
+      """
+
+  config :skeptic_bot, :transcription,
+    batch_size: String.to_integer(transcription_batch_size),
+    repo: {:hf, transcription_model}
+
+  embedding_generation_batch_size =
+    System.get_env("EMBEDDING_GENERATION_BATCH_SIZE") ||
+      raise """
+      environment variable EMBEDDING_GENERATION_BATCH_SIZE is missing.
+      For example: 64
+      """
+
+  embedding_generation_dimensions =
+    System.get_env("EMBEDDING_GENERATION_DIMENSIONS") ||
+      raise """
+      environment variable EMBEDDING_GENERATION_DIMENSIONS is missing.
+      For example: 1024
+      """
+
+  embedding_generation_model =
+    System.get_env("EMBEDDING_GENERATION_MODEL") ||
+      raise """
+      environment variable EMBEDDING_GENERATION_MODEL is missing.
+      For example: thenlper/gte-large
+      """
+
+  config :skeptic_bot, :embedding_generation,
+    batch_size: String.to_integer(embedding_generation_batch_size),
+    dimensions: String.to_integer(embedding_generation_dimensions),
+    repo: {:hf, embedding_generation_model}
+
+  huggingface_token =
+    System.get_env("HUGGINGFACE_TOKEN") ||
+      raise """
+      environment variable HUGGINGFACE_TOKEN is missing.
+      """
+
+  config :skeptic_bot, :huggingface_token, huggingface_token
 end

@@ -16,9 +16,10 @@ defmodule SkepticBot.Application do
       {Finch, name: SkepticBot.Finch},
       # Start a worker by calling: SkepticBot.Worker.start_link(arg)
       # {SkepticBot.Worker, arg},
+      {Nx.Serving, name: SkepticBot.Rag.Embedding, serving: SkepticBot.Rag.Embedding.serving()},
+      {Nx.Serving, name: SkepticBot.Transcription, serving: SkepticBot.Transcription.serving()},
       # Start to serve requests, typically the last entry
       SkepticBotWeb.Endpoint,
-      {Nx.Serving, name: SkepticBot.Transcription, serving: SkepticBot.Transcription.serving()},
       {Oban, Application.fetch_env!(:skeptic_bot, Oban)}
     ]
 

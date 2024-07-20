@@ -63,10 +63,23 @@ config :phoenix, :json_library, Jason
 
 config :skeptic_bot, Oban,
   engine: Oban.Engines.Basic,
-  queues: [downloading: 3, transcoding: 3, transcribing: 1],
+  queues: [downloading: 3, generating_embeddings: 1, transcoding: 3, transcribing: 1],
   repo: SkepticBot.Repo
 
 config :nx, default_backend: EXLA.Backend
+
+config :skeptic_bot, SkepticBot.Repo, types: SkepticBot.PostgrexTypes
+
+config :skeptic_bot, :transcription,
+  batch_size: String.to_integer(System.get_env("TRANSCRIPTION_BATCH_SIZE", "4")),
+  repo: {:hf, System.get_env("TRANSCRIPTION_MODEL", "openai/whisper-tiny")}
+
+config :skeptic_bot, :embedding_generation,
+  batch_size: String.to_integer(System.get_env("EMBEDDING_GENERATION_BATCH_SIZE", "64")),
+  dimensions: String.to_integer(System.get_env("EMBEDDING_GENERATION_DIMENSIONS", "384")),
+  repo: {:hf, System.get_env("EMBEDDING_GENERATION_MODEL", "thenlper/gte-small")}
+
+config :skeptic_bot, :huggingface_token, System.get_env("HUGGINGFACE_TOKEN")
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

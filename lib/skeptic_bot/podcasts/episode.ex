@@ -7,6 +7,7 @@ defmodule SkepticBot.Podcasts.Episode do
   @foreign_key_type :binary_id
   schema "podcast_episodes" do
     field :description, :string
+    field :embedding, Pgvector.Ecto.Vector
     field :external_id, :string
     field :title, :string
 
@@ -16,7 +17,7 @@ defmodule SkepticBot.Podcasts.Episode do
   @doc false
   def changeset(episode, attrs) do
     episode
-    |> cast(attrs, [:description, :external_id, :title])
+    |> cast(attrs, [:description, :embedding, :external_id, :title])
     |> validate_required([:external_id, :title])
     |> unique_constraint(:external_id)
   end

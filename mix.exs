@@ -62,6 +62,7 @@ defmodule SkepticBot.MixProject do
       {:bumblebee, "~> 0.5"},
       {:exla, "~> 0.5"},
       {:oban, "~> 2.17"},
+      {:pgvector, "~> 0.2.0"},
       {:req, "~> 0.5"}
     ]
   end

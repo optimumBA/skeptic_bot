@@ -1,14 +1,16 @@
 defmodule SkepticBot.Podcasts.TranscribingWorker do
-  alias SkepticBot.Podcasts
-  alias SkepticBot.Transcription
-
   use Oban.Worker,
     queue: :transcribing,
     unique: [period: :infinity, states: Oban.Job.states()]
 
+  alias SkepticBot.Podcasts
+  alias SkepticBot.Rag.EmbeddingsGeneratingWorker
+  alias SkepticBot.Transcription
+
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"id" => id}}) do
     transcribe_episode(id)
+    EmbeddingsGeneratingWorker.enqueue(%{"id" => id})
 
     :ok
   end
