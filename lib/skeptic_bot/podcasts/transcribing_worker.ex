@@ -22,7 +22,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
     for chunk <- Transcription.transcribe(path) do
       Podcasts.create_episode_transcription(%{
         podcast_episode_id: id,
-        timestamp: %{months: 0, days: 0, secs: floor(chunk.start_timestamp_seconds)},
+        timestamp: %{months: 0, days: 0, secs: chunk.start_timestamp_seconds},
         transcription: chunk.text
       })
     end
