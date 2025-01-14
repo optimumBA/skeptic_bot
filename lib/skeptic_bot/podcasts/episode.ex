@@ -10,6 +10,7 @@ defmodule SkepticBot.Podcasts.Episode do
     field :embedding, Pgvector.Ecto.Vector
     field :external_id, :string
     field :title, :string
+    field :transcription, :string, virtual: true
 
     timestamps(type: :utc_datetime)
   end

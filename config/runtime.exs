@@ -158,12 +158,4 @@ if config_env() == :prod do
     batch_size: String.to_integer(embedding_generation_batch_size),
     dimensions: String.to_integer(embedding_generation_dimensions),
     repo: {:hf, embedding_generation_model}
-
-  huggingface_token =
-    System.get_env("HUGGINGFACE_TOKEN") ||
-      raise """
-      environment variable HUGGINGFACE_TOKEN is missing.
-      """
-
-  config :skeptic_bot, :huggingface_token, huggingface_token
 end
