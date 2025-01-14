@@ -19,6 +19,8 @@ defmodule SkepticBot.Podcasts.EpisodeTranscription do
     podcast_episode_transcription
     |> cast(attrs, [:embedding, :podcast_episode_id, :timestamp, :transcription])
     |> validate_required([:podcast_episode_id, :timestamp, :transcription])
-    |> unique_constraint([:podcast_episode_id, :timestamp])
+    |> unique_constraint([:podcast_episode_id, :timestamp],
+      name: :podcast_episode_transcriptions_podcast_episode_id_timestamp_ind
+    )
   end
 end
