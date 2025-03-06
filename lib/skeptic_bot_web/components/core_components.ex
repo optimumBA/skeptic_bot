@@ -231,7 +231,7 @@ defmodule SkepticBotWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
+        "phx-submit-loading:opacity-75 rounded-lg py-2 px-3",
         "text-sm font-semibold leading-6 text-white active:text-white/80",
         @class
       ]}
@@ -368,20 +368,41 @@ defmodule SkepticBotWeb.CoreComponents do
   end
 
   # All other inputs text, datetime-local, url, password, etc. are handled here...
+  # def input(assigns) do
+  #   ~H"""
+  #   <div phx-feedback-for={@name}>
+  #     <.label for={@id}><%= @label %></.label>
+  #     <input
+  #       type={@type}
+  #       name={@name}
+  #       id={@id}
+  #       value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+  #       class={[
+  #         "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
+  #         "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
+  #         @errors == [] && "border-zinc-300 focus:border-zinc-400",
+  #         @errors != [] && "border-rose-400 focus:border-rose-400"
+  #       ]}
+  #       {@rest}
+  #     />
+  #     <.error :for={msg <- @errors}><%= msg %></.error>
+  #   </div>
+  #   """
+  # end
+
   def input(assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div>
       <.label for={@id}><%= @label %></.label>
       <input
         type={@type}
         name={@name}
-        id={@id}
+        id={@id || @name}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-          "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
-          @errors != [] && "border-rose-400 focus:border-rose-400"
+          "placeholder:text-sm caret-[#0079FF] mono-400 w-full border-none outline-none rounded-lg py-[7px] px-[11px] remove-outline",
+          "placeholder:text-[#697C9A]  sm:text-lg sm:leading-6",
+          @errors != [] && "border-rose-400 focus:border-rose-400 focus:ring-rose-400/10"
         ]}
         {@rest}
       />
