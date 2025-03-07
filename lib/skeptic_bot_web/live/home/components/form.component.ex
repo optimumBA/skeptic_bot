@@ -7,11 +7,13 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
 
   use SkepticBotWeb, :live_component
 
+  alias SkepticBot.{Query, Prompt}
+
   @impl true
   def render(assigns) do
     ~H"""
     <div>
-      <.form for={@form} phx-target={@myself} phx-submit="save">
+      <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
         <div class="flex justify-between mt-8 items-center rounded-xl hover:cursor-pointer custom-shadow border">
           <div class="w-2/3 grow pl-4">
             <.input placeholder="Ask anything" field={@form[:query]} autocomplete="off" />
@@ -19,7 +21,6 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
 
           <.button
             type="submit"
-            phx-disable-with="Searching..."
             class="hover:cursor-pointer text-[#FFFFFF] bg-[#CD4631] transition ease-in-out duration-300 my-3 mr-4"
           >
             <div class="flex flex-row gap-2 items-center">
@@ -39,18 +40,52 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
   @impl true
 
   def update(assigns, socket) do
-    form = to_form(%{}, as: "prompt")
-
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(form: form)}
+     |> assign(:prompt, %Prompt{})
+     |> assign_form()}
+  end
+
+  def assign_form(%{assigns: %{prompt: prompt}} = socket) do
+    socket
+    |> assign(:form, to_form(Query.change_prompt(prompt), as: "prompt"))
   end
 
   @impl true
-  def handle_event("save", %{"prompt" => %{"query" => prompt_params}}, socket) do
-    dbg(prompt_params)
+  def handle_event(
+        "validate",
+        %{"prompt" => prompt_params},
+        %{assigns: %{prompt: prompt}} = socket
+      ) do
+    changeset =
+      prompt
+      |> Query.change_prompt(prompt_params)
+      |> Map.put(:action, :validate)
 
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> assign(:form, to_form(changeset, as: "prompt"))}
+  end
+
+  @impl true
+  def handle_event(
+        "save",
+        %{"prompt" => _prompt_params},
+        %{assigns: %{form: form}} = socket
+      ) do
+    cond do
+      form.source.valid? == false ->
+        {:noreply,
+         socket
+         |> assign(:form, form)}
+
+      true ->
+        # dbg(prompt_params)
+
+        {:noreply,
+         socket
+         |> assign_form()}
+    end
   end
 end
