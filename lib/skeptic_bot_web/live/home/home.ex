@@ -4,6 +4,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
   """
 
   use SkepticBotWeb, :live_view
+  use Phoenix.Component
 
   @impl true
   def render(assigns) do
@@ -39,9 +40,20 @@ defmodule SkepticBotWeb.HomeLive.Index do
             <section class="ml-28 w-[68%]">
               <.live_component module={SkepticBotWeb.HomeLive.FormComponent} id="prompt form" />
             </section>
+            <section class="ml-44 mt-48 relative w-[68%]">
+              <section class="text-6xl">
+                Popular Podcast
+              </section>
+
+              <div class="superscript-image w-[11%]">
+                <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image" />
+              </div>
+            </section>
           </section>
         </section>
       </div>
+
+      <.pictures />
     </div>
     """
   end
@@ -54,5 +66,86 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @impl true
   def handle_params(_params, _url, socket) do
     {:noreply, socket}
+  end
+
+  @doc """
+  Renders the picture items
+  """
+
+  def pictures(assigns) do
+    ~H"""
+    <div class="picture-grid">
+      <section class="relative rounded-r-xl overflow-hidden">
+        <img src={~p"/images/cards/cover1.svg"} alt="Cover 1" class="w-full h-full object-cover" />
+
+        <section class="social-media-card flex items-center gap-2">
+          <div>
+            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
+          </div>
+          <div>
+            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
+          </div>
+        </section>
+
+        <div class="image-title text-3xl">Autopilot</div>
+      </section>
+
+      <section class="relative rounded-xl overflow-hidden">
+        <img src={~p"/images/cards/cover2.svg"} alt="Cover 2" class="w-full h-full object-cover" />
+
+        <section class="social-media-card flex items-center gap-2">
+          <div>
+            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
+          </div>
+          <div>
+            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
+          </div>
+        </section>
+        <div class="image-title text-3xl">Self-confidence</div>
+      </section>
+
+      <section class="relative rounded-xl overflow-hidden">
+        <img src={~p"/images/cards/cover3.svg"} alt="Cover 3" class="w-full h-full object-cover" />
+
+        <section class="social-media-card flex items-center gap-2">
+          <div>
+            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
+          </div>
+          <div>
+            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
+          </div>
+        </section>
+        <div class="image-title text-3xl">Perplexed mind</div>
+      </section>
+
+      <section class="relative rounded-xl overflow-hidden">
+        <img src={~p"/images/cards/cover4.svg"} alt="Cover 4" class="w-full h-full object-cover" />
+
+        <section class="social-media-card flex items-center gap-2">
+          <div>
+            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
+          </div>
+          <div>
+            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
+          </div>
+        </section>
+        <div class="image-title text-3xl">Women's Rights</div>
+      </section>
+
+      <section class="relative rounded-l-xl overflow-hidden">
+        <img src={~p"/images/cards/cover5.svg"} alt="Cover 5" class="w-full h-full object-cover" />
+
+        <section class="social-media-card flex items-center gap-2">
+          <div>
+            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
+          </div>
+          <div>
+            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
+          </div>
+        </section>
+        <div class="image-title text-3xl">Social Class</div>
+      </section>
+    </div>
+    """
   end
 end

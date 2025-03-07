@@ -16,7 +16,12 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
       <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
         <div class="flex justify-between mt-8 items-center rounded-xl hover:cursor-pointer custom-shadow border">
           <div class="w-2/3 grow pl-4">
-            <.input placeholder="Ask anything" field={@form[:query]} autocomplete="off" />
+            <.input
+              placeholder="Ask anything"
+              field={@form[:query]}
+              autocomplete="off"
+              phx-debounce="500"
+            />
           </div>
 
           <.button
