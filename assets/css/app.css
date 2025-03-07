@@ -12,3 +12,21 @@
   outline-style: none;
   box-shadow: none;
 }
+
+.top-swirl {
+  position: absolute;
+  top: 2rem;
+  left: 0;
+}
+
+.illustration {
+  position: absolute;
+  bottom: 10.5rem;
+  left: 4rem;
+}
+
+.stars {
+  position: absolute;
+  bottom: 8rem;
+  right: 2rem;
+}

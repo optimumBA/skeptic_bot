@@ -400,7 +400,7 @@ defmodule SkepticBotWeb.CoreComponents do
         id={@id || @name}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "placeholder:text-sm caret-[#0079FF] mono-400 w-full border-none outline-none rounded-lg py-[7px] px-[11px] remove-outline",
+          "placeholder:text-sm caret-[#0079FF] mono-400 w-full border-none bg-[#FFF5F5] outline-none rounded-lg py-[7px] px-[11px] remove-outline",
           "placeholder:text-[#697C9A]  sm:text-lg sm:leading-6",
           @errors != [] && "border-rose-400 focus:border-rose-400 focus:ring-rose-400/10"
         ]}

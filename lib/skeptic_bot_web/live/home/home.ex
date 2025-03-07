@@ -9,22 +9,36 @@ defmodule SkepticBotWeb.HomeLive.Index do
   def render(assigns) do
     ~H"""
     <div>
-      <%= live_render(@socket, SkepticBotWeb.Header,
-        id: "live_header",
-        sticky: true
-      ) %>
+      <div class="bg-[#FFF5F5]">
+        <%= live_render(@socket, SkepticBotWeb.Header,
+          id: "live_header",
+          sticky: true
+        ) %>
+      </div>
 
-      <div class="flex justify-start items-center">
-        <section class="">
-          <img src={~p"/images/home/top_swirl.svg"} alt="Swirl" />
+      <div class="flex justify-start items-start gap-20 h-screen bg-[#FFF5F5]">
+        <section>
+          <div class="top-swirl"><img src={~p"/images/home/top_swirl.svg"} alt="Swirl" /></div>
+          <div class="illustration w-[20%]">
+            <img src={~p"/images/home/illustration_1.svg"} alt="Illustration 1" />
+          </div>
+
+          <div class="stars w-[11%]">
+            <img src={~p"/images/home/stars.png"} alt="Stars Group" />
+          </div>
         </section>
-        <section class="flex flex-col">
-          <section>Your Daily <span>Podcast</span></section>
+        <section class="flex flex-col justify-start items-start pl-72 gap-8 w-full">
+          <section class="text-8xl pt-40">
+            Your Daily <span class="text-[#CD4631]">Podcast</span>
+          </section>
 
-          <section>Ask anything and get answers directly from trusted experts</section>
-
-          <section>
-            <.live_component module={SkepticBotWeb.HomeLive.FormComponent} id="prompt form" />
+          <section class="w-[70%] flex flex-col items-start gap-8">
+            <section class="w-[35%] ml-52 text-center">
+              Ask anything and get answers directly from trusted experts
+            </section>
+            <section class="ml-28 w-[68%]">
+              <.live_component module={SkepticBotWeb.HomeLive.FormComponent} id="prompt form" />
+            </section>
           </section>
         </section>
       </div>
