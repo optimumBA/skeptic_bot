@@ -1,0 +1,182 @@
+/* All objects that are absolutely positioned have the styles in this file */
+
+/* DRY */
+.top-swirl,
+.illustration,
+.stars,
+.superscript-image,
+.social-media-card,
+.image-title,
+.vector1,
+.vector2,
+.vector3,
+.vector4,
+.vector5,
+.vector6,
+.vector7,
+.vector8,
+.vector9,
+.vector10,
+.vector11,
+.vector12,
+.vector13,
+.vector14,
+.vector15,
+.vector16,
+.vector17,
+.vector18,
+.vector19,
+.vector20,
+.vector21,
+.vector22,
+.vector23 {
+  position: absolute;
+}
+
+.top-swirl {
+  top: 2rem;
+  left: 0;
+}
+
+.illustration {
+  bottom: 10.5rem;
+  left: 4rem;
+}
+
+.stars {
+  bottom: 8rem;
+  right: 2rem;
+}
+
+.superscript-image {
+  top: -2.5rem;
+  left: -3rem;
+}
+
+.social-media-card {
+  z-index: 10;
+  top: 0.8rem;
+  right: 1.8rem;
+}
+
+.image-title {
+  bottom: 1rem;
+  left: 0.8rem;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* Vectors in the grid pictures component */
+
+.vector1 {
+  bottom: 4rem;
+  left: 0;
+}
+
+.vector2 {
+  bottom: 4rem;
+  right: 2.8rem;
+}
+
+.vector3 {
+  top: 2.7rem;
+  left: 2.4rem;
+}
+
+.vector4 {
+  bottom: 2.7rem;
+  right: 6.7rem;
+}
+
+.vector5 {
+  top: 3rem;
+  right: 9rem;
+}
+
+.vector6 {
+  top: 7.5rem;
+  left: 7rem;
+}
+
+.vector7 {
+  top: 4.8rem;
+  left: 6rem;
+}
+
+.vector8 {
+  top: 0;
+  left: 0;
+}
+
+.vector9 {
+  bottom: 6.2rem;
+  left: 7.8rem;
+}
+
+.vector10 {
+  top: 7rem;
+  left: 3.5rem;
+}
+
+.vector11 {
+  top: 7.8rem;
+  left: 2.9rem;
+}
+
+.vector12 {
+  top: 4.9rem;
+  right: 11.7rem;
+}
+
+.vector13 {
+  top: 6.8rem;
+  right: 5.2rem;
+}
+
+.vector14 {
+  top: 9rem;
+  right: 2.4rem;
+}
+
+.vector15 {
+  top: 8.5rem;
+  right: 1.8rem;
+}
+
+.vector16 {
+  top: 8.75rem;
+  right: 1.4rem;
+}
+
+.vector17 {
+  top: 9.1rem;
+  right: 1.7rem;
+}
+
+.vector18 {
+  top: 7rem;
+  left: 1.7rem;
+}
+
+.vector19 {
+  top: 7.8rem;
+  left: 2.2rem;
+}
+.vector20 {
+  top: 8rem;
+  left: 1.8rem;
+}
+.vector21 {
+  bottom: 7.4rem;
+  left: 1.7rem;
+}
+
+.vector22 {
+  bottom: 7.2rem;
+  left: 1.4rem;
+}
+
+.vector23 {
+  top: 9rem;
+  right: 1.7rem;
+}
