@@ -56,12 +56,47 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
       <Component.pictures />
 
-      <Component.card
-        title="Covid-19 Actual Conspiracy"
-        body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
-        people_count="134"
-        title_color="text-[#CD4631]"
-      />
+      <div class="questions-grid border border-red-400 mx-auto max-60">
+        <Component.card
+          title="Covid-19 Actual Conspiracy"
+          body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
+          people_count="134"
+          title_color="text-[#CD4631]"
+        />
+        <Component.card
+          title="Tesla Autopilot Controversy"
+          body="Tesla's vehicles boast 'Full-Self-Driving' (FSD), but current regulations do not allow for fully"
+          people_count="134"
+          title_color="text-[#000000]"
+        />
+        <Component.card
+          title="Women's Rights? Is it alright?"
+          body="A look back at history shows that women have made great strides in the fight for equality"
+          people_count="134"
+          title_color="text-[#000000]"
+        />
+
+        <Component.card
+          title="Who Really Killed JKF?"
+          body="We have a therapist expert as our guest, Krista Gordon is will share her experience"
+          people_count="134"
+          title_color="text-[#CD4631]"
+        />
+
+        <Component.card
+          title="Epstein Controversy"
+          body="Social class refers to a group of people with similar levels of wealth, influence, and"
+          people_count="134"
+          title_color="text-[#CD4631]"
+        />
+
+        <Component.card
+          title="Are you a Perplexed mind Person?"
+          body="Unable to grasp something clearly or to think logically and decisively about something"
+          people_count="134"
+          title_color="text-[#000000]"
+        />
+      </div>
     </div>
     """
   end

@@ -28,7 +28,7 @@
 .divider {
   height: 1px;
   line-height: 1px;
-  width: 70%;
+  width: 78%;
   background-color: #4d4d4d;
   margin-top: 20px;
   margin-bottom: 16px;
@@ -36,4 +36,15 @@
 
 .max-30 {
   max-width: 30rem;
+}
+
+.max-60 {
+  max-width: 62rem;
+}
+
+.questions-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  /* grid-template-rows: 315px; */
+  gap: 0.8rem;
 }

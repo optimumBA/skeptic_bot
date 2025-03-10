@@ -144,7 +144,7 @@ defmodule SkepticBotWeb.Home.Component do
         <div class="divider">
           &zwj;
         </div>
-        <section class="text-sm w-[70%]">
+        <section class="text-sm w-[77%]">
           <%= @body %>...
         </section>
         <section class="flex justify-start items-center gap-2 py-4">
