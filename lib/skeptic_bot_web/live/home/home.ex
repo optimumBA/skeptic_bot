@@ -108,7 +108,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
         </section>
       </div>
 
-      <div class="bg-[#FFF5F5] py-20">
+      <div class="relative bg-[#FFF5F5] py-20">
         <section class="relative max-w-[38.813rem] text-center mx-auto">
           <p class="font-bold text-[#000000] text-title leading-none">
             Insightful clips to expand your view
@@ -118,7 +118,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           </p>
         </section>
 
-        <section class="max-w-[73.6rem] mx-auto">
+        <section class="max-w-[73.6rem] py-20 mx-auto">
           <div class="clips-grid">
             <Component.clip
               image_file="clip1.svg"
@@ -141,6 +141,9 @@ defmodule SkepticBotWeb.HomeLive.Index do
               video_length="16:20"
             />
           </div>
+        </section>
+        <section class="bottom-vector w-80">
+          <img src={~p"/images/home/bottom_vector.svg"} alt="Bottom Vector" class="object-cover" />
         </section>
       </div>
     </div>

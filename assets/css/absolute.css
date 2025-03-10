@@ -31,7 +31,8 @@
 .vector21,
 .vector22,
 .vector23,
-.scribble {
+.scribble,
+.bottom-vector {
   position: absolute;
 }
 
@@ -193,4 +194,10 @@
 .superscript-question {
   top: -2.5rem;
   left: 0.8rem;
+}
+
+.bottom-vector {
+  top: 12rem;
+  right: 0;
+  z-index: 1;
 }
