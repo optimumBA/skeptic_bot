@@ -9,6 +9,10 @@
   box-shadow: 5px 5px #81adc8;
 }
 
+.card-shadow {
+  box-shadow: 10px 10px #81adc8;
+}
+
 .remove-outline:focus {
   outline-style: none;
   box-shadow: none;
@@ -19,4 +23,17 @@
   grid-template-columns: 215px repeat(3, 1fr) 215px;
   grid-template-rows: 315px;
   gap: 0.8rem;
+}
+
+.divider {
+  height: 1px;
+  line-height: 1px;
+  width: 70%;
+  background-color: #4d4d4d;
+  margin-top: 20px;
+  margin-bottom: 16px;
+}
+
+.max-30 {
+  max-width: 30rem;
 }

@@ -4,7 +4,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
   """
 
   use SkepticBotWeb, :live_view
-  use Phoenix.Component
+
+  alias SkepticBotWeb.Home.Component
 
   @impl true
   def render(assigns) do
@@ -53,7 +54,14 @@ defmodule SkepticBotWeb.HomeLive.Index do
         </section>
       </div>
 
-      <.pictures />
+      <Component.pictures />
+
+      <Component.card
+        title="Covid-19 Actual Conspiracy"
+        body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
+        people_count="134"
+        title_color="text-[#CD4631]"
+      />
     </div>
     """
   end
@@ -66,121 +74,5 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @impl true
   def handle_params(_params, _url, socket) do
     {:noreply, socket}
-  end
-
-  @doc """
-  Renders the picture items
-  """
-
-  def pictures(assigns) do
-    ~H"""
-    <div class="picture-grid">
-      <section class="relative rounded-r-xl overflow-hidden">
-        <img src={~p"/images/cards/cover1.svg"} alt="Cover 1" class="w-full h-full object-cover" />
-
-        <section class="social-media-card flex items-center gap-2">
-          <div>
-            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-          </div>
-          <div>
-            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-          </div>
-        </section>
-
-        <img src={~p"/images/grid/vector1.svg"} alt="Vector 1" class="vector1" />
-
-        <img src={~p"/images/grid/vector2.svg"} alt="Vector 2" class="vector2" />
-
-        <img src={~p"/images/grid/vector3.svg"} alt="Vector 3" class="vector3" />
-        <div class="image-title text-3xl">Autopilot</div>
-      </section>
-
-      <section class="relative rounded-xl overflow-hidden">
-        <img src={~p"/images/cards/cover2.svg"} alt="Cover 2" class="w-full h-full object-cover" />
-
-        <section class="social-media-card flex items-center gap-2">
-          <div>
-            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-          </div>
-          <div>
-            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-          </div>
-        </section>
-
-        <img src={~p"/images/grid/star2.svg"} alt="Star 2" class="vector4" />
-        <img src={~p"/images/grid/vector5.svg"} alt="Vector 5" class="vector5" />
-
-        <img src={~p"/images/grid/vector4.svg"} alt="Vector 4" class="vector6" />
-
-        <div class="image-title text-3xl">Self-confidence</div>
-      </section>
-
-      <section class="relative rounded-xl overflow-hidden">
-        <img src={~p"/images/cards/cover3.svg"} alt="Cover 3" class="w-full h-full object-cover" />
-
-        <section class="social-media-card flex items-center gap-2">
-          <div>
-            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-          </div>
-          <div>
-            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-          </div>
-        </section>
-
-        <img src={~p"/images/grid/vector7.svg"} alt="Vector 7" class="vector7" />
-        <div class="image-title text-3xl">Perplexed mind</div>
-      </section>
-
-      <section class="relative rounded-xl overflow-hidden">
-        <img src={~p"/images/cards/cover4.svg"} alt="Cover 4" class="w-full h-full object-cover" />
-
-        <section class="social-media-card flex items-center gap-2">
-          <div>
-            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-          </div>
-          <div>
-            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-          </div>
-        </section>
-
-        <img src={~p"/images/grid/vector8.svg"} alt="Vector 8" class="vector8" />
-
-        <img src={~p"/images/grid/vector9.svg"} alt="Vector 9" class="vector9" />
-
-        <img src={~p"/images/grid/vector10.svg"} alt="Vector 10" class="vector10" />
-        <img src={~p"/images/grid/vector11.svg"} alt="Vector 11" class="vector11" />
-        <img src={~p"/images/grid/vector12.svg"} alt="Vector 12" class="vector12" />
-        <img src={~p"/images/grid/vector13.svg"} alt="Vector 13" class="vector13" />
-        <img src={~p"/images/grid/vector14.svg"} alt="Vector 14" class="vector14" />
-        <img src={~p"/images/grid/vector15.svg"} alt="Vector 15" class="vector15" />
-        <img src={~p"/images/grid/vector16.svg"} alt="Vector 16" class="vector16" />
-        <img src={~p"/images/grid/vector17.svg"} alt="Vector 17" class="vector17" />
-
-        <div class="image-title text-3xl">Women's Rights</div>
-      </section>
-
-      <section class="relative rounded-l-xl overflow-hidden">
-        <img src={~p"/images/cards/cover5.svg"} alt="Cover 5" class="w-full h-full object-cover" />
-
-        <section class="social-media-card flex items-center gap-2">
-          <div>
-            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-          </div>
-          <div>
-            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-          </div>
-        </section>
-
-        <img src={~p"/images/grid/vector18.svg"} alt="Vector 18" class="vector18" />
-        <img src={~p"/images/grid/vector19.svg"} alt="Vector 19" class="vector19" />
-        <img src={~p"/images/grid/vector20.svg"} alt="Vector 20" class="vector20" />
-        <img src={~p"/images/grid/vector21.svg"} alt="Vector 21" class="vector21" />
-        <img src={~p"/images/grid/vector22.svg"} alt="Vector 22" class="vector22" />
-        <img src={~p"/images/grid/vector23.svg"} alt="Vector 23" class="vector23" />
-
-        <div class="image-title text-3xl">Social Class</div>
-      </section>
-    </div>
-    """
   end
 end
