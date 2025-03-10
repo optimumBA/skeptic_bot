@@ -12,7 +12,7 @@ defmodule SkepticBotWeb.Home.Component do
 
   def pictures(assigns) do
     ~H"""
-    <div class="picture-grid pb-10 bg-[#FFF5F5]">
+    <div class="picture-grid pb-20 bg-[#FFF5F5]">
       <section class="relative rounded-r-xl overflow-hidden">
         <img src={~p"/images/cards/cover1.svg"} alt="Cover 1" class="w-full h-full object-cover" />
 

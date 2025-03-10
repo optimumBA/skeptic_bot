@@ -5,6 +5,7 @@
 .illustration,
 .stars,
 .superscript-image,
+.superscript-question,
 .social-media-card,
 .image-title,
 .vector1,
@@ -29,7 +30,8 @@
 .vector20,
 .vector21,
 .vector22,
-.vector23 {
+.vector23,
+.scribble {
   position: absolute;
 }
 
@@ -162,10 +164,12 @@
   top: 7.8rem;
   left: 2.2rem;
 }
+
 .vector20 {
   top: 8rem;
   left: 1.8rem;
 }
+
 .vector21 {
   bottom: 7.4rem;
   left: 1.7rem;
@@ -179,4 +183,14 @@
 .vector23 {
   top: 9rem;
   right: 1.7rem;
+}
+
+.scribble {
+  bottom: -11.9rem;
+  left: -11rem;
+}
+
+.superscript-question {
+  top: -2.5rem;
+  left: 0.8rem;
 }
