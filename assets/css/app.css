@@ -48,3 +48,9 @@
   /* grid-template-rows: 315px; */
   gap: 0.8rem;
 }
+
+.clips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}

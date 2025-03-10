@@ -107,6 +107,42 @@ defmodule SkepticBotWeb.HomeLive.Index do
           <img src={~p"/images/cards/scribble.svg"} alt="Scribble" class="scribble" />
         </section>
       </div>
+
+      <div class="bg-[#FFF5F5] py-20">
+        <section class="relative max-w-[38.813rem] text-center mx-auto">
+          <p class="font-bold text-[#000000] text-title leading-none">
+            Insightful clips to expand your view
+            <div class="superscript-question">
+              <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
+            </div>
+          </p>
+        </section>
+
+        <section class="max-w-[73.6rem] mx-auto">
+          <div class="clips-grid">
+            <Component.clip
+              image_file="clip1.svg"
+              title="Quarter-life crisis"
+              author="Allen John"
+              video_length="23:20"
+            />
+
+            <Component.clip
+              image_file="clip2.svg"
+              title="Finance Gen Ƶ"
+              author="Brock Leslar"
+              video_length="45:00"
+            />
+
+            <Component.clip
+              image_file="clip3.svg"
+              title="Love, Family, and Secrets"
+              author="Aidan & Friends"
+              video_length="16:20"
+            />
+          </div>
+        </section>
+      </div>
     </div>
     """
   end

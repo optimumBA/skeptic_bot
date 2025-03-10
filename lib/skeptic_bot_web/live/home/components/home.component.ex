@@ -123,7 +123,7 @@ defmodule SkepticBotWeb.Home.Component do
   end
 
   @doc """
-  Renders the picture items with a Grid
+  Renders a card item
   """
 
   attr :title, :string, required: true
@@ -158,5 +158,43 @@ defmodule SkepticBotWeb.Home.Component do
       </div>
     </div>
     """
+  end
+
+  @doc """
+  Renders a clip card item
+  """
+
+  attr :image_file, :string, required: true
+  attr :title, :any, required: true
+  attr :author, :string, required: true
+  attr :video_length, :string, required: true
+
+  def clip(assigns) do
+    ~H"""
+    <div class="flex justify-start items-center gap-6 border border-[#CD4631] py-6 rounded-lg max-w-[23.6rem] bg-[#F8F8F8] card-shadow">
+      <div>
+        <img src={get_clip_image_src(@image_file)} alt="Clip Item" />
+      </div>
+      <div class="flex flex-col items-start justify-center">
+        <div class="text-2xl font-medium text-[#532822] pr-6">
+          <%= @title %>
+        </div>
+        <div class="text-[#383838]"><%= @author %></div>
+        <section class="flex justify-between gap-16 items-center">
+          <div class="text-2xl font-semibold text-[#383838]">
+            <%= @video_length %>
+          </div>
+
+          <div>
+            <img src={~p"/images/clips/playicon.svg"} width="60" alt="Play Icon" />
+          </div>
+        </section>
+      </div>
+    </div>
+    """
+  end
+
+  defp get_clip_image_src(filename) do
+    ~p"/images/clips/#{filename}"
   end
 end
