@@ -30,19 +30,19 @@ defmodule SkepticBotWeb.HomeLive.Index do
           </div>
         </section>
         <section class="flex flex-col justify-start items-start pl-72 gap-8 w-full">
-          <section class="text-8xl pt-40">
-            Your Daily <span class="text-[#CD4631]">Podcast</span>
+          <section class="text-8xl pt-40 montserrat-semibold tracking-4">
+            Your Daily <span class="text-[#CD4631] montserrat-alternates-semibold">Podcast</span>
           </section>
 
           <section class="w-[70%] flex flex-col items-start gap-8">
-            <section class="w-[35%] ml-52 text-center">
+            <section class="w-[35%] ml-52 text-center montserrat-alternates-medium text-[#4D4D4D]">
               Ask anything and get answers directly from trusted experts
             </section>
             <section class="ml-28 w-[68%]">
               <.live_component module={SkepticBotWeb.HomeLive.FormComponent} id="prompt form" />
             </section>
             <section class="ml-44 mt-48 relative w-[68%]">
-              <section class="text-6xl">
+              <section class="text-6xl montserrat-alternates-bold text-[#000000]">
                 Popular Podcast
               </section>
 
@@ -57,13 +57,13 @@ defmodule SkepticBotWeb.HomeLive.Index do
       <Component.pictures />
 
       <div class="my-20">
-        <section class="relative max-w-[38.813rem] text-center mx-auto">
-          <p class="font-bold text-[#000000] text-title leading-none">
+        <section class="relative max-w-[41.8rem] text-center mx-auto">
+          <p class="text-[#000000] text-title leading-none montserrat-alternates-bold">
             Questions that fuel insight and curiosity
-            <div class="superscript-question">
-              <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
-            </div>
           </p>
+          <div class="superscript-question">
+            <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
+          </div>
         </section>
         <section class="relative mx-auto mb-32 max-60">
           <div class="questions-grid">
@@ -145,6 +145,23 @@ defmodule SkepticBotWeb.HomeLive.Index do
         <section class="bottom-vector w-80">
           <img src={~p"/images/home/bottom_vector.svg"} alt="Bottom Vector" class="object-cover" />
         </section>
+      </div>
+
+      <div class="pt-10 pb-4">
+        <div class="divider bg-[#7F7F7F] w-[92%] mx-auto">
+          &zwj;
+        </div>
+
+        <.link href="https://x.com/optimumBA">
+          <div class="w-[10%] mx-auto border border-[#532822] rounded-custom my-8">
+            <section class="py-3 w-[98%] mx-auto flex gap-2 justify-center items-center">
+              <div>
+                <img src={~p"/images/home/twitter.svg"} alt="Twitter Icon" />
+              </div>
+              <div class="text-[#532822] text-lg font-bold">Twitter</div>
+            </section>
+          </div>
+        </.link>
       </div>
     </div>
     """

@@ -30,7 +30,7 @@ defmodule SkepticBotWeb.Home.Component do
         <img src={~p"/images/grid/vector2.svg"} alt="Vector 2" class="vector2" />
 
         <img src={~p"/images/grid/vector3.svg"} alt="Vector 3" class="vector3" />
-        <div class="image-title text-3xl">Autopilot</div>
+        <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">Autopilot</div>
       </section>
 
       <section class="relative rounded-xl overflow-hidden">
@@ -50,7 +50,9 @@ defmodule SkepticBotWeb.Home.Component do
 
         <img src={~p"/images/grid/vector4.svg"} alt="Vector 4" class="vector6" />
 
-        <div class="image-title text-3xl">Self-confidence</div>
+        <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+          Self-confidence
+        </div>
       </section>
 
       <section class="relative rounded-xl overflow-hidden">
@@ -66,7 +68,9 @@ defmodule SkepticBotWeb.Home.Component do
         </section>
 
         <img src={~p"/images/grid/vector7.svg"} alt="Vector 7" class="vector7" />
-        <div class="image-title text-3xl">Perplexed mind</div>
+        <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+          Perplexed mind
+        </div>
       </section>
 
       <section class="relative rounded-xl overflow-hidden">
@@ -94,7 +98,9 @@ defmodule SkepticBotWeb.Home.Component do
         <img src={~p"/images/grid/vector16.svg"} alt="Vector 16" class="vector16" />
         <img src={~p"/images/grid/vector17.svg"} alt="Vector 17" class="vector17" />
 
-        <div class="image-title text-3xl">Women's Rights</div>
+        <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+          Women's Rights
+        </div>
       </section>
 
       <section class="relative rounded-l-xl overflow-hidden">
@@ -116,7 +122,7 @@ defmodule SkepticBotWeb.Home.Component do
         <img src={~p"/images/grid/vector22.svg"} alt="Vector 22" class="vector22" />
         <img src={~p"/images/grid/vector23.svg"} alt="Vector 23" class="vector23" />
 
-        <div class="image-title text-3xl">Social Class</div>
+        <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">Social Class</div>
       </section>
     </div>
     """
