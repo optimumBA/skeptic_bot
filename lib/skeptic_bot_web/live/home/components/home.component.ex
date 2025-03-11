@@ -177,21 +177,22 @@ defmodule SkepticBotWeb.Home.Component do
 
   def clip(assigns) do
     ~H"""
-    <div class="max-w-[23.5rem] px-3 flex justify-start items-center gap-6 border border-[#CD4631] py-6 rounded-lg bg-[#F8F8F8] card-shadow z-50">
+    <div class="px-3 flex justify-start items-stretch gap-6 border border-[#CD4631] py-6 rounded-lg bg-[#F8F8F8] card-shadow z-50">
       <div class="shrink-0">
         <img src={get_clip_image_src(@image_file)} alt="Clip Item" />
       </div>
-      <div class="flex flex-col items-start justify-start">
-        <div class="text-2xl font-medium text-[#532822] pr-6">
+      <div class="flex flex-col items-start justify-between">
+        <div class="montserrat-alternates-medium text-2xl text-[#532822] pr-2">
           <%= @title %>
         </div>
-        <div class="text-[#383838]"><%= @author %></div>
-        <section class="shrink-0 flex justify-between gap-16 items-center">
-          <div class="text-2xl font-semibold text-[#383838]">
+        <div class="text-[#383838] text-lg montserrat-alternates-regular"><%= @author %></div>
+
+        <section class="flex justify-between gap-16 items-center">
+          <div class="text-2xl text-[#383838] montserrat-alternates-semibold">
             <%= @video_length %>
           </div>
           <div>
-            <img src={~p"/images/clips/playicon.svg"} width="60" alt="Play Icon" />
+            <img src={~p"/images/clips/playicon.svg"} width="55" alt="Play Icon" />
           </div>
         </section>
       </div>

@@ -35,7 +35,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           </section>
 
           <section class="w-[70%] flex flex-col items-start gap-8">
-            <section class="w-[35%] ml-52 text-center montserrat-alternates-medium text-[#4D4D4D]">
+            <section class="w-[42%] ml-[18rem] text-center montserrat-alternates-medium text-[#4D4D4D]">
               Ask anything and get answers directly from trusted experts
             </section>
             <section class="ml-28 w-[68%]">
@@ -108,17 +108,21 @@ defmodule SkepticBotWeb.HomeLive.Index do
         </section>
       </div>
 
-      <div class="relative bg-[#FFF5F5] py-20">
+      <div class="relative bg-[#FFF5F5] py-16 pb-40">
         <section class="relative max-w-[38.813rem] text-center mx-auto">
-          <p class="font-bold text-[#000000] text-title leading-none">
+          <p class="text-[#000000] text-title leading-none montserrat-alternates-bold">
             Insightful clips to expand your view
             <div class="superscript-question">
               <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
             </div>
+
+            <div class="scribble2">
+              <img src={~p"/images/clips/scribble2.svg"} alt="Scribble 2" />
+            </div>
           </p>
         </section>
 
-        <section class="max-w-[73.6rem] py-20 mx-auto">
+        <section class="max-w-[75.6rem] py-20 mx-auto">
           <div class="clips-grid">
             <Component.clip
               image_file="clip1.svg"
@@ -142,23 +146,27 @@ defmodule SkepticBotWeb.HomeLive.Index do
             />
           </div>
         </section>
-        <section class="bottom-vector w-80">
-          <img src={~p"/images/home/bottom_vector.svg"} alt="Bottom Vector" class="object-cover" />
+        <section class="bottom-vector w-[26.2%]">
+          <img
+            src={~p"/images/home/bottom_vector.svg"}
+            alt="Bottom Vector"
+            class="w-[100%] h-[100%] object-cover"
+          />
         </section>
       </div>
 
-      <div class="pt-10 pb-4">
+      <div class="pt-14 pb-4">
         <div class="divider bg-[#7F7F7F] w-[92%] mx-auto">
           &zwj;
         </div>
 
         <.link href="https://x.com/optimumBA">
-          <div class="w-[10%] mx-auto border border-[#532822] rounded-custom my-8">
+          <div class="w-[10%] mx-auto border border-[#532822] rounded-custom my-12">
             <section class="py-3 w-[98%] mx-auto flex gap-2 justify-center items-center">
               <div>
                 <img src={~p"/images/home/twitter.svg"} alt="Twitter Icon" />
               </div>
-              <div class="text-[#532822] text-lg font-bold">Twitter</div>
+              <div class="text-[#532822] text-lg red-hat-display-bold">Twitter</div>
             </section>
           </div>
         </.link>
