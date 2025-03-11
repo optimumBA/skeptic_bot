@@ -139,25 +139,25 @@ defmodule SkepticBotWeb.Home.Component do
 
   def card(assigns) do
     ~H"""
-    <div class="border-2 border-[#000000] my-6 rounded-2xl max-30 card-shadow">
-      <div class="px-6 py-8 text-[#4D4D4D]">
+    <div class="border-2 border-[#000000] my-6 rounded-2xl card-shadow">
+      <div class="px-3 py-8 text-[#4D4D4D]">
         <section class="flex justify-between items-center">
-          <div class={["text-2xl", @title_color]}><%= @title %></div>
+          <div class={["text-2xl montserrat-alternates-bold", @title_color]}><%= @title %></div>
           <div class="pr-4">
-            <img src={~p"/images/cards/xmark.svg"} alt="X Mark" class="" />
+            <img src={~p"/images/cards/xmark.svg"} alt="X Mark" />
           </div>
         </section>
         <div class="divider">
           &zwj;
         </div>
-        <section class="text-sm w-[77%]">
+        <section class="text-sm w-[78%] montserrat-alternates-medium">
           <%= @body %>...
         </section>
         <section class="flex justify-start items-center gap-2 py-4">
           <div>
             <img src={~p"/images/cards/ask.svg"} alt="Ask me" class="" />
           </div>
-          <div class="text-xs">
+          <div class="text-xs montserrat-alternates-medium">
             Asked by <%= @people_count %> people
           </div>
         </section>

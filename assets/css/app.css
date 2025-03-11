@@ -115,18 +115,10 @@
 .divider {
   height: 1px;
   line-height: 1px;
-  width: 78%;
+  width: 85%;
   background-color: #4d4d4d;
   margin-top: 20px;
-  margin-bottom: 16px;
-}
-
-.max-30 {
-  max-width: 30rem;
-}
-
-.max-60 {
-  max-width: 62rem;
+  margin-bottom: 10px;
 }
 
 .questions-grid {

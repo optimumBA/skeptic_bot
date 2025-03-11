@@ -65,7 +65,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
           </div>
         </section>
-        <section class="relative mx-auto mb-32 max-60">
+        <section class="relative mx-auto mb-32 max-w-[61rem]">
           <div class="questions-grid">
             <Component.card
               title="Covid-19 Actual Conspiracy"
