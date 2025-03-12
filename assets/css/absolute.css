@@ -9,6 +9,8 @@
 .superscript-question-2,
 .social-media-card,
 .image-title,
+.podcast-title,
+.podcast-length,
 .vector1,
 .vector2,
 .vector3,
@@ -67,8 +69,6 @@
 .image-title {
   bottom: 1rem;
   left: 0.8rem;
-  color: #ffffff;
-  font-weight: 700;
 }
 
 /* Vectors in the grid pictures component */
@@ -212,4 +212,19 @@
   top: 7.8rem;
   right: 0;
   z-index: 1;
+}
+
+.podcast-title {
+  bottom: 6rem;
+  left: 1rem;
+}
+
+.podcast-title {
+  bottom: 4rem;
+  left: 1rem;
+}
+
+.podcast-length {
+  bottom: 2rem;
+  left: 1.2rem;
 }

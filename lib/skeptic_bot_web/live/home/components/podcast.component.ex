@@ -9,6 +9,8 @@ defmodule SkepticBotWeb.PodcastComponent do
   alias SkepticBotWeb.Home.Component
 
   attr :image_file, :string, required: true
+  attr :podcast_title, :string, required: true
+  attr :video_length, :string, required: true
 
   def podcast_video_card(assigns) do
     ~H"""
@@ -19,18 +21,17 @@ defmodule SkepticBotWeb.PodcastComponent do
 
       <Component.absolute_vectors_2 />
 
-      <.podcast_title title="Self-confidence" />
+      <div class="podcast-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+        <%= @podcast_title %>
+      </div>
+
+      <div class="podcast-length flex gap-2 montserrat-alternates-bold text-[#FFFFFF]">
+        <div>
+          <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
+        </div>
+        <div class="text-sm"><%= @video_length %></div>
+      </div>
     </section>
-    """
-  end
-
-  attr :title, :string, required: true
-
-  def podcast_title(assigns) do
-    ~H"""
-    <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
-      <%= @title %>
-    </div>
     """
   end
 

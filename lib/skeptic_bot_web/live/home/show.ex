@@ -41,7 +41,11 @@ defmodule SkepticBotWeb.HomeLive.Show do
             style={"transform: translateX(-#{@index * 20.6875}rem);"}
           >
             <%= for item <- @items do %>
-              <PodcastComponent.podcast_video_card image_file={item.thumbnail} />
+              <PodcastComponent.podcast_video_card
+                image_file={item.thumbnail}
+                podcast_title={item.podcast_title}
+                video_length={item.video_length}
+              />
             <% end %>
           </div>
         </section>
@@ -88,12 +92,13 @@ defmodule SkepticBotWeb.HomeLive.Show do
     {:noreply, socket}
   end
 
+  @impl true
   def handle_event("next", _, socket) do
-    dbg(socket.assigns.items)
     new_index = min(socket.assigns.index + 1, length(socket.assigns.items) - 1)
     {:noreply, assign(socket, index: new_index)}
   end
 
+  @impl true
   def handle_event("prev", _, socket) do
     new_index = max(socket.assigns.index - 1, 0)
     {:noreply, assign(socket, index: new_index)}
@@ -102,34 +107,44 @@ defmodule SkepticBotWeb.HomeLive.Show do
   def get_items() do
     [
       %{
-        thumbnail: "cover1.svg"
+        thumbnail: "cover1.svg",
+        podcast_title: "JFK Assassination",
+        video_length: "02:20:45"
       },
       %{
-        thumbnail: "cover2.svg"
+        thumbnail: "cover2.svg",
+        podcast_title: "Space X",
+        video_length: "02:41:45"
       },
       %{
-        thumbnail: "cover3.svg"
+        thumbnail: "cover3.svg",
+        podcast_title: "Trump's Rule",
+        video_length: "03:31:45"
       },
       %{
-        thumbnail: "cover4.svg"
+        thumbnail: "cover4.svg",
+        podcast_title: "Kenya Chaos",
+        video_length: "04:31:45"
       },
       %{
-        thumbnail: "cover5.svg"
+        thumbnail: "cover5.svg",
+        podcast_title: "Nigerian Delta",
+        video_length: "02:31:35"
       },
       %{
-        thumbnail: "cover1.svg"
+        thumbnail: "cover1.svg",
+        podcast_title: "Women's Rights",
+        video_length: "02:53:45"
       },
       %{
-        thumbnail: "cover2.svg"
+        thumbnail: "cover2.svg",
+        podcast_title: "USAID Crisis",
+        video_length: "10:36:45"
       },
       %{
-        thumbnail: "cover3.svg"
-      },
-      %{
-        thumbnail: "cover4.svg"
-      },
-      %{
-        thumbnail: "cover5.svg"
+        thumbnail: "cover3.svg",
+        podcast_title: "Femicide",
+        video_length: "02:21:45"
       }
     ]
   end
@@ -144,6 +159,7 @@ defmodule SkepticBotWeb.HomeLive.Show do
   end
 
   def forward_btn_disabler(index, items) do
+    # * called for the forward button
     if index >= length(items) - 1 do
       true
     else
