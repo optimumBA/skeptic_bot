@@ -13,9 +13,14 @@ defmodule SkepticBotWeb.Header do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="flex justify-between">
-      <section class="ml-20">Logo</section>
-      <section class="mr-20">RECENT EPISODES</section>
+    <div class="flex items-center justify-between py-8 text-[#000000] montserrat-alternates-bold">
+      <section class="ml-20 text-[2rem]">Logo</section>
+
+      <.link>
+        <section class="mr-20 border-2 border-[#000000] rounded-lg px-6 py-3 text-sm">
+          RECENT EPISODES
+        </section>
+      </.link>
     </div>
     """
   end

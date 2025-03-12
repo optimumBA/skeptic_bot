@@ -33,7 +33,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
                 <img src={~p"/images/home/search_icon.svg"} alt="Search Icon" />
               </div>
 
-              <section>Search...</section>
+              <section class="montserrat-alternates-medium">Search...</section>
             </div>
           </.button>
         </div>
