@@ -6,6 +6,7 @@
 .stars,
 .superscript-image,
 .superscript-question,
+.superscript-question-2,
 .social-media-card,
 .image-title,
 .vector1,
@@ -200,6 +201,11 @@
 .superscript-question {
   top: -2.1rem;
   left: -0.4rem;
+}
+
+.superscript-question-2 {
+  top: -2.1rem;
+  left: -2.8rem;
 }
 
 .bottom-vector {

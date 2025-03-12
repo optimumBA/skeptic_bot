@@ -16,14 +16,7 @@ defmodule SkepticBotWeb.Home.Component do
       <section class="relative rounded-r-xl overflow-hidden">
         <img src={~p"/images/cards/cover1.svg"} alt="Cover 1" class="w-full h-full object-cover" />
 
-        <section class="social-media-card flex items-center gap-2">
-          <div>
-            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-          </div>
-          <div>
-            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-          </div>
-        </section>
+        <.socials />
 
         <img src={~p"/images/grid/vector1.svg"} alt="Vector 1" class="vector1" />
 
@@ -36,14 +29,7 @@ defmodule SkepticBotWeb.Home.Component do
       <section class="relative rounded-xl overflow-hidden">
         <img src={~p"/images/cards/cover2.svg"} alt="Cover 2" class="w-full h-full object-cover" />
 
-        <section class="social-media-card flex items-center gap-2">
-          <div>
-            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-          </div>
-          <div>
-            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-          </div>
-        </section>
+        <.socials />
 
         <img src={~p"/images/grid/star2.svg"} alt="Star 2" class="vector4" />
         <img src={~p"/images/grid/vector5.svg"} alt="Vector 5" class="vector5" />
@@ -58,14 +44,7 @@ defmodule SkepticBotWeb.Home.Component do
       <section class="relative rounded-xl overflow-hidden">
         <img src={~p"/images/cards/cover3.svg"} alt="Cover 3" class="w-full h-full object-cover" />
 
-        <section class="social-media-card flex items-center gap-2">
-          <div>
-            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-          </div>
-          <div>
-            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-          </div>
-        </section>
+        <.socials />
 
         <img src={~p"/images/grid/vector7.svg"} alt="Vector 7" class="vector7" />
         <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
@@ -76,14 +55,7 @@ defmodule SkepticBotWeb.Home.Component do
       <section class="relative rounded-xl overflow-hidden">
         <img src={~p"/images/cards/cover4.svg"} alt="Cover 4" class="w-full h-full object-cover" />
 
-        <section class="social-media-card flex items-center gap-2">
-          <div>
-            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-          </div>
-          <div>
-            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-          </div>
-        </section>
+        <.socials />
 
         <img src={~p"/images/grid/vector8.svg"} alt="Vector 8" class="vector8" />
 
@@ -105,15 +77,7 @@ defmodule SkepticBotWeb.Home.Component do
 
       <section class="relative rounded-l-xl overflow-hidden">
         <img src={~p"/images/cards/cover5.svg"} alt="Cover 5" class="w-full h-full object-cover" />
-
-        <section class="social-media-card flex items-center gap-2">
-          <div>
-            <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-          </div>
-          <div>
-            <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-          </div>
-        </section>
+        <.socials />
 
         <img src={~p"/images/grid/vector18.svg"} alt="Vector 18" class="vector18" />
         <img src={~p"/images/grid/vector19.svg"} alt="Vector 19" class="vector19" />
@@ -125,6 +89,19 @@ defmodule SkepticBotWeb.Home.Component do
         <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">Social Class</div>
       </section>
     </div>
+    """
+  end
+
+  def socials(assigns) do
+    ~H"""
+    <section class="social-media-card flex items-center gap-2">
+      <div>
+        <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
+      </div>
+      <div>
+        <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
+      </div>
+    </section>
     """
   end
 
