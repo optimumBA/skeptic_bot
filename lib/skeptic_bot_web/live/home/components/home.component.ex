@@ -31,10 +31,7 @@ defmodule SkepticBotWeb.Home.Component do
 
         <.socials />
 
-        <img src={~p"/images/grid/star2.svg"} alt="Star 2" class="vector4" />
-        <img src={~p"/images/grid/vector5.svg"} alt="Vector 5" class="vector5" />
-
-        <img src={~p"/images/grid/vector4.svg"} alt="Vector 4" class="vector6" />
+        <.absolute_vectors_2 />
 
         <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
           Self-confidence
@@ -46,7 +43,8 @@ defmodule SkepticBotWeb.Home.Component do
 
         <.socials />
 
-        <img src={~p"/images/grid/vector7.svg"} alt="Vector 7" class="vector7" />
+        <.absolute_vectors_3 />
+
         <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
           Perplexed mind
         </div>
@@ -56,19 +54,7 @@ defmodule SkepticBotWeb.Home.Component do
         <img src={~p"/images/cards/cover4.svg"} alt="Cover 4" class="w-full h-full object-cover" />
 
         <.socials />
-
-        <img src={~p"/images/grid/vector8.svg"} alt="Vector 8" class="vector8" />
-
-        <img src={~p"/images/grid/vector9.svg"} alt="Vector 9" class="vector9" />
-
-        <img src={~p"/images/grid/vector10.svg"} alt="Vector 10" class="vector10" />
-        <img src={~p"/images/grid/vector11.svg"} alt="Vector 11" class="vector11" />
-        <img src={~p"/images/grid/vector12.svg"} alt="Vector 12" class="vector12" />
-        <img src={~p"/images/grid/vector13.svg"} alt="Vector 13" class="vector13" />
-        <img src={~p"/images/grid/vector14.svg"} alt="Vector 14" class="vector14" />
-        <img src={~p"/images/grid/vector15.svg"} alt="Vector 15" class="vector15" />
-        <img src={~p"/images/grid/vector16.svg"} alt="Vector 16" class="vector16" />
-        <img src={~p"/images/grid/vector17.svg"} alt="Vector 17" class="vector17" />
+        <.absolute_vectors_4 />
 
         <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
           Women's Rights
@@ -79,12 +65,7 @@ defmodule SkepticBotWeb.Home.Component do
         <img src={~p"/images/cards/cover5.svg"} alt="Cover 5" class="w-full h-full object-cover" />
         <.socials />
 
-        <img src={~p"/images/grid/vector18.svg"} alt="Vector 18" class="vector18" />
-        <img src={~p"/images/grid/vector19.svg"} alt="Vector 19" class="vector19" />
-        <img src={~p"/images/grid/vector20.svg"} alt="Vector 20" class="vector20" />
-        <img src={~p"/images/grid/vector21.svg"} alt="Vector 21" class="vector21" />
-        <img src={~p"/images/grid/vector22.svg"} alt="Vector 22" class="vector22" />
-        <img src={~p"/images/grid/vector23.svg"} alt="Vector 23" class="vector23" />
+        <.absolute_vectors_5 />
 
         <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">Social Class</div>
       </section>
@@ -102,6 +83,49 @@ defmodule SkepticBotWeb.Home.Component do
         <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
       </div>
     </section>
+    """
+  end
+
+  def absolute_vectors_2(assigns) do
+    ~H"""
+    <img src={~p"/images/grid/star2.svg"} alt="Star 2" class="vector4" />
+    <img src={~p"/images/grid/vector5.svg"} alt="Vector 5" class="vector5" />
+
+    <img src={~p"/images/grid/vector4.svg"} alt="Vector 4" class="vector6" />
+    """
+  end
+
+  def absolute_vectors_3(assigns) do
+    ~H"""
+    <img src={~p"/images/grid/vector7.svg"} alt="Vector 7" class="vector7" />
+    """
+  end
+
+  def absolute_vectors_4(assigns) do
+    ~H"""
+    <img src={~p"/images/grid/vector8.svg"} alt="Vector 8" class="vector8" />
+
+    <img src={~p"/images/grid/vector9.svg"} alt="Vector 9" class="vector9" />
+
+    <img src={~p"/images/grid/vector10.svg"} alt="Vector 10" class="vector10" />
+    <img src={~p"/images/grid/vector11.svg"} alt="Vector 11" class="vector11" />
+    <img src={~p"/images/grid/vector12.svg"} alt="Vector 12" class="vector12" />
+    <img src={~p"/images/grid/vector13.svg"} alt="Vector 13" class="vector13" />
+    <img src={~p"/images/grid/vector14.svg"} alt="Vector 14" class="vector14" />
+    <img src={~p"/images/grid/vector15.svg"} alt="Vector 15" class="vector15" />
+    <img src={~p"/images/grid/vector16.svg"} alt="Vector 16" class="vector16" />
+    <img src={~p"/images/grid/vector17.svg"} alt="Vector 17" class="vector17" />
+    """
+  end
+
+  def absolute_vectors_5(assigns) do
+    ~H"""
+    <img src={~p"/images/grid/vector18.svg"} alt="Vector 18" class="vector18" />
+    <img src={~p"/images/grid/vector19.svg"} alt="Vector 19" class="vector19" />
+    <img src={~p"/images/grid/vector20.svg"} alt="Vector 20" class="vector20" />
+    <img src={~p"/images/grid/vector21.svg"} alt="Vector 21" class="vector21" />
+    <img src={~p"/images/grid/vector22.svg"} alt="Vector 22" class="vector22" />
+    <img src={~p"/images/grid/vector23.svg"} alt="Vector 23" class="vector23" />
     """
   end
 

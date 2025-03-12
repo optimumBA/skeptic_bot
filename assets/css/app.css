@@ -150,3 +150,10 @@
 .rounded-custom {
   border-radius: 48px;
 }
+
+.podcasts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 316px);
+  grid-template-rows: 315px;
+  gap: 1rem;
+}
