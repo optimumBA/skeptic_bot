@@ -45,6 +45,7 @@ defmodule SkepticBotWeb.HomeLive.Show do
                 image_file={item.thumbnail}
                 podcast_title={item.podcast_title}
                 video_length={item.video_length}
+                random={:rand.uniform(5)}
               />
             <% end %>
           </div>

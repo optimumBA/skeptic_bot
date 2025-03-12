@@ -11,6 +11,7 @@ defmodule SkepticBotWeb.PodcastComponent do
   attr :image_file, :string, required: true
   attr :podcast_title, :string, required: true
   attr :video_length, :string, required: true
+  attr :random, :integer, required: true
 
   def podcast_video_card(assigns) do
     ~H"""
@@ -19,7 +20,7 @@ defmodule SkepticBotWeb.PodcastComponent do
 
       <Component.socials />
 
-      <Component.absolute_vectors_2 />
+      <%= get_the_vector_randomly(@random) %>
 
       <div class="podcast-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
         <%= @podcast_title %>
@@ -37,5 +38,17 @@ defmodule SkepticBotWeb.PodcastComponent do
 
   defp get_podcast_thumbnail(filename) do
     ~p"/images/podcasts/#{filename}"
+  end
+
+  defp get_the_vector_randomly(random) do
+    assigns = %{}
+
+    cond do
+      random == 1 -> Component.absolute_vectors_2(assigns)
+      random == 2 -> Component.absolute_vectors_2(assigns)
+      random == 3 -> Component.absolute_vectors_3(assigns)
+      random == 4 -> Component.absolute_vectors_4(assigns)
+      random == 5 -> Component.absolute_vectors_5(assigns)
+    end
   end
 end
