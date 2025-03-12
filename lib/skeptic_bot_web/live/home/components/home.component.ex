@@ -23,7 +23,8 @@ defmodule SkepticBotWeb.Home.Component do
         <img src={~p"/images/grid/vector2.svg"} alt="Vector 2" class="vector2" />
 
         <img src={~p"/images/grid/vector3.svg"} alt="Vector 3" class="vector3" />
-        <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">Autopilot</div>
+
+        <.podcast_title title="Autopilot" />
       </section>
 
       <section class="relative rounded-xl overflow-hidden">
@@ -33,9 +34,7 @@ defmodule SkepticBotWeb.Home.Component do
 
         <.absolute_vectors_2 />
 
-        <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
-          Self-confidence
-        </div>
+        <.podcast_title title="Self-confidence" />
       </section>
 
       <section class="relative rounded-xl overflow-hidden">
@@ -45,9 +44,7 @@ defmodule SkepticBotWeb.Home.Component do
 
         <.absolute_vectors_3 />
 
-        <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
-          Perplexed mind
-        </div>
+        <.podcast_title title="Perplexed mind" />
       </section>
 
       <section class="relative rounded-xl overflow-hidden">
@@ -56,9 +53,7 @@ defmodule SkepticBotWeb.Home.Component do
         <.socials />
         <.absolute_vectors_4 />
 
-        <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
-          Women's Rights
-        </div>
+        <.podcast_title title="Women's Rights" />
       </section>
 
       <section class="relative rounded-l-xl overflow-hidden">
@@ -67,7 +62,7 @@ defmodule SkepticBotWeb.Home.Component do
 
         <.absolute_vectors_5 />
 
-        <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">Social Class</div>
+        <.podcast_title title="Social Class" />
       </section>
     </div>
     """
@@ -126,6 +121,16 @@ defmodule SkepticBotWeb.Home.Component do
     <img src={~p"/images/grid/vector21.svg"} alt="Vector 21" class="vector21" />
     <img src={~p"/images/grid/vector22.svg"} alt="Vector 22" class="vector22" />
     <img src={~p"/images/grid/vector23.svg"} alt="Vector 23" class="vector23" />
+    """
+  end
+
+  attr :title, :string, required: true
+
+  def podcast_title(assigns) do
+    ~H"""
+    <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+      <%= @title %>
+    </div>
     """
   end
 
