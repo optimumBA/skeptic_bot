@@ -38,7 +38,7 @@ defmodule SkepticBotWeb.HomeLive.Show do
         <section class="overflow-hidden relative mb-12 w-[95%]">
           <div
             class="flex gap-4 transition-transform duration-300"
-            style={"transform: translateX(-#{@index * 315}px);"}
+            style={"transform: translateX(-#{@index * 20.6875}rem);"}
           >
             <%= for item <- @items do %>
               <PodcastComponent.podcast_video_card image_file={item.thumbnail} />
@@ -102,34 +102,34 @@ defmodule SkepticBotWeb.HomeLive.Show do
   def get_items() do
     [
       %{
-        thumbnail: "cover2.svg"
+        thumbnail: "cover1.svg"
       },
       %{
         thumbnail: "cover2.svg"
       },
       %{
-        thumbnail: "cover2.svg"
+        thumbnail: "cover3.svg"
+      },
+      %{
+        thumbnail: "cover4.svg"
+      },
+      %{
+        thumbnail: "cover5.svg"
+      },
+      %{
+        thumbnail: "cover1.svg"
       },
       %{
         thumbnail: "cover2.svg"
       },
       %{
-        thumbnail: "cover2.svg"
+        thumbnail: "cover3.svg"
       },
       %{
-        thumbnail: "cover2.svg"
+        thumbnail: "cover4.svg"
       },
       %{
-        thumbnail: "cover2.svg"
-      },
-      %{
-        thumbnail: "cover2.svg"
-      },
-      %{
-        thumbnail: "cover2.svg"
-      },
-      %{
-        thumbnail: "cover2.svg"
+        thumbnail: "cover5.svg"
       }
     ]
   end

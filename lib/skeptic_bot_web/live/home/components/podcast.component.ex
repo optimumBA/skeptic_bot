@@ -12,7 +12,7 @@ defmodule SkepticBotWeb.PodcastComponent do
 
   def podcast_video_card(assigns) do
     ~H"""
-    <section class="shrink-0 relative rounded-xl overflow-hidden">
+    <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative rounded-xl overflow-hidden">
       <img src={get_podcast_thumbnail(@image_file)} alt="Cover 2" class="w-full h-full object-cover" />
 
       <Component.socials />
