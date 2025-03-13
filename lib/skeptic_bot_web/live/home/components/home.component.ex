@@ -71,12 +71,21 @@ defmodule SkepticBotWeb.Home.Component do
   def socials(assigns) do
     ~H"""
     <section class="social-media-card flex items-center gap-2">
-      <div>
+      <.link
+        href="https://vid.samtripoli.com/w/xoV9AbNuEQe9j9VAieVUxV"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <img src={~p"/images/media/spotify.svg"} alt="Spotify Logo" />
-      </div>
-      <div>
+      </.link>
+
+      <.link
+        href="https://vid.samtripoli.com/w/xoV9AbNuEQe9j9VAieVUxV"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         <img src={~p"/images/media/youtube.svg"} alt="YouTube Logo" />
-      </div>
+      </.link>
     </section>
     """
   end

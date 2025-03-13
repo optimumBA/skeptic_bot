@@ -36,7 +36,7 @@ defmodule SkepticBotWeb.HomeLive.Show do
 
       <section class="relative pb-16">
         <div class="flex justify-end">
-          <section class="overflow-hidden pt-12 relative mb-12 w-[95%] border border-blue-400">
+          <section class="overflow-hidden pt-12 relative mb-12 w-[95%]">
             <div
               class="flex gap-4 transition-transform duration-300 ease-in-out"
               style={"transform: translateX(-#{@index * 20.6875}rem);"}

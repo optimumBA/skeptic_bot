@@ -88,9 +88,9 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
       true ->
         _query = String.trim(query)
 
-        # result = SkepticBot.Rag.generate(query)
+        result = SkepticBot.Rag.generate(query)
 
-        # dbg(result)
+        dbg(result)
 
         {:noreply,
          socket
