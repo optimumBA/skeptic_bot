@@ -11,6 +11,9 @@
 .image-title,
 .podcast-title,
 .podcast-length,
+.podcast_vector1,
+.podcast_vector2,
+.podcast_vector3,
 .vector1,
 .vector2,
 .vector3,
@@ -72,6 +75,22 @@
 }
 
 /* Vectors in the grid pictures component */
+
+.podcast_vector1 {
+  bottom: 4rem;
+  left: 3rem;
+  /* z-index: 200; */
+}
+
+.podcast_vector2 {
+  top: -3rem;
+  left: -0.8rem;
+}
+
+.podcast_vector3 {
+  top: 2.2rem;
+  left: 9.7rem;
+}
 
 .vector1 {
   bottom: 4rem;

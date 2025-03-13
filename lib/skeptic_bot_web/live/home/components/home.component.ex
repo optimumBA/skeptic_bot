@@ -81,6 +81,25 @@ defmodule SkepticBotWeb.Home.Component do
     """
   end
 
+  def absolute_vectors_1(assigns) do
+    ~H"""
+    <img
+      src={~p"/images/podcasts/podcast_vector1.svg"}
+      alt="Podcast Vector 1"
+      class="podcast_vector1"
+    />
+
+    <img
+      src={~p"/images/podcasts/podcast_vector2.svg"}
+      alt="Podcast Vector 2"
+      class="podcast_vector2"
+    />
+
+    <img src={~p"/images/grid/vector3.svg"} alt="Vector 3" class="podcast_vector3" />
+    <img src={~p"/images/grid/vector2.svg"} alt="Vector 2" class="vector2" />
+    """
+  end
+
   def absolute_vectors_2(assigns) do
     ~H"""
     <img src={~p"/images/grid/star2.svg"} alt="Star 2" class="vector4" />

@@ -13,10 +13,26 @@ defmodule SkepticBotWeb.PodcastComponent do
   attr :video_length, :string, required: true
   attr :random, :integer, required: true
 
+  #   <section class="relative">
+  #   <div class="rounded-xl w-full h-full overflow-hidden">
+  #     <img src={~p"/images/podcasts/cover1.svg"} alt="Cover 1" class="w-full h-full object-cover" />
+  #   </div>
+
+  #   <.socials />
+
+  #   <.podcast_title title="Autopilot" />
+  # </section>
+
   def podcast_video_card(assigns) do
     ~H"""
-    <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative rounded-xl overflow-hidden">
-      <img src={get_podcast_thumbnail(@image_file)} alt="Cover 2" class="w-full h-full object-cover" />
+    <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative">
+      <div class="rounded-xl w-full h-full overflow-hidden">
+        <img
+          src={get_podcast_thumbnail(@image_file)}
+          alt="Cover 2"
+          class="w-full h-full object-cover"
+        />
+      </div>
 
       <Component.socials />
 
@@ -44,7 +60,7 @@ defmodule SkepticBotWeb.PodcastComponent do
     assigns = %{}
 
     cond do
-      random == 1 -> Component.absolute_vectors_2(assigns)
+      random == 1 -> Component.absolute_vectors_1(assigns)
       random == 2 -> Component.absolute_vectors_2(assigns)
       random == 3 -> Component.absolute_vectors_3(assigns)
       random == 4 -> Component.absolute_vectors_4(assigns)

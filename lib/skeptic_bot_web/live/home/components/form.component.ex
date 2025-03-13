@@ -76,7 +76,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
   @impl true
   def handle_event(
         "save",
-        %{"prompt" => _prompt_params},
+        %{"prompt" => %{"query" => query}},
         %{assigns: %{form: form}} = socket
       ) do
     cond do
@@ -86,7 +86,11 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
          |> assign(:form, form)}
 
       true ->
-        # dbg(prompt_params)
+        _query = String.trim(query)
+
+        # result = SkepticBot.Rag.generate(query)
+
+        # dbg(result)
 
         {:noreply,
          socket
