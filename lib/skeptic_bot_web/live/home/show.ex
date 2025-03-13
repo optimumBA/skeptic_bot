@@ -34,46 +34,52 @@ defmodule SkepticBotWeb.HomeLive.Show do
         Top Podcast
       </section>
 
-      <div class="flex justify-end">
-        <section class="overflow-hidden pt-12 px-6 relative mb-12 w-[95%]">
-          <div
-            class="flex gap-4 transition-transform duration-300 ease-in-out"
-            style={"transform: translateX(-#{@index * 20.6875}rem);"}
+      <section class="relative pb-16">
+        <div class="flex justify-end">
+          <section class="overflow-hidden pt-12 relative mb-12 w-[95%] border border-blue-400">
+            <div
+              class="flex gap-4 transition-transform duration-300 ease-in-out"
+              style={"transform: translateX(-#{@index * 20.6875}rem);"}
+            >
+              <%= for item <- @items do %>
+                <PodcastComponent.podcast_video_card
+                  image_file={item.thumbnail}
+                  podcast_title={item.podcast_title}
+                  video_length={item.video_length}
+                  random={:rand.uniform(5)}
+                />
+              <% end %>
+            </div>
+          </section>
+        </div>
+
+        <div class="flex gap-5 max-w-[90%] mx-auto mt-16">
+          <button phx-click="prev" class="disabled:opacity-50" disabled={prev_btn_disabler(@index)}>
+            <div>
+              <img src={~p"/images/podcasts/back_arrow.svg"} alt="Back Arrow" />
+            </div>
+          </button>
+
+          <button
+            phx-click="next"
+            class="disabled:opacity-50"
+            disabled={
+              forward_btn_disabler(
+                @index,
+                @items
+              )
+            }
           >
-            <%= for item <- @items do %>
-              <PodcastComponent.podcast_video_card
-                image_file={item.thumbnail}
-                podcast_title={item.podcast_title}
-                video_length={item.video_length}
-                random={:rand.uniform(5)}
-              />
-            <% end %>
-          </div>
-        </section>
-      </div>
+            <div>
+              <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
+            </div>
+          </button>
+        </div>
 
-      <div class="flex gap-5 max-w-[90%] mx-auto">
-        <button phx-click="prev" class="disabled:opacity-50" disabled={prev_btn_disabler(@index)}>
-          <div>
-            <img src={~p"/images/podcasts/back_arrow.svg"} alt="Back Arrow" />
-          </div>
-        </button>
-
-        <button
-          phx-click="next"
-          class="disabled:opacity-50"
-          disabled={
-            forward_btn_disabler(
-              @index,
-              @items
-            )
-          }
-        >
-          <div>
-            <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
-          </div>
-        </button>
-      </div>
+        <div class="podcast-scribble">
+          <img src={~p"/images/podcasts/podcast_scribble.svg"} alt="Podcast Scribble" />
+        </div>
+      </section>
     </div>
     """
   end

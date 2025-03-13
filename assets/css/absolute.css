@@ -38,6 +38,7 @@
 .vector22,
 .vector23,
 .scribble,
+.podcast-scribble,
 .scribble2,
 .bottom-vector {
   position: absolute;
@@ -210,6 +211,11 @@
 .scribble {
   bottom: -11.9rem;
   left: -11rem;
+}
+
+.podcast-scribble {
+  bottom: -5rem;
+  right: 8rem;
 }
 
 .scribble2 {
