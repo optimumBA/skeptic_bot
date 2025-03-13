@@ -30,12 +30,12 @@ defmodule SkepticBotWeb.HomeLive.Show do
         The assassination of John F. Kennedy has given rise to numerous conspiracy theories, several of which are prominently discussed
       </section>
 
-      <section class="max-w-[90%] mx-auto  montserrat-alternates-bold text-[#000000] text-2xl mb-10">
+      <section class="max-w-[90%] mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
         Top Podcast
       </section>
 
       <div class="flex justify-end">
-        <section class="overflow-hidden relative mb-12 w-[95%]">
+        <section class="overflow-hidden pt-12 px-6 relative mb-12 w-[95%]">
           <div
             class="flex gap-4 transition-transform duration-300 ease-in-out"
             style={"transform: translateX(-#{@index * 20.6875}rem);"}

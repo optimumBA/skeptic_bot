@@ -13,16 +13,6 @@ defmodule SkepticBotWeb.PodcastComponent do
   attr :video_length, :string, required: true
   attr :random, :integer, required: true
 
-  #   <section class="relative">
-  #   <div class="rounded-xl w-full h-full overflow-hidden">
-  #     <img src={~p"/images/podcasts/cover1.svg"} alt="Cover 1" class="w-full h-full object-cover" />
-  #   </div>
-
-  #   <.socials />
-
-  #   <.podcast_title title="Autopilot" />
-  # </section>
-
   def podcast_video_card(assigns) do
     ~H"""
     <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative">
