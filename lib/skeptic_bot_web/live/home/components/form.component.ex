@@ -86,15 +86,20 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
          |> assign(:form, form)}
 
       true ->
-        _query = String.trim(query)
+        query = String.trim(query)
 
-        result = SkepticBot.Rag.generate(query)
+        # American Ponzi With Lee Camp
 
-        dbg(result)
+        {description, list_of_episodes} = SkepticBot.Rag.generate(query)
 
-        {:noreply,
-         socket
-         |> assign_form()}
+        send(self(), {:podcast_results, {description, list_of_episodes}})
+
+        {
+          :noreply,
+          socket
+          |> push_patch(to: ~p"/home/chat")
+          #  |> assign_form()
+        }
     end
   end
 end
