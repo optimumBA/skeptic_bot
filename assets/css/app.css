@@ -141,6 +141,12 @@
   gap: 0.8rem;
 }
 
+.podcast-questions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.125rem;
+}
+
 .clips-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
