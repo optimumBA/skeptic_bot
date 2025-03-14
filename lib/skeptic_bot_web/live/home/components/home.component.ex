@@ -109,6 +109,19 @@ defmodule SkepticBotWeb.Home.Component do
     """
   end
 
+  def absolute_grid_vectors_1(assigns) do
+    ~H"""
+    <img
+      src={~p"/images/podcasts/podcast_vector1.svg"}
+      alt="Podcast Vector 1"
+      class="podcast_vector1"
+    />
+
+    <img src={~p"/images/grid/vector3.svg"} alt="Vector 3" class="podcast_vector3" />
+    <img src={~p"/images/grid/vector2.svg"} alt="Vector 2" class="vector2" />
+    """
+  end
+
   def absolute_vectors_2(assigns) do
     ~H"""
     <img src={~p"/images/grid/star2.svg"} alt="Star 2" class="vector4" />
@@ -173,7 +186,7 @@ defmodule SkepticBotWeb.Home.Component do
 
   def card(assigns) do
     ~H"""
-    <div class="border-2 border-[#000000] my-6 rounded-2xl card-shadow">
+    <div class="border-2 border-[#000000] bg-[#FFFFFF] my-6 rounded-2xl card-shadow">
       <div class="px-3 py-8 text-[#4D4D4D]">
         <section class="flex justify-between items-center">
           <div class={["text-2xl montserrat-alternates-bold", @title_color]}><%= @title %></div>
@@ -230,6 +243,27 @@ defmodule SkepticBotWeb.Home.Component do
           </div>
         </section>
       </div>
+    </div>
+    """
+  end
+
+  def twitter_component(assigns) do
+    ~H"""
+    <div class="pt-14 pb-4">
+      <div class="divider bg-[#7F7F7F] w-[92%] mx-auto">
+        &zwj;
+      </div>
+
+      <.link href="https://x.com/optimumBA">
+        <div class="w-[10%] mx-auto border border-[#532822] rounded-custom my-12">
+          <section class="py-3 w-[98%] mx-auto flex gap-2 justify-center items-center">
+            <div>
+              <img src={~p"/images/home/twitter.svg"} alt="Twitter Icon" />
+            </div>
+            <div class="text-[#532822] text-lg red-hat-display-bold">Twitter</div>
+          </section>
+        </div>
+      </.link>
     </div>
     """
   end

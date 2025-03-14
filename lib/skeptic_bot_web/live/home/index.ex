@@ -156,22 +156,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           </section>
         </div>
 
-        <div class="pt-14 pb-4">
-          <div class="divider bg-[#7F7F7F] w-[92%] mx-auto">
-            &zwj;
-          </div>
-
-          <.link href="https://x.com/optimumBA">
-            <div class="w-[10%] mx-auto border border-[#532822] rounded-custom my-12">
-              <section class="py-3 w-[98%] mx-auto flex gap-2 justify-center items-center">
-                <div>
-                  <img src={~p"/images/home/twitter.svg"} alt="Twitter Icon" />
-                </div>
-                <div class="text-[#532822] text-lg red-hat-display-bold">Twitter</div>
-              </section>
-            </div>
-          </.link>
-        </div>
+        <Component.twitter_component />
       <% else %>
         <.live_component
           module={SkepticBotWeb.HomeLive.EpisodesComponent}

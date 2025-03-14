@@ -130,46 +130,70 @@ defmodule SkepticBotWeb.HomeLive.Show do
         </div>
       </section>
 
-      <section class="mx-auto mb-32 max-w-[72rem]">
-        <div class="podcast-questions-grid">
-          <Component.card
-            title="Covid-19 Actual Conspiracy"
-            body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
-            people_count="134"
-            title_color="text-[#CD4631]"
-          />
-          <Component.card
-            title="Tesla Autopilot Controversy"
-            body="Tesla's vehicles boast 'Full-Self-Driving' (FSD), but current regulations do not allow for fully"
-            people_count="134"
-            title_color="text-[#000000]"
-          />
-          <Component.card
-            title="Women's Rights? Is it alright?"
-            body="A look back at history shows that women have made great strides in the fight for equality"
-            people_count="134"
-            title_color="text-[#000000]"
-          />
-          <Component.card
-            title="Who Really Killed JKF?"
-            body="We have a therapist expert as our guest, Krista Gordon is will share her experience"
-            people_count="134"
-            title_color="text-[#CD4631]"
-          />
-          <Component.card
-            title="Epstein Controversy"
-            body="Social class refers to a group of people with similar levels of wealth, influence, and"
-            people_count="134"
-            title_color="text-[#CD4631]"
-          />
-          <Component.card
-            title="Are you a Perplexed mind Person?"
-            body="Unable to grasp something clearly or to think logically and decisively about something"
-            people_count="134"
-            title_color="text-[#000000]"
-          />
+      <section class="bg-[#FFF5F5] pt-28 pb-16">
+        <section class="max-w-[76%] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
+          Related Questions
+        </section>
+        <section class="mx-auto max-w-[72rem]">
+          <div class="podcast-questions-grid">
+            <Component.card
+              title="Covid-19 Actual Conspiracy"
+              body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
+              people_count="134"
+              title_color="text-[#CD4631]"
+            />
+            <Component.card
+              title="Tesla Autopilot Controversy"
+              body="Tesla's vehicles boast 'Full-Self-Driving' (FSD), but current regulations do not allow for fully"
+              people_count="134"
+              title_color="text-[#000000]"
+            />
+            <Component.card
+              title="Women's Rights? Is it alright?"
+              body="A look back at history shows that women have made great strides in the fight for equality"
+              people_count="134"
+              title_color="text-[#000000]"
+            />
+            <Component.card
+              title="Who Really Killed JKF?"
+              body="We have a therapist expert as our guest, Krista Gordon is will share her experience"
+              people_count="134"
+              title_color="text-[#CD4631]"
+            />
+            <Component.card
+              title="Epstein Controversy"
+              body="Social class refers to a group of people with similar levels of wealth, influence, and"
+              people_count="134"
+              title_color="text-[#CD4631]"
+            />
+            <Component.card
+              title="Are you a Perplexed mind Person?"
+              body="Unable to grasp something clearly or to think logically and decisively about something"
+              people_count="134"
+              title_color="text-[#000000]"
+            />
+          </div>
+        </section>
+      </section>
+
+      <section class="bg-[#ECF5FF] pt-28 pb-28">
+        <section class="max-w-[76%] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
+          Top Podcast
+        </section>
+
+        <div class="podcast-episodes-grid max-w-[72rem] mx-auto">
+          <%= for item <- @items do %>
+            <PodcastComponent.podcast_video_grid_card
+              image_file={item.thumbnail}
+              podcast_title={item.podcast_title}
+              video_length={item.video_length}
+              random={:rand.uniform(3)}
+            />
+          <% end %>
         </div>
       </section>
+
+      <Component.twitter_component />
     </div>
     """
   end

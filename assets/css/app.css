@@ -147,6 +147,12 @@
   gap: 1.125rem;
 }
 
+.podcast-episodes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.3125rem;
+}
+
 .clips-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
