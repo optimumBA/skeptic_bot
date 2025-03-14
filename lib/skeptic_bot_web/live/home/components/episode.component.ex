@@ -1,7 +1,10 @@
 defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
   use SkepticBotWeb, :live_component
 
+  alias SkepticBot.Podcasts
   alias SkepticBotWeb.PodcastComponent
+
+  alias SkepticBotWeb.Home.Component
 
   @impl true
   def render(assigns) do
@@ -26,35 +29,34 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         The assassination of John F. Kennedy has given rise to numerous conspiracy theories, several of which are prominently discussed
       </section>
 
-      <section class="max-w-[90%] mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
-        Top Podcast
+      <section class="max-w-[74%]  mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
+        Related Podcasts
       </section>
 
       <section class="relative pb-16">
         <div class="flex justify-end">
-          <section class="overflow-hidden pt-12 relative mb-12 w-[95%]">
+          <section class="overflow-hidden pt-12 relative mb-12 w-[82rem]">
             <div
               class="flex gap-4 transition-transform duration-300 ease-in-out"
-              style={"transform: translateX(-#{@index * 20.6875}rem);"}
+              style={"transform: translateX(-#{@related_episodes_index * 20.6875}rem);"}
             >
-              <%= for item <- @items do %>
+              <%= for episode <- @related_episodes do %>
                 <PodcastComponent.podcast_video_card
-                  image_file={item.thumbnail}
-                  podcast_title={item.title}
-                  video_length={item.video_length}
+                  image_file={episode.thumbnail}
+                  podcast_title={first_two_words(episode.title)}
+                  video_length={episode.video_length}
                   random={:rand.uniform(5)}
                 />
               <% end %>
             </div>
           </section>
         </div>
-
-        <div class="flex gap-5 max-w-[90%] mx-auto mt-16">
+        <div class="flex gap-5 max-w-[74%] mx-auto mt-16">
           <button
-            phx-click="prev"
+            phx-click="prev_related_episodes"
             phx-target={@myself}
             class="disabled:opacity-50"
-            disabled={prev_btn_disabler(@index)}
+            disabled={prev_btn_disabler(@related_episodes_index)}
           >
             <div>
               <img src={~p"/images/podcasts/back_arrow.svg"} alt="Back Arrow" />
@@ -62,13 +64,13 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
           </button>
 
           <button
-            phx-click="next"
+            phx-click="next_related_episodes"
             phx-target={@myself}
             class="disabled:opacity-50"
             disabled={
               forward_btn_disabler(
-                @index,
-                @items
+                @related_episodes_index,
+                @related_episodes
               )
             }
           >
@@ -82,6 +84,124 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
           <img src={~p"/images/podcasts/podcast_scribble.svg"} alt="Podcast Scribble" />
         </div>
       </section>
+
+      <section class="max-w-[74%] mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
+        Other Podcasts
+      </section>
+
+      <section class="relative pb-16">
+        <div class="flex justify-end">
+          <section class="overflow-hidden pt-12 relative mb-12 w-[82rem]">
+            <div
+              class="flex gap-4 transition-transform duration-300 ease-in-out"
+              style={"transform: translateX(-#{ @other_episodes_index * 20.6875}rem);"}
+            >
+              <%= for episode <- @other_episodes do %>
+                <PodcastComponent.podcast_video_card
+                  image_file={episode.thumbnail}
+                  podcast_title={first_two_words(episode.title)}
+                  video_length={episode.video_length}
+                  random={:rand.uniform(5)}
+                />
+              <% end %>
+            </div>
+          </section>
+        </div>
+
+        <div class="flex gap-5 max-w-[74%] mx-auto mt-16">
+          <button
+            phx-click="prev_other_episodes"
+            phx-target={@myself}
+            class="disabled:opacity-50"
+            disabled={prev_btn_disabler(@other_episodes_index)}
+          >
+            <div>
+              <img src={~p"/images/podcasts/back_arrow.svg"} alt="Back Arrow" />
+            </div>
+          </button>
+
+          <button
+            phx-click="next_other_episodes"
+            phx-target={@myself}
+            class="disabled:opacity-50"
+            disabled={
+              forward_btn_disabler(
+                @other_episodes_index,
+                @other_episodes
+              )
+            }
+          >
+            <div>
+              <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <section class="bg-[#FFF5F5] pt-28 pb-16">
+        <section class="max-w-[76%] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
+          Related Questions
+        </section>
+        <section class="mx-auto max-w-[72rem]">
+          <div class="podcast-questions-grid">
+            <Component.card
+              title="Covid-19 Actual Conspiracy"
+              body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
+              people_count="134"
+              title_color="text-[#CD4631]"
+            />
+            <Component.card
+              title="Tesla Autopilot Controversy"
+              body="Tesla's vehicles boast 'Full-Self-Driving' (FSD), but current regulations do not allow for fully"
+              people_count="134"
+              title_color="text-[#000000]"
+            />
+            <Component.card
+              title="Women's Rights? Is it alright?"
+              body="A look back at history shows that women have made great strides in the fight for equality"
+              people_count="134"
+              title_color="text-[#000000]"
+            />
+            <Component.card
+              title="Who Really Killed JKF?"
+              body="We have a therapist expert as our guest, Krista Gordon is will share her experience"
+              people_count="134"
+              title_color="text-[#CD4631]"
+            />
+            <Component.card
+              title="Epstein Controversy"
+              body="Social class refers to a group of people with similar levels of wealth, influence, and"
+              people_count="134"
+              title_color="text-[#CD4631]"
+            />
+            <Component.card
+              title="Are you a Perplexed mind Person?"
+              body="Unable to grasp something clearly or to think logically and decisively about something"
+              people_count="134"
+              title_color="text-[#000000]"
+            />
+          </div>
+        </section>
+      </section>
+
+      <section class="bg-[#ECF5FF] pt-28 pb-28">
+        <section class="max-w-[76%] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
+          Other Podcasts
+        </section>
+
+        <div class="podcast-episodes-grid max-w-[72rem] mx-auto">
+          <%= for episode <- @other_episodes do %>
+            <PodcastComponent.podcast_video_grid_card
+              image_file={episode.thumbnail}
+              podcast_title={first_two_words(episode.title)}
+              video_length={episode.video_length}
+              random={:rand.uniform(3)}
+            />
+          <% end %>
+        </div>
+      </section>
+
+      <Component.twitter_component />
     </div>
     """
   end
@@ -91,29 +211,64 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
   def update(assigns, socket) do
     %{list_of_episodes: list_of_episodes} = assigns
 
+    related_episodes = format_episodes(list_of_episodes)
+
+    other_episodes =
+      Podcasts.get_first_six_records()
+      |> format_episodes()
+
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(items: get_items(list_of_episodes))
-     |> assign(index: 0)}
+     |> assign(related_episodes: related_episodes)
+     |> assign(other_episodes: other_episodes)
+     |> assign(other_episodes_index: 0)
+     |> assign(related_episodes_index: 0)}
   end
 
   @impl true
-  def handle_event("next", _, socket) do
-    new_index = min(socket.assigns.index + 1, length(socket.assigns.items) - 1)
-    {:noreply, assign(socket, index: new_index)}
+  def handle_event("next_other_episodes", _params, socket) do
+    index = socket.assigns.other_episodes_index
+    episodes = socket.assigns.other_episodes
+    new_index = min(index + 1, length(episodes) - 1)
+    {:noreply, assign(socket, other_episodes_index: new_index)}
   end
 
   @impl true
-  def handle_event("prev", _, socket) do
-    new_index = max(socket.assigns.index - 1, 0)
-    {:noreply, assign(socket, index: new_index)}
+  def handle_event("prev_other_episodes", _params, socket) do
+    index = socket.assigns.other_episodes_index
+    new_index = max(index - 1, 0)
+    {:noreply, assign(socket, other_episodes_index: new_index)}
   end
 
-  def get_items(episodes_list) do
+  @impl true
+  def handle_event("next_related_episodes", _params, socket) do
+    index = socket.assigns.related_episodes_index
+    episodes = socket.assigns.related_episodes
+    new_index = min(index + 1, length(episodes) - 1)
+    {:noreply, assign(socket, related_episodes_index: new_index)}
+  end
+
+  @impl true
+  def handle_event("prev_related_episodes", _params, socket) do
+    index = socket.assigns.related_episodes_index
+    new_index = max(index - 1, 0)
+    {:noreply, assign(socket, related_episodes_index: new_index)}
+  end
+
+  def format_episodes(episodes_list) do
     items =
       Enum.reduce(episodes_list, [], fn episode, output_list ->
-        episode = Map.from_struct(episode)
+        episode =
+          case is_struct(episode) do
+            true ->
+              episode = Map.from_struct(episode)
+
+              episode
+
+            false ->
+              episode
+          end
 
         episode = Map.put(episode, :thumbnail, "cover1.svg")
         episode = Map.put(episode, :video_length, "02:20:45")
@@ -140,47 +295,11 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
       false
     end
   end
-end
 
-# [
-#   %{
-#     thumbnail: "cover1.svg",
-#     podcast_title: "JFK Assassination",
-#     video_length: "02:20:45"
-#   },
-#   %{
-#     thumbnail: "cover2.svg",
-#     podcast_title: "Space X",
-#     video_length: "02:41:45"
-#   },
-#   %{
-#     thumbnail: "cover3.svg",
-#     podcast_title: "Trump's Rule",
-#     video_length: "03:31:45"
-#   },
-#   %{
-#     thumbnail: "cover4.svg",
-#     podcast_title: "Kenya Chaos",
-#     video_length: "04:31:45"
-#   },
-#   %{
-#     thumbnail: "cover5.svg",
-#     podcast_title: "Nigerian Delta",
-#     video_length: "02:31:35"
-#   },
-#   %{
-#     thumbnail: "cover1.svg",
-#     podcast_title: "Women's Rights",
-#     video_length: "02:53:45"
-#   },
-#   %{
-#     thumbnail: "cover2.svg",
-#     podcast_title: "USAID Crisis",
-#     video_length: "10:36:45"
-#   },
-#   %{
-#     thumbnail: "cover3.svg",
-#     podcast_title: "Femicide",
-#     video_length: "02:21:45"
-#   }
-# ]
+  defp first_two_words(string) do
+    string
+    |> String.split(~r/\s+/, trim: true)
+    |> Enum.take(2)
+    |> Enum.join(" ")
+  end
+end

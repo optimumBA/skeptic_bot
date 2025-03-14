@@ -167,4 +167,12 @@ defmodule SkepticBot.Podcasts do
 
     Repo.transaction(transformation, timeout: :infinity)
   end
+
+  def get_first_six_records do
+    Repo.all(
+      from episode in Episode,
+        select: %{id: episode.id, title: episode.title, description: episode.description},
+        limit: 6
+    )
+  end
 end
