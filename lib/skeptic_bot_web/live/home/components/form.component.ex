@@ -14,7 +14,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
     ~H"""
     <div>
       <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
-        <div class="flex justify-between mt-8 items-center rounded-xl hover:cursor-pointer custom-shadow border bg-[#FFFFFF]">
+        <div class="flex justify-between mt-8 items-center rounded-xl hover:cursor-pointer custom-shadow border bg-[#FFFFFF] py-2">
           <div class="w-2/3 grow pl-4">
             <.input
               placeholder="Ask anything"

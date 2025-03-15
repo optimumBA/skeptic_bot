@@ -19,7 +19,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           ) %>
         </div>
 
-        <div class="flex justify-start items-start gap-20 h-screen bg-[#FFF5F5]">
+        <div class="flex justify-start items-start gap-20  bg-[#FFF5F5] pb-20">
           <section>
             <div class="top-swirl"><img src={~p"/images/home/top_swirl.svg"} alt="Swirl" /></div>
             <div class="illustration w-[20%]">
@@ -30,19 +30,19 @@ defmodule SkepticBotWeb.HomeLive.Index do
               <img src={~p"/images/home/stars.png"} alt="Stars Group" />
             </div>
           </section>
-          <section class="flex flex-col justify-start items-start pl-72 gap-8 w-full">
-            <section class="text-8xl pt-40 montserrat-semibold tracking-4">
+          <section class="flex flex-col justify-start items-start gap-8 w-full">
+            <section class="text-8xl mx-auto pt-14 montserrat-semibold tracking-4">
               Your Daily <span class="text-[#CD4631] montserrat-alternates-semibold">Podcast</span>
             </section>
 
-            <section class="w-[70%] flex flex-col items-start gap-8">
-              <section class="w-[42%] ml-[18rem] text-center montserrat-alternates-medium text-[#4D4D4D]">
+            <section class="w-[70%] mx-auto mt-6 flex flex-col items-start gap-8">
+              <section class="w-[35%] ml-[20rem] text-center montserrat-alternates-medium text-[#4D4D4D]">
                 Ask anything and get answers directly from trusted experts
               </section>
-              <section class="ml-28 w-[68%]">
+              <section class="ml-36 pl-10 mt-4 w-[70%]">
                 <.live_component module={SkepticBotWeb.HomeLive.FormComponent} id="prompt form" />
               </section>
-              <section class="ml-44 mt-48 relative w-[68%]">
+              <section class="ml-56 mt-36 relative w-[68%]">
                 <section class="text-6xl montserrat-alternates-bold text-[#000000]">
                   Popular Podcast
                 </section>
