@@ -19,7 +19,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           ) %>
         </div>
 
-        <div class="flex justify-start items-start gap-20  bg-[#FFF5F5] pb-20">
+        <div class="flex justify-start items-start gap-20  bg-[#FFF5F5] pb-20 relative">
           <section>
             <div class="top-swirl"><img src={~p"/images/home/top_swirl.svg"} alt="Swirl" /></div>
             <div class="illustration w-[20%]">

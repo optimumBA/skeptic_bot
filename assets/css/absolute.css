@@ -45,17 +45,17 @@
 }
 
 .top-swirl {
-  top: 1rem;
+  top: -7rem;
   left: 0;
 }
 
 .illustration {
-  bottom: 10.5rem;
+  top: 16rem;
   left: 4rem;
 }
 
 .stars {
-  bottom: 4rem;
+  bottom: 7rem;
   right: 2rem;
 }
 
