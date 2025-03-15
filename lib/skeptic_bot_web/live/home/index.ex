@@ -12,47 +12,45 @@ defmodule SkepticBotWeb.HomeLive.Index do
     ~H"""
     <div>
       <%= if @live_action == :index do %>
-        <div class="bg-[#FFF5F5]">
-          <%= live_render(@socket, SkepticBotWeb.Header,
-            id: "live_header",
-            sticky: true
-          ) %>
-        </div>
-
-        <div class="flex justify-start items-start gap-20  bg-[#FFF5F5] pb-20 relative">
-          <section>
-            <div class="top-swirl"><img src={~p"/images/home/top_swirl.svg"} alt="Swirl" /></div>
-            <div class="illustration w-[20%]">
-              <img src={~p"/images/home/illustration_1.svg"} alt="Illustration 1" />
-            </div>
-
-            <div class="stars w-[11%]">
-              <img src={~p"/images/home/stars.png"} alt="Stars Group" />
-            </div>
-          </section>
-          <section class="flex flex-col justify-start items-start gap-8 w-full">
-            <section class="text-8xl mx-auto pt-14 montserrat-semibold tracking-4">
-              Your Daily <span class="text-[#CD4631] montserrat-alternates-semibold">Podcast</span>
+        <div class="h-screen">
+          <div class="bg-[#FFF5F5]">
+            <%= live_render(@socket, SkepticBotWeb.Header,
+              id: "live_header",
+              sticky: true
+            ) %>
+          </div>
+          <div class="flex justify-start items-start gap-20  bg-[#FFF5F5] pb-16 relative">
+            <section>
+              <div class="top-swirl"><img src={~p"/images/home/top_swirl.svg"} alt="Swirl" /></div>
+              <div class="illustration w-[20%]">
+                <img src={~p"/images/home/illustration_1.svg"} alt="Illustration 1" />
+              </div>
+              <div class="stars w-[11%]">
+                <img src={~p"/images/home/stars.png"} alt="Stars Group" />
+              </div>
             </section>
-
-            <section class="w-[70%] mx-auto mt-6 flex flex-col items-start gap-8">
-              <section class="w-[35%] ml-[20rem] text-center montserrat-alternates-medium text-[#4D4D4D]">
-                Ask anything and get answers directly from trusted experts
+            <section class="flex flex-col justify-start items-start gap-8 w-full">
+              <section class="text-8xl mx-auto pt-14 montserrat-semibold tracking-4">
+                Your Daily <span class="text-[#CD4631] montserrat-alternates-semibold">Podcast</span>
               </section>
-              <section class="ml-36 pl-10 mt-4 w-[70%]">
-                <.live_component module={SkepticBotWeb.HomeLive.FormComponent} id="prompt form" />
-              </section>
-              <section class="ml-56 mt-36 relative w-[68%]">
-                <section class="text-6xl montserrat-alternates-bold text-[#000000]">
-                  Popular Podcast
+              <section class="w-[70%] mx-auto mt-6 flex flex-col items-start gap-8">
+                <section class="w-[35%] ml-[20rem] text-center montserrat-alternates-medium text-[#4D4D4D]">
+                  Ask anything and get answers directly from trusted experts
                 </section>
-
-                <div class="superscript-image">
-                  <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image" />
-                </div>
+                <section class="ml-36 pl-10 mt-4 w-[70%]">
+                  <.live_component module={SkepticBotWeb.HomeLive.FormComponent} id="prompt form" />
+                </section>
+                <section class="ml-56 mt-36 relative w-[68%]">
+                  <section class="text-6xl montserrat-alternates-bold text-[#000000]">
+                    Popular Podcast
+                  </section>
+                  <div class="superscript-image">
+                    <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image" />
+                  </div>
+                </section>
               </section>
             </section>
-          </section>
+          </div>
         </div>
 
         <Component.pictures />
@@ -163,6 +161,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           id="episode_results_component"
           list_of_episodes={@list_of_episodes}
           result_description={@result_description}
+          query={@query}
         />
       <% end %>
     </div>
@@ -174,6 +173,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
     {:ok,
      socket
      |> assign(list_of_episodes: [])
+     |> assign(query: "")
      |> assign(result_description: "")}
   end
 
@@ -183,10 +183,11 @@ defmodule SkepticBotWeb.HomeLive.Index do
   end
 
   @impl true
-  def handle_info({:podcast_results, {description, list_of_episodes}}, socket) do
+  def handle_info({:podcast_results, {description, list_of_episodes, query}}, socket) do
     {:noreply,
      socket
      |> assign(list_of_episodes: list_of_episodes)
+     |> assign(query: query)
      |> assign(result_description: description)}
   end
 end

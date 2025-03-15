@@ -92,7 +92,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
 
         {description, list_of_episodes} = SkepticBot.Rag.generate(query)
 
-        send(self(), {:podcast_results, {description, list_of_episodes}})
+        send(self(), {:podcast_results, {description, list_of_episodes, query}})
 
         {
           :noreply,

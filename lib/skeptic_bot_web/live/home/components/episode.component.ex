@@ -18,7 +18,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
       </div>
       <section class="relative max-w-[33.6rem] text-center mx-auto mb-10">
         <p class="text-[#000000] text-title leading-none montserrat-alternates-bold">
-          Who Killed John F Kennedy
+          <%= @query %>
         </p>
         <div class="superscript-question-2">
           <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
@@ -26,7 +26,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
       </section>
 
       <section class="max-w-[34rem] mx-auto  montserrat-alternates-medium text-[#4D4D4D] mb-10">
-        The assassination of John F. Kennedy has given rise to numerous conspiracy theories, several of which are prominently discussed
+        <%= @result_description %>
       </section>
 
       <section class="max-w-[74%]  mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
@@ -209,9 +209,10 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
   @impl true
 
   def update(assigns, socket) do
-    %{list_of_episodes: list_of_episodes} = assigns
+    %{list_of_episodes: list_of_episodes, result_description: result_description} = assigns
 
     related_episodes = format_episodes(list_of_episodes)
+    result_description = format_description(result_description)
 
     other_episodes =
       Podcasts.get_first_six_records()
@@ -221,6 +222,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
      socket
      |> assign(assigns)
      |> assign(related_episodes: related_episodes)
+     |> assign(result_description: result_description)
      |> assign(other_episodes: other_episodes)
      |> assign(other_episodes_index: 0)
      |> assign(related_episodes_index: 0)}
@@ -278,6 +280,15 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
     items
   end
 
+  defp format_description(description) do
+    description =
+      description
+      |> String.split(".")
+      |> Enum.take(1)
+
+    description
+  end
+
   def prev_btn_disabler(index) do
     # * called for the prev button
     if index == 0 do
@@ -303,3 +314,5 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
     |> Enum.join(" ")
   end
 end
+
+# American Ponzi with Lee Camp
