@@ -22,7 +22,7 @@ defmodule SkepticBotWeb.Router do
     live "/home", HomeLive.Index, :index
     live "/home/chat", HomeLive.Index, :show
 
-    live "/home/chat/:id", HomeLive.Show, :show
+    # live "/home/chat/:id", HomeLive.Show, :show
   end
 
   # Other scopes may use custom stacks.
