@@ -213,6 +213,40 @@ defmodule SkepticBotWeb.Home.Component do
     """
   end
 
+  attr :title, :string, required: true
+  attr :title_color, :string, required: true
+  attr :people_count, :string, required: true
+  attr :body, :string, required: true
+
+  def episode_card(assigns) do
+    ~H"""
+    <div class="border-2 border-[#000000] bg-[#FFFFFF] my-6 rounded-2xl card-shadow">
+      <div class="flex flex-col px-3 pt-4 pb-2 text-[#4D4D4D]">
+        <section class="flex justify-between items-center">
+          <div class={["text-2xl montserrat-alternates-bold", @title_color]}><%= @title %></div>
+          <div class="pr-4">
+            <img src={~p"/images/cards/xmark.svg"} alt="X Mark" />
+          </div>
+        </section>
+        <div class="divider">
+          &zwj;
+        </div>
+        <section class="text-sm w-[88%] montserrat-alternates-medium">
+          <%= @body %>...
+        </section>
+        <section class="flex justify-start items-center gap-2 py-4">
+          <div>
+            <img src={~p"/images/cards/ask.svg"} alt="Ask me" class="" />
+          </div>
+          <div class="text-xs montserrat-alternates-medium">
+            Asked by <%= @people_count %> people
+          </div>
+        </section>
+      </div>
+    </div>
+    """
+  end
+
   @doc """
   Renders a clip card item
   """

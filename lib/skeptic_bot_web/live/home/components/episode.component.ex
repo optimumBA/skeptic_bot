@@ -90,18 +90,18 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
       </section>
 
       <section class="relative pb-16">
-        <div class="flex justify-end">
-          <section class="overflow-hidden pt-12 relative mb-12 w-[82rem]">
+        <div class="flex justify-center">
+          <section class="overflow-hidden pt-12 relative mb-12 w-[73rem]">
             <div
-              class="flex gap-4 transition-transform duration-300 ease-in-out"
-              style={"transform: translateX(-#{ @other_episodes_index * 20.6875}rem);"}
+              class="flex gap-5 transition-transform duration-300 ease-in-out"
+              style={"transform: translateX(-#{ @other_episodes_index * 24.5625}rem);"}
             >
               <%= for episode <- @other_episodes do %>
-                <PodcastComponent.podcast_video_card
+                <PodcastComponent.podcast_video_grid_card
                   image_file={episode.thumbnail}
                   podcast_title={first_two_words(episode.title)}
                   video_length={episode.video_length}
-                  random={:rand.uniform(5)}
+                  random={:rand.uniform(3)}
                 />
               <% end %>
             </div>
@@ -144,41 +144,42 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         </section>
         <section class="mx-auto max-w-[72rem]">
           <div class="podcast-questions-grid">
-            <Component.card
+            <Component.episode_card
               title="Covid-19 Actual Conspiracy"
               body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
               people_count="134"
               title_color="text-[#CD4631]"
             />
-            <Component.card
+            <Component.episode_card
               title="Tesla Autopilot Controversy"
               body="Tesla's vehicles boast 'Full-Self-Driving' (FSD), but current regulations do not allow for fully"
               people_count="134"
               title_color="text-[#000000]"
             />
-            <Component.card
+            <Component.episode_card
               title="Women's Rights? Is it alright?"
               body="A look back at history shows that women have made great strides in the fight for equality"
               people_count="134"
               title_color="text-[#000000]"
             />
-            <Component.card
+            <Component.episode_card
               title="Who Really Killed JKF?"
               body="We have a therapist expert as our guest, Krista Gordon is will share her experience"
               people_count="134"
               title_color="text-[#CD4631]"
             />
-            <Component.card
-              title="Epstein Controversy"
-              body="Social class refers to a group of people with similar levels of wealth, influence, and"
-              people_count="134"
-              title_color="text-[#CD4631]"
-            />
-            <Component.card
+            <Component.episode_card
               title="Are you a Perplexed mind Person?"
               body="Unable to grasp something clearly or to think logically and decisively about something"
               people_count="134"
               title_color="text-[#000000]"
+            />
+
+            <Component.episode_card
+              title="Epstein Controversy"
+              body="Social class refers to a group of people with similar levels of wealth, influence, and"
+              people_count="134"
+              title_color="text-[#CD4631]"
             />
           </div>
         </section>

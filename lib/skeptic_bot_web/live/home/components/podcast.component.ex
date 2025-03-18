@@ -33,7 +33,7 @@ defmodule SkepticBotWeb.PodcastComponent do
         <%= @podcast_title %>
       </div>
 
-      <div class="podcast-length flex gap-2 montserrat-alternates-bold text-[#FFFFFF]">
+      <div class="podcast-length flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
         <div>
           <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
         </div>
