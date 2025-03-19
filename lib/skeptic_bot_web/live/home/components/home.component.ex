@@ -283,7 +283,7 @@ defmodule SkepticBotWeb.Home.Component do
 
   def twitter_component(assigns) do
     ~H"""
-    <div class="pt-14 pb-4">
+    <div class="pt-10 pb-4">
       <div class="divider bg-[#7F7F7F] w-[92%] mx-auto">
         &zwj;
       </div>
