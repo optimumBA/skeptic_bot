@@ -29,13 +29,13 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         <%= @result_description %>
       </section>
 
-      <section class="max-w-[74%]  mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
+      <section class="max-w-[76%]   mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
         Related Podcasts
       </section>
 
       <section class="relative pb-16">
-        <div class="flex justify-end">
-          <section class="overflow-hidden pt-12 relative mb-12 w-[82rem]">
+        <div class="flex justify-end ">
+          <section class="overflow-hidden pt-12 relative mb-12 w-[88%] ">
             <div
               class="flex gap-4 transition-transform duration-300 ease-in-out"
               style={"transform: translateX(-#{@related_episodes_index * 20.6875}rem);"}
@@ -51,7 +51,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
             </div>
           </section>
         </div>
-        <div class="flex gap-5 max-w-[74%] mx-auto mt-16">
+        <div class="flex gap-5 max-w-[76%]  mx-auto mt-16">
           <button
             phx-click="prev_related_episodes"
             phx-target={@myself}
@@ -85,30 +85,32 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         </div>
       </section>
 
-      <section class="max-w-[74%] mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
+      <section class="max-w-[76%]  mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
         Other Podcasts
       </section>
 
-      <section class="relative pb-16">
-        <div class="flex justify-center">
-          <section class="overflow-hidden pt-12 relative mb-12 w-[73rem]">
-            <div
-              class="flex gap-5 transition-transform duration-300 ease-in-out"
-              style={"transform: translateX(-#{ @other_episodes_index * 24.5625}rem);"}
-            >
-              <%= for episode <- @other_episodes do %>
-                <PodcastComponent.podcast_video_grid_card
-                  image_file={episode.thumbnail}
-                  podcast_title={first_two_words(episode.title)}
-                  video_length={episode.video_length}
-                  random={:rand.uniform(3)}
-                />
-              <% end %>
-            </div>
-          </section>
+      <section class=" relative pb-16">
+        <div class="flex justify-end">
+          <div class="w-[88%]">
+            <section class="overflow-hidden pt-12 relative  mb-12 w-[73rem]">
+              <div
+                class="flex gap-5 transition-transform duration-300 ease-in-out"
+                style={"transform: translateX(-#{ @other_episodes_index * 24.5625}rem);"}
+              >
+                <%= for episode <- @other_episodes do %>
+                  <PodcastComponent.podcast_video_grid_card
+                    image_file={episode.thumbnail}
+                    podcast_title={first_two_words(episode.title)}
+                    video_length={episode.video_length}
+                    random={:rand.uniform(3)}
+                  />
+                <% end %>
+              </div>
+            </section>
+          </div>
         </div>
 
-        <div class="flex gap-5 max-w-[74%] mx-auto mt-16">
+        <div class="flex gap-5 max-w-[76%]  mx-auto mt-16">
           <button
             phx-click="prev_other_episodes"
             phx-target={@myself}
@@ -142,7 +144,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         <section class="max-w-[76%] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
           Related Questions
         </section>
-        <section class="mx-auto max-w-[72rem]">
+        <section class="mx-auto max-w-[72rem] border border-blue-400">
           <div class="podcast-questions-grid">
             <Component.episode_card
               title="Covid-19 Actual Conspiracy"

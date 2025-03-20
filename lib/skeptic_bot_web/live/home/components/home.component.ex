@@ -47,7 +47,7 @@ defmodule SkepticBotWeb.Home.Component do
         <.podcast_title title="Perplexed mind" />
       </section>
 
-      <section class="relative rounded-xl overflow-hidden">
+      <section class=" relative rounded-xl overflow-hidden">
         <img src={~p"/images/cards/cover4.svg"} alt="Cover 4" class="w-full h-full object-cover" />
 
         <.socials />

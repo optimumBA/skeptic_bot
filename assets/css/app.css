@@ -120,7 +120,7 @@
 
 .picture-grid {
   display: grid;
-  grid-template-columns: 215px repeat(3, 1fr) 215px;
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: 315px;
   gap: 0.8rem;
 }
