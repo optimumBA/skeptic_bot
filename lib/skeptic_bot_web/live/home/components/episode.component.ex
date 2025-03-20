@@ -144,7 +144,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         <section class="max-w-[76%] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
           Related Questions
         </section>
-        <section class="mx-auto max-w-[72rem] border border-blue-400">
+        <section class="mx-auto max-w-[72rem]">
           <div class="podcast-questions-grid">
             <Component.episode_card
               title="Covid-19 Actual Conspiracy"
