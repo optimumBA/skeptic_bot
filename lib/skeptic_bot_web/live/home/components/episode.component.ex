@@ -51,7 +51,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
             </div>
           </section>
         </div>
-        <div class="flex gap-5 max-w-[76%]  mx-auto mt-16">
+        <div class="flex gap-5 max-w-[76%]  mx-auto mt-10">
           <button
             phx-click="prev_related_episodes"
             phx-target={@myself}
@@ -110,7 +110,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
           </div>
         </div>
 
-        <div class="flex gap-5 max-w-[76%]  mx-auto mt-16">
+        <div class="flex gap-5 max-w-[76%]  mx-auto mt-10">
           <button
             phx-click="prev_other_episodes"
             phx-target={@myself}

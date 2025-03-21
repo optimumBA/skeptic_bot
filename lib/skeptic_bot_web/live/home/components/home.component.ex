@@ -24,7 +24,7 @@ defmodule SkepticBotWeb.Home.Component do
 
         <img src={~p"/images/grid/vector3.svg"} alt="Vector 3" class="vector3" />
 
-        <.podcast_title title="Autopilot" />
+        <.podcast_title title="Tesla Autopilot" />
       </section>
 
       <section class="relative rounded-xl overflow-hidden">
