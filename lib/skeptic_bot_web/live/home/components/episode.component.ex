@@ -20,7 +20,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         <p class="text-[#000000] text-title leading-none montserrat-alternates-bold">
           <%= @query %>
         </p>
-        <div class="superscript-question-2">
+        <div class="absolute top-[-2.1rem] left-[-2.8rem]">
           <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
         </div>
       </section>
@@ -80,7 +80,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
           </button>
         </div>
 
-        <div class="podcast-scribble">
+        <div class="absolute bottom-[-5rem] right-[8rem]">
           <img src={~p"/images/podcasts/podcast_scribble.svg"} alt="Podcast Scribble" />
         </div>
       </section>

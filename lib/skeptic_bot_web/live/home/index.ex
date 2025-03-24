@@ -109,7 +109,11 @@ defmodule SkepticBotWeb.HomeLive.Index do
                 title_color="text-[#000000]"
               />
             </div>
-            <img src={~p"/images/cards/scribble.svg"} alt="Scribble" class="scribble" />
+            <img
+              src={~p"/images/cards/scribble.svg"}
+              alt="Scribble"
+              class="absolute bottom-[-11.9rem] left-[-11rem]"
+            />
           </section>
         </div>
 
@@ -121,7 +125,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
                 <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
               </div>
 
-              <div class="scribble2">
+              <div class="absolute top-[-8rem] left-[13.6rem]">
                 <img src={~p"/images/clips/scribble2.svg"} alt="Scribble 2" />
               </div>
             </p>
@@ -151,7 +155,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               />
             </div>
           </section>
-          <section class="bottom-vector w-[26.2%]">
+          <section class="absolute top-[7.8rem] right-0 w-[26.2%]">
             <img
               src={~p"/images/home/bottom_vector.svg"}
               alt="Bottom Vector"

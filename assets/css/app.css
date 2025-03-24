@@ -7,7 +7,6 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-@import "./absolute.css";
 
 /* This file is for your main application CSS */
 

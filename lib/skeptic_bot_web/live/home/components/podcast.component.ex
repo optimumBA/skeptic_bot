@@ -29,11 +29,11 @@ defmodule SkepticBotWeb.PodcastComponent do
 
       <%= get_the_vector_randomly(@random) %>
 
-      <div class="podcast-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+      <div class="absolute bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
         <%= @podcast_title %>
       </div>
 
-      <div class="podcast-length flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
+      <div class="absolute bottom-[2rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
         <div>
           <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
         </div>
@@ -64,11 +64,11 @@ defmodule SkepticBotWeb.PodcastComponent do
 
       <%= get_the_grid_vector_randomly(@random) %>
 
-      <div class="podcast-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+      <div class="absolute  bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
         <%= @podcast_title %>
       </div>
 
-      <div class="podcast-length flex gap-2 montserrat-alternates-bold text-[#FFFFFF]">
+      <div class="absolute bottom-[2rem] left-[1.2rem] flex gap-2 montserrat-alternates-bold text-[#FFFFFF]">
         <div>
           <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
         </div>
