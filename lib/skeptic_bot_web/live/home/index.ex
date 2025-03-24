@@ -21,17 +21,17 @@ defmodule SkepticBotWeb.HomeLive.Index do
           </div>
           <div class="flex justify-start items-start gap-20  bg-[#FFF5F5] pb-16 relative">
             <section>
-              <div class="top-swirl w-[20%]">
+              <div class="absolute top-[-8rem] left-0 w-[20%]">
                 <img
                   src={~p"/images/home/top_swirl.svg"}
                   class="w-full h-full object-cover"
                   alt="Swirl"
                 />
               </div>
-              <div class="illustration w-[20%]">
+              <div class="absolute  top-[16rem] left-[4rem] w-[20%]">
                 <img src={~p"/images/home/illustration_1.svg"} alt="Illustration 1" />
               </div>
-              <div class="stars w-[11%]">
+              <div class="absolute bottom-[7rem] right-[2rem] w-[11%]">
                 <img src={~p"/images/home/stars.png"} alt="Stars Group" />
               </div>
             </section>
@@ -50,7 +50,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
                   <section class="text-6xl montserrat-alternates-bold text-[#000000]">
                     Popular Podcast
                   </section>
-                  <div class="superscript-image">
+                  <div class="absolute top-[-2.5rem] left-[-3rem]">
                     <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image" />
                   </div>
                 </section>
@@ -66,7 +66,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             <p class="text-[#000000] text-title leading-none montserrat-alternates-bold">
               Questions that fuel insight and curiosity
             </p>
-            <div class="superscript-question">
+            <div class="absolute top-[-2.1rem] left-[-0.4rem]">
               <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
             </div>
           </section>
@@ -117,7 +117,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           <section class="relative max-w-[38.813rem] text-center mx-auto">
             <p class="text-[#000000] text-title leading-none montserrat-alternates-bold">
               Insightful clips to expand your view
-              <div class="superscript-question">
+              <div class="absolute top-[-2.1rem] left-[-0.4rem]">
                 <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
               </div>
 

@@ -1,14 +1,8 @@
 /* All objects that are absolutely positioned have the styles in this file */
 
 /* DRY */
-.top-swirl,
-.illustration,
-.stars,
-.superscript-image,
-.superscript-question,
+
 .superscript-question-2,
-.social-media-card,
-.image-title,
 .podcast-title,
 .podcast-length,
 .podcast_vector1,
@@ -42,37 +36,6 @@
 .scribble2,
 .bottom-vector {
   position: absolute;
-}
-
-.top-swirl {
-  top: -8rem;
-  left: 0;
-}
-
-.illustration {
-  top: 16rem;
-  left: 4rem;
-}
-
-.stars {
-  bottom: 7rem;
-  right: 2rem;
-}
-
-.superscript-image {
-  top: -2.5rem;
-  left: -3rem;
-}
-
-.social-media-card {
-  z-index: 10;
-  top: 0.8rem;
-  right: 1.8rem;
-}
-
-.image-title {
-  bottom: 1rem;
-  left: 0.8rem;
 }
 
 /* Vectors in the grid pictures component */
@@ -221,11 +184,6 @@
 .scribble2 {
   top: -8rem;
   left: 13.6rem;
-}
-
-.superscript-question {
-  top: -2.1rem;
-  left: -0.4rem;
 }
 
 .superscript-question-2 {

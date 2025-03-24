@@ -70,7 +70,7 @@ defmodule SkepticBotWeb.Home.Component do
 
   def socials(assigns) do
     ~H"""
-    <section class="social-media-card flex items-center gap-2">
+    <section class="absolute top-[0.8rem] right-[1.8rem] z-10 flex items-center gap-2">
       <.link
         href="https://vid.samtripoli.com/w/xoV9AbNuEQe9j9VAieVUxV"
         target="_blank"
@@ -169,7 +169,7 @@ defmodule SkepticBotWeb.Home.Component do
 
   def podcast_title(assigns) do
     ~H"""
-    <div class="image-title text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+    <div class="absolute bottom-[1rem] left-[0.8rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
       <%= @title %>
     </div>
     """

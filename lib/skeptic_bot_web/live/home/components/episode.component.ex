@@ -187,7 +187,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         </section>
       </section>
 
-      <section class="bg-[#ECF5FF] pt-28 pb-44">
+      <section class="bg-[#ECF5FF] pt-28 pb-36">
         <section class="max-w-[76%] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
           Other Podcasts
         </section>
