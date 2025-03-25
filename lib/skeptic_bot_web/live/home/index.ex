@@ -43,7 +43,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
                 <section class="w-[35%] ml-[20rem] text-center montserrat-alternates-medium text-[#4D4D4D]">
                   Ask anything and get answers directly from trusted experts
                 </section>
-                <section class="ml-36 pl-10 mt-4 w-[70%]">
+                <section class="ml-32 pl-10 mt-4 w-[70%]">
                   <.live_component module={SkepticBotWeb.HomeLive.FormComponent} id="prompt form" />
                 </section>
                 <section class="ml-56 mt-36 relative w-[68%]">

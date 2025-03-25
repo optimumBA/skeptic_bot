@@ -29,13 +29,13 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         <%= @result_description %>
       </section>
 
-      <section class="max-w-[76%]   mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
+      <section class="max-w-[72.625rem] mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
         Related Podcasts
       </section>
 
       <section class="relative pb-16">
         <div class="flex justify-end ">
-          <section class="overflow-hidden pt-12 relative mb-12 w-[88%] ">
+          <section class="overflow-hidden pt-12 relative mb-12 w-[93%] max-w-[83.625rem]">
             <div
               class="flex gap-4 transition-transform duration-300 ease-in-out"
               style={"transform: translateX(-#{@related_episodes_index * 20.6875}rem);"}
@@ -51,7 +51,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
             </div>
           </section>
         </div>
-        <div class="flex gap-5 max-w-[76%]  mx-auto mt-10">
+        <div class="flex gap-5 max-w-[72.625rem] mx-auto mt-10">
           <button
             phx-click="prev_related_episodes"
             phx-target={@myself}
@@ -85,32 +85,30 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         </div>
       </section>
 
-      <section class="max-w-[76%]  mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
+      <section class="max-w-[72.625rem] mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
         Other Podcasts
       </section>
 
-      <section class=" relative pb-16">
-        <div class="flex justify-end">
-          <div class="w-[88%]">
-            <section class="overflow-hidden pt-12 relative  mb-12 w-[73rem]">
-              <div
-                class="flex gap-5 transition-transform duration-300 ease-in-out"
-                style={"transform: translateX(-#{ @other_episodes_index * 24.5625}rem);"}
-              >
-                <%= for episode <- @other_episodes do %>
-                  <PodcastComponent.podcast_video_grid_card
-                    image_file={episode.thumbnail}
-                    podcast_title={first_two_words(episode.title)}
-                    video_length={episode.video_length}
-                    random={:rand.uniform(3)}
-                  />
-                <% end %>
-              </div>
-            </section>
-          </div>
+      <section class="relative pb-16">
+        <div class="max-w-[72.625rem] mx-auto">
+          <section class="overflow-hidden pt-12 relative  mb-12 w-[73rem]">
+            <div
+              class="flex gap-5 transition-transform duration-300 ease-in-out"
+              style={"transform: translateX(-#{ @other_episodes_index * 24.5625}rem);"}
+            >
+              <%= for episode <- @other_episodes do %>
+                <PodcastComponent.podcast_video_grid_card
+                  image_file={episode.thumbnail}
+                  podcast_title={first_two_words(episode.title)}
+                  video_length={episode.video_length}
+                  random={:rand.uniform(3)}
+                />
+              <% end %>
+            </div>
+          </section>
         </div>
 
-        <div class="flex gap-5 max-w-[76%]  mx-auto mt-10">
+        <div class="flex gap-5 max-w-[72.625rem] mx-auto mt-10">
           <button
             phx-click="prev_other_episodes"
             phx-target={@myself}
@@ -141,67 +139,70 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
       </section>
 
       <section class="bg-[#FFF5F5] pt-28 pb-16">
-        <section class="max-w-[76%] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
+        <section class="max-w-[72.625rem] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
           Related Questions
         </section>
-        <section class="mx-auto max-w-[72rem]">
-          <div class="grid grid-cols-3 gap-[1.125rem]">
-            <Component.episode_card
-              title="Covid-19 Actual Conspiracy"
-              body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
-              people_count="134"
-              title_color="text-[#CD4631]"
-            />
-            <Component.episode_card
-              title="Tesla Autopilot Controversy"
-              body="Tesla's vehicles boast 'Full-Self-Driving' (FSD), but current regulations do not allow for fully"
-              people_count="134"
-              title_color="text-[#000000]"
-            />
-            <Component.episode_card
-              title="Women's Rights? Is it alright?"
-              body="A look back at history shows that women have made great strides in the fight for equality"
-              people_count="134"
-              title_color="text-[#000000]"
-            />
-            <Component.episode_card
-              title="Who Really Killed JKF?"
-              body="We have a therapist expert as our guest, Krista Gordon is will share her experience"
-              people_count="134"
-              title_color="text-[#CD4631]"
-            />
-            <Component.episode_card
-              title="Are you a Perplexed mind Person?"
-              body="Unable to grasp something clearly or to think logically and decisively about something"
-              people_count="134"
-              title_color="text-[#000000]"
-            />
-
-            <Component.episode_card
-              title="Epstein Controversy"
-              body="Social class refers to a group of people with similar levels of wealth, influence, and"
-              people_count="134"
-              title_color="text-[#CD4631]"
-            />
-          </div>
+        <section class="max-w-[72.625rem] mx-auto">
+          <section>
+            <div class="grid grid-cols-3 gap-[1.125rem]">
+              <Component.episode_card
+                title="Covid-19 Actual Conspiracy"
+                body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
+                people_count="134"
+                title_color="text-[#CD4631]"
+              />
+              <Component.episode_card
+                title="Tesla Autopilot Controversy"
+                body="Tesla's vehicles boast 'Full-Self-Driving' (FSD), but current regulations do not allow for fully"
+                people_count="134"
+                title_color="text-[#000000]"
+              />
+              <Component.episode_card
+                title="Women's Rights? Is it alright?"
+                body="A look back at history shows that women have made great strides in the fight for equality"
+                people_count="134"
+                title_color="text-[#000000]"
+              />
+              <Component.episode_card
+                title="Who Really Killed JKF?"
+                body="We have a therapist expert as our guest, Krista Gordon is will share her experience"
+                people_count="134"
+                title_color="text-[#CD4631]"
+              />
+              <Component.episode_card
+                title="Are you a Perplexed mind Person?"
+                body="Unable to grasp something clearly or to think logically and decisively about something"
+                people_count="134"
+                title_color="text-[#000000]"
+              />
+              <Component.episode_card
+                title="Epstein Controversy"
+                body="Social class refers to a group of people with similar levels of wealth, influence, and"
+                people_count="134"
+                title_color="text-[#CD4631]"
+              />
+            </div>
+          </section>
         </section>
       </section>
 
       <section class="bg-[#ECF5FF] pt-28 pb-36">
-        <section class="max-w-[76%] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
+        <section class="max-w-[72.625rem] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
           Other Podcasts
         </section>
 
-        <div class="grid grid-cols-3 gap-[1.3125rem] max-w-[72rem] mx-auto">
-          <%= for episode <- @other_episodes do %>
-            <PodcastComponent.podcast_video_grid_card
-              image_file={episode.thumbnail}
-              podcast_title={first_two_words(episode.title)}
-              video_length={episode.video_length}
-              random={:rand.uniform(3)}
-            />
-          <% end %>
-        </div>
+        <section class="max-w-[72.625rem] mx-auto">
+          <div class="grid grid-cols-3 gap-[1.3125rem] max-w-[72rem]">
+            <%= for episode <- @other_episodes do %>
+              <PodcastComponent.podcast_video_grid_card
+                image_file={episode.thumbnail}
+                podcast_title={first_two_words(episode.title)}
+                video_length={episode.video_length}
+                random={:rand.uniform(3)}
+              />
+            <% end %>
+          </div>
+        </section>
       </section>
 
       <Component.twitter_component />
