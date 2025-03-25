@@ -71,7 +71,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             </div>
           </section>
           <section class="relative mx-auto mb-32 max-w-[61rem]">
-            <div class="questions-grid">
+            <div class="grid grid-cols-2 gap-[0.8rem]">
               <Component.card
                 title="Covid-19 Actual Conspiracy"
                 body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
@@ -132,7 +132,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           </section>
 
           <section class="max-w-[75.6rem] py-20 mx-auto">
-            <div class="clips-grid">
+            <div class="grid grid-cols-3 gap-[1rem]">
               <Component.clip
                 image_file="clip1.svg"
                 title="Quarter-life crisis"

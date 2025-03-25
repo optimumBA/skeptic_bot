@@ -12,7 +12,7 @@ defmodule SkepticBotWeb.Home.Component do
 
   def pictures(assigns) do
     ~H"""
-    <div class="picture-grid pb-20 bg-[#FFF5F5]">
+    <div class="grid grid-cols-5 gap-[0.8rem] picture-row pb-20 bg-[#FFF5F5]">
       <section class="relative rounded-r-xl overflow-hidden">
         <img src={~p"/images/cards/cover1.svg"} alt="Cover 1" class="w-full h-full object-cover" />
 
@@ -117,7 +117,11 @@ defmodule SkepticBotWeb.Home.Component do
       alt="Vector 3"
       class="absolute top-[2.2rem] left-[9.7rem]"
     />
-    <img src={~p"/images/grid/vector2.svg"} alt="Vector 2" class="vector2" />
+    <img
+      src={~p"/images/grid/vector2.svg"}
+      alt="Vector 2"
+      class="absolute bottom-[4rem] right-[2.8rem]"
+    />
     """
   end
 
@@ -134,7 +138,11 @@ defmodule SkepticBotWeb.Home.Component do
       alt="Vector 3"
       class="absolute top-[2.2rem] left-[9.7rem]"
     />
-    <img src={~p"/images/grid/vector2.svg"} alt="Vector 2" class="vector2" />
+    <img
+      src={~p"/images/grid/vector2.svg"}
+      alt="Vector 2"
+      class="absolute bottom-[4rem] right-[2.8rem]"
+    />
     """
   end
 

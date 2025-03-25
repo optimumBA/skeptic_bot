@@ -117,11 +117,8 @@
   box-shadow: none;
 }
 
-.picture-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+.picture-row {
   grid-template-rows: 315px;
-  gap: 0.8rem;
 }
 
 .divider {
@@ -131,31 +128,6 @@
   background-color: #4d4d4d;
   margin-top: 20px;
   margin-bottom: 10px;
-}
-
-.questions-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  /* grid-template-rows: 315px; */
-  gap: 0.8rem;
-}
-
-.podcast-questions-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.125rem;
-}
-
-.podcast-episodes-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.3125rem;
-}
-
-.clips-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
 }
 
 .rounded-custom {

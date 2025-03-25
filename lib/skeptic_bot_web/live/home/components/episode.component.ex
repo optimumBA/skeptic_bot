@@ -145,7 +145,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
           Related Questions
         </section>
         <section class="mx-auto max-w-[72rem]">
-          <div class="podcast-questions-grid">
+          <div class="grid grid-cols-3 gap-[1.125rem]">
             <Component.episode_card
               title="Covid-19 Actual Conspiracy"
               body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
@@ -192,7 +192,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
           Other Podcasts
         </section>
 
-        <div class="podcast-episodes-grid max-w-[72rem] mx-auto">
+        <div class="grid grid-cols-3 gap-[1.3125rem] max-w-[72rem] mx-auto">
           <%= for episode <- @other_episodes do %>
             <PodcastComponent.podcast_video_grid_card
               image_file={episode.thumbnail}
