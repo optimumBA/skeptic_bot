@@ -9,6 +9,10 @@ scrape_episodes = fn ->
   TinfoilScraper.scrape()
 end
 
+scrape_an_episode = fn external_id ->
+  TinfoilScraper.scrape_episode(external_id)
+end
+
 rag = fn question ->
   SkepticBot.Rag.generate(question)
 end
