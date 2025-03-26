@@ -20,7 +20,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
               placeholder="Ask anything"
               field={@form[:query]}
               autocomplete="off"
-              phx-debounce="500"
+              phx-debounce="1000"
             />
           </div>
 

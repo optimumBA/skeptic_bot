@@ -85,59 +85,6 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         </div>
       </section>
 
-      <section class="max-w-[72.625rem] mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
-        Other Podcasts
-      </section>
-
-      <section class="relative pb-16">
-        <div class="max-w-[72.625rem] mx-auto">
-          <section class="overflow-hidden pt-12 relative  mb-12 w-[73rem]">
-            <div
-              class="flex gap-5 transition-transform duration-300 ease-in-out"
-              style={"transform: translateX(-#{ @other_episodes_index * 24.5625}rem);"}
-            >
-              <%= for episode <- @other_episodes do %>
-                <PodcastComponent.podcast_video_grid_card
-                  image_file={episode.thumbnail}
-                  podcast_title={first_two_words(episode.title)}
-                  video_length={episode.video_length}
-                  random={:rand.uniform(3)}
-                />
-              <% end %>
-            </div>
-          </section>
-        </div>
-
-        <div class="flex gap-5 max-w-[72.625rem] mx-auto mt-10">
-          <button
-            phx-click="prev_other_episodes"
-            phx-target={@myself}
-            class="disabled:opacity-50"
-            disabled={prev_btn_disabler(@other_episodes_index)}
-          >
-            <div>
-              <img src={~p"/images/podcasts/back_arrow.svg"} alt="Back Arrow" />
-            </div>
-          </button>
-
-          <button
-            phx-click="next_other_episodes"
-            phx-target={@myself}
-            class="disabled:opacity-50"
-            disabled={
-              forward_btn_disabler(
-                @other_episodes_index,
-                @other_episodes
-              )
-            }
-          >
-            <div>
-              <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
-            </div>
-          </button>
-        </div>
-      </section>
-
       <section class="bg-[#FFF5F5] pt-28 pb-16">
         <section class="max-w-[72.625rem] mx-auto pb-10 montserrat-alternates-bold text-[#000000] text-2xl">
           Related Questions
@@ -216,7 +163,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
     %{list_of_episodes: list_of_episodes, result_description: result_description} = assigns
 
     related_episodes = format_episodes(list_of_episodes)
-    result_description = format_description(result_description)
+    # result_description = format_description(result_description)
 
     other_episodes =
       Podcasts.get_first_six_records()
