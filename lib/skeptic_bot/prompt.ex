@@ -1,18 +1,14 @@
 defmodule SkepticBot.Prompt do
-  defstruct [:name, :email]
+  @moduledoc """
+  The context for our prompt
+  """
+  alias SkepticBot.Prompt.Question
 
-  @types %{query: :string}
+  def change_prompt_question(%Question{} = question, attrs \\ %{}) do
+    Question.question_changeset(question, attrs)
+  end
 
-  alias SkepticBot.Prompt
-  import Ecto.Changeset
-
-  def changeset(%Prompt{} = prompt, attrs) do
-    {prompt, @types}
-    |> cast(attrs, Map.keys(@types))
-    |> validate_required([:query])
-    |> validate_length(:query,
-      min: 4,
-      message: "Your prompt must be at least 4 characters in length"
-    )
+  def change_question(%Question{} = question, attrs \\ %{}) do
+    Question.changeset(question, attrs)
   end
 end

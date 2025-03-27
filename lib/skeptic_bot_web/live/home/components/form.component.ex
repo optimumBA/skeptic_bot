@@ -7,7 +7,9 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
 
   use SkepticBotWeb, :live_component
 
-  alias SkepticBot.{Query, Prompt}
+  alias SkepticBot.{Repo, Prompt}
+
+  alias SkepticBot.Prompt.Question
 
   @impl true
   def render(assigns) do
@@ -48,24 +50,24 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:prompt, %Prompt{})
+     |> assign(:question, %Question{})
      |> assign_form()}
   end
 
-  def assign_form(%{assigns: %{prompt: prompt}} = socket) do
+  def assign_form(%{assigns: %{question: question}} = socket) do
     socket
-    |> assign(:form, to_form(Query.change_prompt(prompt), as: "prompt"))
+    |> assign(:form, to_form(Prompt.change_prompt_question(question), as: "prompt"))
   end
 
   @impl true
   def handle_event(
         "validate",
         %{"prompt" => prompt_params},
-        %{assigns: %{prompt: prompt}} = socket
+        %{assigns: %{question: question}} = socket
       ) do
     changeset =
-      prompt
-      |> Query.change_prompt(prompt_params)
+      question
+      |> Prompt.change_prompt_question(prompt_params)
       |> Map.put(:action, :validate)
 
     {:noreply,
@@ -76,33 +78,53 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
   @impl true
   def handle_event(
         "save",
-        %{"prompt" => %{"query" => query}},
-        %{assigns: %{form: form}} = socket
+        %{"prompt" => %{"query" => query} = prompt_params},
+        %{assigns: %{question: question}} = socket
       ) do
-    cond do
-      form.source.valid? == false ->
-        {:noreply,
-         socket
-         |> assign(:form, form)}
+    # American Ponzi With Lee Camp
+    changeset =
+      question
+      |> Prompt.change_prompt_question(prompt_params)
 
+    case changeset.valid? do
       true ->
-        query = String.trim(query)
-
-        # American Ponzi With Lee Camp
-
         {description, list_of_episodes} = SkepticBot.Rag.generate(query)
 
-        dbg(description)
-        dbg(list_of_episodes)
+        list_of_ids =
+          Enum.reduce(list_of_episodes, [], fn episode, list ->
+            [%{episode_id: episode.id} | list]
+          end)
 
-        send(self(), {:podcast_results, {description, list_of_episodes, query}})
-
-        {
-          :noreply,
-          socket
-          |> push_patch(to: ~p"/home/chat")
-          #  |> assign_form()
+        question_params = %{
+          query: query,
+          description: description,
+          episodes: list_of_ids
         }
+
+        changeset = Prompt.change_question(question, question_params)
+
+        dbg(changeset)
+
+        case Repo.insert(changeset) do
+          {:ok, record} ->
+            _id = record.id
+
+            send(self(), {:podcast_results, {description, list_of_episodes, query}})
+
+            {
+              :noreply,
+              socket
+              |> push_patch(to: ~p"/home/chat")
+            }
+
+          {:error, _changeset} ->
+            {:noreply,
+             socket
+             |> put_flash(:error, "There was an error processing your request")}
+        end
+
+      false ->
+        {:noreply, socket}
     end
   end
 end
