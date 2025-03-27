@@ -83,3 +83,7 @@ config :phoenix_live_view,
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
+
+config :skeptic_bot, :tigris_storage,
+  api_key: System.get_env("TIGRIS_STORAGE_API_KEY"),
+  bucket: System.get_env("TIGRIS_STORAGE_BUCKET")

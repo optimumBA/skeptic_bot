@@ -3,20 +3,22 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     queue: :downloading,
     unique: [period: :infinity, states: Oban.Job.states()]
 
-  alias SkepticBot.Podcasts.TranscribingWorker
+  require Logger
+
+  alias SkepticBot.Podcasts.TranscodingWorker
 
   @url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/<external_id>-0-fragmented.mp4"
 
   @impl Oban.Worker
   def perform(%Oban.Job{args: %{"id" => id, "external_id" => external_id}}) do
     download_episode(id, external_id)
-    TranscribingWorker.enqueue(%{"id" => id})
+    TranscodingWorker.enqueue(%{"id" => id})
 
     :ok
   end
 
   defp download_episode(id, external_id) do
-    dir = Path.join([Application.app_dir(:skeptic_bot, "priv"), "podcasts", "audio"])
+    dir = Path.join([Application.app_dir(:skeptic_bot, "priv"), "podcasts", "video"])
     File.mkdir_p!(dir)
     path = Path.join(dir, "#{id}.mp4")
 
