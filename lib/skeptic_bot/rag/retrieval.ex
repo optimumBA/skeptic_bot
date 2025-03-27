@@ -4,10 +4,13 @@ defmodule SkepticBot.Rag.Retrieval do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Repo
+  require Logger
 
   @num_transcriptions_surrounding_the_target 100
 
   def retrieve(embedding) do
+    # each podcast episode has an embedding
+    # we use that embedding to get a maximum of 3 episodes
     episodes =
       from(e in Podcasts.Episode,
         select: e,
@@ -15,6 +18,8 @@ defmodule SkepticBot.Rag.Retrieval do
         limit: 3
       )
       |> Repo.all()
+
+    # the transcription field for each episode is always going to be nil because that field is virtual
 
     episodes
     |> Enum.map(fn %Podcasts.Episode{} = episode ->

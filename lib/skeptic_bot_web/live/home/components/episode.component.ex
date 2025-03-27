@@ -6,7 +6,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
 
   alias SkepticBotWeb.Home.Component
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div>
@@ -16,7 +16,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
           sticky: true
         ) %>
       </div>
-      <section class="relative max-w-[33.6rem] text-center mx-auto mb-10">
+      <section class="relative max-w-[33.6rem] mx-auto mb-10 border border-blue-400">
         <p class="text-[#000000] text-title leading-none montserrat-alternates-bold">
           <%= @query %>
         </p>
@@ -231,14 +231,14 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
     items
   end
 
-  defp format_description(description) do
-    description =
-      description
-      |> String.split(".")
-      |> Enum.take(1)
+  # defp format_description(description) do
+  #   description =
+  #     description
+  #     |> String.split(".")
+  #     |> Enum.take(1)
 
-    description
-  end
+  #   description
+  # end
 
   def prev_btn_disabler(index) do
     # * called for the prev button

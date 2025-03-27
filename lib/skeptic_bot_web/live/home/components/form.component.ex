@@ -92,6 +92,9 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
 
         {description, list_of_episodes} = SkepticBot.Rag.generate(query)
 
+        dbg(description)
+        dbg(list_of_episodes)
+
         send(self(), {:podcast_results, {description, list_of_episodes, query}})
 
         {
