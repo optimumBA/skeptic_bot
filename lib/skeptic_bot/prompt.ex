@@ -3,6 +3,8 @@ defmodule SkepticBot.Prompt do
   The context for our prompt
   """
   alias SkepticBot.Prompt.Question
+  alias SkepticBot.Repo
+  def get_question!(id), do: Repo.get!(Question, id)
 
   def change_prompt_question(%Question{} = question, attrs \\ %{}) do
     Question.question_changeset(question, attrs)

@@ -1,12 +1,18 @@
-defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
-  use SkepticBotWeb, :live_component
+defmodule SkepticBotWeb.PodcastLive.Show do
+  @moduledoc """
+  Shows the results of a prompt i.e the related episodes.
+  """
 
-  alias SkepticBot.Podcasts
+  use SkepticBotWeb, :live_view
+
+  alias SkepticBot.{Prompt, Podcasts, Repo, Podcasts.Episode}
+
   alias SkepticBotWeb.PodcastComponent
 
   alias SkepticBotWeb.Home.Component
 
-  @impl Phoenix.LiveComponent
+  @impl Phoenix.LiveView
+
   def render(assigns) do
     ~H"""
     <div>
@@ -16,7 +22,7 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
           sticky: true
         ) %>
       </div>
-      <section class="relative max-w-[33.6rem] mx-auto mb-10 border border-blue-400">
+      <section class="relative max-w-[33.6rem] mx-auto mb-10">
         <p class="text-[#000000] text-title leading-none montserrat-alternates-bold">
           <%= @query %>
         </p>
@@ -54,7 +60,6 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
         <div class="flex gap-5 max-w-[72.625rem] mx-auto mt-10">
           <button
             phx-click="prev_related_episodes"
-            phx-target={@myself}
             class="disabled:opacity-50"
             disabled={prev_btn_disabler(@related_episodes_index)}
           >
@@ -65,7 +70,6 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
 
           <button
             phx-click="next_related_episodes"
-            phx-target={@myself}
             class="disabled:opacity-50"
             disabled={
               forward_btn_disabler(
@@ -158,40 +162,31 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
   end
 
   @impl true
-
-  def update(assigns, socket) do
-    %{list_of_episodes: list_of_episodes, result_description: result_description} = assigns
-
-    related_episodes = format_episodes(list_of_episodes)
-    # result_description = format_description(result_description)
-
+  def mount(_params, _session, socket) do
     other_episodes =
       Podcasts.get_first_six_records()
       |> format_episodes()
 
     {:ok,
      socket
-     |> assign(assigns)
-     |> assign(related_episodes: related_episodes)
-     |> assign(result_description: result_description)
      |> assign(other_episodes: other_episodes)
      |> assign(other_episodes_index: 0)
      |> assign(related_episodes_index: 0)}
   end
 
   @impl true
-  def handle_event("next_other_episodes", _params, socket) do
-    index = socket.assigns.other_episodes_index
-    episodes = socket.assigns.other_episodes
-    new_index = min(index + 1, length(episodes) - 1)
-    {:noreply, assign(socket, other_episodes_index: new_index)}
-  end
+  def handle_params(%{"id" => id}, _, socket) do
+    question = Prompt.get_question!(id)
 
-  @impl true
-  def handle_event("prev_other_episodes", _params, socket) do
-    index = socket.assigns.other_episodes_index
-    new_index = max(index - 1, 0)
-    {:noreply, assign(socket, other_episodes_index: new_index)}
+    list_of_episodes = get_episodes(question.episodes)
+
+    related_episodes = format_episodes(list_of_episodes)
+
+    {:noreply,
+     socket
+     |> assign(result_description: format_description(question.description))
+     |> assign(query: question.query)
+     |> assign(related_episodes: related_episodes)}
   end
 
   @impl true
@@ -231,15 +226,6 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
     items
   end
 
-  # defp format_description(description) do
-  #   description =
-  #     description
-  #     |> String.split(".")
-  #     |> Enum.take(1)
-
-  #   description
-  # end
-
   def prev_btn_disabler(index) do
     # * called for the prev button
     if index == 0 do
@@ -264,6 +250,24 @@ defmodule SkepticBotWeb.HomeLive.EpisodesComponent do
     |> Enum.take(2)
     |> Enum.join(" ")
   end
-end
 
-# American Ponzi with Lee Camp
+  def get_episodes(list_of_ids) do
+    episodes =
+      Enum.reduce(list_of_ids, [], fn map, list ->
+        episode = Repo.get!(Episode, map.episode_id)
+
+        [episode | list]
+      end)
+
+    episodes
+  end
+
+  defp format_description(description) do
+    description =
+      description
+      |> String.split(".")
+      |> Enum.take(1)
+
+    description
+  end
+end

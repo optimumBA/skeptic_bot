@@ -103,18 +103,12 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
 
         changeset = Prompt.change_question(question, question_params)
 
-        dbg(changeset)
-
         case Repo.insert(changeset) do
           {:ok, record} ->
-            _id = record.id
-
-            send(self(), {:podcast_results, {description, list_of_episodes, query}})
-
             {
               :noreply,
               socket
-              |> push_patch(to: ~p"/home/chat")
+              |> push_navigate(to: ~p"/chat/#{record.id}")
             }
 
           {:error, _changeset} ->

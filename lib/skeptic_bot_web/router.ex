@@ -20,9 +20,8 @@ defmodule SkepticBotWeb.Router do
     get "/", PageController, :home
 
     live "/home", HomeLive.Index, :index
-    live "/home/chat", HomeLive.Index, :show
 
-    # live "/home/chat/:id", HomeLive.Show, :show
+    live "/chat/:id", PodcastLive.Show, :show
   end
 
   # Other scopes may use custom stacks.
