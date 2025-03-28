@@ -302,7 +302,7 @@ defmodule SkepticBotWeb.Home.Component do
   end
 
   attr :title, :string, required: true
-  attr :title_color, :string, required: true
+  attr :number, :integer, required: true
   attr :people_count, :string, required: true
   attr :body, :string, required: true
 
@@ -311,7 +311,9 @@ defmodule SkepticBotWeb.Home.Component do
     <div class="border-2 border-[#000000] bg-[#FFFFFF] my-6 rounded-2xl card-shadow">
       <div class="flex flex-col px-3 pt-4 pb-2 text-[#4D4D4D]">
         <section class="flex justify-between items-center">
-          <div class={["text-2xl montserrat-alternates-bold", @title_color]}><%= @title %></div>
+          <div class={["text-2xl montserrat-alternates-bold", get_title_color(@number)]}>
+            <%= @title %>
+          </div>
           <div class="pr-4">
             <img src={~p"/images/cards/xmark.svg"} alt="X Mark" />
           </div>
@@ -333,6 +335,14 @@ defmodule SkepticBotWeb.Home.Component do
       </div>
     </div>
     """
+  end
+
+  defp get_title_color(number) do
+    if rem(number, 2) == 0 do
+      "text-[#000000]"
+    else
+      "text-[#CD4631]"
+    end
   end
 
   @doc """

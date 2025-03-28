@@ -99,42 +99,14 @@ defmodule SkepticBotWeb.PodcastLive.Show do
         <section class="max-w-[72.625rem] mx-auto">
           <section>
             <div class="grid grid-cols-3 gap-[1.125rem]">
-              <Component.episode_card
-                title="Covid-19 Actual Conspiracy"
-                body="A nature survey shows many scientists expect the virus that causes COVID-19 to become"
-                people_count="134"
-                title_color="text-[#CD4631]"
-              />
-              <Component.episode_card
-                title="Tesla Autopilot Controversy"
-                body="Tesla's vehicles boast 'Full-Self-Driving' (FSD), but current regulations do not allow for fully"
-                people_count="134"
-                title_color="text-[#000000]"
-              />
-              <Component.episode_card
-                title="Women's Rights? Is it alright?"
-                body="A look back at history shows that women have made great strides in the fight for equality"
-                people_count="134"
-                title_color="text-[#000000]"
-              />
-              <Component.episode_card
-                title="Who Really Killed JKF?"
-                body="We have a therapist expert as our guest, Krista Gordon is will share her experience"
-                people_count="134"
-                title_color="text-[#CD4631]"
-              />
-              <Component.episode_card
-                title="Are you a Perplexed mind Person?"
-                body="Unable to grasp something clearly or to think logically and decisively about something"
-                people_count="134"
-                title_color="text-[#000000]"
-              />
-              <Component.episode_card
-                title="Epstein Controversy"
-                body="Social class refers to a group of people with similar levels of wealth, influence, and"
-                people_count="134"
-                title_color="text-[#CD4631]"
-              />
+              <%= for {question, number_on_list} <- @related_questions do %>
+                <Component.episode_card
+                  title={question.title}
+                  body={question.description}
+                  people_count="134"
+                  number={number_on_list}
+                />
+              <% end %>
             </div>
           </section>
         </section>
@@ -181,9 +153,12 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   def handle_params(%{"id" => id}, _, socket) do
     question = Prompt.get_question!(id)
 
-    related_questions = get_related_questions(question.embedding, question.id)
+    related_questions =
+      get_related_questions(question.embedding, question.id)
+      |> return_question_and_number()
 
     dbg(related_questions)
+
     list_of_episodes = get_episodes(question.episodes)
 
     related_episodes = format_episodes(list_of_episodes)
@@ -192,7 +167,8 @@ defmodule SkepticBotWeb.PodcastLive.Show do
      socket
      |> assign(result_description: format_description(question.description))
      |> assign(query: question.query)
-     |> assign(related_episodes: related_episodes)}
+     |> assign(related_episodes: related_episodes)
+     |> assign(related_questions: related_questions)}
   end
 
   @impl Phoenix.LiveView
@@ -294,7 +270,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   def get_related_questions(embedding, id) do
     questions =
       from(e in SkepticBot.Prompt.Question,
-        select: e,
+        select: %{id: e.id, description: e.description, title: e.query},
         where: e.id != ^id,
         order_by: [asc: l2_distance(e.embedding, ^embedding)],
         limit: 6
@@ -302,5 +278,9 @@ defmodule SkepticBotWeb.PodcastLive.Show do
       |> Repo.all()
 
     questions
+  end
+
+  defp return_question_and_number(list) do
+    Enum.with_index(list, fn element, index -> {element, index + 1} end)
   end
 end
