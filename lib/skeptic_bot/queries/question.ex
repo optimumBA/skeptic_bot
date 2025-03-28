@@ -7,6 +7,7 @@ defmodule SkepticBot.Prompt.Question do
   schema "user_questions" do
     field :query, :string
     field :description, :string
+    field :embedding, Pgvector.Ecto.Vector
 
     timestamps(type: :utc_datetime)
 
@@ -15,7 +16,7 @@ defmodule SkepticBot.Prompt.Question do
 
   def changeset(question, attrs) do
     question
-    |> cast(attrs, [:query, :description])
+    |> cast(attrs, [:query, :description, :embedding])
     |> validate_required([:query, :description])
     |> validate_length(:query,
       min: 4,

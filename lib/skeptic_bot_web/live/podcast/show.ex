@@ -5,6 +5,9 @@ defmodule SkepticBotWeb.PodcastLive.Show do
 
   use SkepticBotWeb, :live_view
 
+  import Ecto.Query
+  import Pgvector.Ecto.Query, only: [l2_distance: 2]
+
   alias SkepticBot.{Prompt, Podcasts, Repo, Podcasts.Episode}
 
   alias SkepticBotWeb.PodcastComponent
@@ -178,6 +181,9 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   def handle_params(%{"id" => id}, _, socket) do
     question = Prompt.get_question!(id)
 
+    related_questions = get_related_questions(question.embedding, question.id)
+
+    dbg(related_questions)
     list_of_episodes = get_episodes(question.episodes)
 
     related_episodes = format_episodes(list_of_episodes)
@@ -283,5 +289,18 @@ defmodule SkepticBotWeb.PodcastLive.Show do
       |> Enum.join()
 
     formatted_string
+  end
+
+  def get_related_questions(embedding, id) do
+    questions =
+      from(e in SkepticBot.Prompt.Question,
+        select: e,
+        where: e.id != ^id,
+        order_by: [asc: l2_distance(e.embedding, ^embedding)],
+        limit: 6
+      )
+      |> Repo.all()
+
+    questions
   end
 end

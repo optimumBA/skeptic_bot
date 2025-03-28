@@ -7,6 +7,8 @@ defmodule SkepticBot.Rag do
     embedding = Rag.Embedding.generate(query)
     context = Rag.Retrieval.retrieve(embedding)
 
+    # the context is basically the list of episodes
+
     prompt = format_prompt(context, query)
 
     {Rag.Generation.predict(prompt), context}
