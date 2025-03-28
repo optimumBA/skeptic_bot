@@ -7,7 +7,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
 
   use SkepticBotWeb, :live_component
 
-  alias SkepticBot.{Rag, Repo, Prompt}
+  alias SkepticBot.{Repo, Prompt}
 
   alias SkepticBot.Prompt.Question
 
@@ -95,15 +95,10 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
             [%{episode_id: episode.id} | list]
           end)
 
-        embedding_value = query <> " " <> description
-
-        embedding = Rag.Embedding.generate(embedding_value)
-
         question_params = %{
           query: query,
           description: description,
-          episodes: list_of_ids,
-          embedding: embedding
+          episodes: list_of_ids
         }
 
         changeset = Prompt.change_question(question, question_params)

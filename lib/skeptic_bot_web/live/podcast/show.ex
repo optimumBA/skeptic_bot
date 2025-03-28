@@ -3,12 +3,13 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   Shows the results of a prompt i.e the related episodes.
   """
 
+  require Logger
   use SkepticBotWeb, :live_view
 
   import Ecto.Query
   import Pgvector.Ecto.Query, only: [l2_distance: 2]
 
-  alias SkepticBot.{Prompt, Podcasts, Repo, Podcasts.Episode}
+  alias SkepticBot.{Prompt, Podcasts, Repo, Rag, Podcasts.Episode}
 
   alias SkepticBotWeb.PodcastComponent
 
@@ -153,11 +154,30 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   def handle_params(%{"id" => id}, _, socket) do
     question = Prompt.get_question!(id)
 
+    question =
+      if question.embedding == nil do
+        embedding_value = question.query <> " " <> question.description
+
+        embedding = Rag.Embedding.generate(embedding_value)
+
+        embedding_params = %{embedding: embedding}
+
+        changeset = Prompt.change_question(question, embedding_params)
+
+        case Repo.update(changeset) do
+          {:ok, question} ->
+            question
+
+          {:error, _changeset} ->
+            :error
+        end
+      else
+        question
+      end
+
     related_questions =
       get_related_questions(question.embedding, question.id)
       |> return_question_and_number()
-
-    dbg(related_questions)
 
     list_of_episodes = get_episodes(question.episodes)
 
