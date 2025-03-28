@@ -11,7 +11,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
 
   alias SkepticBot.Prompt.Question
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div>
@@ -44,7 +44,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
 
   def update(assigns, socket) do
     {:ok,
@@ -59,7 +59,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
     |> assign(:form, to_form(Prompt.change_prompt_question(question), as: "prompt"))
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event(
         "validate",
         %{"prompt" => prompt_params},

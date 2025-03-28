@@ -161,7 +161,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     other_episodes =
       Podcasts.get_first_six_records()
@@ -174,7 +174,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
      |> assign(related_episodes_index: 0)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _, socket) do
     question = Prompt.get_question!(id)
 
@@ -189,7 +189,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
      |> assign(related_episodes: related_episodes)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("next_related_episodes", _params, socket) do
     index = socket.assigns.related_episodes_index
     episodes = socket.assigns.related_episodes
@@ -197,7 +197,6 @@ defmodule SkepticBotWeb.PodcastLive.Show do
     {:noreply, assign(socket, related_episodes_index: new_index)}
   end
 
-  @impl true
   def handle_event("prev_related_episodes", _params, socket) do
     index = socket.assigns.related_episodes_index
     new_index = max(index - 1, 0)
@@ -262,12 +261,27 @@ defmodule SkepticBotWeb.PodcastLive.Show do
     episodes
   end
 
-  defp format_description(description) do
-    description =
-      description
-      |> String.split(".")
-      |> Enum.take(1)
+  # defp trim_description(description) do
+  #   description =
+  #     description
+  #     |> String.split(".")
+  #     |> Enum.take(1)
 
-    description
+  #   description
+  # end
+
+  def format_description(string) do
+    list_of_strings =
+      String.split(string, "\n")
+      |> Enum.filter(fn x -> x != "" end)
+
+    formatted_string =
+      Enum.map(list_of_strings, fn x ->
+        (String.trim(x, "*")
+         |> String.trim()) <> " "
+      end)
+      |> Enum.join()
+
+    formatted_string
   end
 end
