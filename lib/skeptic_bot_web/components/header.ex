@@ -5,12 +5,12 @@ defmodule SkepticBotWeb.Header do
   """
   use SkepticBotWeb, :live_view
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok, socket, layout: false}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="w-[86%] max-w-[72.625rem] mx-auto flex items-center justify-between py-8 text-[#000000] montserrat-alternates-bold">

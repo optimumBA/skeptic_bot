@@ -16,7 +16,6 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   alias SkepticBotWeb.Home.Component
 
   @impl Phoenix.LiveView
-
   def render(assigns) do
     ~H"""
     <div>
@@ -53,9 +52,9 @@ defmodule SkepticBotWeb.PodcastLive.Show do
               <%= for episode <- @related_episodes do %>
                 <PodcastComponent.podcast_video_card
                   image_file={episode.thumbnail}
-                  podcast_title={first_two_words(episode.title)}
+                  podcast_title={first_n_words(episode.title, 2)}
                   video_length={episode.video_length}
-                  random={:rand.uniform(5)}
+                  random={round(1 + 4 * :rand.uniform())}
                 />
               <% end %>
             </div>
@@ -103,7 +102,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
               <%= for {question, number_on_list} <- @related_questions do %>
                 <Component.episode_card
                   title={question.title}
-                  body={question.description}
+                  body={first_n_words(question.description, 40)}
                   people_count="134"
                   number={number_on_list}
                 />
@@ -123,9 +122,9 @@ defmodule SkepticBotWeb.PodcastLive.Show do
             <%= for episode <- @other_episodes do %>
               <PodcastComponent.podcast_video_grid_card
                 image_file={episode.thumbnail}
-                podcast_title={first_two_words(episode.title)}
+                podcast_title={first_n_words(episode.title, 2)}
                 video_length={episode.video_length}
-                random={:rand.uniform(3)}
+                random={round(1 + 2 * :rand.uniform())}
               />
             <% end %>
           </div>
@@ -219,8 +218,10 @@ defmodule SkepticBotWeb.PodcastLive.Show do
               episode
           end
 
-        episode = Map.put(episode, :thumbnail, "cover1.svg")
-        episode = Map.put(episode, :video_length, "02:20:45")
+        episode =
+          Map.put(episode, :thumbnail, "cover1.svg")
+          |> Map.put(:video_length, "02:20:45")
+
         [episode | output_list]
       end)
 
@@ -245,22 +246,19 @@ defmodule SkepticBotWeb.PodcastLive.Show do
     end
   end
 
-  defp first_two_words(string) do
+  defp first_n_words(string, number_of_words) do
     string
     |> String.split(~r/\s+/, trim: true)
-    |> Enum.take(2)
+    |> Enum.take(number_of_words)
     |> Enum.join(" ")
   end
 
   def get_episodes(list_of_ids) do
-    episodes =
-      Enum.reduce(list_of_ids, [], fn map, list ->
-        episode = Repo.get!(Episode, map.episode_id)
+    Enum.reduce(list_of_ids, [], fn map, list ->
+      episode = Repo.get!(Episode, map.episode_id)
 
-        [episode | list]
-      end)
-
-    episodes
+      [episode | list]
+    end)
   end
 
   # defp trim_description(description) do
@@ -277,14 +275,11 @@ defmodule SkepticBotWeb.PodcastLive.Show do
       String.split(string, "\n")
       |> Enum.filter(fn x -> x != "" end)
 
-    formatted_string =
-      Enum.map(list_of_strings, fn x ->
-        (String.trim(x, "*")
-         |> String.trim()) <> " "
-      end)
-      |> Enum.join()
-
-    formatted_string
+    Enum.map(list_of_strings, fn x ->
+      (String.trim(x, "*")
+       |> String.trim()) <> " "
+    end)
+    |> Enum.join()
   end
 
   def get_related_questions(embedding, id) do

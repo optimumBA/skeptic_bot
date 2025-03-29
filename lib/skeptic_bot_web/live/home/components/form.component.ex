@@ -45,18 +45,12 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
   end
 
   @impl Phoenix.LiveComponent
-
   def update(assigns, socket) do
     {:ok,
      socket
      |> assign(assigns)
      |> assign(:question, %Question{})
      |> assign_form()}
-  end
-
-  def assign_form(%{assigns: %{question: question}} = socket) do
-    socket
-    |> assign(:form, to_form(Prompt.change_prompt_question(question), as: "prompt"))
   end
 
   @impl Phoenix.LiveComponent
@@ -75,7 +69,6 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
      |> assign(:form, to_form(changeset, as: "prompt"))}
   end
 
-  @impl true
   def handle_event(
         "save",
         %{"prompt" => %{"query" => query} = prompt_params},
@@ -89,6 +82,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
     case changeset.valid? do
       true ->
         {description, list_of_episodes} = SkepticBot.Rag.generate(query)
+        dbg(description)
 
         list_of_ids =
           Enum.reduce(list_of_episodes, [], fn episode, list ->
@@ -120,5 +114,10 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
       false ->
         {:noreply, socket}
     end
+  end
+
+  def assign_form(%{assigns: %{question: question}} = socket) do
+    socket
+    |> assign(:form, to_form(Prompt.change_prompt_question(question), as: "prompt"))
   end
 end
