@@ -14,10 +14,21 @@ defmodule SkepticBotWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :webhook do
+    plug :accepts, ["json"]
+    plug SkepticBotWeb.Plugs.VerifyReplicateWebhook
+  end
+
   scope "/", SkepticBotWeb do
     pipe_through :browser
 
     get "/", PageController, :home
+  end
+
+  scope "/webhook", SkepticBotWeb do
+    pipe_through :webhook
+
+    post "/replicate", WebhookController, :replicate
   end
 
   # Other scopes may use custom stacks.

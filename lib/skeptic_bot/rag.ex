@@ -4,12 +4,15 @@ defmodule SkepticBot.Rag do
   alias SkepticBot.Rag
 
   def generate(query) do
-    embedding = Rag.Embedding.generate(query)
-    context = Rag.Retrieval.retrieve(embedding)
-
-    prompt = format_prompt(context, query)
-
-    {Rag.Generation.predict(prompt), context}
+    with {:ok, embedding} <- Rag.Embedding.generate("query: " <> query),
+         context <- Rag.Retrieval.retrieve(embedding),
+         prompt <- format_prompt(context, query),
+         {:ok, response} <- Rag.Generation.predict(prompt) do
+      {:ok, {response, context}}
+    else
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   defp format_prompt(context, query) do

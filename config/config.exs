@@ -70,15 +70,6 @@ config :nx, default_backend: EXLA.Backend
 
 config :skeptic_bot, SkepticBot.Repo, types: SkepticBot.PostgrexTypes
 
-config :skeptic_bot, :transcription,
-  batch_size: String.to_integer(System.get_env("TRANSCRIPTION_BATCH_SIZE", "4")),
-  repo: {:hf, System.get_env("TRANSCRIPTION_MODEL", "openai/whisper-tiny")}
-
-config :skeptic_bot, :embedding_generation,
-  batch_size: String.to_integer(System.get_env("EMBEDDING_GENERATION_BATCH_SIZE", "64")),
-  dimensions: String.to_integer(System.get_env("EMBEDDING_GENERATION_DIMENSIONS", "384")),
-  repo: {:hf, System.get_env("EMBEDDING_GENERATION_MODEL", "thenlper/gte-small")}
-
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

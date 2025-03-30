@@ -17,8 +17,35 @@ import Config
 # Alternatively, you can use `mix phx.gen.release` to generate a `bin/server`
 # script that automatically sets the env var above.
 if System.get_env("PHX_SERVER") do
-  config :skeptic_bot, SkepticBotWeb.Endpoint, server: true
+  host =
+    System.get_env("PHX_HOST") ||
+      raise """
+      environment variable PHX_HOST is missing.
+      #{if config_env() == :dev, do: "Run `make server` to start with ngrok."}
+      """
+
+  config :skeptic_bot, SkepticBotWeb.Endpoint,
+    server: true,
+    url: [host: host, port: 443, scheme: "https"]
 end
+
+replicate_api_token =
+  System.get_env("REPLICATE_API_TOKEN") ||
+    raise """
+    environment variable REPLICATE_API_TOKEN is missing.
+    """
+
+replicate_webhook_secret =
+  System.get_env("REPLICATE_WEBHOOK_SECRET") ||
+    raise """
+    environment variable REPLICATE_WEBHOOK_SECRET is missing.
+    """
+
+config :skeptic_bot, :replicate,
+  api_token: replicate_api_token,
+  webhook_secret: replicate_webhook_secret
+
+config :skeptic_bot, :embedding_generation, dimensions: 1024
 
 tigris_access_key_id =
   System.get_env("TIGRIS_ACCESS_KEY_ID") ||
@@ -72,13 +99,11 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  host = System.get_env("PHX_HOST") || "example.com"
   port = String.to_integer(System.get_env("PORT") || "4000")
 
   config :skeptic_bot, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :skeptic_bot, SkepticBotWeb.Endpoint,
-    url: [host: host, port: 443, scheme: "https"],
     http: [
       # Enable IPv6 and bind on all interfaces.
       # Set it to  {0, 0, 0, 0, 0, 0, 0, 1} for local network only access.
@@ -138,48 +163,4 @@ if config_env() == :prod do
   #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
-
-  transcription_batch_size =
-    System.get_env("TRANSCRIPTION_BATCH_SIZE") ||
-      raise """
-      environment variable TRANSCRIPTION_BATCH_SIZE is missing.
-      For example: 64
-      """
-
-  transcription_model =
-    System.get_env("TRANSCRIPTION_MODEL") ||
-      raise """
-      environment variable TRANSCRIPTION_MODEL is missing.
-      For example: openai/whisper-large-v3
-      """
-
-  config :skeptic_bot, :transcription,
-    batch_size: String.to_integer(transcription_batch_size),
-    repo: {:hf, transcription_model}
-
-  embedding_generation_batch_size =
-    System.get_env("EMBEDDING_GENERATION_BATCH_SIZE") ||
-      raise """
-      environment variable EMBEDDING_GENERATION_BATCH_SIZE is missing.
-      For example: 64
-      """
-
-  embedding_generation_dimensions =
-    System.get_env("EMBEDDING_GENERATION_DIMENSIONS") ||
-      raise """
-      environment variable EMBEDDING_GENERATION_DIMENSIONS is missing.
-      For example: 1024
-      """
-
-  embedding_generation_model =
-    System.get_env("EMBEDDING_GENERATION_MODEL") ||
-      raise """
-      environment variable EMBEDDING_GENERATION_MODEL is missing.
-      For example: thenlper/gte-large
-      """
-
-  config :skeptic_bot, :embedding_generation,
-    batch_size: String.to_integer(embedding_generation_batch_size),
-    dimensions: String.to_integer(embedding_generation_dimensions),
-    repo: {:hf, embedding_generation_model}
 end
