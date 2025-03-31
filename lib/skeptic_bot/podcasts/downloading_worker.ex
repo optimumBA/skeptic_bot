@@ -1,5 +1,6 @@
 defmodule SkepticBot.Podcasts.DownloadingWorker do
   use Oban.Worker,
+    max_attempts: 5,
     queue: :downloading,
     unique: [period: :infinity, states: Oban.Job.states()]
 

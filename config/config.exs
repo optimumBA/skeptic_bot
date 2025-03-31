@@ -63,7 +63,7 @@ config :phoenix, :json_library, Jason
 
 config :skeptic_bot, Oban,
   engine: Oban.Engines.Basic,
-  queues: [downloading: 3, generating_embeddings: 1, transcoding: 3, transcribing: 1],
+  queues: [downloading: 10, generating_embeddings: 3, transcoding: 10, transcribing: 3],
   repo: SkepticBot.Repo
 
 config :nx, default_backend: EXLA.Backend

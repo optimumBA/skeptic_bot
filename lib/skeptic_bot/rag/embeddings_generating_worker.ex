@@ -1,5 +1,6 @@
 defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
   use Oban.Worker,
+    max_attempts: 3,
     queue: :generating_embeddings,
     unique: [period: :infinity, states: Oban.Job.states()]
 

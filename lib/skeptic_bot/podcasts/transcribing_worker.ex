@@ -1,5 +1,6 @@
 defmodule SkepticBot.Podcasts.TranscribingWorker do
   use Oban.Worker,
+    max_attempts: 3,
     queue: :transcribing,
     unique: [period: :infinity, states: Oban.Job.states()]
 
