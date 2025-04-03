@@ -1,4 +1,4 @@
-.PHONY: iex_server ngrok_host server stop_ngrok
+.PHONY: ci iex_server ngrok_host server stop_ngrok
 
 ngrok_host:
 	@if ! pgrep -f ngrok > /dev/null; then \
@@ -21,3 +21,8 @@ iex_server:
 
 stop_ngrok:
 	@pkill -f ngrok
+
+ci:
+	MIX_ENV=test mix compile
+	mix ci
+	MIX_ENV=test mix ecto.rollback --all --quiet

@@ -16,8 +16,9 @@ defmodule SkepticBotWeb.CoreComponents do
   """
   use Phoenix.Component
 
-  alias Phoenix.LiveView.JS
   import SkepticBotWeb.Gettext
+
+  alias Phoenix.LiveView.JS
 
   @doc """
   Renders a modal.
@@ -593,7 +594,7 @@ defmodule SkepticBotWeb.CoreComponents do
   attr :name, :string, required: true
   attr :class, :string, default: nil
 
-  def icon(%{name: "hero-" <> _} = assigns) do
+  def icon(%{name: "hero-" <> _rest} = assigns) do
     ~H"""
     <span class={[@name, @class]} />
     """

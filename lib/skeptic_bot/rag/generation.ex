@@ -1,15 +1,25 @@
 defmodule SkepticBot.Rag.Generation do
-  @behaviour SkepticBot.ReplicateClient
-  require Logger
+  @moduledoc """
+  Handles generation of responses using Replicate's language models.
+  """
+
   alias LangChain.Message
+  alias SkepticBot.ReplicateClient
+
+  require Logger
+
+  @behaviour SkepticBot.ReplicateClient
 
   @model "meta/meta-llama-3-8b-instruct"
 
+  @impl ReplicateClient
   def get_type, do: "generation"
 
+  @impl ReplicateClient
   def handle_output(output) when is_list(output), do: Enum.join(output)
   def handle_output(output), do: output
 
+  @spec predict([LangChain.Message.t()]) :: {:ok, String.t()} | {:error, any()}
   def predict(messages) do
     input = %{
       length_penalty: 1.0,
@@ -25,12 +35,10 @@ defmodule SkepticBot.Rag.Generation do
   end
 
   defp format_messages(messages) do
-    messages
-    |> Enum.map(fn
+    Enum.map_join(messages, "\n", fn
       %Message{role: :system, content: content} -> "System: #{content}\n"
       %Message{role: :user, content: content} -> "Human: #{content}\n"
       %Message{role: :assistant, content: content} -> "Assistant: #{content}\n"
     end)
-    |> Enum.join("\n")
   end
 end

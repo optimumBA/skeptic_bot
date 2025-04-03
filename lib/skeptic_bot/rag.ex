@@ -1,8 +1,14 @@
 defmodule SkepticBot.Rag do
+  @moduledoc """
+  Implements a Retrieval-Augmented Generation system for podcast content.
+  Combines vector search retrieval with language model generation to create contextual responses.
+  """
+
   alias LangChain.Message
   alias SkepticBot.Podcasts
   alias SkepticBot.Rag
 
+  @spec generate(String.t()) :: {:ok, {String.t(), list()}} | {:error, any()}
   def generate(query) do
     with {:ok, embedding} <- Rag.Embedding.generate("query: " <> query),
          context <- Rag.Retrieval.retrieve(embedding),

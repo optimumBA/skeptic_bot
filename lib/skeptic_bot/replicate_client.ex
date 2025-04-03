@@ -5,13 +5,15 @@ defmodule SkepticBot.ReplicateClient do
 
   use SkepticBotWeb, :verified_routes
 
-  require Logger
-
   alias SkepticBot.WebhookHandler
+
+  require Logger
 
   @callback get_type() :: String.t()
   @callback handle_output(any()) :: any()
 
+  @spec start_prediction(module(), String.t(), map(), timeout()) ::
+          {:ok, any()} | {:error, String.t()}
   def start_prediction(module, model, input, timeout \\ :timer.minutes(5)) do
     replicate_config = Application.fetch_env!(:skeptic_bot, :replicate)
     api_token = Keyword.fetch!(replicate_config, :api_token)
@@ -19,7 +21,7 @@ defmodule SkepticBot.ReplicateClient do
 
     version =
       case String.split(model, ":") do
-        [_, version] -> version
+        [_model_id, version] -> version
         [model_id] -> model_id
       end
 
@@ -61,34 +63,4 @@ defmodule SkepticBot.ReplicateClient do
         {:error, "#{module.get_type()} timed out"}
     end
   end
-
-  def handle_webhook(_module, %{
-        "id" => prediction_id,
-        "status" => "succeeded",
-        "output" => output
-      }) do
-    case Registry.lookup(:prediction_registry, prediction_id) do
-      [{pid, _}] ->
-        send(pid, {:prediction_completed, prediction_id, output})
-
-      [] ->
-        Logger.warning("No process waiting for prediction #{prediction_id}")
-    end
-
-    :ok
-  end
-
-  def handle_webhook(_module, %{"id" => prediction_id, "status" => "failed", "error" => error}) do
-    case Registry.lookup(:prediction_registry, prediction_id) do
-      [{pid, _}] ->
-        send(pid, {:prediction_failed, prediction_id, error})
-
-      [] ->
-        Logger.warning("No process waiting for prediction #{prediction_id}")
-    end
-
-    :ok
-  end
-
-  def handle_webhook(_module, _payload), do: :ok
 end

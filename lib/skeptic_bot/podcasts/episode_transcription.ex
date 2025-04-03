@@ -1,7 +1,11 @@
 defmodule SkepticBot.Podcasts.EpisodeTranscription do
+  @moduledoc false
+
   use Ecto.Schema
 
   import Ecto.Changeset
+
+  @type t :: %__MODULE__{}
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -14,7 +18,7 @@ defmodule SkepticBot.Podcasts.EpisodeTranscription do
     timestamps(type: :utc_datetime)
   end
 
-  @doc false
+  @spec changeset(t(), map()) :: Ecto.Changeset.t()
   def changeset(podcast_episode_transcription, attrs) do
     podcast_episode_transcription
     |> cast(attrs, [:embedding, :podcast_episode_id, :timestamp, :transcription])

@@ -1,9 +1,15 @@
 defmodule SkepticBot.Podcasts.TinfoilScraper do
-  @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
+  @moduledoc false
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
 
+  @type episode_id :: String.t()
+  @type start :: integer()
+
+  @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
+
+  @spec scrape(start()) :: :ok | {:error, any()}
   def scrape(start \\ 0)
 
   def scrape(start) do
@@ -26,6 +32,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     end
   end
 
+  @spec scrape_episode(episode_id(), start()) :: :ok | {:error, any()}
   def scrape_episode(uuid, start \\ 0) do
     url = String.replace(@url, "<start>", Integer.to_string(start))
 

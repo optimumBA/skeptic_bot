@@ -66,9 +66,16 @@ config :skeptic_bot, Oban,
   queues: [downloading: 10, transcoding: 2],
   repo: SkepticBot.Repo
 
-config :nx, default_backend: EXLA.Backend
-
 config :skeptic_bot, SkepticBot.Repo, types: SkepticBot.PostgrexTypes
+
+# AppSignal
+config :appsignal, :config,
+  active: false,
+  ecto_repos: [SkepticBot.Repo],
+  env: config_env(),
+  ignore_actions: ["SkepticBotWeb.HealthController#index"],
+  name: "skeptic_bot",
+  otp_app: :skeptic_bot
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

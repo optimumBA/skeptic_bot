@@ -4,8 +4,11 @@ defmodule SkepticBot.Storage.Tigris do
   """
   require Logger
 
+  @type reason :: String.t()
+
   @timeout :timer.minutes(5)
 
+  @spec new() :: Req.Request.t()
   def new do
     config = Application.fetch_env!(:skeptic_bot, :tigris_storage)
     bucket = Keyword.fetch!(config, :bucket)
@@ -26,6 +29,7 @@ defmodule SkepticBot.Storage.Tigris do
   @doc """
   Uploads a file to Tigris Storage and returns the public URL.
   """
+  @spec upload_file(String.t(), String.t()) :: {:ok, String.t()} | {:error, reason()}
   def upload_file(file_path, content_type \\ "audio/mpeg") do
     {:ok, file_binary} = File.read(file_path)
     file_name = Path.basename(file_path)
@@ -33,8 +37,8 @@ defmodule SkepticBot.Storage.Tigris do
     bucket = Keyword.fetch!(config, :bucket)
 
     response =
-      new()
-      |> Req.put!(
+      Req.put!(
+        new(),
         url: file_name,
         headers: [
           {"content-type", content_type},
@@ -65,10 +69,11 @@ defmodule SkepticBot.Storage.Tigris do
   @doc """
   Deletes a file from Tigris Storage.
   """
+  @spec delete_file(String.t()) :: :ok | {:error, reason()}
   def delete_file(file_name) do
     response =
-      new()
-      |> Req.delete!(
+      Req.delete!(
+        new(),
         url: file_name,
         receive_timeout: @timeout
       )

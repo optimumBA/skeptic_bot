@@ -52,4 +52,6 @@ defmodule SkepticBotWeb.Router do
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
+
+  resources "/health", SkepticBotWeb.HealthController, only: [:index]
 end

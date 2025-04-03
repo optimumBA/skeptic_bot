@@ -1,17 +1,27 @@
 defmodule SkepticBot.Podcasts.TranscribingWorker do
+  @moduledoc """
+  Worker responsible for transcribing podcast audio using external transcription services.
+  Processes audio files and creates episode transcription records with proper timestamps.
+  """
+
   use Oban.Worker,
     max_attempts: 3,
     queue: :transcribing,
     unique: [period: :infinity, states: Oban.Job.states()]
-
-  require Logger
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Storage.Tigris
   alias SkepticBot.Transcription
 
+  require Logger
+
+  @type audio_url :: String.t()
+  @type id :: String.t()
+  @type job :: Oban.Job.t()
+
   @impl Oban.Worker
+  @spec perform(job()) :: :ok | {:error, String.t()}
   def perform(%Oban.Job{args: %{"id" => id, "audio_url" => audio_url}}) do
     case transcribe_episode(id, audio_url) do
       :ok ->
@@ -34,6 +44,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
     end
   end
 
+  @spec transcribe_episode(id(), audio_url()) :: :ok | {:error, any()}
   defp transcribe_episode(id, audio_url) do
     case Transcription.transcribe(audio_url) do
       {:ok, chunks} when is_list(chunks) ->
@@ -52,6 +63,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
     end
   end
 
+  @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}
   def enqueue(attrs) do
     attrs
     |> __MODULE__.new()

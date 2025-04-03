@@ -1,24 +1,44 @@
 defmodule SkepticBot.WebhookHandler do
+  @moduledoc """
+  Manages prediction workflows and webhook callbacks from the Replicate API.
+  """
+
   use GenServer
 
   require Logger
 
-  @registry_name :prediction_registry
+  @type payload :: map()
+  @type prediction_id :: String.t()
 
+  @registry_name SkepticBot.PredictionRegistry
+
+  @spec start_link(any()) :: GenServer.on_start()
   def start_link(_opts) do
-    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
+    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
-  @impl true
+  @impl GenServer
   def init(_state) do
     {:ok, %{}}
   end
 
+  @spec register_for_prediction(prediction_id(), pid()) ::
+          {:ok, pid()} | {:error, {:already_registered, pid()}}
+  def register_for_prediction(prediction_id, pid) do
+    Registry.register(@registry_name, prediction_id, pid)
+  end
+
+  @spec unregister_prediction(prediction_id()) :: :ok
+  def unregister_prediction(prediction_id) do
+    Registry.unregister(@registry_name, prediction_id)
+  end
+
+  @spec handle_webhook(payload()) :: :ok
   def handle_webhook(payload) do
     GenServer.cast(__MODULE__, {:handle_webhook, payload})
   end
 
-  @impl true
+  @impl GenServer
   def handle_cast({:handle_webhook, %{"id" => prediction_id} = payload}, state) do
     handle_prediction_result(payload, prediction_id)
     {:noreply, state}
@@ -31,7 +51,7 @@ defmodule SkepticBot.WebhookHandler do
 
   defp handle_prediction_result(%{"status" => "succeeded", "output" => output}, prediction_id) do
     case Registry.lookup(@registry_name, prediction_id) do
-      [{pid, _}] ->
+      [{pid, _ref}] ->
         send(pid, {:prediction_completed, prediction_id, output})
         unregister_prediction(prediction_id)
 
@@ -56,20 +76,12 @@ defmodule SkepticBot.WebhookHandler do
 
   defp notify_prediction_failed(prediction_id, error) do
     case Registry.lookup(@registry_name, prediction_id) do
-      [{pid, _}] ->
+      [{pid, _ref}] ->
         send(pid, {:prediction_failed, prediction_id, error})
         unregister_prediction(prediction_id)
 
       [] ->
         Logger.warning("No process waiting for prediction #{prediction_id}")
     end
-  end
-
-  def register_for_prediction(prediction_id, pid) do
-    Registry.register(@registry_name, prediction_id, pid)
-  end
-
-  def unregister_prediction(prediction_id) do
-    Registry.unregister(@registry_name, prediction_id)
   end
 end

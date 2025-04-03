@@ -1,43 +1,63 @@
 defmodule SkepticBotWeb.Plugs.VerifyReplicateWebhook do
+  @moduledoc """
+  Verifies the authenticity of incoming webhooks from Replicate.
+  Validates the webhook signature, ID, and timestamp to ensure requests are genuine.
+  """
+
   import Phoenix.Controller
   import Plug.Conn
+
   require Logger
+
+  @type conn :: Plug.Conn.t()
+  @type opts :: Plug.opts()
 
   @interesting_statuses ["succeeded", "failed", "canceled"]
 
+  @spec init(opts()) :: opts()
   def init(opts), do: opts
 
+  @spec call(conn(), opts()) :: conn()
   def call(conn, _opts) do
+    case validate_webhook(conn) do
+      :ok -> conn
+      {:error, :skip_event} -> handle_skip_event(conn)
+      {:error, reason} -> handle_error(conn, reason)
+    end
+  end
+
+  defp validate_webhook(conn) do
     with {:ok, raw_body} <- get_raw_body(conn),
          {:ok, status} <- get_prediction_status(raw_body),
          :ok <- verify_status(status),
          {:ok, signature} <- get_signature(conn),
          {:ok, webhook_id} <- get_webhook_id(conn),
-         {:ok, timestamp} <- get_timestamp(conn),
-         :ok <- verify_signature(raw_body, signature, webhook_id, timestamp) do
-      conn
-    else
-      {:error, :skip_event} ->
-        conn
-        |> put_status(:ok)
-        |> json(%{status: "ok"})
-        |> halt()
-
-      {:error, reason} ->
-        Logger.error("Webhook verification failed: #{reason}")
-
-        conn
-        |> put_status(:unauthorized)
-        |> json(%{error: reason})
-        |> halt()
+         {:ok, timestamp} <- get_timestamp(conn) do
+      verify_signature(raw_body, signature, webhook_id, timestamp)
     end
+  end
+
+  defp handle_skip_event(conn) do
+    conn
+    |> put_status(:ok)
+    |> json(%{status: "ok"})
+    |> halt()
+  end
+
+  defp handle_error(conn, reason) do
+    Logger.error("Webhook verification failed: #{reason}")
+
+    conn
+    |> put_status(:unauthorized)
+    |> json(%{error: reason})
+    |> halt()
   end
 
   defp get_prediction_status(raw_body) do
     case Jason.decode(raw_body) do
       {:ok, %{"status" => status}} -> {:ok, status}
-      {:ok, _} -> {:error, "Missing status field"}
-      {:error, _} -> {:error, "Invalid JSON payload"}
+      {:ok, _payload} -> {:error, "Missing status field"}
+      {:error, _reason} -> {:error, "Invalid JSON payload"}
     end
   end
 
@@ -51,8 +71,8 @@ defmodule SkepticBotWeb.Plugs.VerifyReplicateWebhook do
 
   defp get_raw_body(conn) do
     case conn.assigns[:raw_body] do
-      [body | _] -> {:ok, body}
-      _ -> {:error, "Missing request body"}
+      [body | _rest] -> {:ok, body}
+      _invalid -> {:error, "Missing request body"}
     end
   end
 
@@ -78,21 +98,30 @@ defmodule SkepticBotWeb.Plugs.VerifyReplicateWebhook do
   end
 
   defp verify_signature(body, signature_header, webhook_id, timestamp) do
-    webhook_secret = Application.fetch_env!(:skeptic_bot, :replicate)[:webhook_secret]
-
     secret =
-      webhook_secret
+      :skeptic_bot
+      |> Application.fetch_env!(:replicate)
+      |> Keyword.fetch!(:webhook_secret)
       |> String.replace_prefix("whsec_", "")
       |> Base.decode64!()
 
     signed_content = "#{webhook_id}.#{timestamp}.#{body}"
-    computed = :crypto.mac(:hmac, :sha256, secret, signed_content) |> Base.encode64()
-    signatures = String.split(signature_header, " ")
+    computed_mac = :crypto.mac(:hmac, :sha256, secret, signed_content)
 
-    if Enum.any?(signatures, fn sig ->
-         [_version, signature] = String.split(sig, ",")
-         :crypto.hash_equals(Base.decode64!(signature), Base.decode64!(computed))
-       end) do
+    valid_signature =
+      signature_header
+      |> String.split(" ")
+      |> Enum.any?(fn signature ->
+        decoded_signature =
+          signature
+          |> String.split(",")
+          |> Enum.at(1)
+          |> Base.decode64!()
+
+        :crypto.hash_equals(decoded_signature, computed_mac)
+      end)
+
+    if valid_signature do
       :ok
     else
       {:error, "Invalid signature"}

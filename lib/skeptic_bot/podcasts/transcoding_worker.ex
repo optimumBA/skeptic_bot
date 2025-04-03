@@ -1,17 +1,28 @@
 defmodule SkepticBot.Podcasts.TranscodingWorker do
+  @moduledoc """
+  Handles transcoding of podcast episodes from video to audio formats.
+  Prepares audio for transcription by converting, optimizing, and uploading to storage.
+  """
+
   use Oban.Worker,
     max_attempts: 5,
     queue: :transcoding,
     unique: [period: :infinity, states: Oban.Job.states()]
 
-  require Logger
-
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.Tigris
+
+  require Logger
+
+  @type file_type :: :audio | :unknown | :video
+  @type id :: String.t()
+  @type job :: Oban.Job.t()
+  @type source_file_path :: String.t()
 
   @audio_extensions [".mp3", ".wav", ".m4a", ".aac", ".ogg", ".flac"]
 
   @impl Oban.Worker
+  @spec perform(job()) :: :ok | {:error, String.t()}
   def perform(%Oban.Job{args: %{"id" => id}}) do
     source_file_path = get_source_file_path(id)
 
@@ -24,8 +35,13 @@ defmodule SkepticBot.Podcasts.TranscodingWorker do
     end
   end
 
+  @spec get_source_file_path(id()) :: source_file_path()
   defp get_source_file_path(id) do
-    dir = Path.join(Application.app_dir(:skeptic_bot, "priv"), "podcasts")
+    dir =
+      :skeptic_bot
+      |> Application.app_dir("priv")
+      |> Path.join("podcasts")
+
     video_path = Path.join([dir, "video", "#{id}.mp4"])
 
     audio_paths =
@@ -33,7 +49,7 @@ defmodule SkepticBot.Podcasts.TranscodingWorker do
         Path.join([dir, "audio", "#{id}#{ext}"])
       end)
 
-    audio_path = Enum.find(audio_paths, fn path -> File.exists?(path) end)
+    audio_path = Enum.find(audio_paths, &File.exists?/1)
 
     cond do
       File.exists?(video_path) -> video_path
@@ -42,6 +58,7 @@ defmodule SkepticBot.Podcasts.TranscodingWorker do
     end
   end
 
+  @spec determine_file_type(source_file_path()) :: file_type()
   defp determine_file_type(file_path) do
     extension = Path.extname(file_path)
 
@@ -53,7 +70,7 @@ defmodule SkepticBot.Podcasts.TranscodingWorker do
         :audio
 
       true ->
-        {output, 0} = System.cmd("file", ["--mime-type", "-b", file_path])
+        {output, 0} = System.cmd("file", ["--mime-type", "-b", file_path], env: [])
         mime_type = String.trim(output)
 
         cond do
@@ -78,23 +95,31 @@ defmodule SkepticBot.Podcasts.TranscodingWorker do
     process_file(id, source_file_path, :video)
   end
 
+  @spec transcode_video_to_audio(id(), source_file_path()) :: source_file_path()
   defp transcode_video_to_audio(id, video_file_path) do
-    dir = Path.join(Application.app_dir(:skeptic_bot, "priv"), "podcasts")
-    audio_dir = Path.join(dir, "audio")
+    audio_dir =
+      :skeptic_bot
+      |> Application.app_dir("priv")
+      |> Path.join("podcasts")
+      |> Path.join("audio")
+
     File.mkdir_p!(audio_dir)
     audio_file_path = Path.join(audio_dir, "#{id}.mp3")
-
     File.rm(audio_file_path)
 
-    System.cmd("ffmpeg", [
-      "-hide_banner",
-      "-i",
-      video_file_path,
-      "-b:a",
-      "192K",
-      "-vn",
-      audio_file_path
-    ])
+    System.cmd(
+      "ffmpeg",
+      [
+        "-hide_banner",
+        "-i",
+        video_file_path,
+        "-b:a",
+        "192K",
+        "-vn",
+        audio_file_path
+      ],
+      env: []
+    )
 
     File.rm!(video_file_path)
 
@@ -115,6 +140,7 @@ defmodule SkepticBot.Podcasts.TranscodingWorker do
     end
   end
 
+  @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}
   def enqueue(attrs) do
     attrs
     |> __MODULE__.new()

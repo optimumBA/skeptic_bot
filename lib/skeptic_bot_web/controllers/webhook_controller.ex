@@ -1,10 +1,18 @@
 defmodule SkepticBotWeb.WebhookController do
+  @moduledoc """
+  Controller for handling webhook callbacks from external services.
+  """
+
   use SkepticBotWeb, :controller
 
   alias SkepticBot.WebhookHandler
 
-  def replicate(conn, payload) do
-    WebhookHandler.handle_webhook(payload)
+  @type conn :: Plug.Conn.t()
+  @type params :: map()
+
+  @spec replicate(conn(), params()) :: conn()
+  def replicate(conn, params) do
+    WebhookHandler.handle_webhook(params)
 
     conn
     |> put_status(:ok)
