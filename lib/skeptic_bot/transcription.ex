@@ -1,24 +1,35 @@
 defmodule SkepticBot.Transcription do
-  def serving do
-    repo = Application.get_env(:skeptic_bot, :transcription)[:repo]
+  @moduledoc """
+  Provides audio transcription capabilities using Replicate's speech recognition models.
+  Handles the conversion of audio to text and processes the chunked output.
+  """
 
-    {:ok, model_info} = Bumblebee.load_model(repo)
-    {:ok, featurizer} = Bumblebee.load_featurizer(repo)
-    {:ok, tokenizer} = Bumblebee.load_tokenizer(repo)
-    {:ok, generation_config} = Bumblebee.load_generation_config(repo)
-    generation_config = Bumblebee.configure(generation_config, max_new_tokens: 100)
-    batch_size = Application.get_env(:skeptic_bot, :transcription)[:batch_size]
+  alias SkepticBot.ReplicateClient
 
-    Bumblebee.Audio.speech_to_text_whisper(model_info, featurizer, tokenizer, generation_config,
-      compile: [batch_size: batch_size],
-      chunk_num_seconds: 30,
-      timestamps: :segments,
-      stream: true,
-      defn_options: [compiler: EXLA]
-    )
-  end
+  require Logger
 
-  def transcribe(audio_file) do
-    Nx.Serving.batched_run(__MODULE__, {:file, audio_file})
+  @behaviour ReplicateClient
+
+  @model "vaibhavs10/incredibly-fast-whisper:3ab86df6c8f54c11309d4d1f930ac292bad43ace52d10c80d87eb258b3c9f79c"
+
+  @impl ReplicateClient
+  def get_type, do: "transcription"
+
+  @impl ReplicateClient
+  def handle_output(%{"chunks" => chunks}), do: chunks
+  def handle_output(output), do: output
+
+  @spec transcribe(String.t()) :: {:ok, list()} | {:error, any()}
+  def transcribe(audio_url) do
+    input = %{
+      audio: audio_url,
+      task: "transcribe",
+      language: "None",
+      timestamp: "chunk",
+      batch_size: 64,
+      diarise_audio: false
+    }
+
+    ReplicateClient.start_prediction(__MODULE__, @model, input, :timer.minutes(30))
   end
 end

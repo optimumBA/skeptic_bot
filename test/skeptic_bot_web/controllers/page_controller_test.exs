@@ -1,5 +1,5 @@
 defmodule SkepticBotWeb.PageControllerTest do
-  use SkepticBotWeb.ConnCase
+  use SkepticBotWeb.ConnCase, async: true
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")

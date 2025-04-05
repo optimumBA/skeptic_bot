@@ -19,7 +19,7 @@ config :skeptic_bot, SkepticBot.Repo,
 config :skeptic_bot, SkepticBotWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
@@ -83,3 +83,7 @@ config :phoenix_live_view,
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
+
+config :skeptic_bot, :tigris_storage,
+  api_key: System.get_env("TIGRIS_STORAGE_API_KEY"),
+  bucket: System.get_env("TIGRIS_STORAGE_BUCKET")

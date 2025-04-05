@@ -5,7 +5,7 @@ defmodule SkepticBot.Application do
 
   use Application
 
-  @impl true
+  @impl Application
   def start(_type, _args) do
     children = [
       SkepticBotWeb.Telemetry,
@@ -16,10 +16,10 @@ defmodule SkepticBot.Application do
       {Finch, name: SkepticBot.Finch},
       # Start a worker by calling: SkepticBot.Worker.start_link(arg)
       # {SkepticBot.Worker, arg},
-      {Nx.Serving, name: SkepticBot.Rag.Embedding, serving: SkepticBot.Rag.Embedding.serving()},
-      {Nx.Serving, name: SkepticBot.Transcription, serving: SkepticBot.Transcription.serving()},
+      {Registry, keys: :unique, name: SkepticBot.PredictionRegistry},
       # Start to serve requests, typically the last entry
       SkepticBotWeb.Endpoint,
+      SkepticBot.WebhookHandler,
       {Oban, Application.fetch_env!(:skeptic_bot, Oban)}
     ]
 
@@ -31,7 +31,7 @@ defmodule SkepticBot.Application do
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
-  @impl true
+  @impl Application
   def config_change(changed, _new, removed) do
     SkepticBotWeb.Endpoint.config_change(changed, removed)
     :ok

@@ -1,0 +1,59 @@
+#!/bin/sh
+set -eu
+
+cd -P -- "$(dirname -- "$0")"
+
+if [ -z "$DATABASE_URL" ]; then
+    echo "ERROR: DATABASE_URL environment variable is not set"
+    exit 1
+fi
+
+echo "Checking if database needs restoration..."
+
+APP_TABLES=$(psql "$DATABASE_URL" -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'schema_migrations';" || echo "error")
+APP_TABLES=$(echo $APP_TABLES | tr -d '[:space:]')
+
+if [ "$APP_TABLES" = "0" ] || [ "$APP_TABLES" = "error" ]; then
+    echo "Database doesn't have application tables. Will restore from dump."
+
+    if [ -z "$TIGRIS_ACCESS_KEY_ID" ] || [ -z "$TIGRIS_SECRET_ACCESS_KEY" ] || [ -z "$TIGRIS_BUCKET" ]; then
+        echo "ERROR: TIGRIS_ACCESS_KEY_ID, TIGRIS_SECRET_ACCESS_KEY, and TIGRIS_BUCKET must be set"
+        exit 1
+    fi
+
+    export AWS_ACCESS_KEY_ID=$TIGRIS_ACCESS_KEY_ID
+    export AWS_SECRET_ACCESS_KEY=$TIGRIS_SECRET_ACCESS_KEY
+
+    TEMP_DIR=$(mktemp -d)
+    DUMP_FILE_PATH="$TEMP_DIR/skeptic_bot.dump"
+
+    echo "Downloading dump to temporary file..."
+    aws s3 cp --endpoint-url=https://fly.storage.tigris.dev \
+        "s3://$TIGRIS_BUCKET/_db/$DATABASE_DUMP_FILE" "$DUMP_FILE_PATH" --region auto
+
+    if [ ! -f "$DUMP_FILE_PATH" ]; then
+        echo "ERROR: Failed to download the database dump"
+        exit 1
+    fi
+
+    echo "Download complete. Restoring database in stages..."
+
+    echo "Restoring database schema..."
+    pg_restore --dbname="$DATABASE_URL" --no-owner --no-privileges --section=pre-data "$DUMP_FILE_PATH"
+
+    echo "Restoring data..."
+    pg_restore --dbname="$DATABASE_URL" --no-owner --no-privileges --section=data "$DUMP_FILE_PATH"
+
+    echo "Creating regular indexes (skipping vector indexes)..."
+    pg_restore --list "$DUMP_FILE_PATH" | grep "INDEX\|CONSTRAINT" | grep -v "embedding_vector" >"$TEMP_DIR/indexes_to_create.txt"
+    pg_restore --dbname="$DATABASE_URL" --no-owner --no-privileges --use-list="$TEMP_DIR/indexes_to_create.txt" "$DUMP_FILE_PATH"
+
+    rm -rf "$TEMP_DIR"
+
+    echo "Database restoration completed!"
+else
+    echo "Database already has application tables. Skipping restoration."
+fi
+
+echo "Running migrations..."
+exec ./skeptic_bot eval SkepticBot.Release.migrate

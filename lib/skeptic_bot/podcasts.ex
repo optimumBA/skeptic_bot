@@ -9,6 +9,12 @@ defmodule SkepticBot.Podcasts do
   alias SkepticBot.Podcasts.EpisodeTranscription
   alias SkepticBot.Repo
 
+  @type attrs :: map()
+  @type changeset :: Ecto.Changeset.t()
+  @type episode :: Episode.t()
+  @type episode_transcription :: EpisodeTranscription.t()
+  @type id :: String.t()
+
   @doc """
   Creates a podcast_episode.
 
@@ -21,6 +27,7 @@ defmodule SkepticBot.Podcasts do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec create_episode(attrs()) :: {:ok, episode()} | {:error, changeset()}
   def create_episode(attrs \\ %{}) do
     %Episode{}
     |> Episode.changeset(attrs)
@@ -39,6 +46,8 @@ defmodule SkepticBot.Podcasts do
       {:error, %Ecto.Changeset{}}
 
   """
+  @spec create_episode_transcription(attrs()) ::
+          {:ok, episode_transcription()} | {:error, changeset()}
   def create_episode_transcription(attrs \\ %{}) do
     %EpisodeTranscription{}
     |> EpisodeTranscription.changeset(attrs)
@@ -57,8 +66,12 @@ defmodule SkepticBot.Podcasts do
       false
 
   """
-  def episode_exists?(id),
-    do: Repo.exists?(from e in Episode, where: e.external_id == ^id)
+  @spec episode_exists?(id()) :: boolean()
+  def episode_exists?(id) do
+    Episode
+    |> where([e], e.external_id == ^id)
+    |> Repo.exists?()
+  end
 
   @doc """
   Gets a podcast_episode.
@@ -72,6 +85,7 @@ defmodule SkepticBot.Podcasts do
       nil
 
   """
+  @spec get_episode(id()) :: episode() | nil
   def get_episode(id), do: Repo.get(Episode, id)
 
   @doc """
@@ -83,6 +97,7 @@ defmodule SkepticBot.Podcasts do
       {:ok, episode_transcriptions}
 
   """
+  @spec get_episode_transcriptions(id()) :: {:ok, String.t()} | {:error, any()}
   def get_episode_transcriptions(episode_id) do
     transformation = fn ->
       EpisodeTranscription
@@ -102,16 +117,17 @@ defmodule SkepticBot.Podcasts do
   ## Examples
 
       iex> {:ok, episode} = Podcasts.create_episode()
-      ...>
+      ...> 
       ...> result =
       ...>   Podcasts.update_episode(episode, %{
       ...>     transcription: "updated transcription"
       ...>   })
-      ...>
+      ...> 
       ...> with {:ok, %Podcasts.Episode{}} <- result, do: :ok
       :ok
 
   """
+  @spec update_episode(episode(), attrs()) :: {:ok, episode()} | {:error, changeset()}
   def update_episode(%Episode{} = episode, attrs) do
     episode
     |> Episode.changeset(attrs)
@@ -124,16 +140,18 @@ defmodule SkepticBot.Podcasts do
   ## Examples
 
       iex> {:ok, episode_transcription} = Podcasts.create_episode_transcription()
-      ...>
+      ...> 
       ...> result =
       ...>   Podcasts.update_episode_transcription(episode_transcription, %{
       ...>     transcription: "updated transcription"
       ...>   })
-      ...>
+      ...> 
       ...> with {:ok, %Podcasts.EpisodeTranscription{}} <- result, do: :ok
       :ok
 
   """
+  @spec update_episode_transcription(episode_transcription(), attrs()) ::
+          {:ok, episode_transcription()} | {:error, changeset()}
   def update_episode_transcription(%EpisodeTranscription{} = episode_transcription, attrs) do
     episode_transcription
     |> EpisodeTranscription.changeset(attrs)
@@ -155,6 +173,8 @@ defmodule SkepticBot.Podcasts do
       :ok
 
   """
+  @spec while_streaming_episode_transcriptions(id(), integer(), (list() -> any())) ::
+          {:ok, integer()} | {:error, any()}
   def while_streaming_episode_transcriptions(episode_id, chunk_size, callback_fun) do
     transformation = fn ->
       EpisodeTranscription

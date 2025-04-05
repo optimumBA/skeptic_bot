@@ -22,6 +22,7 @@ defmodule SkepticBotWeb.ConnCase do
       # The default endpoint for testing
       @endpoint SkepticBotWeb.Endpoint
 
+      use Oban.Testing, repo: SkepticBot.Repo
       use SkepticBotWeb, :verified_routes
 
       # Import conveniences for testing with connections

@@ -1,14 +1,44 @@
 defmodule SkepticBot.Rag.Generation do
-  alias LangChain.ChatModels.ChatOllamaAI
-  alias LangChain.Chains.LLMChain
+  @moduledoc """
+  Handles generation of responses using Replicate's language models.
+  """
 
+  alias LangChain.Message
+  alias SkepticBot.ReplicateClient
+
+  require Logger
+
+  @behaviour SkepticBot.ReplicateClient
+
+  @model "meta/meta-llama-3-8b-instruct"
+
+  @impl ReplicateClient
+  def get_type, do: "generation"
+
+  @impl ReplicateClient
+  def handle_output(output) when is_list(output), do: Enum.join(output)
+  def handle_output(output), do: output
+
+  @spec predict([LangChain.Message.t()]) :: {:ok, String.t()} | {:error, any()}
   def predict(messages) do
-    {:ok, updated_chain} =
-      %{llm: ChatOllamaAI.new!(%{model: "llama3.1"})}
-      |> LLMChain.new!()
-      |> LLMChain.add_messages(messages)
-      |> LLMChain.run()
+    input = %{
+      length_penalty: 1.0,
+      max_tokens: 512,
+      presence_penalty: 0,
+      prompt: format_messages(messages),
+      temperature: 0.7,
+      top_k: 0,
+      top_p: 0.95
+    }
 
-    updated_chain.last_message.content
+    SkepticBot.ReplicateClient.start_prediction(__MODULE__, @model, input)
+  end
+
+  defp format_messages(messages) do
+    Enum.map_join(messages, "\n", fn
+      %Message{role: :system, content: content} -> "System: #{content}\n"
+      %Message{role: :user, content: content} -> "Human: #{content}\n"
+      %Message{role: :assistant, content: content} -> "Assistant: #{content}\n"
+    end)
   end
 end

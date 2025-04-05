@@ -63,21 +63,19 @@ config :phoenix, :json_library, Jason
 
 config :skeptic_bot, Oban,
   engine: Oban.Engines.Basic,
-  queues: [downloading: 3, generating_embeddings: 1, transcoding: 3, transcribing: 1],
+  queues: [downloading: 10, transcoding: 2],
   repo: SkepticBot.Repo
-
-config :nx, default_backend: EXLA.Backend
 
 config :skeptic_bot, SkepticBot.Repo, types: SkepticBot.PostgrexTypes
 
-config :skeptic_bot, :transcription,
-  batch_size: String.to_integer(System.get_env("TRANSCRIPTION_BATCH_SIZE", "4")),
-  repo: {:hf, System.get_env("TRANSCRIPTION_MODEL", "openai/whisper-tiny")}
-
-config :skeptic_bot, :embedding_generation,
-  batch_size: String.to_integer(System.get_env("EMBEDDING_GENERATION_BATCH_SIZE", "64")),
-  dimensions: String.to_integer(System.get_env("EMBEDDING_GENERATION_DIMENSIONS", "384")),
-  repo: {:hf, System.get_env("EMBEDDING_GENERATION_MODEL", "thenlper/gte-small")}
+# AppSignal
+config :appsignal, :config,
+  active: false,
+  ecto_repos: [SkepticBot.Repo],
+  env: config_env(),
+  ignore_actions: ["SkepticBotWeb.HealthController#index"],
+  name: "skeptic_bot",
+  otp_app: :skeptic_bot
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

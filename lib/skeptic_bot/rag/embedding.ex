@@ -1,27 +1,40 @@
 defmodule SkepticBot.Rag.Embedding do
+  @moduledoc """
+  Handles generation of text embeddings for the RAG system.
+  Uses multilingual embedding models to convert text into dense vector representations.
+  """
+
+  alias SkepticBot.ReplicateClient
+
   require Logger
 
-  def serving do
-    batch_size = Application.get_env(:skeptic_bot, :embedding_generation)[:batch_size]
-    repo = Application.get_env(:skeptic_bot, :embedding_generation)[:repo]
+  @behaviour SkepticBot.ReplicateClient
 
-    {:ok, model_info} = Bumblebee.load_model(repo)
-    {:ok, tokenizer} = Bumblebee.load_tokenizer(repo)
+  @type embedding :: [float()]
+  @type text :: String.t()
 
-    Bumblebee.Text.text_embedding(model_info, tokenizer,
-      compile: [batch_size: batch_size, sequence_length: 512],
-      embedding_processor: :l2_norm,
-      defn_options: [compiler: EXLA]
-    )
+  @model "beautyyuyanli/multilingual-e5-large:a06276a89f1a902d5fc225a9ca32b6e8e6292b7f3b136518878da97c458e2bad"
+
+  @impl ReplicateClient
+  def get_type, do: "embedding generation"
+
+  @impl ReplicateClient
+  def handle_output(embeddings) do
+    embeddings
   end
 
-  def generate(text) when is_list(text) do
-    for result <- Nx.Serving.batched_run(__MODULE__, text), do: result.embedding
-  end
+  @spec generate(text()) :: {:ok, embedding()} | {:error, any()}
+  def generate(text) when is_binary(text), do: generate([text])
 
-  def generate(text) do
-    %{embedding: embedding} = Nx.Serving.batched_run(__MODULE__, text)
+  @spec generate([text()]) :: {:ok, [embedding()]} | {:error, any()}
+  def generate(texts) when is_list(texts) do
+    input = %{
+      batch_size: 32,
+      max_length: 512,
+      normalize_embeddings: true,
+      texts: Jason.encode!(texts)
+    }
 
-    embedding
+    SkepticBot.ReplicateClient.start_prediction(__MODULE__, @model, input)
   end
 end

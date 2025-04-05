@@ -1,28 +1,49 @@
 # SkepticBot
 
-To start your Phoenix server:
+## Setup
 
-  * Install ffmpeg: `brew install ffmpeg`
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+- install ffmpeg: `brew install ffmpeg`
+- install Elixir, Erlang and Node using [mise](https://mise.jdx.dev)
+  - install mise using either `curl https://mise.run | sh` or `brew install mise`
+  - make sure to activate it
+  - run `mise install`
+- start PostgreSQL server
+- set environment variables in `.env` (see: [.env.sample](.env.sample))
+- run `mix setup`
+- start Phoenix server with `make server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
 
 ## Usage
 
 Start the server with IEx:
+
 ```bash
-iex -S mix phx.server
+make iex_server
 ```
 
 Scrape episodes:
+
 ```elixir
 SkepticBot.Podcasts.TinfoilScraper.scrape()
 ```
 
 Ask a question:
+
 ```elixir
 SkepticBot.Rag.generate("Who killed Tupac?")
 ```
+
+## Docs
+
+- execute `mix docs --formatter html --open`
+
+It will open documentation in your browser.
+
+## Running tests
+
+- run `mix coveralls` or `mix coveralls.html`
+
+## Contributing
+
+Make sure to execute `make ci` in order to run all the checks before committing the code.
