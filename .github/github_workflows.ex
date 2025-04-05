@@ -197,9 +197,8 @@ defmodule GithubWorkflows do
           with: [
             name: @preview_app_name,
             postgres_image: "almirsarajcic/fly-pgvector",
-            postgres_volume_size: 5,
             secrets:
-              "APPSIGNAL_APP_ENV=preview APPSIGNAL_PUSH_API_KEY=${{ secrets.APPSIGNAL_PUSH_API_KEY }} PHX_HOST=${{ env.PHX_HOST }} REPLICATE_API_TOKEN=${{ secrets.REPLICATE_API_TOKEN }} REPLICATE_WEBHOOK_SECRET=${{ secrets.REPLICATE_WEBHOOK_SECRET }} SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} TIGRIS_ACCESS_KEY_ID=${{ secrets.TIGRIS_ACCESS_KEY_ID }} TIGRIS_BUCKET=${{ env.TIGRIS_BUCKET }} TIGRIS_SECRET_ACCESS_KEY=${{ secrets.TIGRIS_SECRET_ACCESS_KEY }}"
+              "APPSIGNAL_APP_ENV=preview APPSIGNAL_PUSH_API_KEY=${{ secrets.APPSIGNAL_PUSH_API_KEY }} DATABASE_DUMP_FILE=${{ vars.DATABASE_DUMP_FILE }} PHX_HOST=${{ env.PHX_HOST }} REPLICATE_API_TOKEN=${{ secrets.REPLICATE_API_TOKEN }} REPLICATE_WEBHOOK_SECRET=${{ secrets.REPLICATE_WEBHOOK_SECRET }} SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} TIGRIS_ACCESS_KEY_ID=${{ secrets.TIGRIS_ACCESS_KEY_ID }} TIGRIS_BUCKET=${{ vars.TIGRIS_BUCKET }} TIGRIS_SECRET_ACCESS_KEY=${{ secrets.TIGRIS_SECRET_ACCESS_KEY }}"
           ]
         ]
       ]

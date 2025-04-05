@@ -237,27 +237,9 @@ jobs:
           MIX_ENV: test
         run: mix ecto.rollback --all --quiet
   prettier:
-    needs: compile
     name: Check formatting using Prettier
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - id: setup-beam
-        name: Set up Elixir
-        uses: erlef/setup-beam@v1
-        with:
-          version-file: .tool-versions
-          version-type: strict
-      - name: Restore dependencies cache
-        uses: actions/cache/restore@v4
-        with:
-          key: mix-${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-${{ github.sha }}
-          path: |
-            _build
-            deps
-          restore-keys: |
-            mix-${{ runner.os }}-${{ steps.setup-beam.outputs.elixir-version }}-${{ steps.setup-beam.outputs.otp-version }}-
       - name: Checkout
         uses: actions/checkout@v4
       - name: Restore npm cache
@@ -412,5 +394,4 @@ jobs:
         with:
           name: skeptic-bot-pr-${{ github.event.number }}
           postgres_image: almirsarajcic/fly-pgvector
-          postgres_volume_size: 5
-          secrets: APPSIGNAL_APP_ENV=preview APPSIGNAL_PUSH_API_KEY=${{ secrets.APPSIGNAL_PUSH_API_KEY }} PHX_HOST=${{ env.PHX_HOST }} REPLICATE_API_TOKEN=${{ secrets.REPLICATE_API_TOKEN }} REPLICATE_WEBHOOK_SECRET=${{ secrets.REPLICATE_WEBHOOK_SECRET }} SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} TIGRIS_ACCESS_KEY_ID=${{ secrets.TIGRIS_ACCESS_KEY_ID }} TIGRIS_BUCKET=${{ env.TIGRIS_BUCKET }} TIGRIS_SECRET_ACCESS_KEY=${{ secrets.TIGRIS_SECRET_ACCESS_KEY }}
+          secrets: APPSIGNAL_APP_ENV=preview APPSIGNAL_PUSH_API_KEY=${{ secrets.APPSIGNAL_PUSH_API_KEY }} DATABASE_DUMP_FILE=${{ vars.DATABASE_DUMP_FILE }} PHX_HOST=${{ env.PHX_HOST }} REPLICATE_API_TOKEN=${{ secrets.REPLICATE_API_TOKEN }} REPLICATE_WEBHOOK_SECRET=${{ secrets.REPLICATE_WEBHOOK_SECRET }} SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} TIGRIS_ACCESS_KEY_ID=${{ secrets.TIGRIS_ACCESS_KEY_ID }} TIGRIS_BUCKET=${{ vars.TIGRIS_BUCKET }} TIGRIS_SECRET_ACCESS_KEY=${{ secrets.TIGRIS_SECRET_ACCESS_KEY }}
