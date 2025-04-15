@@ -229,7 +229,6 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   end
 
   def prev_btn_disabler(index) do
-    # * called for the prev button
     if index == 0 do
       true
     else
@@ -238,7 +237,6 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   end
 
   def forward_btn_disabler(index, items) do
-    # * called for the forward button
     if index >= length(items) - 1 do
       true
     else

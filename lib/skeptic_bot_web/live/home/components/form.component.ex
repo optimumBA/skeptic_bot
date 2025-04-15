@@ -75,14 +75,18 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
         %{assigns: %{question: question}} = socket
       ) do
     # American Ponzi With Lee Camp
+
     changeset =
       question
       |> Prompt.change_prompt_question(prompt_params)
 
+    submit_prompt(changeset, query, question, socket)
+  end
+
+  defp submit_prompt(changeset, query, question, socket) do
     case changeset.valid? do
       true ->
         {description, list_of_episodes} = SkepticBot.Rag.generate(query)
-        dbg(description)
 
         list_of_ids =
           Enum.reduce(list_of_episodes, [], fn episode, list ->
