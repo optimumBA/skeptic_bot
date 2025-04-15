@@ -17,9 +17,7 @@ defmodule SkepticBotWeb.Router do
   scope "/", SkepticBotWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
-
-    live "/home", HomeLive.Index, :index
+    live "/", HomeLive.Index, :index
 
     live "/chat/:id", PodcastLive.Show, :show
   end

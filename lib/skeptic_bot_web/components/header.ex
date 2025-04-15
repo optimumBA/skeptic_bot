@@ -13,10 +13,12 @@ defmodule SkepticBotWeb.Header do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <div class="w-[86%] max-w-[72.625rem] mx-auto flex items-center justify-between py-8 text-[#000000] montserrat-alternates-bold">
-      <section class="text-[2rem]">Logo</section>
+    <div class="w-[86%] max-w-[72.625rem] mx-auto flex items-center justify-between py-8 text-[#000000] montserrat-alternates-bold z-30">
+      <.link navigate={~p"/"}>
+        <section class="text-[2rem]">Logo</section>
+      </.link>
 
-      <.link>
+      <.link navigate={~p"/"}>
         <section class="border-2 border-[#000000] rounded-lg px-6 py-3 text-sm">
           RECENT EPISODES
         </section>

@@ -11,7 +11,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
   def render(assigns) do
     ~H"""
     <div>
-      <div class="h-screen">
+      <div class="lg:h-screen">
         <div class="bg-[#FFF5F5]">
           <%= live_render(@socket, SkepticBotWeb.Header,
             id: "live_header",
@@ -20,7 +20,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
         </div>
         <div class="flex justify-start items-start gap-20  bg-[#FFF5F5] pb-16 relative">
           <section>
-            <div class="absolute top-[-8rem] left-0 w-[20%]">
+            <div class="absolute top-[-8rem] left-0 w-[20%] pointer-events-none">
               <img
                 src={~p"/images/home/top_swirl.svg"}
                 class="w-full h-full object-cover"
