@@ -29,6 +29,17 @@ if System.get_env("PHX_SERVER") do
     url: [host: host, port: 443, scheme: "https"]
 end
 
+if System.get_env("SCRAPE") do
+  config :skeptic_bot, Oban,
+    plugins: [
+      {Oban.Plugins.Cron,
+       crontab: [
+         {"@hourly", SkepticBot.Podcasts.ScrapingWorker}
+       ]}
+    ],
+    queues: [downloading: 2, generating_embeddings: 2, scraping: 1, transcoding: 2]
+end
+
 replicate_api_token =
   System.get_env("REPLICATE_API_TOKEN") ||
     raise """
