@@ -41,7 +41,6 @@ defmodule SkepticBot.CheckPodcastEpisodes do
 
   defp check_episode(episode) do
     downloading = check_job_status(episode.id, "downloading")
-    transcoding = check_job_status(episode.id, "transcoding")
     transcribing = check_job_status(episode.id, "transcribing")
     embeddings = check_job_status(episode.id, "generating_embeddings")
 
@@ -51,7 +50,6 @@ defmodule SkepticBot.CheckPodcastEpisodes do
       id: episode.id,
       external_id: episode.external_id,
       downloading: downloading,
-      transcoding: transcoding,
       transcribing: transcribing,
       embeddings: embeddings,
       audio_file_exists: audio_file_exists
@@ -113,16 +111,6 @@ defmodule SkepticBot.CheckPodcastEpisodes do
           IO.puts(file, "  ⚠️  Downloading job state: #{state}")
       end
 
-      # Check transcoding job
-      case result.transcoding do
-        %{exists: false} ->
-          IO.puts(file, "  ❌ No transcoding job found")
-        %{exists: true, state: "completed"} ->
-          IO.puts(file, "  ✅ Transcoding completed")
-        %{exists: true, state: state} ->
-          IO.puts(file, "  ⚠️  Transcoding job state: #{state}")
-      end
-
       # Check transcribing job and audio file
       case result.transcribing do
         %{exists: false} ->
@@ -155,7 +143,6 @@ defmodule SkepticBot.CheckPodcastEpisodes do
       is_completed = fn job -> job[:exists] == true && job[:state] == "completed" end
 
       is_completed.(r.downloading) &&
-      is_completed.(r.transcoding) &&
       is_completed.(r.transcribing) &&
       is_completed.(r.embeddings)
     end)
@@ -165,7 +152,6 @@ defmodule SkepticBot.CheckPodcastEpisodes do
     # List issues that need attention
     issues = Enum.filter(results, fn r ->
       r.downloading[:exists] == false ||
-      r.transcoding[:exists] == false ||
       r.transcribing[:exists] == false ||
       (r.transcribing[:exists] == true && r.transcribing[:state] == "completed" && r.embeddings[:exists] == false) ||
       (r.transcribing[:exists] == true && r.transcribing[:state] == "completed" && r.audio_file_exists) ||
@@ -184,8 +170,6 @@ defmodule SkepticBot.CheckPodcastEpisodes do
     cond do
       episode.downloading[:exists] == false ->
         "Missing downloading job"
-      episode.transcoding[:exists] == false ->
-        "Missing transcoding job"
       episode.transcribing[:exists] == false ->
         "Missing transcribing job"
       episode.transcribing[:exists] == true && episode.transcribing[:state] == "completed" && episode.embeddings[:exists] == false ->

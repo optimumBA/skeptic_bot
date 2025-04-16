@@ -187,4 +187,12 @@ if config_env() == :prod do
     env: appsignal_app_env,
     push_api_key: appsignal_push_api_key,
     revision: appsignal_revision
+
+  config :flame, FLAME.FlyBackend,
+    env: %{
+      "TIGRIS_ACCESS_KEY_ID" => tigris_access_key_id,
+      "TIGRIS_BUCKET" => tigris_bucket,
+      "TIGRIS_SECRET_ACCESS_KEY" => tigris_secret_access_key
+    },
+    token: System.get_env("FLY_API_TOKEN")
 end

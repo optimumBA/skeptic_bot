@@ -77,6 +77,14 @@ config :appsignal, :config,
   name: "skeptic_bot",
   otp_app: :skeptic_bot
 
+config :skeptic_bot, :downloading_runner,
+  idle_shutdown_after: :timer.seconds(30),
+  min: 0,
+  max: 1,
+  max_concurrency: 2,
+  name: SkepticBot.DownloadingRunner,
+  timeout: :timer.minutes(10)
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

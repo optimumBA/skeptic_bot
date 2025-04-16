@@ -64,6 +64,7 @@ defmodule SkepticBot.MixProject do
   # Type `mix help deps` for examples and options.
   defp app_deps do
     [
+      {:flame, "~> 0.5"},
       {:langchain, "~> 0.3.0-rc.2"},
       {:oban, "~> 2.17"},
       {:pgvector, "~> 0.2.0"},

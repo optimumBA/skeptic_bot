@@ -24,3 +24,9 @@ config :logger,
 
 # AppSignal
 config :appsignal, :config, active: true
+
+config :flame, :backend, FLAME.FlyBackend
+
+config :flame, FLAME.FlyBackend,
+  cpus: 1,
+  memory_mb: 2048
