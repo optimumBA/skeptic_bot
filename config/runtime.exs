@@ -37,7 +37,13 @@ if System.get_env("SCRAPE") do
          {"@hourly", SkepticBot.Podcasts.ScrapingWorker}
        ]}
     ],
-    queues: [downloading: 2, generating_embeddings: 2, scraping: 1, transcoding: 2]
+    queues: [
+      downloading: 2,
+      generating_embeddings: 5,
+      scraping: 1,
+      transcoding: 2,
+      transcribing: 5
+    ]
 end
 
 replicate_api_token =

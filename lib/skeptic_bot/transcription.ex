@@ -26,7 +26,7 @@ defmodule SkepticBot.Transcription do
       task: "transcribe",
       language: "None",
       timestamp: "chunk",
-      batch_size: 64,
+      batch_size: 24,
       diarise_audio: false
     }
 

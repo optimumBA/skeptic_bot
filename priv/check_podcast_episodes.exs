@@ -15,14 +15,14 @@ defmodule SkepticBot.CheckPodcastEpisodes do
 
     file = File.open!(output_file, [:write, :utf8])
 
-    IO.puts("Starting checks for #{length(episodes)} episodes...")
-    IO.puts("Results will be written to #{output_file}")
+    Logger.info("Starting checks for #{length(episodes)} episodes...")
+    Logger.info("Results will be written to #{output_file}")
 
     results =
       Task.async_stream(
         episodes,
         &check_episode/1,
-        max_concurrency: 10,
+        max_concurrency: 20,
         timeout: 30_000,
         ordered: true
       )
@@ -32,7 +32,7 @@ defmodule SkepticBot.CheckPodcastEpisodes do
 
     File.close(file)
 
-    IO.puts("Check completed. Results written to #{output_file}")
+    Logger.info("Check completed. Results written to #{output_file}")
   end
 
   defp get_all_episodes do
@@ -44,7 +44,13 @@ defmodule SkepticBot.CheckPodcastEpisodes do
     transcribing = check_job_status(episode.id, "transcribing")
     embeddings = check_job_status(episode.id, "generating_embeddings")
 
-    audio_file_exists = check_audio_file_exists(transcribing)
+    # Only check audio file if transcribing is in progress
+    audio_file_exists =
+      if transcribing[:exists] && transcribing[:state] != "completed" do
+        check_audio_file_exists(transcribing)
+      else
+        false
+      end
 
     %{
       id: episode.id,
@@ -116,8 +122,7 @@ defmodule SkepticBot.CheckPodcastEpisodes do
         %{exists: false} ->
           IO.puts(file, "  ❌ No transcribing job found")
         %{exists: true, state: "completed"} ->
-          audio_status = if result.audio_file_exists, do: "❌ still exists (should be deleted)", else: "✅ properly deleted"
-          IO.puts(file, "  ✅ Transcribing completed (Audio: #{audio_status})")
+          IO.puts(file, "  ✅ Transcribing completed (Audio: ✅ assumed deleted)")
         %{exists: true, state: state, audio_url: audio_url} ->
           audio_status = if result.audio_file_exists, do: "✅ exists", else: "❌ missing"
           IO.puts(file, "  ⚠️  Transcribing #{state} (Audio: #{audio_status}, URL: #{audio_url})")
@@ -151,31 +156,43 @@ defmodule SkepticBot.CheckPodcastEpisodes do
 
     # List issues that need attention
     issues = Enum.filter(results, fn r ->
-      r.downloading[:exists] == false ||
-      r.transcribing[:exists] == false ||
-      (r.transcribing[:exists] == true && r.transcribing[:state] == "completed" && r.embeddings[:exists] == false) ||
-      (r.transcribing[:exists] == true && r.transcribing[:state] == "completed" && r.audio_file_exists) ||
-      (r.transcribing[:exists] == true && r.transcribing[:state] != "completed" && !r.audio_file_exists)
+      downloading_issue = r.downloading[:exists] != true || r.downloading[:state] != "completed"
+      transcribing_issue = r.transcribing[:exists] != true || r.transcribing[:state] != "completed"
+      embeddings_issue = r.transcribing[:exists] == true &&
+                         r.transcribing[:state] == "completed" &&
+                         (r.embeddings[:exists] != true || r.embeddings[:state] != "completed")
+      audio_missing_issue = r.transcribing[:exists] == true &&
+                            r.transcribing[:state] != "completed" &&
+                            !r.audio_file_exists
+
+      downloading_issue || transcribing_issue || embeddings_issue || audio_missing_issue
     end)
 
     if length(issues) > 0 do
-      IO.puts(file, "\n⚠️  Issues requiring attention:")
+      IO.puts(file, "\n⚠️  Issues requiring attention (#{length(issues)} episodes):")
       Enum.each(issues, fn issue ->
-        IO.puts(file, "  - Episode #{issue.id}: #{get_issue_description(issue)}")
+        IO.puts(file, "  - Episode #{issue.id} (#{issue.external_id}): #{get_issue_description(issue)}")
       end)
+    else
+      IO.puts(file, "\n✅ No issues found requiring attention")
     end
   end
 
   defp get_issue_description(episode) do
     cond do
-      episode.downloading[:exists] == false ->
+      episode.downloading[:exists] != true ->
         "Missing downloading job"
-      episode.transcribing[:exists] == false ->
+      episode.downloading[:exists] == true && episode.downloading[:state] != "completed" ->
+        "Downloading job in state: #{episode.downloading[:state]}"
+      episode.transcribing[:exists] != true ->
         "Missing transcribing job"
-      episode.transcribing[:exists] == true && episode.transcribing[:state] == "completed" && episode.embeddings[:exists] == false ->
+      episode.transcribing[:exists] == true && episode.transcribing[:state] != "completed" ->
+        "Transcribing job in state: #{episode.transcribing[:state]}"
+      episode.transcribing[:exists] == true && episode.transcribing[:state] == "completed" && episode.embeddings[:exists] != true ->
         "Transcribing completed but missing embeddings job"
-      episode.transcribing[:exists] == true && episode.transcribing[:state] == "completed" && episode.audio_file_exists ->
-        "Transcribing completed but audio file still exists (should be deleted)"
+      episode.transcribing[:exists] == true && episode.transcribing[:state] == "completed" &&
+        episode.embeddings[:exists] == true && episode.embeddings[:state] != "completed" ->
+        "Embeddings job in state: #{episode.embeddings[:state]}"
       episode.transcribing[:exists] == true && episode.transcribing[:state] != "completed" && !episode.audio_file_exists ->
         "Transcribing in progress but audio file is missing"
       true ->

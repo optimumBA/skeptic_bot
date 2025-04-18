@@ -48,7 +48,9 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
   defp transcribe_episode(id, audio_url) do
     case Transcription.transcribe(audio_url) do
       {:ok, chunks} when is_list(chunks) ->
-        Enum.each(chunks, fn %{"text" => text, "timestamp" => [start, _end]} ->
+        chunks
+        |> Stream.reject(fn %{"timestamp" => [start, _end]} -> is_nil(start) end)
+        |> Enum.each(fn %{"text" => text, "timestamp" => [start, _end]} ->
           Podcasts.create_episode_transcription(%{
             podcast_episode_id: id,
             timestamp: %{months: 0, days: 0, secs: floor(start)},

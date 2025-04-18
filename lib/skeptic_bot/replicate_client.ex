@@ -29,7 +29,8 @@ defmodule SkepticBot.ReplicateClient do
            json: %{
              version: version,
              input: input,
-             webhook: webhook_url
+             webhook: webhook_url,
+             webhook_events_filter: ["completed"]
            },
            headers: [{"Authorization", "Token #{api_token}"}]
          ) do
