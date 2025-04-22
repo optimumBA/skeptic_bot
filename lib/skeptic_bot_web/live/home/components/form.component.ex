@@ -7,7 +7,7 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
 
   use SkepticBotWeb, :live_component
 
-  alias SkepticBot.{Repo, Prompt}
+  alias SkepticBot.{Prompt}
 
   alias SkepticBot.Prompt.Question
 
@@ -74,50 +74,27 @@ defmodule SkepticBotWeb.HomeLive.FormComponent do
         %{"prompt" => %{"query" => query} = prompt_params},
         %{assigns: %{question: question}} = socket
       ) do
-    # American Ponzi With Lee Camp
-
     changeset =
       question
       |> Prompt.change_prompt_question(prompt_params)
 
-    submit_prompt(changeset, query, question, socket)
+    maybe_generate_prompt_results(changeset.valid?, query, question)
+
+    {:noreply, socket}
   end
 
-  defp submit_prompt(changeset, query, question, socket) do
-    case changeset.valid? do
-      true ->
-        {description, list_of_episodes} = SkepticBot.Rag.generate(query)
+  defp maybe_generate_prompt_results(false, _query, _question) do
+    :ok
+  end
 
-        list_of_ids =
-          Enum.reduce(list_of_episodes, [], fn episode, list ->
-            [%{episode_id: episode.id} | list]
-          end)
+  defp maybe_generate_prompt_results(true, query, question) do
+    caller = self()
+    send(caller, {:loading, true})
 
-        question_params = %{
-          query: query,
-          description: description,
-          episodes: list_of_ids
-        }
-
-        changeset = Prompt.change_question(question, question_params)
-
-        case Repo.insert(changeset) do
-          {:ok, record} ->
-            {
-              :noreply,
-              socket
-              |> push_navigate(to: ~p"/chat/#{record.id}")
-            }
-
-          {:error, _changeset} ->
-            {:noreply,
-             socket
-             |> put_flash(:error, "There was an error processing your request")}
-        end
-
-      false ->
-        {:noreply, socket}
-    end
+    Task.start(fn ->
+      result = SkepticBot.Rag.generate(query)
+      send(caller, {:generation_done, result, {query, question}})
+    end)
   end
 
   def assign_form(%{assigns: %{question: question}} = socket) do

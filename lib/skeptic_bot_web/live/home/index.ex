@@ -7,6 +7,12 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   alias SkepticBotWeb.Home.Component
 
+  alias SkepticBotWeb.Prompt.Helpers
+
+  alias SkepticBot.Repo
+
+  # require Logger
+
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
@@ -44,6 +50,33 @@ defmodule SkepticBotWeb.HomeLive.Index do
               </section>
               <section class="ml-32 pl-10 mt-4 w-[70%]">
                 <.live_component module={SkepticBotWeb.HomeLive.FormComponent} id="prompt form" />
+
+                <div>
+                  <%= if @loading do %>
+                    <svg
+                      class="animate-spin h-10 w-10 text-blue-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                      >
+                      </circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 6.627 5.373 12 12 12v-4a7.946 7.946 0 01-6-2.709z"
+                      >
+                      </path>
+                    </svg>
+                  <% end %>
+                </div>
               </section>
               <section class="ml-56 mt-36 relative w-[68%]">
                 <section class="text-6xl montserrat-alternates-bold text-[#000000]">
@@ -170,11 +203,39 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    {:ok,
+     socket
+     |> assign(:loading, false)}
   end
 
   @impl Phoenix.LiveView
   def handle_params(_params, _url, socket) do
     {:noreply, socket}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info({:loading, value}, socket) do
+    {:noreply,
+     socket
+     |> assign(:loading, value)}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info({:generation_done, {description, list_of_episodes}, {query, question}}, socket) do
+    changeset = Helpers.return_question_changeset(list_of_episodes, query, description, question)
+
+    case Repo.insert(changeset) do
+      {:ok, record} ->
+        {
+          :noreply,
+          socket
+          |> push_navigate(to: ~p"/chat/#{record.id}")
+        }
+
+      {:error, _changeset} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "There was an error processing your request")}
+    end
   end
 end

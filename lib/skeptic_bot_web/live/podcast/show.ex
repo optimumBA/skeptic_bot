@@ -3,13 +3,11 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   Shows the results of a prompt i.e the related episodes.
   """
 
-  require Logger
   use SkepticBotWeb, :live_view
 
-  import Ecto.Query
-  import Pgvector.Ecto.Query, only: [l2_distance: 2]
+  alias SkepticBotWeb.Prompt.Helpers
 
-  alias SkepticBot.{Prompt, Podcasts, Repo, Rag, Podcasts.Episode}
+  alias SkepticBot.{Prompt, Podcasts}
 
   alias SkepticBotWeb.PodcastComponent
 
@@ -52,7 +50,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
               <%= for episode <- @related_episodes do %>
                 <PodcastComponent.podcast_video_card
                   image_file={episode.thumbnail}
-                  podcast_title={first_n_words(episode.title, 2)}
+                  podcast_title={Helpers.first_n_words(episode.title, 2)}
                   video_length={episode.video_length}
                   random={round(1 + 4 * :rand.uniform())}
                 />
@@ -102,7 +100,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
               <%= for {question, number_on_list} <- @related_questions do %>
                 <Component.episode_card
                   title={question.title}
-                  body={first_n_words(question.description, 40)}
+                  body={Helpers.first_n_words(question.description, 40)}
                   people_count="134"
                   number={number_on_list}
                 />
@@ -122,7 +120,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
             <%= for episode <- @other_episodes do %>
               <PodcastComponent.podcast_video_grid_card
                 image_file={episode.thumbnail}
-                podcast_title={first_n_words(episode.title, 2)}
+                podcast_title={Helpers.first_n_words(episode.title, 2)}
                 video_length={episode.video_length}
                 random={round(1 + 2 * :rand.uniform())}
               />
@@ -140,7 +138,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   def mount(_params, _session, socket) do
     other_episodes =
       Podcasts.get_first_six_records()
-      |> format_episodes()
+      |> Helpers.format_episodes()
 
     {:ok,
      socket
@@ -153,38 +151,17 @@ defmodule SkepticBotWeb.PodcastLive.Show do
   def handle_params(%{"id" => id}, _, socket) do
     question = Prompt.get_question!(id)
 
-    question =
-      if question.embedding == nil do
-        embedding_value = question.query <> " " <> question.description
-
-        embedding = Rag.Embedding.generate(embedding_value)
-
-        embedding_params = %{embedding: embedding}
-
-        changeset = Prompt.change_question(question, embedding_params)
-
-        case Repo.update(changeset) do
-          {:ok, question} ->
-            question
-
-          {:error, _changeset} ->
-            :error
-        end
-      else
-        question
-      end
-
     related_questions =
-      get_related_questions(question.embedding, question.id)
-      |> return_question_and_number()
+      Helpers.get_related_questions(question.embedding, question.id)
+      |> Helpers.return_question_and_number()
 
-    list_of_episodes = get_episodes(question.episodes)
+    list_of_episodes = Helpers.get_episodes(question.episodes)
 
-    related_episodes = format_episodes(list_of_episodes)
+    related_episodes = Helpers.format_episodes(list_of_episodes)
 
     {:noreply,
      socket
-     |> assign(result_description: format_description(question.description))
+     |> assign(result_description: Helpers.format_description(question.description))
      |> assign(query: question.query)
      |> assign(related_episodes: related_episodes)
      |> assign(related_questions: related_questions)}
@@ -204,30 +181,6 @@ defmodule SkepticBotWeb.PodcastLive.Show do
     {:noreply, assign(socket, related_episodes_index: new_index)}
   end
 
-  def format_episodes(episodes_list) do
-    items =
-      Enum.reduce(episodes_list, [], fn episode, output_list ->
-        episode =
-          case is_struct(episode) do
-            true ->
-              episode = Map.from_struct(episode)
-
-              episode
-
-            false ->
-              episode
-          end
-
-        episode =
-          Map.put(episode, :thumbnail, "cover1.svg")
-          |> Map.put(:video_length, "02:20:45")
-
-        [episode | output_list]
-      end)
-
-    items
-  end
-
   def prev_btn_disabler(index) do
     if index == 0 do
       true
@@ -244,21 +197,6 @@ defmodule SkepticBotWeb.PodcastLive.Show do
     end
   end
 
-  defp first_n_words(string, number_of_words) do
-    string
-    |> String.split(~r/\s+/, trim: true)
-    |> Enum.take(number_of_words)
-    |> Enum.join(" ")
-  end
-
-  def get_episodes(list_of_ids) do
-    Enum.reduce(list_of_ids, [], fn map, list ->
-      episode = Repo.get!(Episode, map.episode_id)
-
-      [episode | list]
-    end)
-  end
-
   # defp trim_description(description) do
   #   description =
   #     description
@@ -267,33 +205,4 @@ defmodule SkepticBotWeb.PodcastLive.Show do
 
   #   description
   # end
-
-  def format_description(string) do
-    list_of_strings =
-      String.split(string, "\n")
-      |> Enum.filter(fn x -> x != "" end)
-
-    Enum.map(list_of_strings, fn x ->
-      (String.trim(x, "*")
-       |> String.trim()) <> " "
-    end)
-    |> Enum.join()
-  end
-
-  def get_related_questions(embedding, id) do
-    questions =
-      from(e in SkepticBot.Prompt.Question,
-        select: %{id: e.id, description: e.description, title: e.query},
-        where: e.id != ^id,
-        order_by: [asc: l2_distance(e.embedding, ^embedding)],
-        limit: 6
-      )
-      |> Repo.all()
-
-    questions
-  end
-
-  defp return_question_and_number(list) do
-    Enum.with_index(list, fn element, index -> {element, index + 1} end)
-  end
 end
