@@ -11,22 +11,30 @@ defmodule SkepticBotWeb.HomeLive.Index do
     <div class="bg-[#FFF5F5]">
       <div class="flex items-start h-screen relative">
         <section>
-          <div class="absolute top-[2.5rem] xl:top-[1rem] 3xl:top-[1.5rem] 4xl:top-[-1rem] left-0 w-[18%] xl:w-[21%] 2xl:w-[23%] 3xl:w-[21%]">
+          <div class="absolute top-[2%] left-0 2xl:top-[3%] w-[22%] xl:w-[23%] 2xl:w-[22%] 3xl:w-[20%] 4xl:w-[17%]">
             <img src={~p"/images/home/top_swirl.svg"} class="w-full h-full object-cover" alt="Swirl" />
           </div>
-          <div class="absolute bottom-[8rem] 2xl:bottom-[5rem] left-[4rem] w-[30%] 2xl:w-[33%]">
-            <img src={~p"/images/home/demonstration.svg"} alt="Illustration 1" />
+          <div class="absolute bottom-[20%] left-[4%] w-[23%] xl:w-[21%] 2xl:w-[19%] 3xl:w-[17%]">
+            <img
+              src={~p"/images/home/demonstration.svg"}
+              class="w-full h-full object-cover"
+              alt="Illustration 1"
+            />
           </div>
-          <div class="absolute bottom-[8rem] right-[2rem] w-[16%]">
-            <img src={~p"/images/home/stars.png"} alt="Stars Group" />
+          <div class="absolute bottom-[10%] right-[1.3rem] w-[12%] 3xl:w-[10%]">
+            <img
+              src={~p"/images/home/stars.png"}
+              class="w-full h-full object-cover"
+              alt="Stars Group"
+            />
           </div>
         </section>
-        <section class="flex flex-col justify-start items-start gap-8 w-[70%] mx-auto">
-          <section class="text-8xl mx-auto pt-32 xl:pt-36 2xl:pt-44 montserrat-semibold tracking-4">
-            SKEPTIC.<span class="text-[#CD4631] montserrat-alternates-semibold">BOT</span>
+        <section class="flex flex-col justify-start items-start gap-8 w-[70%] mx-auto mt-16">
+          <section class="text-7xl 2xl:text-8xl mx-auto pt-32 2xl:pt-28 montserrat-semibold tracking-4">
+            Skeptic.<span class="text-[#CD4631] montserrat-alternates-semibold">Bot</span>
           </section>
           <section class="w-[50%] mx-auto mt-6 text-center montserrat-alternates-medium text-[#4D4D4D]">
-            Ask anything and get answers directly from trusted experts
+            Questions everything
           </section>
         </section>
       </div>

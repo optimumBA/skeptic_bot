@@ -6,10 +6,10 @@ defmodule SkepticBotWeb.HomeLiveTest do
     test "check homepage content on mount connection", %{conn: conn} do
       {:ok, _view, html} = live(conn, "/")
 
-      assert html =~ "SKEPTIC."
-      assert html =~ "BOT"
+      assert html =~ "Skeptic."
+      assert html =~ "Bot"
 
-      assert html =~ "Ask anything and get answers directly from trusted experts"
+      assert html =~ "Questions everything"
     end
   end
 end
