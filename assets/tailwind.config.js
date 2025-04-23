@@ -12,6 +12,22 @@ module.exports = {
     '../lib/skeptic_bot_web/**/*.*ex',
   ],
   theme: {
+    screens: {
+      sm: '640px',
+
+      md: '768px',
+
+      lg: '1024px',
+
+      xl: '1100px',
+
+      '2xl': '1246px',
+
+      '3xl': '1330px',
+
+      '4xl': '1450px',
+    },
+
     extend: {
       colors: {
         brand: '#FD4F00',
