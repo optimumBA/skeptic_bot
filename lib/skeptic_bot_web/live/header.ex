@@ -1,4 +1,4 @@
-defmodule SkepticBotWeb.Header do
+defmodule SkepticBotWeb.HeaderLive do
   @moduledoc """
   Renders the header as a child liveview inside
   every page

@@ -11,7 +11,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
     <div>
       <div class="lg:h-screen">
         <div class="bg-[#FFF5F5]">
-          <%= live_render(@socket, SkepticBotWeb.Header,
+          <%= live_render(@socket, SkepticBotWeb.HeaderLive,
             id: "live_header",
             sticky: true
           ) %>
