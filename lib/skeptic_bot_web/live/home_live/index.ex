@@ -1,6 +1,6 @@
 defmodule SkepticBotWeb.HomeLive.Index do
   @moduledoc """
-  The home page containing the chat input.
+  Our home page. Where a user submits his prompt
   """
 
   use SkepticBotWeb, :live_view

@@ -1,7 +1,6 @@
 defmodule SkepticBotWeb.HeaderLive do
   @moduledoc """
-  Renders the header as a child liveview inside
-  every page
+  This Header will be rendered inside LiveViews
   """
   use SkepticBotWeb, :live_view
 
