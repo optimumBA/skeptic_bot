@@ -22,7 +22,7 @@ defmodule SkepticBotWeb.Router do
   scope "/", SkepticBotWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", HomeLive.Index, :index
   end
 
   scope "/webhook", SkepticBotWeb do
