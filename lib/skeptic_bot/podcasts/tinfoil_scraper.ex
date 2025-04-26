@@ -62,6 +62,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
         Podcasts.create_episode(%{
           "description" => episode["description"],
           "external_id" => episode["uuid"],
+          "thumbnail" => episode["thumbnailPath"],
           "title" => episode["name"]
         })
 

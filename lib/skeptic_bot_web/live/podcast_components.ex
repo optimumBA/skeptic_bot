@@ -1,0 +1,210 @@
+defmodule SkepticBotWeb.PodcastComponents do
+  @moduledoc """
+  Dead components associated with rendering podcast related content
+  """
+
+  use SkepticBotWeb, :html
+
+  @type assigns :: map()
+  @type rendered :: Phoenix.LiveView.Rendered.t()
+
+  attr :image_file, :string, required: true
+  attr :podcast_title, :string, required: true
+  attr :video_length, :string, required: true
+  attr :random, :integer, required: true
+
+  @spec podcast_video_card(assigns()) :: rendered()
+  def podcast_video_card(assigns) do
+    ~H"""
+    <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative">
+      <div class="rounded-xl w-full h-full overflow-hidden">
+        <img
+          src={get_podcast_thumbnail(@image_file)}
+          alt="Cover 2"
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+      <%= get_the_vector_randomly(@random) %>
+
+      <div class="absolute bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+        <%= @podcast_title %>
+      </div>
+
+      <div class="absolute bottom-[2rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
+        <div>
+          <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
+        </div>
+        <div class="text-sm"><%= @video_length %></div>
+      </div>
+    </section>
+    """
+  end
+
+  defp get_podcast_thumbnail(filename) do
+    ~p"/images/podcasts/#{filename}"
+  end
+
+  defp get_the_vector_randomly(random) do
+    assigns = %{}
+
+    cond do
+      random == 1 -> absolute_vectors_1(assigns)
+      random == 2 -> absolute_vectors_2(assigns)
+      random == 3 -> absolute_vectors_3(assigns)
+      random == 4 -> absolute_vectors_4(assigns)
+      random == 5 -> absolute_vectors_5(assigns)
+    end
+  end
+
+  @spec absolute_vectors_1(assigns()) :: rendered()
+  def absolute_vectors_1(assigns) do
+    ~H"""
+    <img
+      src={~p"/images/vectors/podcast_vector1.svg"}
+      alt="Podcast Vector 1"
+      class="absolute bottom-[4rem] left-[3rem]"
+    />
+
+    <img
+      src={~p"/images/vectors/podcast_vector2.svg"}
+      alt="Podcast Vector 2"
+      class="absolute top-[-3rem] left-[-0.8rem]"
+    />
+
+    <img
+      src={~p"/images/vectors/vector3.svg"}
+      alt="Vector 3"
+      class="absolute top-[2.2rem] left-[9.7rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector2.svg"}
+      alt="Vector 2"
+      class="absolute bottom-[4rem] right-[2.8rem]"
+    />
+    """
+  end
+
+  @spec absolute_vectors_2(assigns()) :: rendered()
+  def absolute_vectors_2(assigns) do
+    ~H"""
+    <img
+      src={~p"/images/vectors/star2.svg"}
+      alt="Star 2"
+      class="absolute bottom-[2.7rem] right-[6.7rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector5.svg"}
+      alt="Vector 5"
+      class="absolute top-[3rem] right-[9rem]"
+    />
+
+    <img
+      src={~p"/images/vectors/vector4.svg"}
+      alt="Vector 4"
+      class="absolute top-[7.5rem] left-[7rem]"
+    />
+    """
+  end
+
+  @spec absolute_vectors_3(assigns()) :: rendered()
+  def absolute_vectors_3(assigns) do
+    ~H"""
+    <img
+      src={~p"/images/vectors/vector7.svg"}
+      alt="Vector 7"
+      class="absolute top-[4.8rem] left-[6rem]"
+    />
+    """
+  end
+
+  @spec absolute_vectors_4(assigns()) :: rendered()
+  def absolute_vectors_4(assigns) do
+    ~H"""
+    <img src={~p"/images/vectors/vector8.svg"} alt="Vector 8" class="absolute top-0 left-0" />
+
+    <img
+      src={~p"/images/vectors/vector9.svg"}
+      alt="Vector 9"
+      class="absolute bottom-[6.2rem] left-[7.8rem]"
+    />
+
+    <img
+      src={~p"/images/vectors/vector10.svg"}
+      alt="Vector 10"
+      class="absolute top-[7rem] left-[3.5rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector11.svg"}
+      alt="Vector 11"
+      class="absolute top-[7.8rem] left-[2.9rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector12.svg"}
+      alt="Vector 12"
+      class="absolute top-[4.9rem] right-[11.7rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector13.svg"}
+      alt="Vector 13"
+      class="absolute top-[6.8rem] right-[5.2rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector14.svg"}
+      alt="Vector 14"
+      class="absolute top-[9rem] right-[2.4rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector15.svg"}
+      alt="Vector 15"
+      class="absolute top-[8.5rem] right-[1.8rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector16.svg"}
+      alt="Vector 16"
+      class="absolute top-[8.75rem] right-[1.4rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector17.svg"}
+      alt="Vector 17"
+      class="absolute top-[9.1rem] right-[1.7rem]"
+    />
+    """
+  end
+
+  @spec absolute_vectors_5(assigns()) :: rendered()
+  def absolute_vectors_5(assigns) do
+    ~H"""
+    <img
+      src={~p"/images/vectors/vector18.svg"}
+      alt="Vector 18"
+      class="absolute top-[7rem] left-[1.7rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector19.svg"}
+      alt="Vector 19"
+      class="absolute top-[7.8rem] left-[2.2rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector20.svg"}
+      alt="Vector 20"
+      class="absolute top-[8rem] left-[1.8rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector21.svg"}
+      alt="Vector 21"
+      class="absolute bottom-[7.4rem] left-[1.7rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector22.svg"}
+      alt="Vector 22"
+      class="absolute bottom-[7.2rem] left-[1.4rem]"
+    />
+    <img
+      src={~p"/images/vectors/vector23.svg"}
+      alt="Vector 23"
+      class="absolute top-[9rem] right-[1.7rem]"
+    />
+    """
+  end
+end

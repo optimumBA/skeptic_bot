@@ -10,7 +10,7 @@ defmodule SkepticBot.Rag.Retrieval do
   alias SkepticBot.Podcasts
   alias SkepticBot.Repo
 
-  @type embedding :: [float()]
+  @type embedding :: float()
   @type episode :: map()
 
   @num_transcriptions_surrounding_the_target 100
@@ -25,13 +25,11 @@ defmodule SkepticBot.Rag.Retrieval do
     |> Repo.all()
     |> Enum.map(fn %Podcasts.Episode{} = episode ->
       most_relevant_transcription =
-        from(et in Podcasts.EpisodeTranscription,
-          where: et.podcast_episode_id == ^episode.id,
-          order_by: [asc: l2_distance(et.embedding, ^embedding)],
-          limit: 1
-        )
+        Podcasts.EpisodeTranscription
+        |> where([et], et.podcast_episode_id == ^episode.id)
+        |> order_by([et], asc: l2_distance(et.embedding, ^embedding))
+        |> limit(1)
         |> Repo.one()
-        |> Map.get(:transcription)
 
       transcriptions_before =
         from(et in Podcasts.EpisodeTranscription,
@@ -57,9 +55,11 @@ defmodule SkepticBot.Rag.Retrieval do
         |> Enum.map_join("\n", & &1.transcription)
 
       transcription =
-        "#{transcriptions_before}\n#{most_relevant_transcription}\n#{transcriptions_after}"
+        "#{transcriptions_before}\n#{most_relevant_transcription.transcription}\n#{transcriptions_after}"
 
-      Map.put(episode, :transcription, transcription)
+      episode
+      |> Map.put(:timestamp, most_relevant_transcription.timestamp)
+      |> Map.put(:transcription, transcription)
     end)
   end
 end

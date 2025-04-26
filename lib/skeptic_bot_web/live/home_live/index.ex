@@ -1,6 +1,10 @@
 defmodule SkepticBotWeb.HomeLive.Index do
   use SkepticBotWeb, :live_view
 
+  alias SkepticBot.Repo
+  alias SkepticBotWeb.HomeLive.QuestionFormComponent
+  alias SkepticBotWeb.PromptHelpers
+
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
@@ -32,9 +36,29 @@ defmodule SkepticBotWeb.HomeLive.Index do
           <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
             Questions everything
           </section>
+          <section class="w-[60%] mx-auto">
+            <.live_component module={QuestionFormComponent} id="prompt form" />
+          </section>
         </section>
       </div>
     </div>
     """
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info({:generation_done, {description, list_of_episodes}, {query, question}}, socket) do
+    changeset =
+      PromptHelpers.return_question_changeset(list_of_episodes, query, description, question)
+
+    case Repo.insert(changeset) do
+      {:ok, record} ->
+        {
+          :noreply,
+          push_navigate(socket, to: ~p"/podcasts/#{record.id}")
+        }
+
+      {:error, _changeset} ->
+        {:noreply, put_flash(socket, :error, "There was an error processing your request")}
+    end
   end
 end
