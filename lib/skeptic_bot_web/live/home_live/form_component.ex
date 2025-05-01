@@ -7,8 +7,8 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
 
   use SkepticBotWeb, :live_component
 
-  alias SkepticBot.Prompt
-  alias SkepticBot.Prompt.UserQuestion
+  alias SkepticBot.Prompts
+  alias SkepticBot.Prompts.UserQuestion
 
   @type socket :: Phoenix.LiveView.Socket.t()
   @impl Phoenix.LiveComponent
@@ -67,7 +67,7 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
       ) do
     changeset =
       question
-      |> Prompt.change_prompt_question(prompt_params)
+      |> Prompts.change_prompt_question(prompt_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :form, to_form(changeset, as: "prompt"))}
@@ -79,7 +79,7 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
         %{assigns: %{question: question}} = socket
       ) do
     changeset =
-      Prompt.change_prompt_question(question, prompt_params)
+      Prompts.change_prompt_question(question, prompt_params)
 
     maybe_generate_prompt_results(changeset.valid?, query, question)
 
@@ -92,17 +92,17 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
 
   defp maybe_generate_prompt_results(true, query, question) do
     caller = self()
-    # send(caller, {:loading, true})
+    send(caller, {:loading_state, true})
 
     Task.start(fn ->
-      {:ok, result} = SkepticBot.Rag.generate(query)
+      {:ok, {description, list_of_episodes}} = SkepticBot.Rag.generate(query)
 
-      send(caller, {:generation_done, result, {query, question}})
+      send(caller, {:generation_done, {description, list_of_episodes}, {query, question}})
     end)
   end
 
   @spec assign_form(socket()) :: socket()
   def assign_form(%{assigns: %{question: question}} = socket) do
-    assign(socket, :form, to_form(Prompt.change_prompt_question(question), as: "prompt"))
+    assign(socket, :form, to_form(Prompts.change_prompt_question(question), as: "prompt"))
   end
 end

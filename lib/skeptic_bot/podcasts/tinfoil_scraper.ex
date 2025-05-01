@@ -9,6 +9,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
 
   @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
 
+  @spec get_url() :: String.t()
+  def get_url, do: @url
+
   @spec scrape(start()) :: :ok | {:error, any()}
   def scrape(start \\ 0)
 

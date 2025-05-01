@@ -1,9 +1,8 @@
 defmodule SkepticBotWeb.PodcastLive.Show do
   use SkepticBotWeb, :live_view
 
-  alias SkepticBot.Prompt
+  alias SkepticBot.Prompts
   alias SkepticBotWeb.PodcastComponents
-  alias SkepticBotWeb.PromptHelpers
 
   @impl Phoenix.LiveView
   def render(assigns) do
@@ -19,7 +18,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
       </section>
 
       <section class="max-w-[72.625rem] mx-auto  montserrat-alternates-bold text-[#000000] text-2xl">
-        Related Podcasts
+        <div class="ml-5">Related Podcasts</div>
       </section>
 
       <section class="relative pb-16">
@@ -31,9 +30,10 @@ defmodule SkepticBotWeb.PodcastLive.Show do
             >
               <%= for episode <- @related_episodes do %>
                 <PodcastComponents.podcast_video_card
-                  image_file={episode.thumbnail}
-                  podcast_title={PromptHelpers.first_n_words(episode.title, 2)}
+                  podcast_title={episode.title}
+                  thumbnail={episode.thumbnail}
                   video_length={episode.video_length}
+                  timestamp={to_string(episode.timestamp.secs)}
                   random={
                     Enum.at(
                       @vector_numbers,
@@ -48,7 +48,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
         <div class="flex gap-5 max-w-[72.625rem] mx-auto mt-10">
           <button
             phx-click="prev_related_episodes"
-            class="disabled:opacity-50"
+            class="disabled:opacity-50 ml-5"
             disabled={@related_episodes_index == 0}
           >
             <div>
@@ -88,11 +88,12 @@ defmodule SkepticBotWeb.PodcastLive.Show do
 
   @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _uri, socket) do
-    question = Prompt.get_question!(id)
+    question = Prompts.get_question!(id)
 
-    list_of_episodes = PromptHelpers.get_episodes(question.episodes)
-
-    related_episodes = PromptHelpers.format_episodes(list_of_episodes)
+    related_episodes =
+      question.episodes
+      |> Prompts.get_question_episodes()
+      |> format_episodes()
 
     {:noreply,
      socket
@@ -112,5 +113,14 @@ defmodule SkepticBotWeb.PodcastLive.Show do
     index = socket.assigns.related_episodes_index
     new_index = max(index - 1, 0)
     {:noreply, assign(socket, :related_episodes_index, new_index)}
+  end
+
+  defp format_episodes(episodes_list) do
+    Enum.reduce(episodes_list, [], fn episode, new_episode_list ->
+      episode =
+        Map.put(episode, :video_length, "02:20:45")
+
+      [episode | new_episode_list]
+    end)
   end
 end

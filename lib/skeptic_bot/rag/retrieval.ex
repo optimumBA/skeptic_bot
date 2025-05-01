@@ -10,7 +10,7 @@ defmodule SkepticBot.Rag.Retrieval do
   alias SkepticBot.Podcasts
   alias SkepticBot.Repo
 
-  @type embedding :: float()
+  @type embedding :: [float()]
   @type episode :: map()
 
   @num_transcriptions_surrounding_the_target 100

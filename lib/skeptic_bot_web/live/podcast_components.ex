@@ -1,6 +1,6 @@
 defmodule SkepticBotWeb.PodcastComponents do
   @moduledoc """
-  Dead components associated with rendering podcast related content
+  Dead components concerned with rendering podcast related content
   """
 
   use SkepticBotWeb, :html
@@ -8,53 +8,40 @@ defmodule SkepticBotWeb.PodcastComponents do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
-  attr :image_file, :string, required: true
+  attr :thumbnail, :string, required: true
   attr :podcast_title, :string, required: true
   attr :video_length, :string, required: true
+  attr :timestamp, :string, required: true
   attr :random, :integer, required: true
 
   @spec podcast_video_card(assigns()) :: rendered()
   def podcast_video_card(assigns) do
     ~H"""
-    <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative">
-      <div class="rounded-xl w-full h-full overflow-hidden">
-        <img
-          src={get_podcast_thumbnail(@image_file)}
-          alt="Cover 2"
-          class="w-full h-full object-cover"
-        />
-      </div>
-
-      <%= get_the_vector_randomly(@random) %>
-
-      <div class="absolute bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
-        <%= @podcast_title %>
-      </div>
-
-      <div class="absolute bottom-[2rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
-        <div>
-          <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
+    <a href={"https://vid.samtripoli.com/w/xoV9AbNuEQe9j9VAieVUxV?start=" <> @timestamp}>
+      <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative">
+        <div class="rounded-xl w-full h-full overflow-hidden">
+          <img
+            src={"https://vid.samtripoli.com/" <> @thumbnail}
+            alt="Cover 2"
+            class="w-full h-full object-cover"
+          />
         </div>
-        <div class="text-sm"><%= @video_length %></div>
-      </div>
-    </section>
+
+        <%= get_the_vector_randomly(@random) %>
+
+        <div class="absolute bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+          <%= first_n_words(@podcast_title, 2) %>
+        </div>
+
+        <div class="absolute bottom-[2rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
+          <div>
+            <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
+          </div>
+          <div class="text-sm"><%= @video_length %></div>
+        </div>
+      </section>
+    </a>
     """
-  end
-
-  defp get_podcast_thumbnail(filename) do
-    ~p"/images/podcasts/#{filename}"
-  end
-
-  defp get_the_vector_randomly(random) do
-    assigns = %{}
-
-    cond do
-      random == 1 -> absolute_vectors_1(assigns)
-      random == 2 -> absolute_vectors_2(assigns)
-      random == 3 -> absolute_vectors_3(assigns)
-      random == 4 -> absolute_vectors_4(assigns)
-      random == 5 -> absolute_vectors_5(assigns)
-    end
   end
 
   @spec absolute_vectors_1(assigns()) :: rendered()
@@ -206,5 +193,24 @@ defmodule SkepticBotWeb.PodcastComponents do
       class="absolute top-[9rem] right-[1.7rem]"
     />
     """
+  end
+
+  defp get_the_vector_randomly(random) do
+    assigns = %{}
+
+    cond do
+      random == 1 -> absolute_vectors_1(assigns)
+      random == 2 -> absolute_vectors_2(assigns)
+      random == 3 -> absolute_vectors_3(assigns)
+      random == 4 -> absolute_vectors_4(assigns)
+      random == 5 -> absolute_vectors_5(assigns)
+    end
+  end
+
+  defp first_n_words(string, number_of_words) do
+    string
+    |> String.split(~r/\s+/, trim: true)
+    |> Enum.take(number_of_words)
+    |> Enum.join(" ")
   end
 end

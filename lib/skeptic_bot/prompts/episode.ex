@@ -1,6 +1,6 @@
-defmodule SkepticBot.Prompt.Episode do
+defmodule SkepticBot.Prompts.Episode do
   @moduledoc """
-  Used as an embedded schema inside a SkepticBot.Prompt.Question schema
+  Used as an embedded schema inside a SkepticBot.Prompt.UserQuestion
   """
 
   use Ecto.Schema
@@ -11,12 +11,13 @@ defmodule SkepticBot.Prompt.Episode do
 
   embedded_schema do
     field :episode_id, :string
+    field :timestamp, EctoInterval
   end
 
   @spec changeset(t(), map()) :: Ecto.Changeset.t()
   def changeset(episode, attrs) do
     episode
-    |> cast(attrs, [:episode_id])
-    |> validate_required([:episode_id])
+    |> cast(attrs, [:episode_id, :timestamp])
+    |> validate_required([:episode_id, :timestamp])
   end
 end
