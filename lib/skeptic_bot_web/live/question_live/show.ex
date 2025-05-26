@@ -1,4 +1,4 @@
-defmodule SkepticBotWeb.PodcastLive.Show do
+defmodule SkepticBotWeb.QuestionLive.Show do
   use SkepticBotWeb, :live_view
 
   alias SkepticBot.Prompts

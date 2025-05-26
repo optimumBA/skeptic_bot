@@ -78,7 +78,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       refute has_element?(view, ~s(div.h-screen.flex.items-center.relative.animate-pulse))
     end
 
-    test "redirects to the SkepticBotWeb.PodcastLive.Show when episodes are found", %{
+    test "redirects to the QuestionLive.Show when episodes are found", %{
       conn: conn,
       description: description,
       embedding: embedding,

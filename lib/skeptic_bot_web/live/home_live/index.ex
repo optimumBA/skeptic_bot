@@ -60,7 +60,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
         {
           :noreply,
-          push_navigate(socket, to: ~p"/podcasts/#{question.id}")
+          push_navigate(socket, to: ~p"/questions/#{question.id}")
         }
 
       {:error, _changeset} ->

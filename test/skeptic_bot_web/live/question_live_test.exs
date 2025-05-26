@@ -1,4 +1,4 @@
-defmodule SkepticBotWeb.PodcastLiveTest do
+defmodule SkepticBotWeb.QuestionLiveTest do
   use SkepticBotWeb.ConnCase, async: true
 
   import Mox
@@ -46,7 +46,7 @@ defmodule SkepticBotWeb.PodcastLiveTest do
         episodes
       end)
 
-      {:ok, _view, html} = live(conn, "/podcasts/#{question.id}")
+      {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
       assert html =~ question.query
       assert html =~ "Related Podcasts"

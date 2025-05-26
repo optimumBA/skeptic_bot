@@ -2,6 +2,7 @@ defmodule SkepticBot.Prompts do
   @moduledoc """
   The context for our prompt
   """
+
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Rag
@@ -11,6 +12,7 @@ defmodule SkepticBot.Prompts do
 
   @type attrs :: map()
   @type changeset :: Ecto.Changeset.t()
+  @type embedding :: [float()]
   @type episode :: map()
   @type id :: Ecto.UUID.t()
   @type question :: UserQuestion.t()
