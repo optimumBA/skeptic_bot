@@ -38,7 +38,7 @@ defmodule SkepticBot.Prompts do
       end)
 
     embedding_value = query <> " " <> description
-    {:ok, [embedding]} = Rag.Embedding.generate(embedding_value)
+    {:ok, [embedding]} = get_rag_embedding_module().generate(embedding_value)
 
     question_params = %{
       query: query,
@@ -60,5 +60,9 @@ defmodule SkepticBot.Prompts do
   @spec change_question(question(), attrs()) :: changeset()
   def change_question(%UserQuestion{} = question, attrs \\ %{}) do
     UserQuestion.changeset(question, attrs)
+  end
+
+  defp get_rag_embedding_module do
+    Application.get_env(:skeptic_bot, :rag_embedding_module, Rag.Embedding)
   end
 end

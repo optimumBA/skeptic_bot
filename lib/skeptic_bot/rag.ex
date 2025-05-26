@@ -8,6 +8,8 @@ defmodule SkepticBot.Rag do
   alias SkepticBot.Podcasts
   alias SkepticBot.Rag
 
+  @callback generate(String.t()) :: {:ok, {String.t(), list()}} | {:error, any()}
+
   @spec generate(String.t()) :: {:ok, {String.t(), list()}} | {:error, any()}
   def generate(query) do
     with {:ok, [embedding]} <- Rag.Embedding.generate("query: " <> query),

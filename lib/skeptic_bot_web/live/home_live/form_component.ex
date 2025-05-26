@@ -1,7 +1,6 @@
 defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
   @moduledoc """
   Our form component.
-
   Forwads the user Prompt to the LLM.
   """
 
@@ -95,14 +94,23 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
     send(caller, {:loading_state, true})
 
     Task.start(fn ->
-      {:ok, {description, list_of_episodes}} = SkepticBot.Rag.generate(query)
+      {:ok, {description, list_of_episodes}} = get_rag_module().generate(query)
 
-      send(caller, {:generation_done, {description, list_of_episodes}, {query, question}})
+      if list_of_episodes == [] do
+        send(caller, :no_episodes_found)
+        send(caller, {:loading_state, false})
+      else
+        send(caller, {:generation_done, {description, list_of_episodes}, {query, question}})
+      end
     end)
   end
 
   @spec assign_form(socket()) :: socket()
   def assign_form(%{assigns: %{question: question}} = socket) do
     assign(socket, :form, to_form(Prompts.change_prompt_question(question), as: "prompt"))
+  end
+
+  defp get_rag_module do
+    Application.get_env(:skeptic_bot, :rag_module, SkepticBot.Rag)
   end
 end

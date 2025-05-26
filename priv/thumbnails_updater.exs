@@ -18,7 +18,6 @@ defmodule ThumbnailsUpdater do
         :ok
 
       {:ok, %Req.Response{status: 200, body: body}} ->
-        # Process each episode in the current page
         Enum.each(body["data"], fn podcast_episode ->
           podcast_episode["uuid"]
           |> Podcasts.get_episode_by_external_id()

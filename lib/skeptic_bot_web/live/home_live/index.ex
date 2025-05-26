@@ -72,4 +72,9 @@ defmodule SkepticBotWeb.HomeLive.Index do
   def handle_info({:loading_state, value}, socket) do
     {:noreply, assign(socket, :loading, value)}
   end
+
+  @impl Phoenix.LiveView
+  def handle_info(:no_episodes_found, socket) do
+    {:noreply, put_flash(socket, :error, "No related podcast was found")}
+  end
 end

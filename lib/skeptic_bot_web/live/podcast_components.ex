@@ -8,11 +8,11 @@ defmodule SkepticBotWeb.PodcastComponents do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
-  attr :thumbnail, :string, required: true
   attr :podcast_title, :string, required: true
-  attr :video_length, :string, required: true
-  attr :timestamp, :string, required: true
   attr :random, :integer, required: true
+  attr :thumbnail, :string, required: true
+  attr :timestamp, :string, required: true
+  attr :video_length, :string, required: true
 
   @spec podcast_video_card(assigns()) :: rendered()
   def podcast_video_card(assigns) do

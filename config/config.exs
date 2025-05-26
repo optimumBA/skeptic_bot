@@ -85,6 +85,9 @@ config :skeptic_bot, :downloading_runner,
   name: SkepticBot.DownloadingRunner,
   timeout: :timer.minutes(10)
 
+config :skeptic_bot, :rag_module, SkepticBot.Rag
+config :skeptic_bot, :rag_embedding_module, SkepticBot.Rag.Embedding
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

@@ -77,13 +77,10 @@ defmodule SkepticBotWeb.PodcastLive.Show do
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
-    vector_numbers =
-      Enum.shuffle([1, 2, 3, 4, 5])
-
     {:ok,
      socket
      |> assign(:related_episodes_index, 0)
-     |> assign(:vector_numbers, vector_numbers)}
+     |> assign(:vector_numbers, Enum.shuffle([1, 2, 3, 4, 5]))}
   end
 
   @impl Phoenix.LiveView
@@ -97,15 +94,14 @@ defmodule SkepticBotWeb.PodcastLive.Show do
 
     {:noreply,
      socket
-     |> assign(:related_episodes, related_episodes)
-     |> assign(:query, question.query)}
+     |> assign(:query, question.query)
+     |> assign(:related_episodes, related_episodes)}
   end
 
   @impl Phoenix.LiveView
   def handle_event("next_related_episodes", _params, socket) do
     index = socket.assigns.related_episodes_index
-    episodes = socket.assigns.related_episodes
-    new_index = min(index + 1, length(episodes) - 1)
+    new_index = min(index + 1, length(socket.assigns.related_episodes) - 1)
     {:noreply, assign(socket, :related_episodes_index, new_index)}
   end
 
