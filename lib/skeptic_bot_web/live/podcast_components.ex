@@ -8,6 +8,7 @@ defmodule SkepticBotWeb.PodcastComponents do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
+  attr :external_id, :string, required: true
   attr :podcast_title, :string, required: true
   attr :random, :integer, required: true
   attr :thumbnail, :string, required: true
@@ -17,7 +18,7 @@ defmodule SkepticBotWeb.PodcastComponents do
   @spec podcast_video_card(assigns()) :: rendered()
   def podcast_video_card(assigns) do
     ~H"""
-    <a href={"https://vid.samtripoli.com/w/xoV9AbNuEQe9j9VAieVUxV?start=" <> @timestamp}>
+    <a href={"https://vid.samtripoli.com/w/" <> @external_id <> "?start=" <> @timestamp}>
       <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative">
         <div class="rounded-xl w-full h-full overflow-hidden">
           <img

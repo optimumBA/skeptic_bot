@@ -30,16 +30,17 @@ defmodule SkepticBotWeb.PodcastLive.Show do
             >
               <%= for episode <- @related_episodes do %>
                 <PodcastComponents.podcast_video_card
+                  external_id={episode.external_id}
                   podcast_title={episode.title}
-                  thumbnail={episode.thumbnail}
-                  video_length={episode.video_length}
-                  timestamp={to_string(episode.timestamp.secs)}
                   random={
                     Enum.at(
                       @vector_numbers,
                       Enum.find_index(@related_episodes, fn x -> x == episode end)
                     )
                   }
+                  thumbnail={episode.thumbnail}
+                  timestamp={to_string(episode.timestamp.secs)}
+                  video_length={episode.video_length}
                 />
               <% end %>
             </div>
