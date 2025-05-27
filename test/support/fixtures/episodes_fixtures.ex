@@ -32,7 +32,7 @@ defmodule SkepticBot.EpisodesFixtures do
     {:ok, episode} =
       Podcasts.create_episode(episode_attrs)
 
-    Map.put(episode, :timestamp, %{secs: 62, months: 0, days: 0})
+    Map.put(episode, :timestamp, %{secs: :rand.uniform(3000), months: 0, days: 0})
   end
 
   @doc """
@@ -54,5 +54,19 @@ defmodule SkepticBot.EpisodesFixtures do
       |> Base.encode64()
 
     "A random description #{random_string}"
+  end
+
+  @doc """
+  creates multiple episodes.
+  """
+  @spec create_multiple_episodes(integer()) :: list(episode())
+  def create_multiple_episodes(number_of_episodes) do
+    for episode <- 1..number_of_episodes do
+      episode_fixture(%{
+        thumbnail: "cover#{episode}.svg",
+        title: "episode #{episode}",
+        description: "a random description #{episode}"
+      })
+    end
   end
 end

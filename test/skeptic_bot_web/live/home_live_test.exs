@@ -68,7 +68,9 @@ defmodule SkepticBotWeb.HomeLiveTest do
       {:ok, view, _html} = live(conn, "/")
 
       view
-      |> form("#prompt-input-form", prompt: %{query: "I have no idea that this will not return any episodes"})
+      |> form("#prompt-input-form",
+        prompt: %{query: "I have no idea that this will not return any episodes"}
+      )
       |> render_submit()
 
       assert render(view) =~ "No related podcast was found"
