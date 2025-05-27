@@ -11,11 +11,11 @@ defmodule SkepticBotWeb.HomeLiveTest do
   setup :verify_on_exit!
 
   defp create_episodes_setup(%{conn: conn}) do
-    episode = episode_fixture()
-    embedding = embedding_fixture()
     description = description_fixture()
+    embedding = embedding_fixture()
+    episode = episode_fixture()
 
-    %{conn: conn, episode: episode, embedding: embedding, description: description}
+    %{conn: conn, description: description, embedding: embedding, episode: episode}
   end
 
   describe "/" do
@@ -79,9 +79,9 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
     test "redirects when episodes are found", %{
       conn: conn,
-      episode: episode,
       description: description,
-      embedding: embedding
+      embedding: embedding,
+      episode: episode
     } do
       expect(RagMock, :generate, fn _query ->
         {:ok, {description, [episode]}}

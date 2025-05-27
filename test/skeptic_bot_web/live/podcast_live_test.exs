@@ -12,10 +12,10 @@ defmodule SkepticBotWeb.PodcastLiveTest do
   setup :verify_on_exit!
 
   defp create_episodes_setup(%{conn: conn}) do
-    embedding = embedding_fixture()
     description = description_fixture()
+    embedding = embedding_fixture()
 
-    %{conn: conn, embedding: embedding, description: description}
+    %{conn: conn, description: description, embedding: embedding}
   end
 
   describe "/" do

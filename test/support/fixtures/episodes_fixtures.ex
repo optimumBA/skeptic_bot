@@ -7,9 +7,9 @@ defmodule SkepticBot.EpisodesFixtures do
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Episode
 
-  @type episode :: Episode.t()
-  @type embedding :: [float()]
   @type description :: String.t()
+  @type embedding :: [float()]
+  @type episode :: Episode.t()
 
   @doc """
   create an episode.
