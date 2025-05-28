@@ -7,6 +7,7 @@ defmodule SkepticBotWeb.PodcastLiveTest do
 
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
+  alias SkepticBot.PromptsMock
   alias SkepticBot.Rag.EmbeddingMock
 
   setup :verify_on_exit!
@@ -40,7 +41,13 @@ defmodule SkepticBotWeb.PodcastLiveTest do
           %UserQuestion{}
         )
 
-      {:ok, _view, html} = live(conn, "/podcasts/#{question.id}")
+      {:ok, view, html} = live(conn, "/podcasts/#{question.id}")
+
+      expect(PromptsMock, :get_question_episodes, fn _question_episodes ->
+        episodes
+      end)
+
+      # open_browser(view)
 
       assert html =~ question.query
       assert html =~ "Related Podcasts"

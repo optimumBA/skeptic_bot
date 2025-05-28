@@ -90,7 +90,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
 
     related_episodes =
       question.episodes
-      |> Prompts.get_question_episodes()
+      |> get_prompts_context().get_question_episodes()
       |> format_episodes()
 
     {:noreply,
@@ -119,5 +119,9 @@ defmodule SkepticBotWeb.PodcastLive.Show do
 
       [episode | new_episode_list]
     end)
+  end
+
+  defp get_prompts_context do
+    Application.get_env(:skeptic_bot, :prompts_context_module, SkepticBot.Prompts)
   end
 end

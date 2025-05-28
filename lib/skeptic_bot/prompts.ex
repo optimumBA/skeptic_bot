@@ -7,6 +7,8 @@ defmodule SkepticBot.Prompts do
   alias SkepticBot.Rag
   alias SkepticBot.Repo
 
+  @callback get_question_episodes([question_episode()]) :: [episode()]
+
   @type attrs :: map()
   @type changeset :: Ecto.Changeset.t()
   @type episode :: map()
