@@ -23,6 +23,7 @@ defmodule SkepticBot.EpisodesFixtures do
 
     episode_attrs =
       Enum.into(attrs, %{
+        episode_length: :rand.uniform(9000),
         external_id: random_string,
         thumbnail: "cover1.svg",
         title: "Just another episode #{random_string}",

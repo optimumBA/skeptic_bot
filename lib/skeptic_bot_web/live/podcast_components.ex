@@ -38,7 +38,7 @@ defmodule SkepticBotWeb.PodcastComponents do
           <div>
             <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
           </div>
-          <div class="text-sm">{@video_length}</div>
+          <div class="text-sm">{get_time_from_seconds(@video_length)}</div>
         </div>
       </section>
     </a>
@@ -215,4 +215,16 @@ defmodule SkepticBotWeb.PodcastComponents do
     |> Enum.take(number_of_words)
     |> Enum.join(" ")
   end
+
+  @spec get_time_from_seconds(integer()) :: String.t()
+  def get_time_from_seconds(seconds) when is_integer(seconds) and seconds >= 0 do
+    hours = div(seconds, 3600)
+    minutes = div(rem(seconds, 3600), 60)
+    secs = rem(seconds, 60)
+
+    "#{pad(hours)}:#{pad(minutes)}:#{pad(secs)}"
+  end
+
+  defp pad(value) when value < 10, do: "0#{value}"
+  defp pad(value), do: "#{value}"
 end

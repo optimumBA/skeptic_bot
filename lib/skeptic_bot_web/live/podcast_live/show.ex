@@ -40,7 +40,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
                   }
                   thumbnail={episode.thumbnail}
                   timestamp={to_string(episode.timestamp.secs)}
-                  video_length={episode.video_length}
+                  video_length={episode.episode_length}
                 />
               <% end %>
             </div>
@@ -89,9 +89,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
     question = Prompts.get_question!(id)
 
     related_episodes =
-      question.episodes
-      |> get_prompts_context().get_question_episodes()
-      |> format_episodes()
+      get_prompts_context().get_question_episodes(question.episodes)
 
     {:noreply,
      socket
@@ -110,15 +108,6 @@ defmodule SkepticBotWeb.PodcastLive.Show do
     index = socket.assigns.related_episodes_index
     new_index = max(index - 1, 0)
     {:noreply, assign(socket, :related_episodes_index, new_index)}
-  end
-
-  defp format_episodes(episodes_list) do
-    Enum.reduce(episodes_list, [], fn episode, new_episode_list ->
-      episode =
-        Map.put(episode, :video_length, "02:20:45")
-
-      [episode | new_episode_list]
-    end)
   end
 
   defp get_prompts_context do

@@ -53,6 +53,7 @@ defmodule SkepticBotWeb.PodcastLiveTest do
 
       Enum.each(episodes, fn episode ->
         assert html =~ PodcastComponents.first_n_words(episode.title, 2)
+        assert html =~ PodcastComponents.get_time_from_seconds(episode.episode_length)
       end)
     end
   end

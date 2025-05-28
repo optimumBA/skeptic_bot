@@ -21,7 +21,7 @@ defmodule ThumbnailsUpdater do
         Enum.each(body["data"], fn podcast_episode ->
           podcast_episode["uuid"]
           |> Podcasts.get_episode_by_external_id()
-          |> maybe_update_episode(podcast_episode["thumbnailPath"])
+          |> maybe_update_episode(podcast_episode["thumbnailPath"], podcast_episode["duration"])
         end)
 
         update_thumbnails_from_page(start + 100)
@@ -31,12 +31,12 @@ defmodule ThumbnailsUpdater do
     end
   end
 
-  defp maybe_update_episode(nil, _thumbnail_path) do
+  defp maybe_update_episode(nil, _thumbnail_path, _podcast_length) do
     :ok
   end
 
-  defp maybe_update_episode(episode, thumbnail_path) do
-    Podcasts.update_episode(episode, %{thumbnail: thumbnail_path})
+  defp maybe_update_episode(episode, thumbnail_path, podcast_length) do
+    Podcasts.update_episode(episode, %{thumbnail: thumbnail_path, episode_length: podcast_length})
   end
 end
 
