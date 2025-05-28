@@ -208,7 +208,8 @@ defmodule SkepticBotWeb.PodcastComponents do
     end
   end
 
-  defp first_n_words(string, number_of_words) do
+  @spec first_n_words(String.t(), integer()) :: String.t()
+  def first_n_words(string, number_of_words) do
     string
     |> String.split(~r/\s+/, trim: true)
     |> Enum.take(number_of_words)

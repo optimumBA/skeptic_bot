@@ -64,7 +64,7 @@ defmodule SkepticBot.EpisodesFixtures do
     for episode <- 1..number_of_episodes do
       episode_fixture(%{
         thumbnail: "cover#{episode}.svg",
-        title: "episode #{episode}",
+        title: "episode #{episode} is great",
         description: "a random description #{episode}"
       })
     end
