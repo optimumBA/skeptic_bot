@@ -5,9 +5,9 @@ defmodule ThumbnailsUpdater do
   require Logger
 
   def update() do
-    Logger.debug("Thumbnail update is starting", ansi_color: :green)
+    Logger.debug("Thumbnail and Episode Update is starting", ansi_color: :green)
     update_thumbnails_from_page(0)
-    Logger.debug("Thumbnail update is Finished", ansi_color: :green)
+    Logger.debug("Thumbnail and Episode Update is Finished", ansi_color: :green)
   end
 
   defp update_thumbnails_from_page(start) do
