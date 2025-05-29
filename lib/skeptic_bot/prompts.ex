@@ -49,9 +49,9 @@ defmodule SkepticBot.Prompts do
       embedding: embedding
     }
 
-    question_changeset = change_question(question, question_params)
-
-    Repo.insert(question_changeset)
+    question
+    |> change_question(question_params)
+    |> Repo.insert()
   end
 
   @spec change_prompt_question(question(), attrs()) :: changeset()
