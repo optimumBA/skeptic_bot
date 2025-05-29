@@ -20,10 +20,10 @@ defmodule SkepticBotWeb.PodcastLiveTest do
     %{conn: conn, description: description, embedding: embedding}
   end
 
-  describe "/" do
+  describe "/podcasts/:id/" do
     setup [:create_episodes_setup]
 
-    test "displays the question query and \"Related Podcasts\"", %{
+    test "displays the question query and episodes' information plus \"Related Podcasts\"", %{
       conn: conn,
       description: description,
       embedding: embedding
