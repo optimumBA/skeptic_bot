@@ -67,7 +67,7 @@ defmodule SkepticBotWeb.PodcastLive.Show do
           </button>
         </div>
 
-        <div class="absolute bottom-[-5rem] right-[8rem]">
+        <div class="absolute bottom-[-5rem] right-[5%]">
           <img src={~p"/images/podcasts/podcast_scribble.svg"} alt="Podcast Scribble" />
         </div>
       </section>
