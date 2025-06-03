@@ -80,16 +80,16 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
     changeset =
       Prompts.change_prompt_question(question, prompt_params)
 
-    maybe_generate_prompt_results(changeset.valid?, query, question)
+    maybe_generate_prompt_results(changeset.valid?, query)
 
     {:noreply, socket}
   end
 
-  defp maybe_generate_prompt_results(false, _query, _question) do
+  defp maybe_generate_prompt_results(false, _query) do
     :ok
   end
 
-  defp maybe_generate_prompt_results(true, query, question) do
+  defp maybe_generate_prompt_results(true, query) do
     caller = self()
     send(caller, {:loading_state, true})
 
@@ -100,7 +100,7 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
         send(caller, :no_episodes_found)
         send(caller, {:loading_state, false})
       else
-        send(caller, {:generation_done, {description, list_of_episodes}, {query, question}})
+        send(caller, {:generation_done, {description, list_of_episodes, query}})
       end
     end)
   end

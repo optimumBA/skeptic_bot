@@ -6,10 +6,13 @@ defmodule SkepticBot.EpisodesFixtures do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Episode
+  alias SkepticBot.Prompts
+  alias SkepticBot.Prompts.UserQuestion
 
   @type description :: String.t()
   @type embedding :: [float()]
   @type episode :: Episode.t()
+  @type question :: UserQuestion.t()
 
   @doc """
   create an episode.
@@ -34,6 +37,30 @@ defmodule SkepticBot.EpisodesFixtures do
       Podcasts.create_episode(episode_attrs)
 
     Map.put(episode, :timestamp, %{secs: :rand.uniform(3000), months: 0, days: 0})
+  end
+
+  @doc """
+  create a question.
+  """
+
+  @spec question_fixture(map()) :: question()
+  def question_fixture(attrs) do
+    episode_details =
+      2
+      |> create_multiple_episodes()
+      |> Prompts.get_episode_details()
+
+    question_attrs =
+      Enum.into(attrs, %{
+        description: description_fixture(),
+        embedding: embedding_fixture(),
+        episode_details: episode_details
+      })
+
+    {:ok, question} =
+      Prompts.create_question(question_attrs)
+
+    question
   end
 
   @doc """

@@ -5,7 +5,6 @@ defmodule SkepticBot.Prompts do
 
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Prompts.UserQuestion
-  alias SkepticBot.Rag
   alias SkepticBot.Repo
 
   @callback get_question_episodes([question_episode()]) :: [episode()]
@@ -33,26 +32,11 @@ defmodule SkepticBot.Prompts do
     end)
   end
 
-  @spec create_question([episode()], String.t(), String.t(), question()) ::
+  @spec create_question(attrs()) ::
           {:ok, question()} | {:error, changeset()}
-  def create_question(list_of_episodes, query, description, question) do
-    episode_details =
-      Enum.reduce(list_of_episodes, [], fn episode, list ->
-        [%{episode_id: episode.id, timestamp: episode.timestamp} | list]
-      end)
-
-    embedding_value = query <> " " <> description
-    {:ok, [embedding]} = get_rag_embedding_module().generate(embedding_value)
-
-    question_params = %{
-      query: query,
-      description: description,
-      episodes: episode_details,
-      embedding: embedding
-    }
-
-    question
-    |> change_question(question_params)
+  def create_question(attrs) do
+    %UserQuestion{}
+    |> change_question(attrs)
     |> Repo.insert()
   end
 
@@ -66,7 +50,10 @@ defmodule SkepticBot.Prompts do
     UserQuestion.changeset(question, attrs)
   end
 
-  defp get_rag_embedding_module do
-    Application.get_env(:skeptic_bot, :rag_embedding_module, Rag.Embedding)
+  @spec get_episode_details([episode()]) :: [episode()]
+  def get_episode_details(list_of_episodes) do
+    Enum.reduce(list_of_episodes, [], fn episode, list ->
+      [%{episode_id: episode.id, timestamp: episode.timestamp} | list]
+    end)
   end
 end

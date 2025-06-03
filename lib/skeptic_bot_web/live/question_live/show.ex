@@ -17,59 +17,57 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         </div>
       </section>
 
-      <section class="max-w-[65.0625rem] ml-5 montserrat-alternates-bold text-[#000000] text-2xl xl:mx-auto">
-        Related Podcasts
-      </section>
-
-      <section class="relative pb-16">
-        <section class="max-w-[65.0625rem] ml-5 overflow-hidden pt-12 relative mb-12 xl:mx-auto">
-          <div
-            class="flex gap-4 transition-transform duration-300 ease-in-out"
-            style={"transform: translateX(-#{@related_episodes_index * 20.6875}rem);"}
-          >
-            <%= for episode <- @related_episodes do %>
-              <PodcastComponents.podcast_video_card
-                external_id={episode.external_id}
-                podcast_title={episode.title}
-                random={
-                  Enum.at(
-                    @vector_numbers,
-                    Enum.find_index(@related_episodes, fn x -> x == episode end)
-                  )
-                }
-                thumbnail={episode.thumbnail}
-                timestamp={to_string(episode.timestamp.secs)}
-                video_length={episode.episode_length}
-              />
-            <% end %>
+      <section class="max-w-[75.0625rem] mx-auto">
+        <section class="ml-5 montserrat-alternates-bold text-[#000000] text-2xl">
+          Related Podcasts
+        </section>
+        <section class="relative pb-16">
+          <section class="ml-5 overflow-hidden pt-12 relative mb-12">
+            <div
+              class="flex gap-4 transition-transform duration-300 ease-in-out"
+              style={"transform: translateX(-#{@related_episodes_index * 20.6875}rem);"}
+            >
+              <%= for episode <- @related_episodes do %>
+                <PodcastComponents.related_episode_card
+                  external_id={episode.external_id}
+                  podcast_title={episode.title}
+                  random={
+                    Enum.at(
+                      @vector_numbers,
+                      Enum.find_index(@related_episodes, fn x -> x == episode end)
+                    )
+                  }
+                  thumbnail={episode.thumbnail}
+                  timestamp={to_string(episode.timestamp.secs)}
+                  video_length={episode.episode_length}
+                />
+              <% end %>
+            </div>
+          </section>
+          <div class="ml-5 flex gap-5">
+            <button
+              phx-click="prev_related_episodes"
+              class="disabled:opacity-50"
+              disabled={@related_episodes_index == 0}
+            >
+              <div>
+                <img src={~p"/images/podcasts/back_arrow.svg"} alt="Back Arrow" />
+              </div>
+            </button>
+            <button
+              phx-click="next_related_episodes"
+              class="disabled:opacity-50"
+              disabled={@related_episodes_index >= length(@related_episodes) - 1}
+            >
+              <div>
+                <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
+              </div>
+            </button>
+          </div>
+          <div class="absolute bottom-[-5rem] right-[5%]">
+            <img src={~p"/images/podcasts/podcast_scribble.svg"} alt="Podcast Scribble" />
           </div>
         </section>
-
-        <div class="max-w-[65.0625rem] ml-5 flex gap-5 xl:mx-auto">
-          <button
-            phx-click="prev_related_episodes"
-            class="disabled:opacity-50"
-            disabled={@related_episodes_index == 0}
-          >
-            <div>
-              <img src={~p"/images/podcasts/back_arrow.svg"} alt="Back Arrow" />
-            </div>
-          </button>
-
-          <button
-            phx-click="next_related_episodes"
-            class="disabled:opacity-50"
-            disabled={@related_episodes_index >= length(@related_episodes) - 1}
-          >
-            <div>
-              <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
-            </div>
-          </button>
-        </div>
-
-        <div class="absolute bottom-[-5rem] right-[5%]">
-          <img src={~p"/images/podcasts/podcast_scribble.svg"} alt="Podcast Scribble" />
-        </div>
       </section>
     </div>
     """

@@ -15,8 +15,8 @@ defmodule SkepticBotWeb.PodcastComponents do
   attr :timestamp, :string, required: true
   attr :video_length, :string, required: true
 
-  @spec podcast_video_card(assigns()) :: rendered()
-  def podcast_video_card(assigns) do
+  @spec related_episode_card(assigns()) :: rendered()
+  def related_episode_card(assigns) do
     ~H"""
     <a href={"https://vid.samtripoli.com/w/" <> @external_id <> "?start=" <> @timestamp}>
       <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative">
@@ -28,7 +28,7 @@ defmodule SkepticBotWeb.PodcastComponents do
           />
         </div>
 
-        {get_the_vector_randomly(@random)}
+        {get_related_episode_vector(@random)}
 
         <div class="absolute bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
           {first_n_words(@podcast_title, 2)}
@@ -196,7 +196,7 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
-  defp get_the_vector_randomly(random) do
+  defp get_related_episode_vector(random) do
     assigns = %{}
 
     cond do

@@ -53,8 +53,19 @@ defmodule SkepticBotWeb.HomeLive.Index do
   end
 
   @impl Phoenix.LiveView
-  def handle_info({:generation_done, {description, list_of_episodes}, {query, question}}, socket) do
-    case Prompts.create_question(list_of_episodes, query, description, question) do
+  def handle_info({:generation_done, {description, list_of_episodes, query}}, socket) do
+    {:ok, [embedding]} = get_rag_embedding_module().generate(query)
+
+    episode_details = Prompts.get_episode_details(list_of_episodes)
+
+    question_attrs = %{
+      description: description,
+      embedding: embedding,
+      episodes: episode_details,
+      query: query
+    }
+
+    case Prompts.create_question(question_attrs) do
       {:ok, question} ->
         send(self(), {:loading_state, false})
 
@@ -76,5 +87,9 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @impl Phoenix.LiveView
   def handle_info(:no_episodes_found, socket) do
     {:noreply, put_flash(socket, :error, "No related podcast was found")}
+  end
+
+  defp get_rag_embedding_module do
+    Application.get_env(:skeptic_bot, :rag_embedding_module, SkepticBot.Rag.Embedding)
   end
 end
