@@ -86,7 +86,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     question = Prompts.get_question!(id)
 
     related_episodes =
-      get_prompts_context().get_question_episodes(question.episodes)
+      get_prompts_context_module().get_question_episodes(question.episodes)
 
     {:noreply,
      socket
@@ -107,7 +107,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:noreply, assign(socket, :related_episodes_index, new_index)}
   end
 
-  defp get_prompts_context do
+  defp get_prompts_context_module do
     Application.get_env(:skeptic_bot, :prompts_context_module, SkepticBot.Prompts)
   end
 end

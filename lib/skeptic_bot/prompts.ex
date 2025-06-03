@@ -36,18 +36,13 @@ defmodule SkepticBot.Prompts do
           {:ok, question()} | {:error, changeset()}
   def create_question(attrs) do
     %UserQuestion{}
-    |> change_question(attrs)
+    |> UserQuestion.changeset(attrs)
     |> Repo.insert()
   end
 
   @spec change_prompt_question(question(), attrs()) :: changeset()
   def change_prompt_question(%UserQuestion{} = question, attrs \\ %{}) do
     UserQuestion.question_changeset(question, attrs)
-  end
-
-  @spec change_question(question(), attrs()) :: changeset()
-  def change_question(%UserQuestion{} = question, attrs \\ %{}) do
-    UserQuestion.changeset(question, attrs)
   end
 
   @spec get_episode_details([episode()]) :: [episode()]
