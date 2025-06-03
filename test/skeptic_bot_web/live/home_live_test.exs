@@ -3,14 +3,14 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
   import Mox
   import Phoenix.LiveViewTest
-  import SkepticBot.EpisodesFixtures
+  import SkepticBot.PromptFixtures
 
   alias SkepticBot.Rag.EmbeddingMock
   alias SkepticBot.RagMock
 
   setup :verify_on_exit!
 
-  defp create_episodes_setup(%{conn: conn}) do
+  defp create_prompt_resources_setup(%{conn: conn}) do
     description = description_fixture()
     embedding = embedding_fixture()
     episode = episode_fixture()
@@ -19,7 +19,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
   end
 
   describe "/" do
-    setup [:create_episodes_setup]
+    setup [:create_prompt_resources_setup]
 
     test "shows heading and subtitle", %{conn: conn} do
       {:ok, view, html} = live(conn, "/")

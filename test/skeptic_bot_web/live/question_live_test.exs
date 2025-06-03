@@ -3,23 +3,21 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
   import Mox
   import Phoenix.LiveViewTest
-  import SkepticBot.EpisodesFixtures
+  import SkepticBot.PromptFixtures
 
   alias SkepticBot.PromptsMock
   alias SkepticBotWeb.PodcastComponents
 
   setup :verify_on_exit!
 
-  defp create_episodes_setup(%{conn: conn}) do
-    description = description_fixture()
-    embedding = embedding_fixture()
+  defp create_questions_setup(%{conn: conn}) do
     question = question_fixture(%{query: "American Ponzi with Lee Camp"})
 
-    %{conn: conn, description: description, embedding: embedding, question: question}
+    %{conn: conn, question: question}
   end
 
   describe "/questions/:id/" do
-    setup [:create_episodes_setup]
+    setup [:create_questions_setup]
 
     test "displays the question query and episodes' information plus \"Related Podcasts\"", %{
       conn: conn,

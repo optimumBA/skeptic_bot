@@ -1,4 +1,4 @@
-defmodule SkepticBot.EpisodesFixtures do
+defmodule SkepticBot.PromptFixtures do
   @moduledoc """
   This module defines test helpers for creating
   entities via the `SkepticBot.Podcasts` context.
