@@ -22,8 +22,21 @@
   font-style: normal;
 }
 
+.card-shadow {
+  box-shadow: 10px 10px #81adc8;
+}
+
 .custom-shadow {
   box-shadow: 5px 5px #81adc8;
+}
+
+.divider {
+  height: 1px;
+  line-height: 1px;
+  width: 85%;
+  background-color: #4d4d4d;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .remove-outline:focus {
