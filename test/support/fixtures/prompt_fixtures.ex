@@ -97,4 +97,17 @@ defmodule SkepticBot.PromptFixtures do
       })
     end
   end
+
+  @doc """
+  creates multiple questions.
+  """
+
+  @spec create_multiple_questions(integer()) :: list(question())
+  def create_multiple_questions(number_of_questions) do
+    for question <- 1..number_of_questions do
+      question_fixture(%{
+        query: "Query #{question}"
+      })
+    end
+  end
 end

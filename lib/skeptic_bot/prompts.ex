@@ -2,12 +2,16 @@ defmodule SkepticBot.Prompts do
   @moduledoc """
   The context for our prompt
   """
+  import Ecto.Query
+  import Pgvector.Ecto.Query, only: [l2_distance: 2]
 
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Repo
 
+  @callback get_other_podcast_episodes(embedding()) :: [episode()]
   @callback get_question_episodes([question_episode()]) :: [episode()]
+  @callback get_related_questions(embedding(), id()) :: [question()]
 
   @type attrs :: map()
   @type changeset :: Ecto.Changeset.t()
@@ -30,6 +34,35 @@ defmodule SkepticBot.Prompts do
 
       [episode | list_of_episodes]
     end)
+  end
+
+  @spec get_related_questions(embedding(), id()) :: [question()]
+  def get_related_questions(embedding, id) do
+    UserQuestion
+    |> select([uq], %{
+      id: uq.id,
+      description: uq.description,
+      query: uq.query
+    })
+    |> where([uq], uq.id != ^id)
+    |> where([uq], fragment("? <-> ? >= ?", uq.embedding, ^embedding, 0.55555))
+    |> order_by([uq], asc: l2_distance(uq.embedding, ^embedding))
+    |> limit(6)
+    |> Repo.all()
+  end
+
+  @spec get_other_podcast_episodes(embedding()) :: [episode()]
+  def get_other_podcast_episodes(embedding) do
+    Episode
+    |> select([e], %{
+      episode_length: e.episode_length,
+      title: e.title,
+      external_id: e.external_id,
+      thumbnail: e.thumbnail
+    })
+    |> order_by([e], desc: l2_distance(e.embedding, ^embedding))
+    |> limit(3)
+    |> Repo.all()
   end
 
   @spec create_question(attrs()) ::

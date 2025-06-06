@@ -6,6 +6,7 @@
     "*.{heex,ex,exs}",
     ".github/github_workflows.ex",
     "{config,lib,test}/**/*.{heex,ex,exs}",
-    "priv/*/seeds.exs"
+    "priv/*/seeds.exs",
+    "priv/*.exs"
   ]
 ]

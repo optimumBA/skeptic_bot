@@ -45,6 +45,43 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
+  attr :external_id, :string, required: true
+  attr :podcast_title, :string, required: true
+  attr :random, :integer, required: true
+  attr :thumbnail, :string, required: true
+  attr :video_length, :string, required: true
+
+  @spec other_episode_card(assigns()) :: Phoenix.LiveView.Rendered.t()
+  def other_episode_card(assigns) do
+    ~H"""
+    <a href={"https://vid.samtripoli.com/w/" <> @external_id}>
+      <section class="w-[23.4rem] h-[23.4rem] shrink-0 relative">
+        <div class="rounded-xl w-full h-full overflow-hidden">
+          <img
+            src={"https://vid.samtripoli.com/" <> @thumbnail}
+            alt="Cover 1"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        {get_other_episode_vector(@random)}
+
+        <div class="absolute  bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
+          {first_n_words(@podcast_title, 2)}
+        </div>
+
+        <div class="absolute bottom-[2rem] left-[1.2rem] flex gap-2 montserrat-alternates-bold text-[#FFFFFF]">
+          <div>
+            <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
+          </div>
+
+          <div class="text-sm">{get_time_from_seconds(@video_length)}</div>
+        </div>
+      </section>
+    </a>
+    """
+  end
+
   @spec absolute_vectors_1(assigns()) :: rendered()
   def absolute_vectors_1(assigns) do
     ~H"""
@@ -196,6 +233,45 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
+  attr :body, :string, required: true
+  attr :number, :integer, required: true
+  attr :question_id, :string, required: true
+  attr :title, :string, required: true
+
+  @spec question_card(assigns()) :: rendered()
+  def question_card(assigns) do
+    ~H"""
+    <div
+      class="border-2 border-[#000000] bg-[#FFFFFF] rounded-2xl cursor-pointer card-shadow"
+      phx-click={JS.navigate(~p"/questions/#{@question_id}")}
+    >
+      <div class="flex flex-col px-3 pt-4 pb-2 text-[#4D4D4D]">
+        <section class="flex justify-between items-center">
+          <div class={[
+            "text-2xl montserrat-alternates-bold",
+            if rem(@number, 2) == 0 do
+              "text-[#000000]"
+            else
+              "text-[#CD4631]"
+            end
+          ]}>
+            {@title}
+          </div>
+          <div class="shrink-0 pr-4">
+            <img src={~p"/images/podcasts/xmark.svg"} alt="X Mark" />
+          </div>
+        </section>
+        <div class="divider">
+          &zwj;
+        </div>
+        <section class="text-sm w-[88%] montserrat-alternates-medium">
+          {@body}...
+        </section>
+      </div>
+    </div>
+    """
+  end
+
   defp get_related_episode_vector(random) do
     assigns = %{}
 
@@ -205,6 +281,18 @@ defmodule SkepticBotWeb.PodcastComponents do
       random == 3 -> absolute_vectors_3(assigns)
       random == 4 -> absolute_vectors_4(assigns)
       random == 5 -> absolute_vectors_5(assigns)
+    end
+  end
+
+  defp get_other_episode_vector(random) do
+    assigns = %{}
+
+    cond do
+      random == 1 -> absolute_vectors_5(assigns)
+      random == 2 -> absolute_vectors_3(assigns)
+      random == 3 -> absolute_vectors_1(assigns)
+      random == 4 -> absolute_vectors_4(assigns)
+      random == 5 -> absolute_vectors_2(assigns)
     end
   end
 
