@@ -23,7 +23,7 @@ defmodule SkepticBot.Rag.Embedding do
     embeddings
   end
 
-  @spec generate(text()) :: {:ok, embedding()} | {:error, any()}
+  @spec generate(text()) :: {:ok, [embedding()]} | {:error, any()}
   def generate(text) when is_binary(text), do: generate([text])
 
   @spec generate([text()]) :: {:ok, [embedding()]} | {:error, any()}
