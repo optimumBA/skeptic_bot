@@ -85,7 +85,6 @@ config :skeptic_bot, :downloading_runner,
   name: SkepticBot.DownloadingRunner,
   timeout: :timer.minutes(10)
 
-config :skeptic_bot, :prompts_context_module, SkepticBot.Prompts
 config :skeptic_bot, :rag_module, SkepticBot.Rag
 config :skeptic_bot, :rag_embedding_module, SkepticBot.Rag.Embedding
 

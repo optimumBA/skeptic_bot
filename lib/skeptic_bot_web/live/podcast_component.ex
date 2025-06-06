@@ -27,18 +27,16 @@ defmodule SkepticBotWeb.PodcastComponents do
             class="w-full h-full object-cover"
           />
         </div>
-
-        {get_related_episode_vector(@random)}
-
+        <%= get_related_episode_vector(@random) %>
         <div class="absolute bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
-          {first_n_words(@podcast_title, 2)}
+          <%= first_n_words(@podcast_title, 2) %>
         </div>
 
         <div class="absolute bottom-[2rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
           <div>
             <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
           </div>
-          <div class="text-sm">{get_time_from_seconds(@video_length)}</div>
+          <div class="text-sm"><%= get_time_from_seconds(@video_length) %></div>
         </div>
       </section>
     </a>

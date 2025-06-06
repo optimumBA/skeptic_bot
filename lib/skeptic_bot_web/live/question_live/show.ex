@@ -10,7 +10,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     <div>
       <section class="relative max-w-[33.6rem] mx-auto mt-16 mb-10">
         <p class="text-[#000000] text-[3.75rem] leading-none montserrat-alternates-bold">
-          {@query}
+          <%= @query %>
         </p>
         <div class="absolute top-[-2.1rem] left-[-2.8rem]">
           <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
@@ -86,7 +86,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     question = Prompts.get_question!(id)
 
     related_episodes =
-      get_prompts_context_module().get_question_episodes(question.episodes)
+      Prompts.get_question_episodes(question.episodes)
 
     {:noreply,
      socket
@@ -105,9 +105,5 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     index = socket.assigns.related_episodes_index
     new_index = max(index - 1, 0)
     {:noreply, assign(socket, :related_episodes_index, new_index)}
-  end
-
-  defp get_prompts_context_module do
-    Application.get_env(:skeptic_bot, :prompts_context_module, SkepticBot.Prompts)
   end
 end

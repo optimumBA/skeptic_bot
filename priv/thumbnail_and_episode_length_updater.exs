@@ -1,16 +1,16 @@
-defmodule ThumbnailsUpdater do
+defmodule ThumbnailAndEpisodeLengthUpdater do
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.TinfoilScraper
 
   require Logger
 
   def update() do
-    Logger.debug("Thumbnail and Episode Update is starting", ansi_color: :green)
-    update_thumbnails_from_page(0)
-    Logger.debug("Thumbnail and Episode Update is Finished", ansi_color: :green)
+    Logger.debug("Update is starting", ansi_color: :green)
+    update_thumbnails_and_episode_lengths(0)
+    Logger.debug("Update is completed", ansi_color: :green)
   end
 
-  defp update_thumbnails_from_page(start) do
+  defp update_thumbnails_and_episode_lengths(start) do
     url = String.replace(TinfoilScraper.get_url(), "<start>", Integer.to_string(start))
 
     case Req.get(url) do
@@ -24,7 +24,7 @@ defmodule ThumbnailsUpdater do
           |> maybe_update_episode(podcast_episode["thumbnailPath"], podcast_episode["duration"])
         end)
 
-        update_thumbnails_from_page(start + 100)
+        update_thumbnails_and_episode_lengths(start + 100)
 
       {:error, reason} ->
         {:error, reason}
@@ -41,4 +41,4 @@ defmodule ThumbnailsUpdater do
 end
 
 {:ok, _} = Application.ensure_all_started(:skeptic_bot)
-ThumbnailsUpdater.update()
+ThumbnailAndEpisodeLengthUpdater.update()

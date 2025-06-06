@@ -5,29 +5,25 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   import Phoenix.LiveViewTest
   import SkepticBot.PromptFixtures
 
-  alias SkepticBot.PromptsMock
+  alias SkepticBot.Prompts
   alias SkepticBotWeb.PodcastComponents
 
   setup :verify_on_exit!
 
-  defp create_questions_setup(%{conn: conn}) do
+  defp create_question_setup(%{conn: conn}) do
     question = question_fixture(%{query: "American Ponzi with Lee Camp"})
 
     %{conn: conn, question: question}
   end
 
   describe "/questions/:id/" do
-    setup [:create_questions_setup]
+    setup [:create_question_setup]
 
     test "displays the question query and episodes' information plus \"Related Podcasts\"", %{
       conn: conn,
       question: question
     } do
-      episodes = create_multiple_episodes(4)
-
-      expect(PromptsMock, :get_question_episodes, 2, fn _question_episodes ->
-        episodes
-      end)
+      episodes = Prompts.get_question_episodes(question.episodes)
 
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
