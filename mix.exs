@@ -66,6 +66,7 @@ defmodule SkepticBot.MixProject do
     [
       {:flame, "~> 0.5"},
       {:langchain, "~> 0.3.0-rc.2"},
+      {:mox, "~> 1.1", only: :test},
       {:oban, "~> 2.17"},
       {:pgvector, "~> 0.2.0"},
       {:req, "~> 0.5"}
@@ -96,7 +97,7 @@ defmodule SkepticBot.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.20.2"},
+      {:phoenix_live_view, "~> 1.0.12"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
