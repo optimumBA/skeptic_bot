@@ -54,7 +54,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       |> form("#prompt-input-form", prompt: %{query: ""})
       |> render_submit()
 
-      refute has_element?(view, ~s(div.h-screen.flex.items-center.relative.animate-pulse))
+      refute has_element?(view, ~s(div.animate-pulse))
     end
 
     test "renders error message when no episodes are found", %{
@@ -75,7 +75,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
       refute_redirected(view)
       assert render(view) =~ "No related podcast was found"
-      refute has_element?(view, ~s(div.h-screen.flex.items-center.relative.animate-pulse))
+      refute has_element?(view, ~s(div.animate-pulse))
     end
 
     test "redirects to the QuestionLive.Show when episodes are found", %{
