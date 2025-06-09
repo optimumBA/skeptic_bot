@@ -12,9 +12,7 @@ defmodule SkepticBot.Rag do
 
   @spec generate(String.t()) :: {:ok, {String.t(), list()}} | {:error, any()}
   def generate(query) do
-    with {:ok, expanded_query} <-
-           expand_query(query),
-         {:ok, [embedding]} <- Rag.Embedding.generate(expanded_query),
+    with {:ok, [embedding]} <- Rag.Embedding.generate("query: " <> query),
          context <- Rag.Retrieval.retrieve(embedding),
          prompt <- format_prompt(context, query),
          {:ok, response} <- Rag.Generation.predict(prompt) do
@@ -54,29 +52,5 @@ defmodule SkepticBot.Rag do
     Title: #{episode.title}
     Transcription: #{episode.transcription}
     """
-  end
-
-  defp prepare_for_expansion(query) do
-    system_message =
-      ~s"""
-      For the given question try to generate a hypothetical answer.
-      Only generate the answer and nothing else.
-      """
-
-    [
-      Message.new_system!(system_message)
-    ] ++
-      [
-        Message.new_user!(~s"""
-
-        Question: #{query}
-        """)
-      ]
-  end
-
-  defp expand_query(query) do
-    query
-    |> prepare_for_expansion()
-    |> Rag.Generation.predict()
   end
 end
