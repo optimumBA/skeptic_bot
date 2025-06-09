@@ -10,14 +10,14 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
   setup :verify_on_exit!
 
-  defp create_questions_setup(%{conn: conn}) do
+  defp create_question_setup(%{conn: conn}) do
     question = question_fixture(%{query: "American Ponzi with Lee Camp"})
 
     %{conn: conn, question: question}
   end
 
   describe "/questions/:id/" do
-    setup [:create_questions_setup]
+    setup [:create_question_setup]
 
     test "displays the question query and episodes' information plus \"Related Podcasts\"", %{
       conn: conn,
