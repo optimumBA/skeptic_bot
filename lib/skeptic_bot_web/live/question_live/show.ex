@@ -117,25 +117,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           </div>
         </section>
       </section>
-
-      <section class="bg-[#FFF5F5] pt-20 pb-16">
-        <section class="max-w-[75.0625rem] ml-5 mb-10 montserrat-alternates-bold text-[#000000] text-2xl xl:mx-auto xl:pl-5">
-          Related Questions
-        </section>
-
-        <section class="max-w-[75.0625rem] mx-5 xl:mx-auto xl:px-5">
-          <div class="grid grid-cols-2 items-stretch gap-[1.125rem] lg:grid-cols-3">
-            <%= for {question, number_on_list} <- @related_questions do %>
-              <PodcastComponents.question_card
-                body={PodcastComponents.first_n_words(question.description, 40)}
-                number={number_on_list}
-                question_id={question.id}
-                title={question.query}
-              />
-            <% end %>
-          </div>
-        </section>
-      </section>
     </div>
     """
   end
@@ -161,17 +142,11 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     other_episodes =
       get_prompts_context_module().get_other_podcast_episodes(most_related_episode.embedding)
 
-    related_questions =
-      question.embedding
-      |> get_prompts_context_module().get_related_questions(question.id)
-      |> Enum.with_index(fn element, index -> {element, index + 1} end)
-
     {:noreply,
      socket
      |> assign(:query, question.query)
      |> assign(:other_episodes, other_episodes)
-     |> assign(:related_episodes, related_episodes)
-     |> assign(related_questions: related_questions)}
+     |> assign(:related_episodes, related_episodes)}
   end
 
   @impl Phoenix.LiveView

@@ -11,7 +11,6 @@ defmodule SkepticBot.Prompts do
 
   @callback get_other_podcast_episodes(embedding()) :: [episode()]
   @callback get_question_episodes([question_episode()]) :: [episode()]
-  @callback get_related_questions(embedding(), id()) :: [question()]
 
   @type attrs :: map()
   @type changeset :: Ecto.Changeset.t()
@@ -34,21 +33,6 @@ defmodule SkepticBot.Prompts do
 
       [episode | list_of_episodes]
     end)
-  end
-
-  @spec get_related_questions(embedding(), id()) :: [question()]
-  def get_related_questions(embedding, id) do
-    UserQuestion
-    |> select([uq], %{
-      id: uq.id,
-      description: uq.description,
-      query: uq.query
-    })
-    |> where([uq], uq.id != ^id)
-    |> where([uq], fragment("? <-> ? >= ?", uq.embedding, ^embedding, 0.55555))
-    |> order_by([uq], asc: l2_distance(uq.embedding, ^embedding))
-    |> limit(6)
-    |> Repo.all()
   end
 
   @spec get_other_podcast_episodes(embedding()) :: [episode()]

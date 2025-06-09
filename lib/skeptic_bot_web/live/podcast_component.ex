@@ -233,45 +233,6 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
-  attr :body, :string, required: true
-  attr :number, :integer, required: true
-  attr :question_id, :string, required: true
-  attr :title, :string, required: true
-
-  @spec question_card(assigns()) :: rendered()
-  def question_card(assigns) do
-    ~H"""
-    <div
-      class="border-2 border-[#000000] bg-[#FFFFFF] rounded-2xl cursor-pointer card-shadow"
-      phx-click={JS.navigate(~p"/questions/#{@question_id}")}
-    >
-      <div class="flex flex-col px-3 pt-4 pb-2 text-[#4D4D4D]">
-        <section class="flex justify-between items-center">
-          <div class={[
-            "text-2xl montserrat-alternates-bold",
-            if rem(@number, 2) == 0 do
-              "text-[#000000]"
-            else
-              "text-[#CD4631]"
-            end
-          ]}>
-            {@title}
-          </div>
-          <div class="shrink-0 pr-4">
-            <img src={~p"/images/podcasts/xmark.svg"} alt="X Mark" />
-          </div>
-        </section>
-        <div class="divider">
-          &zwj;
-        </div>
-        <section class="text-sm w-[88%] montserrat-alternates-medium">
-          {@body}...
-        </section>
-      </div>
-    </div>
-    """
-  end
-
   defp get_related_episode_vector(random) do
     assigns = %{}
 
