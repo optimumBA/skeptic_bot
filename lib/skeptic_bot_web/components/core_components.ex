@@ -16,7 +16,7 @@ defmodule SkepticBotWeb.CoreComponents do
   """
   use Phoenix.Component
 
-  import SkepticBotWeb.Gettext
+  use Gettext, backend: SkepticBotWeb.Gettext
 
   alias Phoenix.LiveView.JS
 
