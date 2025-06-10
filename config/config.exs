@@ -87,4 +87,8 @@ config :skeptic_bot, :downloading_runner,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
+
+config :skeptic_bot, :rag_embedding_module, SkepticBot.Rag.Embedding
+config :skeptic_bot, :rag_prediction_module, SkepticBot.Rag.Generation
+
 import_config "#{config_env()}.exs"

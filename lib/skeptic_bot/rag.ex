@@ -10,10 +10,10 @@ defmodule SkepticBot.Rag do
 
   @spec generate(String.t()) :: {:ok, {String.t(), list()}} | {:error, any()}
   def generate(query) do
-    with {:ok, [embedding]} <- Rag.Embedding.generate("query: " <> query),
+    with {:ok, [embedding]} <- get_rag_embedding_module().generate("query: " <> query),
          context <- Rag.Retrieval.retrieve(embedding),
          prompt <- format_prompt(context, query),
-         {:ok, response} <- Rag.Generation.predict(prompt) do
+         {:ok, response} <- get_rag_prediction_module().predict(prompt) do
       {:ok, {response, context}}
     else
       {:error, reason} ->
@@ -50,5 +50,13 @@ defmodule SkepticBot.Rag do
     Title: #{episode.title}
     Transcription: #{episode.transcription}
     """
+  end
+
+  defp get_rag_embedding_module do
+    Application.get_env(:skeptic_bot, :rag_embedding_module, SkepticBot.Rag.Embedding)
+  end
+
+  defp get_rag_prediction_module do
+    Application.get_env(:skeptic_bot, :rag_prediction_module, SkepticBot.Rag.Generation)
   end
 end

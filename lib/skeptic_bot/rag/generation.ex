@@ -7,8 +7,8 @@ defmodule SkepticBot.Rag.Generation do
   alias SkepticBot.ReplicateClient
 
   require Logger
-
   @behaviour SkepticBot.ReplicateClient
+  @callback predict([LangChain.Message.t()]) :: {:ok, String.t()} | {:error, any()}
 
   @model "meta/meta-llama-3-8b-instruct"
 
