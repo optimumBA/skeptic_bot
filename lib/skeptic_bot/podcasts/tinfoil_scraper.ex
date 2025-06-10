@@ -9,6 +9,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
 
   @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
 
+  @spec get_url() :: String.t()
+  def get_url, do: @url
+
   @spec scrape(start()) :: :ok | {:error, any()}
   def scrape(start \\ 0)
 
@@ -61,7 +64,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
       {:ok, %Podcasts.Episode{} = episode} =
         Podcasts.create_episode(%{
           "description" => episode["description"],
+          "episode_length" => episode["duration"],
           "external_id" => episode["uuid"],
+          "thumbnail" => episode["thumbnailPath"],
           "title" => episode["name"]
         })
 
