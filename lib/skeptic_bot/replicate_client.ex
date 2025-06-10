@@ -51,10 +51,12 @@ defmodule SkepticBot.ReplicateClient do
 
     receive do
       {:prediction_completed, ^prediction_id, output} ->
+        WebhookHandler.unregister_prediction(prediction_id)
         {:ok, module.handle_output(output)}
 
       {:prediction_failed, ^prediction_id, error} ->
         Logger.error("#{module.get_type()} failed: #{error}")
+        WebhookHandler.unregister_prediction(prediction_id)
         {:error, "#{module.get_type()} failed: #{error}"}
     after
       timeout ->

@@ -88,9 +88,6 @@ defmodule SkepticBot.Podcasts do
   @spec get_episode(id()) :: episode() | nil
   def get_episode(id), do: Repo.get(Episode, id)
 
-  @spec get_episode_by_external_id(id()) :: episode() | nil
-  def get_episode_by_external_id(external_id), do: Repo.get_by(Episode, external_id: external_id)
-
   @doc """
   Gets all transcriptions for an episode.
 
@@ -120,12 +117,12 @@ defmodule SkepticBot.Podcasts do
   ## Examples
 
       iex> {:ok, episode} = Podcasts.create_episode()
-      ...>
+      ...> 
       ...> result =
       ...>   Podcasts.update_episode(episode, %{
       ...>     transcription: "updated transcription"
       ...>   })
-      ...>
+      ...> 
       ...> with {:ok, %Podcasts.Episode{}} <- result, do: :ok
       :ok
 
@@ -143,12 +140,12 @@ defmodule SkepticBot.Podcasts do
   ## Examples
 
       iex> {:ok, episode_transcription} = Podcasts.create_episode_transcription()
-      ...>
+      ...> 
       ...> result =
       ...>   Podcasts.update_episode_transcription(episode_transcription, %{
       ...>     transcription: "updated transcription"
       ...>   })
-      ...>
+      ...> 
       ...> with {:ok, %Podcasts.EpisodeTranscription{}} <- result, do: :ok
       :ok
 
