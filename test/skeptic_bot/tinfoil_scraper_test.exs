@@ -27,11 +27,11 @@ defmodule SkepticBot.TinfoilScraperTest do
         {:ok, %Req.Response{status: 200, body: body}}
       end)
 
-      expect(DownloadingWorkerMock, :process_with_flame, 1, fn _url, _arg1, _arg2 ->
+      expect(DownloadingWorkerMock, :process_with_flame, fn _url, _arg1, _arg2 ->
         {:ok, "random.mp3"}
       end)
 
-      expect(TranscriptionMock, :transcribe, 1, fn _audio_url ->
+      expect(TranscriptionMock, :transcribe, fn _audio_url ->
         {:ok, chunks}
       end)
 
@@ -52,24 +52,37 @@ defmodule SkepticBot.TinfoilScraperTest do
         |> limit(1)
         |> SkepticBot.Repo.one()
 
-      assert_enqueued([worker: SkepticBot.Podcasts.DownloadingWorker], 500)
+      id = job.args["id"]
+
+      assert_enqueued(worker: SkepticBot.Podcasts.DownloadingWorker, args: job.args)
 
       assert :ok =
                perform_job(SkepticBot.Podcasts.DownloadingWorker, job.args)
 
-      assert_enqueued([worker: SkepticBot.Podcasts.TranscribingWorker], 500)
+      assert_enqueued(
+        worker: SkepticBot.Podcasts.TranscribingWorker,
+        args: %{
+          "id" => id,
+          "audio_url" => "random.mp3"
+        }
+      )
 
       assert :ok =
                perform_job(SkepticBot.Podcasts.TranscribingWorker, %{
-                 "id" => job.args["id"],
+                 "id" => id,
                  "audio_url" => "random.mp3"
                })
 
-      assert_enqueued([worker: SkepticBot.Rag.EmbeddingsGeneratingWorker], 500)
+      assert_enqueued(
+        worker: SkepticBot.Rag.EmbeddingsGeneratingWorker,
+        args: %{
+          "id" => id
+        }
+      )
 
       assert :ok =
                perform_job(SkepticBot.Rag.EmbeddingsGeneratingWorker, %{
-                 "id" => job.args["id"]
+                 "id" => id
                })
     end
   end
