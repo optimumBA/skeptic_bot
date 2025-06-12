@@ -16,6 +16,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   require Logger
 
+  @callback process_with_flame(String.t(), String.t(), String.t()) ::
+              {:ok, String.t()} | {:error, String.t()}
   @type job :: Oban.Job.t()
 
   @url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/<external_id>-0-fragmented.mp4"
@@ -25,7 +27,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   def perform(%Oban.Job{args: %{"id" => id, "external_id" => external_id}}) do
     url = String.replace(@url, "<external_id>", external_id)
 
-    case process_with_flame(id, url, external_id) do
+    case get_downloader_module().process_with_flame(id, url, external_id) do
       {:ok, audio_url} ->
         TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
         :ok
@@ -36,7 +38,10 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     end
   end
 
-  defp process_with_flame(id, url, external_id) do
+  @spec process_with_flame(String.t(), String.t(), String.t()) ::
+          {:ok, String.t()} | {:error, String.t()}
+
+  def process_with_flame(id, url, external_id) do
     result =
       FLAME.call(
         DownloadingRunner,
@@ -133,5 +138,9 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     attrs
     |> __MODULE__.new()
     |> Oban.insert()
+  end
+
+  defp get_downloader_module do
+    Application.get_env(:skeptic_bot, :downloader_module, SkepticBot.Podcasts.DownloadingWorker)
   end
 end

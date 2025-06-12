@@ -10,6 +10,8 @@ defmodule SkepticBot.Rag.Embedding do
 
   @behaviour SkepticBot.ReplicateClient
 
+  @callback generate([text()]) :: {:ok, [embedding()]} | {:error, any()}
+
   @type embedding :: [float()]
   @type text :: String.t()
 

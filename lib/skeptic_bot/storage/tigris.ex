@@ -4,6 +4,7 @@ defmodule SkepticBot.Storage.Tigris do
   """
   require Logger
 
+  @callback delete_file(String.t()) :: :ok | {:error, reason()}
   @type reason :: String.t()
 
   @timeout :timer.minutes(5)

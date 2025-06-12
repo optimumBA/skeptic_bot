@@ -10,6 +10,8 @@ defmodule SkepticBot.Transcription do
 
   @behaviour ReplicateClient
 
+  @callback transcribe(String.t()) :: {:ok, list()} | {:error, any()}
+
   @model "vaibhavs10/incredibly-fast-whisper:3ab86df6c8f54c11309d4d1f930ac292bad43ace52d10c80d87eb258b3c9f79c"
 
   @impl ReplicateClient

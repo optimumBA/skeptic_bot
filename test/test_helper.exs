@@ -1,2 +1,13 @@
+Mox.defmock(SkepticBot.ReqClientMock, for: SkepticBot.ReqClient)
+Mox.defmock(SkepticBot.DownloadingWorkerMock, for: SkepticBot.Podcasts.DownloadingWorker)
+Mox.defmock(SkepticBot.TranscriptionMock, for: SkepticBot.Transcription)
+Mox.defmock(SkepticBot.TigrisMock, for: SkepticBot.Storage.Tigris)
+Mox.defmock(SkepticBot.EmbeddingMock, for: SkepticBot.Rag.Embedding)
+Application.put_env(:skeptic_bot, :req_client_module, SkepticBot.ReqClientMock)
+Application.put_env(:skeptic_bot, :downloader_module, SkepticBot.DownloadingWorkerMock)
+Application.put_env(:skeptic_bot, :transcription_module, SkepticBot.TranscriptionMock)
+Application.put_env(:skeptic_bot, :tigris_module, SkepticBot.TigrisMock)
+Application.put_env(:skeptic_bot, :rag_embedding_module, SkepticBot.EmbeddingMock)
+
 ExUnit.start()
 Ecto.Adapters.SQL.Sandbox.mode(SkepticBot.Repo, :manual)

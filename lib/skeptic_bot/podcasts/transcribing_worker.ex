@@ -11,8 +11,6 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
-  alias SkepticBot.Storage.Tigris
-  alias SkepticBot.Transcription
 
   require Logger
 
@@ -27,7 +25,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
       :ok ->
         file_name = Path.basename(audio_url)
 
-        case Tigris.delete_file(file_name) do
+        case get_tigris_module().delete_file(file_name) do
           :ok ->
             :ok
 
@@ -46,7 +44,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
 
   @spec transcribe_episode(id(), audio_url()) :: :ok | {:error, any()}
   defp transcribe_episode(id, audio_url) do
-    case Transcription.transcribe(audio_url) do
+    case get_transcription_module().transcribe(audio_url) do
       {:ok, chunks} when is_list(chunks) ->
         chunks
         |> Stream.reject(fn %{"timestamp" => [start, _end]} -> is_nil(start) end)
@@ -70,5 +68,13 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
     attrs
     |> __MODULE__.new()
     |> Oban.insert()
+  end
+
+  defp get_transcription_module do
+    Application.get_env(:skeptic_bot, :transcription_module, SkepticBot.Transcription)
+  end
+
+  defp get_tigris_module do
+    Application.get_env(:skeptic_bot, :tigris_module, SkepticBot.Storage.Tigris)
   end
 end
