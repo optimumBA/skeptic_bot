@@ -36,7 +36,4 @@ config :phoenix_live_view,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: true
 
-config :skeptic_bot, Oban,
-  repo: SkepticBot.Repo,
-  queues: false,
-  plugins: false
+config :skeptic_bot, Oban, testing: :manual
