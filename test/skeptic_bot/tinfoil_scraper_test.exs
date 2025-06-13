@@ -6,6 +6,7 @@ defmodule SkepticBot.TinfoilScraperTest do
 
   alias SkepticBot.DownloadingWorkerMock
   alias SkepticBot.EmbeddingMock
+  alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.TinfoilScraper
   alias SkepticBot.ReqClientMock
   alias SkepticBot.TigrisMock
@@ -19,10 +20,19 @@ defmodule SkepticBot.TinfoilScraperTest do
     %{body: body, embedding: embedding, chunks: chunks}
   end
 
+  defp get_job do
+    Oban.Job
+    |> where([j], j.worker == "SkepticBot.Podcasts.DownloadingWorker")
+    |> order_by([j], desc: j.inserted_at)
+    |> limit(1)
+    |> SkepticBot.Repo.one()
+  end
+
   describe "scrape/1" do
     setup [:create_scraper_resources]
 
-    test "add the episode to db", %{body: body, embedding: embedding, chunks: chunks} do
+    test "makes request to get episodes, downloads, trancribes, generates embeddings, and stores the episodes in the DB",
+         %{body: body, embedding: embedding, chunks: chunks} do
       expect(ReqClientMock, :make_request, 1, fn _url ->
         {:ok, %Req.Response{status: 200, body: body}}
       end)
@@ -45,14 +55,11 @@ defmodule SkepticBot.TinfoilScraperTest do
 
       TinfoilScraper.scrape()
 
-      job =
-        Oban.Job
-        |> where([j], j.worker == "SkepticBot.Podcasts.DownloadingWorker")
-        |> order_by([j], desc: j.inserted_at)
-        |> limit(1)
-        |> SkepticBot.Repo.one()
+      job = get_job()
 
       id = job.args["id"]
+
+      assert Podcasts.episode_exists?(job.args["external_id"]) == true
 
       assert_enqueued(worker: SkepticBot.Podcasts.DownloadingWorker, args: job.args)
 
@@ -84,6 +91,18 @@ defmodule SkepticBot.TinfoilScraperTest do
                perform_job(SkepticBot.Rag.EmbeddingsGeneratingWorker, %{
                  "id" => id
                })
+    end
+
+    test "with invalid data does not insert a job to be processed" do
+      expect(ReqClientMock, :make_request, 1, fn _url ->
+        {:error, "Could not make request"}
+      end)
+
+      TinfoilScraper.scrape()
+
+      job = get_job()
+
+      assert job == nil
     end
   end
 end
