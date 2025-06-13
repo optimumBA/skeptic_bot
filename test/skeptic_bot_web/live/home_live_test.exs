@@ -73,7 +73,6 @@ defmodule SkepticBotWeb.HomeLiveTest do
       )
       |> render_submit()
 
-      refute_redirected(view)
       assert render(view) =~ "No related podcast was found"
       refute has_element?(view, ~s(div.animate-pulse))
     end

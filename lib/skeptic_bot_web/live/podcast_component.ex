@@ -27,18 +27,16 @@ defmodule SkepticBotWeb.PodcastComponents do
             class="w-full h-full object-cover"
           />
         </div>
-
-        {get_related_episode_vector(@random)}
-
+        <%= get_related_episode_vector(@random) %>
         <div class="absolute bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
-          {first_n_words(@podcast_title, 2)}
+          <%= first_n_words(@podcast_title, 2) %>
         </div>
 
         <div class="absolute bottom-[2rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
           <div>
             <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
           </div>
-          <div class="text-sm">{get_time_from_seconds(@video_length)}</div>
+          <div class="text-sm"><%= get_time_from_seconds(@video_length) %></div>
         </div>
       </section>
     </a>
@@ -63,11 +61,9 @@ defmodule SkepticBotWeb.PodcastComponents do
             class="w-full h-full object-cover"
           />
         </div>
-
-        {get_other_episode_vector(@random)}
-
+        <%= get_other_episode_vector(@random) %>
         <div class="absolute  bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
-          {first_n_words(@podcast_title, 2)}
+          <%= first_n_words(@podcast_title, 2) %>
         </div>
 
         <div class="absolute bottom-[2rem] left-[1.2rem] flex gap-2 montserrat-alternates-bold text-[#FFFFFF]">
@@ -75,15 +71,14 @@ defmodule SkepticBotWeb.PodcastComponents do
             <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
           </div>
 
-          <div class="text-sm">{get_time_from_seconds(@video_length)}</div>
+          <div class="text-sm"><%= get_time_from_seconds(@video_length) %></div>
         </div>
       </section>
     </a>
     """
   end
 
-  @spec absolute_vectors_1(assigns()) :: rendered()
-  def absolute_vectors_1(assigns) do
+  defp absolute_vectors(%{random: 1} = assigns) do
     ~H"""
     <img
       src={~p"/images/vectors/podcast_vector1.svg"}
@@ -110,8 +105,7 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
-  @spec absolute_vectors_2(assigns()) :: rendered()
-  def absolute_vectors_2(assigns) do
+  defp absolute_vectors(%{random: 2} = assigns) do
     ~H"""
     <img
       src={~p"/images/vectors/star2.svg"}
@@ -132,8 +126,7 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
-  @spec absolute_vectors_3(assigns()) :: rendered()
-  def absolute_vectors_3(assigns) do
+  defp absolute_vectors(%{random: 3} = assigns) do
     ~H"""
     <img
       src={~p"/images/vectors/vector7.svg"}
@@ -143,8 +136,7 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
-  @spec absolute_vectors_4(assigns()) :: rendered()
-  def absolute_vectors_4(assigns) do
+  defp absolute_vectors(%{random: 4} = assigns) do
     ~H"""
     <img src={~p"/images/vectors/vector8.svg"} alt="Vector 8" class="absolute top-0 left-0" />
 
@@ -197,8 +189,7 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
-  @spec absolute_vectors_5(assigns()) :: rendered()
-  def absolute_vectors_5(assigns) do
+  defp absolute_vectors(%{random: 5} = assigns) do
     ~H"""
     <img
       src={~p"/images/vectors/vector18.svg"}
@@ -234,27 +225,15 @@ defmodule SkepticBotWeb.PodcastComponents do
   end
 
   defp get_related_episode_vector(random) do
-    assigns = %{}
-
-    cond do
-      random == 1 -> absolute_vectors_1(assigns)
-      random == 2 -> absolute_vectors_2(assigns)
-      random == 3 -> absolute_vectors_3(assigns)
-      random == 4 -> absolute_vectors_4(assigns)
-      random == 5 -> absolute_vectors_5(assigns)
-    end
+    assigns = %{random: random}
+    absolute_vectors(assigns)
   end
 
   defp get_other_episode_vector(random) do
-    assigns = %{}
+    inverted_random = 6 - random
 
-    cond do
-      random == 1 -> absolute_vectors_5(assigns)
-      random == 2 -> absolute_vectors_3(assigns)
-      random == 3 -> absolute_vectors_1(assigns)
-      random == 4 -> absolute_vectors_4(assigns)
-      random == 5 -> absolute_vectors_2(assigns)
-    end
+    assigns = %{random: inverted_random}
+    absolute_vectors(assigns)
   end
 
   @spec first_n_words(String.t(), integer()) :: String.t()
