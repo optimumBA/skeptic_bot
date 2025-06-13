@@ -1,6 +1,7 @@
 defmodule SkepticBot.Podcasts.TinfoilScraper do
   @moduledoc false
 
+  alias SkepticBot.HttpClient
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
 
@@ -15,7 +16,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   def scrape(start) do
     url = String.replace(@url, "<start>", Integer.to_string(start))
 
-    case get_req_client().make_request(url) do
+    case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
         Enum.each(body["data"], fn episode ->
           maybe_download_episode(episode)
@@ -24,7 +25,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
         if Enum.empty?(body["data"]) do
           :ok
         else
-          maybe_continue_scraping(start)
+          scrape(start + 100)
         end
 
       {:error, reason} ->
@@ -36,7 +37,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   def scrape_episode(uuid, start \\ 0) do
     url = String.replace(@url, "<start>", Integer.to_string(start))
 
-    case Req.get(url) do
+    case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: %{"data" => []}}} ->
         {:error, :episode_not_found}
 
@@ -70,17 +71,5 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
         "external_id" => episode.external_id
       })
     end
-  end
-
-  defp maybe_continue_scraping(start) do
-    if get_current_mix_env() != :test, do: scrape(start + 100)
-  end
-
-  defp get_req_client do
-    Application.get_env(:skeptic_bot, :req_client_module, SkepticBot.ReqClient)
-  end
-
-  defp get_current_mix_env do
-    Application.get_env(:skeptic_bot, :mix_env)
   end
 end

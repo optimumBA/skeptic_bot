@@ -85,12 +85,10 @@ config :skeptic_bot, :downloading_runner,
   name: SkepticBot.DownloadingRunner,
   timeout: :timer.minutes(10)
 
-config :skeptic_bot, :req_client_module, SkepticBot.ReqClient
 config :skeptic_bot, :downloader_module, SkepticBot.Podcasts.DownloadingWorker
 config :skeptic_bot, :transcription_module, SkepticBot.Transcription
 config :skeptic_bot, :tigris_module, SkepticBot.Storage.Tigris
 config :skeptic_bot, :rag_embedding_module, SkepticBot.Rag.Embedding
-config :skeptic_bot, :mix_env, Mix.env()
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
