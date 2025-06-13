@@ -3,7 +3,6 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
-  alias SkepticBot.Podcasts.Episode
 
   @type episode_id :: String.t()
   @type start :: integer()
@@ -57,8 +56,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     end
   end
 
-  @spec maybe_download_episode(Episode.t()) :: {:ok, Oban.Job.t()} | {:error, Ecto.Changeset.t()}
-  def maybe_download_episode(episode) do
+  defp maybe_download_episode(episode) do
     unless Podcasts.episode_exists?(episode["uuid"]) do
       {:ok, %Podcasts.Episode{} = episode} =
         Podcasts.create_episode(%{

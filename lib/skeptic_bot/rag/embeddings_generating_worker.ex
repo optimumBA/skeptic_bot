@@ -45,11 +45,8 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
   @spec fetch_episode(episode_id()) :: {:ok, episode()} | {:error, String.t()}
   defp fetch_episode(episode_id) do
     case Podcasts.get_episode(episode_id) do
-      nil ->
-        {:error, "Episode not found"}
-
-      episode ->
-        {:ok, episode}
+      nil -> {:error, "Episode not found"}
+      episode -> {:ok, episode}
     end
   end
 
