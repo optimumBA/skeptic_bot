@@ -24,8 +24,7 @@ defmodule SkepticBot.PodcastsFixtures do
       |> Enum.into(%{
         title: "Test Episode",
         description: "Sample description",
-        external_id: generate_id(),
-        embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end)
+        external_id: generate_id()
       })
       |> Podcasts.create_episode()
 
@@ -40,7 +39,7 @@ defmodule SkepticBot.PodcastsFixtures do
     {:ok, episode_transcription} =
       attrs
       |> Enum.into(%{
-        embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
+        # embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
         timestamp: %{secs: :rand.uniform(3000), months: 0, days: 0},
         transcription: "Sample episode transcription"
       })

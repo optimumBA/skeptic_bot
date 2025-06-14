@@ -1,13 +1,14 @@
 defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
   use SkepticBot.DataCase, async: true
 
+  import ExUnit.CaptureLog
   import Mox
-  import SkepticBot.TinfoilScraperFixtures
   import SkepticBot.PodcastsFixtures
+  import SkepticBot.TinfoilScraperFixtures
 
+  alias SkepticBot.MockTranscription
   alias SkepticBot.Podcasts.TranscribingWorker
-  alias SkepticBot.TigrisMock
-  alias SkepticBot.TranscriptionMock
+  alias SkepticBot.Storage.MockTigris
 
   defp create_chunks(_attrs) do
     chunks = chunks_fixture()
@@ -20,11 +21,11 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
     setup [:create_chunks]
 
     test "enqueues a transcribing job if successful", %{episode: episode, chunks: chunks} do
-      expect(TranscriptionMock, :transcribe, fn _audio_url ->
+      expect(MockTranscription, :transcribe, fn _audio_url ->
         {:ok, chunks}
       end)
 
-      expect(TigrisMock, :delete_file, fn _filename ->
+      expect(MockTigris, :delete_file, fn _filename ->
         :ok
       end)
 
@@ -45,7 +46,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
     test "returns an error tuple if transcription fails", %{
       episode: episode
     } do
-      expect(TranscriptionMock, :transcribe, fn _audio_url ->
+      expect(MockTranscription, :transcribe, fn _audio_url ->
         {:error, "Failed to transcribe the episode"}
       end)
 
@@ -75,6 +76,29 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
           "audio_url" => "random.mp3"
         }
       )
+    end
+
+    test "logs an error message if it fails to delete a file from tigris", %{
+      episode: episode,
+      chunks: chunks
+    } do
+      expect(MockTranscription, :transcribe, fn _audio_url ->
+        {:ok, chunks}
+      end)
+
+      expect(MockTigris, :delete_file, fn _filename ->
+        {:error, "Tigris is not available"}
+      end)
+
+      log =
+        capture_log(fn ->
+          perform_job(TranscribingWorker, %{
+            "id" => episode.id,
+            "audio_url" => "random.mp3"
+          })
+        end)
+
+      assert log =~ "Tigris is not available"
     end
   end
 end
