@@ -1,7 +1,7 @@
-Mox.defmock(SkepticBot.EmbeddingMock, for: SkepticBot.Rag.Embedding)
-Mox.defmock(SkepticBot.PredictionMock, for: SkepticBot.Rag.Generation)
-Application.put_env(:skeptic_bot, :rag_embedding_module, SkepticBot.EmbeddingMock)
-Application.put_env(:skeptic_bot, :rag_prediction_module, SkepticBot.PredictionMock)
+Mox.defmock(SkepticBot.Rag.MockEmbedder, for: SkepticBot.Rag.Embedder)
+Mox.defmock(SkepticBot.Rag.MockGenerator, for: SkepticBot.Rag.Generator)
+Application.put_env(:skeptic_bot, :embedder, SkepticBot.Rag.MockEmbedder)
+Application.put_env(:skeptic_bot, :generator, SkepticBot.Rag.MockGenerator)
 
 ExUnit.start()
 Ecto.Adapters.SQL.Sandbox.mode(SkepticBot.Repo, :manual)

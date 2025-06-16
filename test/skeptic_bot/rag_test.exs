@@ -4,9 +4,9 @@ defmodule SkepticBot.RagTest do
   import Mox
   import SkepticBot.PodcastsFixtures
 
-  alias SkepticBot.EmbeddingMock
-  alias SkepticBot.PredictionMock
   alias SkepticBot.Rag
+
+  setup :verify_on_exit!
 
   defp create_episodes(_attrs) do
     episode = episode_fixture()
@@ -25,11 +25,11 @@ defmodule SkepticBot.RagTest do
     } do
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
-      expect(EmbeddingMock, :generate, fn _question_episodes ->
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
 
-      expect(PredictionMock, :predict, fn _messages ->
+      expect(Rag.MockGenerator, :predict, fn _messages ->
         {:ok, response}
       end)
 
@@ -39,6 +39,37 @@ defmodule SkepticBot.RagTest do
 
       assert Enum.any?(context, fn context_episode -> context_episode.id == episode.id end) ==
                true
+    end
+
+    test "returns an error tuple if generation process was unsuccessful", %{
+      episode: episode
+    } do
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:error, "Generation process was unsuccessful"}
+      end)
+
+      assert {:error, "Generation process was unsuccessful"} =
+               Rag.generate("Who Killed Two Pac Shakur")
+    end
+
+    test "returns an error tuple if prediction process was unsuccessful", %{
+      episode: episode,
+      embedding: embedding
+    } do
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:ok, [embedding]}
+      end)
+
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:error, "Prediction process was unsuccessful"}
+      end)
+
+      assert {:error, "Prediction process was unsuccessful"} =
+               Rag.generate("Who Killed Two Pac Shakur")
     end
   end
 end
