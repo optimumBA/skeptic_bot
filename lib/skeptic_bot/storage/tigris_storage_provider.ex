@@ -1,10 +1,13 @@
-defmodule SkepticBot.Storage.Tigris do
+defmodule SkepticBot.Storage.TigrisStorageProvider do
   @moduledoc """
   Module for handling file uploads to Tigris Storage using S3-compatible API.
   """
+  alias SkepticBot.Storage.StorageProvider
+
   require Logger
 
-  @callback delete_file(String.t()) :: :ok | {:error, reason()}
+  @behaviour StorageProvider
+
   @type reason :: String.t()
 
   @timeout :timer.minutes(5)
@@ -70,7 +73,7 @@ defmodule SkepticBot.Storage.Tigris do
   @doc """
   Deletes a file from Tigris Storage.
   """
-  @spec delete_file(String.t()) :: :ok | {:error, reason()}
+  @impl StorageProvider
   def delete_file(file_name) do
     response =
       Req.delete!(

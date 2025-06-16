@@ -8,7 +8,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
 
   alias SkepticBot.MockTranscription
   alias SkepticBot.Podcasts.TranscribingWorker
-  alias SkepticBot.Storage.MockTigris
+  alias SkepticBot.Storage.MockStorageProvider
 
   defp create_chunks(_attrs) do
     chunks = chunks_fixture()
@@ -25,7 +25,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
         {:ok, chunks}
       end)
 
-      expect(MockTigris, :delete_file, fn _filename ->
+      expect(MockStorageProvider, :delete_file, fn _filename ->
         :ok
       end)
 
@@ -86,8 +86,8 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
         {:ok, chunks}
       end)
 
-      expect(MockTigris, :delete_file, fn _filename ->
-        {:error, "Tigris is not available"}
+      expect(MockStorageProvider, :delete_file, fn _filename ->
+        {:error, "Storage provider is not available"}
       end)
 
       log =
@@ -98,7 +98,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
           })
         end)
 
-      assert log =~ "Tigris is not available"
+      assert log =~ "Storage provider is not available"
     end
   end
 end

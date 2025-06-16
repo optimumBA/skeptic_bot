@@ -12,7 +12,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   alias SkepticBot.DownloadingRunner
   alias SkepticBot.Podcasts.TranscribingWorker
-  alias SkepticBot.Storage.Tigris
+  alias SkepticBot.Storage.TigrisStorageProvider
 
   require Logger
 
@@ -124,7 +124,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
            stderr_to_stdout: true
          ) do
       {_result, 0} ->
-        Tigris.upload_file(audio_path)
+        TigrisStorageProvider.upload_file(audio_path)
 
       {_result, exit_code} ->
         {:error, "Transcoding failed with exit code: #{exit_code}"}

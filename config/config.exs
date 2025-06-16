@@ -87,7 +87,6 @@ config :skeptic_bot, :downloading_runner,
 
 config :skeptic_bot, :downloader_module, SkepticBot.Podcasts.DownloadingWorker
 config :skeptic_bot, :transcription_module, SkepticBot.Transcription
-config :skeptic_bot, :tigris_module, SkepticBot.Storage.Tigris
 config :skeptic_bot, :rag_embedding_module, SkepticBot.Rag.Embedding
 
 # Import environment specific config. This must remain at the bottom
