@@ -6,7 +6,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
   import SkepticBot.PodcastsFixtures
   import SkepticBot.TinfoilScraperFixtures
 
-  alias SkepticBot.MockTranscription
+  alias SkepticBot.MockTranscriber
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.MockStorageProvider
 
@@ -21,7 +21,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
     setup [:create_chunks]
 
     test "enqueues a transcribing job if successful", %{episode: episode, chunks: chunks} do
-      expect(MockTranscription, :transcribe, fn _audio_url ->
+      expect(MockTranscriber, :transcribe, fn _audio_url ->
         {:ok, chunks}
       end)
 
@@ -46,7 +46,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
     test "returns an error tuple if transcription fails", %{
       episode: episode
     } do
-      expect(MockTranscription, :transcribe, fn _audio_url ->
+      expect(MockTranscriber, :transcribe, fn _audio_url ->
         {:error, "Failed to transcribe the episode"}
       end)
 
@@ -82,7 +82,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
       episode: episode,
       chunks: chunks
     } do
-      expect(MockTranscription, :transcribe, fn _audio_url ->
+      expect(MockTranscriber, :transcribe, fn _audio_url ->
         {:ok, chunks}
       end)
 

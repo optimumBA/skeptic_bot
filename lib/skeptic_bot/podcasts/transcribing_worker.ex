@@ -12,6 +12,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
   alias SkepticBot.Podcasts
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Storage.StorageProvider
+  alias SkepticBot.Transcriber
 
   require Logger
 
@@ -45,7 +46,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
 
   @spec transcribe_episode(id(), audio_url()) :: :ok | {:error, any()}
   defp transcribe_episode(id, audio_url) do
-    case get_transcription_module().transcribe(audio_url) do
+    case Transcriber.transcribe(audio_url) do
       {:ok, chunks} when is_list(chunks) ->
         chunks
         |> Stream.reject(fn %{"timestamp" => [start, _end]} -> is_nil(start) end)
@@ -69,9 +70,5 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
     attrs
     |> __MODULE__.new()
     |> Oban.insert()
-  end
-
-  defp get_transcription_module do
-    Application.get_env(:skeptic_bot, :transcription_module, SkepticBot.Transcription)
   end
 end

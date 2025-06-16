@@ -4,15 +4,15 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
   import ExUnit.CaptureLog
   import Mox
 
+  alias SkepticBot.MockDownloader
   alias SkepticBot.Podcasts.DownloadingWorker
-  alias SkepticBot.Podcasts.MockDownloadingWorker
 
   @id "012eb1cb-5b41-405f-bcab-7a5236eee471"
 
   describe "process_with_flame/3" do
     test "enqueues a transcribing job if successful" do
-      expect(MockDownloadingWorker, :process_with_flame, fn _id, _url, _external_id ->
-        {:ok, "random.mp3"}
+      expect(MockDownloader, :process_with_flame, fn _id, _url, _external_id ->
+        {:ok, "song.mp3"}
       end)
 
       assert :ok =
@@ -25,13 +25,13 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
         worker: SkepticBot.Podcasts.TranscribingWorker,
         args: %{
           "id" => @id,
-          "audio_url" => "random.mp3"
+          "audio_url" => "song.mp3"
         }
       )
     end
 
     test "does not enqueue a transcribing job if unsuccessful" do
-      expect(MockDownloadingWorker, :process_with_flame, fn _id, _url, _external_id ->
+      expect(MockDownloader, :process_with_flame, fn _id, _url, _external_id ->
         {:error, "Could not process the file"}
       end)
 
@@ -51,7 +51,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
     end
 
     test "logs an error message if unsuccessful" do
-      expect(MockDownloadingWorker, :process_with_flame, fn _id, _url, _external_id ->
+      expect(MockDownloader, :process_with_flame, fn _id, _url, _external_id ->
         {:error, "Could not process the file"}
       end)
 

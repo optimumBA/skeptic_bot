@@ -3,9 +3,9 @@ defmodule SkepticBot.HttpClient do
 
   alias SkepticBot.ReqHttpClient
 
+  @type reason :: String.t()
   @type response :: %Req.Response{}
   @type url :: String.t()
-  @type reason :: String.t()
 
   @callback make_request(url()) ::
               {:ok, response()} | {:error, reason()}
