@@ -10,6 +10,8 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Rag.MockEmbedder
 
+  setup :verify_on_exit!
+
   defp create_episode(_attrs) do
     embedding = embedding_fixture()
     episode = episode_fixture()

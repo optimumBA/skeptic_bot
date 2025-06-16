@@ -10,6 +10,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
 
   @id "012eb1cb-5b41-405f-bcab-7a5236eee471"
 
+  setup :verify_on_exit!
+
   describe "process_with_flame/3" do
     test "enqueues a transcribing job if successful" do
       expect(MockDownloader, :process_with_flame, fn _id, _url, _external_id ->
@@ -64,7 +66,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
           })
         end)
 
-      assert log =~ "Failed to process episode:"
+      assert log =~ "Could not process the file"
     end
   end
 end

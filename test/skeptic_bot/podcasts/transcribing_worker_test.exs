@@ -11,6 +11,8 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Storage.MockStorageProvider
 
+  setup :verify_on_exit!
+
   defp create_chunks(_attrs) do
     chunks = chunks_fixture()
     episode = episode_fixture()
@@ -79,7 +81,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
       )
     end
 
-    test "logs an error message if it fails to delete a file from tigris", %{
+    test "logs an error message if it fails to delete a file from the storage provider", %{
       episode: episode,
       chunks: chunks
     } do

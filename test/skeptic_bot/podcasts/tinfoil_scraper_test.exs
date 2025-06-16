@@ -12,6 +12,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
   @external_id "a909da70-13b7-4717-b1c0-c2d001521dc3"
 
+  setup :verify_on_exit!
+
   defp create_scraper_resources(_attrs) do
     body = body_fixture()
 
@@ -50,11 +52,11 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
     test "does not enqueue a job if episode already exists", %{body: body} do
       _episode = episode_fixture(external_id: "a909da70-13b7-4717-b1c0-c2d001521dc3")
 
-      expect(MockHttpClient, :make_request, 1, fn _url ->
+      expect(MockHttpClient, :make_request, fn _url ->
         {:ok, %Req.Response{status: 200, body: body}}
       end)
 
-      expect(MockHttpClient, :make_request, 1, fn _url ->
+      expect(MockHttpClient, :make_request, fn _url ->
         {:ok,
          %Req.Response{
            status: 200,
@@ -75,7 +77,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
     end
 
     test "does not download an episode if there are no episodes in the return data" do
-      expect(MockHttpClient, :make_request, 1, fn _url ->
+      expect(MockHttpClient, :make_request, fn _url ->
         {:ok,
          %Req.Response{
            status: 200,
@@ -84,6 +86,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
            }
          }}
       end)
+
+      TinfoilScraper.scrape()
 
       refute Podcasts.episode_exists?(@external_id)
 
@@ -94,7 +98,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
     end
 
     test "does not insert a job when HTTP request is unsuccessful" do
-      expect(MockHttpClient, :make_request, 1, fn _url ->
+      expect(MockHttpClient, :make_request, fn _url ->
         {:error, "Could not make request"}
       end)
 
@@ -112,8 +116,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
   describe "scrape_episode/2" do
     setup [:create_scraper_resources]
 
-    test "returns an episode not found error if there are no episodes in the return data" do
-      expect(MockHttpClient, :make_request, 1, fn _url ->
+    test "returns an episode_not_found error if there are no episodes in the return data" do
+      expect(MockHttpClient, :make_request, fn _url ->
         {:ok,
          %Req.Response{
            status: 200,
@@ -123,8 +127,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
          }}
       end)
 
-      assert TinfoilScraper.scrape_episode("a909da70-13b7-4717-b1c0-c2d001521dc3") ==
-               {:error, :episode_not_found}
+      assert {:error, :episode_not_found} ==
+               TinfoilScraper.scrape_episode("a909da70-13b7-4717-b1c0-c2d001521dc3")
 
       refute_enqueued(
         worker: DownloadingWorker,
@@ -133,7 +137,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
     end
 
     test "downloads the episode if it finds it in the returned body", %{body: body} do
-      expect(MockHttpClient, :make_request, 1, fn _url ->
+      expect(MockHttpClient, :make_request, fn _url ->
         {:ok,
          %Req.Response{
            status: 200,
@@ -152,7 +156,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
     end
 
     test "does not insert a job when HTTP request is unsuccessful" do
-      expect(MockHttpClient, :make_request, 1, fn _url ->
+      expect(MockHttpClient, :make_request, fn _url ->
         {:error, "Could not make request"}
       end)
 
@@ -167,7 +171,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
     end
 
     test "does not enqueue a job if it doesn't find it in the body", %{body: body} do
-      expect(MockHttpClient, :make_request, 1, fn _url ->
+      expect(MockHttpClient, :make_request, fn _url ->
         {:ok,
          %Req.Response{
            status: 200,
@@ -175,7 +179,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
          }}
       end)
 
-      expect(MockHttpClient, :make_request, 1, fn _url ->
+      expect(MockHttpClient, :make_request, fn _url ->
         {:error, "Could not make request"}
       end)
 
