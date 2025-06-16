@@ -11,7 +11,9 @@ defmodule SkepticBot.PodcastsTest do
   @valid_episode_attrs %{
     description: "Sample description",
     embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
+    episode_length: 4000,
     external_id: "test-123",
+    thumbnail: "/static/thumbnail.png",
     title: "Test Episode"
   }
   @valid_episode_transcription_attrs %{

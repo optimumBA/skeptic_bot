@@ -24,7 +24,9 @@ defmodule SkepticBot.PodcastsFixtures do
       |> Enum.into(%{
         title: "Test Episode",
         description: "Sample description",
-        external_id: generate_id()
+        episode_length: :rand.uniform(3000),
+        external_id: generate_id(),
+        thumbnail: "cover1.svg"
       })
       |> Podcasts.create_episode()
 

@@ -20,7 +20,9 @@ defmodule SkepticBot.ScrapingFixtures do
       "data" => [
         %{
           "description" => "Is this a suitable description?",
+          "duration" => 3000,
           "name" => "Cash Daddies 2",
+          "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a909da70-13b7-4717-b1c0-c2d001521dc3"
         }
       ]
