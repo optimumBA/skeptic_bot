@@ -4,7 +4,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
   import ExUnit.CaptureLog
   import Mox
   import SkepticBot.PodcastsFixtures
-  import SkepticBot.TinfoilScraperFixtures
+  import SkepticBot.ScrapingFixtures
 
   alias SkepticBot.MockTranscriber
   alias SkepticBot.Podcasts.TranscribingWorker

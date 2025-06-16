@@ -1,4 +1,4 @@
-defmodule SkepticBot.TinfoilScraperFixtures do
+defmodule SkepticBot.ScrapingFixtures do
   @moduledoc """
   This module defines test helpers for creating
   entities used in the scraping process.

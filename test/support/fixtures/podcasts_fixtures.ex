@@ -39,7 +39,6 @@ defmodule SkepticBot.PodcastsFixtures do
     {:ok, episode_transcription} =
       attrs
       |> Enum.into(%{
-        # embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
         timestamp: %{secs: :rand.uniform(3000), months: 0, days: 0},
         transcription: "Sample episode transcription"
       })
