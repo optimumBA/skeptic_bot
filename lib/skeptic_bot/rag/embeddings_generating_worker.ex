@@ -10,6 +10,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.Podcasts
+  alias SkepticBot.Rag.Embedder
 
   require Logger
 
@@ -54,7 +55,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
   defp generate_episode_embedding(episode) do
     text = "passage: " <> episode.title <> " " <> (episode.description || "")
 
-    with {:ok, [embedding]} <- get_embedding_module().generate(text) do
+    with {:ok, [embedding]} <- Embedder.generate(text) do
       Podcasts.update_episode(episode, %{embedding: embedding})
     end
   end
@@ -72,7 +73,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
   defp process_transcription_batch(episode_transcriptions) do
     texts = Enum.map(episode_transcriptions, &("passage: " <> &1.transcription))
 
-    with {:ok, embeddings} <- get_embedding_module().generate(texts) do
+    with {:ok, embeddings} <- Embedder.generate(texts) do
       episode_transcriptions
       |> Enum.zip(List.wrap(embeddings))
       |> Enum.map(&update_transcription_embedding/1)
@@ -94,9 +95,5 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     attrs
     |> __MODULE__.new()
     |> Oban.insert()
-  end
-
-  defp get_embedding_module do
-    Application.get_env(:skeptic_bot, :rag_embedding_module, SkepticBot.Rag.Embedding)
   end
 end

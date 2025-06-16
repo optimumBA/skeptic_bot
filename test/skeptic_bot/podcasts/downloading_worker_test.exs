@@ -6,6 +6,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
 
   alias SkepticBot.MockDownloader
   alias SkepticBot.Podcasts.DownloadingWorker
+  alias SkepticBot.Podcasts.TranscribingWorker
 
   @id "012eb1cb-5b41-405f-bcab-7a5236eee471"
 
@@ -22,7 +23,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
                })
 
       assert_enqueued(
-        worker: SkepticBot.Podcasts.TranscribingWorker,
+        worker: TranscribingWorker,
         args: %{
           "id" => @id,
           "audio_url" => "song.mp3"
@@ -42,7 +43,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
                })
 
       refute_enqueued(
-        worker: SkepticBot.Podcasts.TranscribingWorker,
+        worker: TranscribingWorker,
         args: %{
           "id" => @id,
           "audio_url" => "random.mp3"

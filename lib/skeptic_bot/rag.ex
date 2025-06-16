@@ -10,7 +10,7 @@ defmodule SkepticBot.Rag do
 
   @spec generate(String.t()) :: {:ok, {String.t(), list()}} | {:error, any()}
   def generate(query) do
-    with {:ok, embedding} <- Rag.Embedding.generate("query: " <> query),
+    with {:ok, embedding} <- Rag.Embedder.generate("query: " <> query),
          context <- Rag.Retrieval.retrieve(embedding),
          prompt <- format_prompt(context, query),
          {:ok, response} <- Rag.Generation.predict(prompt) do

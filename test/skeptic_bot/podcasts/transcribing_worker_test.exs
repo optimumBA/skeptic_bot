@@ -8,6 +8,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
 
   alias SkepticBot.MockTranscriber
   alias SkepticBot.Podcasts.TranscribingWorker
+  alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Storage.MockStorageProvider
 
   defp create_chunks(_attrs) do
@@ -36,7 +37,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
                })
 
       assert_enqueued(
-        worker: SkepticBot.Rag.EmbeddingsGeneratingWorker,
+        worker: EmbeddingsGeneratingWorker,
         args: %{
           "id" => episode.id
         }
@@ -57,7 +58,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
                })
 
       refute_enqueued(
-        worker: SkepticBot.Rag.EmbeddingsGeneratingWorker,
+        worker: EmbeddingsGeneratingWorker,
         args: %{
           "id" => episode.id
         }

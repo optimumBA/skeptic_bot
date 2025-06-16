@@ -7,6 +7,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
   alias SkepticBot.MockHttpClient
   alias SkepticBot.Podcasts
+  alias SkepticBot.Podcasts.DownloadingWorker
   alias SkepticBot.Podcasts.TinfoilScraper
 
   @external_id "a909da70-13b7-4717-b1c0-c2d001521dc3"
@@ -41,7 +42,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       assert Podcasts.episode_exists?(@external_id)
 
       assert_enqueued(
-        worker: SkepticBot.Podcasts.DownloadingWorker,
+        worker: DownloadingWorker,
         args: %{external_id: @external_id}
       )
     end
@@ -68,7 +69,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       assert Podcasts.episode_exists?(@external_id)
 
       refute_enqueued(
-        worker: SkepticBot.Podcasts.DownloadingWorker,
+        worker: DownloadingWorker,
         args: %{external_id: @external_id}
       )
     end
@@ -87,7 +88,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       refute Podcasts.episode_exists?(@external_id)
 
       refute_enqueued(
-        worker: SkepticBot.Podcasts.DownloadingWorker,
+        worker: DownloadingWorker,
         args: %{external_id: @external_id}
       )
     end
@@ -102,7 +103,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       refute Podcasts.episode_exists?(@external_id)
 
       refute_enqueued(
-        worker: SkepticBot.Podcasts.DownloadingWorker,
+        worker: DownloadingWorker,
         args: %{external_id: @external_id}
       )
     end
@@ -126,7 +127,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
                {:error, :episode_not_found}
 
       refute_enqueued(
-        worker: SkepticBot.Podcasts.DownloadingWorker,
+        worker: DownloadingWorker,
         args: %{external_id: @external_id}
       )
     end
@@ -145,7 +146,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       assert Podcasts.episode_exists?(@external_id)
 
       assert_enqueued(
-        worker: SkepticBot.Podcasts.DownloadingWorker,
+        worker: DownloadingWorker,
         args: %{external_id: @external_id}
       )
     end
@@ -160,7 +161,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       refute Podcasts.episode_exists?(@external_id)
 
       refute_enqueued(
-        worker: SkepticBot.Podcasts.DownloadingWorker,
+        worker: DownloadingWorker,
         args: %{external_id: @external_id}
       )
     end
@@ -183,7 +184,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       refute Podcasts.episode_exists?(@external_id)
 
       refute_enqueued(
-        worker: SkepticBot.Podcasts.DownloadingWorker,
+        worker: DownloadingWorker,
         args: %{external_id: @external_id}
       )
     end

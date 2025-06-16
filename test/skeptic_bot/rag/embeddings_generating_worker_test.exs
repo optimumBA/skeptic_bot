@@ -8,7 +8,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
-  alias SkepticBot.Rag.MockEmbedding
+  alias SkepticBot.Rag.MockEmbedder
 
   defp create_episode(_attrs) do
     embedding = embedding_fixture()
@@ -41,7 +41,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
     test "generates an embedding for an episode", %{embedding: embedding, episode: episode} do
       refute episode.embedding
 
-      expect(MockEmbedding, :generate, 2, fn _text ->
+      expect(MockEmbedder, :generate, 2, fn _text ->
         {:ok, [embedding]}
       end)
 
@@ -58,7 +58,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
     test "returns an error when embedding generation fails", %{
       episode: episode
     } do
-      expect(MockEmbedding, :generate, fn _text ->
+      expect(MockEmbedder, :generate, fn _text ->
         {:error, "failed to connect"}
       end)
 
