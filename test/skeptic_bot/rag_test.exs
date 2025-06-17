@@ -9,7 +9,7 @@ defmodule SkepticBot.RagTest do
   setup :verify_on_exit!
 
   defp create_episodes(_attrs) do
-    episode = episode_fixture(embedding: embedding_fixture())
+    episode = episode_fixture()
     embedding = embedding_fixture()
     response = "Just a simple response from a large language model"
     _transcription = transcription_fixture(%{podcast_episode_id: episode.id})

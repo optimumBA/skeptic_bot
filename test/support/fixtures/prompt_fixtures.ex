@@ -4,40 +4,15 @@ defmodule SkepticBot.PromptFixtures do
   entities via the `SkepticBot.Podcasts` context.
   """
 
-  alias SkepticBot.Podcasts
+  import SkepticBot.PodcastsFixtures
+
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
 
   @type description :: String.t()
-  @type embedding :: [float()]
   @type episode :: Episode.t()
   @type question :: UserQuestion.t()
-
-  @doc """
-  create an episode.
-  """
-  @spec episode_fixture(map()) :: episode()
-  def episode_fixture(attrs \\ %{}) do
-    random_string =
-      12
-      |> :crypto.strong_rand_bytes()
-      |> Base.encode64()
-
-    episode_attrs =
-      Enum.into(attrs, %{
-        episode_length: :rand.uniform(9000),
-        external_id: random_string,
-        thumbnail: "cover1.svg",
-        title: "Just another episode #{random_string}",
-        description: "a random description #{random_string}"
-      })
-
-    {:ok, episode} =
-      Podcasts.create_episode(episode_attrs)
-
-    Map.put(episode, :timestamp, %{secs: :rand.uniform(3000), months: 0, days: 0})
-  end
 
   @doc """
   create a question.
@@ -64,14 +39,6 @@ defmodule SkepticBot.PromptFixtures do
   end
 
   @doc """
-  create an embedding.
-  """
-  @spec embedding_fixture :: embedding()
-  def embedding_fixture do
-    Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end)
-  end
-
-  @doc """
   create a description.
   """
   @spec description_fixture :: description()
@@ -90,11 +57,14 @@ defmodule SkepticBot.PromptFixtures do
   @spec create_multiple_episodes(integer()) :: list(episode())
   def create_multiple_episodes(number_of_episodes) do
     for episode <- 1..number_of_episodes do
-      episode_fixture(%{
-        thumbnail: "cover#{episode}.svg",
-        title: "episode #{episode} is great",
-        description: "a random description #{episode}"
-      })
+      episode =
+        episode_fixture(%{
+          thumbnail: "cover#{episode}.svg",
+          title: "episode #{episode} is great",
+          description: "a random description #{episode}"
+        })
+
+      Map.put(episode, :timestamp, %{secs: :rand.uniform(3000), months: 0, days: 0})
     end
   end
 end

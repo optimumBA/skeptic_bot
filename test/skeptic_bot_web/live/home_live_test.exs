@@ -63,9 +63,9 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
     test "redirects to the question when episodes are found", %{
       conn: conn,
-      response: response,
       embedding: embedding,
-      episode: episode
+      episode: episode,
+      response: response
     } do
       {:ok, view, _html} = live(conn, "/")
 
