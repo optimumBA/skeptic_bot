@@ -16,14 +16,16 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
   defp create_chunks(_attrs) do
     chunks = chunks_fixture()
     episode = episode_fixture()
-
-    %{episode: episode, chunks: chunks}
+    %{chunks: chunks, episode: episode}
   end
 
   describe "transcribe_episode/2" do
     setup [:create_chunks]
 
-    test "enqueues a transcribing job if successful", %{episode: episode, chunks: chunks} do
+    test "enqueues a transcribing job if successful", %{
+      chunks: chunks,
+      episode: episode
+    } do
       expect(MockTranscriber, :transcribe, fn _audio_url ->
         {:ok, chunks}
       end)
@@ -34,8 +36,8 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
 
       assert :ok =
                perform_job(TranscribingWorker, %{
-                 "id" => episode.id,
-                 "audio_url" => "random.mp3"
+                 "audio_url" => "random.mp3",
+                 "id" => episode.id
                })
 
       assert_enqueued(
@@ -46,7 +48,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
       )
     end
 
-    test "returns an error tuple if transcription fails", %{
+    test "returns an error tuple if transcription process fails", %{
       episode: episode
     } do
       expect(MockTranscriber, :transcribe, fn _audio_url ->
@@ -55,8 +57,8 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
 
       assert {:error, "Failed to transcribe the episode"} =
                perform_job(TranscribingWorker, %{
-                 "id" => episode.id,
-                 "audio_url" => "random.mp3"
+                 "audio_url" => "random.mp3",
+                 "id" => episode.id
                })
 
       refute_enqueued(
@@ -67,23 +69,9 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
       )
     end
 
-    test "enqueus a transcription job", %{
-      episode: episode
-    } do
-      TranscribingWorker.enqueue(%{"id" => episode.id, "audio_url" => "random.mp3"})
-
-      assert_enqueued(
-        worker: TranscribingWorker,
-        args: %{
-          "id" => episode.id,
-          "audio_url" => "random.mp3"
-        }
-      )
-    end
-
     test "logs an error message if it fails to delete a file from the storage provider", %{
-      episode: episode,
-      chunks: chunks
+      chunks: chunks,
+      episode: episode
     } do
       expect(MockTranscriber, :transcribe, fn _audio_url ->
         {:ok, chunks}
@@ -96,12 +84,44 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
       log =
         capture_log(fn ->
           perform_job(TranscribingWorker, %{
-            "id" => episode.id,
-            "audio_url" => "random.mp3"
+            "audio_url" => "random.mp3",
+            "id" => episode.id
           })
         end)
 
       assert log =~ "Storage provider is not available"
+    end
+  end
+
+  describe "enqueue/1" do
+    setup [:create_chunks]
+
+    test "with valid arguments enqueues a transcribing job", %{
+      episode: episode
+    } do
+      TranscribingWorker.enqueue(%{"id" => episode.id, "audio_url" => "random.mp3"})
+
+      assert_enqueued(
+        worker: TranscribingWorker,
+        args: %{
+          "audio_url" => "random.mp3",
+          "id" => episode.id
+        }
+      )
+    end
+
+    test "with invalid arguments does not enqueue a transcribing job", %{
+      episode: episode
+    } do
+      TranscribingWorker.enqueue(%{"id" => episode.id, "audio_urle" => "random.mp3"})
+
+      refute_enqueued(
+        worker: TranscribingWorker,
+        args: %{
+          "audio_url" => "random.mp3",
+          "id" => episode.id
+        }
+      )
     end
   end
 end

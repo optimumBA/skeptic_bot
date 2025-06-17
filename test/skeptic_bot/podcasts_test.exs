@@ -75,7 +75,7 @@ defmodule SkepticBot.PodcastsTest do
     setup [:create_episode]
 
     test "with valid data updates an episode", %{episode: episode} do
-      update_attrs = %{title: "Updated Title", description: "a new description"}
+      update_attrs = %{description: "a new description", title: "Updated Title"}
 
       assert {:ok, %Episode{} = updated_episode} = Podcasts.update_episode(episode, update_attrs)
       assert updated_episode.title == "Updated Title"
@@ -146,11 +146,6 @@ defmodule SkepticBot.PodcastsTest do
           transcription: "Second part",
           timestamp: %{secs: 20, months: 0, days: 0},
           podcast_episode_id: episode.id
-        },
-        %{
-          transcription: "Third part",
-          timestamp: %{secs: 30, months: 0, days: 0},
-          podcast_episode_id: episode.id
         }
       ]
 
@@ -159,7 +154,7 @@ defmodule SkepticBot.PodcastsTest do
       end)
 
       assert {:ok, result} = Podcasts.get_episode_transcriptions(episode.id)
-      assert result == "First part\nSecond part\nThird part\nSample episode transcription"
+      assert result == "First part\nSecond part\nSample episode transcription"
     end
   end
 
@@ -171,29 +166,29 @@ defmodule SkepticBot.PodcastsTest do
     } do
       transcription_attrs = [
         %{
-          transcription: "Transcription 1",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 10, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Transcription 1"
         },
         %{
-          transcription: "Transcription 2",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 20, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Transcription 2"
         },
         %{
-          transcription: "Transcription 3",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 30, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Transcription 3"
         },
         %{
-          transcription: "Transcription 3",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 40, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Transcription 3"
         },
         %{
-          transcription: "Transcription 3",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 60, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Transcription 3"
         }
       ]
 

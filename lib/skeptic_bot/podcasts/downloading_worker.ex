@@ -14,6 +14,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   alias SkepticBot.Podcasts.TranscribingWorker
 
   require Logger
+
   @type job :: Oban.Job.t()
 
   @url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/<external_id>-0-fragmented.mp4"

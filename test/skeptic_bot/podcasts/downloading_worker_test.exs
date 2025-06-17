@@ -20,15 +20,15 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
 
       assert :ok =
                perform_job(DownloadingWorker, %{
-                 id: @id,
-                 external_id: "a909da70-13b7-4717-b1c0-c2d001521dc3"
+                 external_id: "a909da70-13b7-4717-b1c0-c2d001521dc3",
+                 id: @id
                })
 
       assert_enqueued(
         worker: TranscribingWorker,
         args: %{
-          "id" => @id,
-          "audio_url" => "song.mp3"
+          "audio_url" => "song.mp3",
+          "id" => @id
         }
       )
     end
@@ -40,15 +40,15 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
 
       assert {:error, "Could not process the file"} =
                perform_job(DownloadingWorker, %{
-                 id: @id,
-                 external_id: "a909da70-13b7-4717-b1c0-c2d001521dc3"
+                 external_id: "a909da70-13b7-4717-b1c0-c2d001521dc3",
+                 id: @id
                })
 
       refute_enqueued(
         worker: TranscribingWorker,
         args: %{
-          "id" => @id,
-          "audio_url" => "random.mp3"
+          "audio_url" => "random.mp3",
+          "id" => @id
         }
       )
     end
@@ -61,8 +61,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
       log =
         capture_log(fn ->
           perform_job(DownloadingWorker, %{
-            id: @id,
-            external_id: "a909da70-13b7-4717-b1c0-c2d001521dc3"
+            external_id: "a909da70-13b7-4717-b1c0-c2d001521dc3",
+            id: @id
           })
         end)
 
