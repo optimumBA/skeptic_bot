@@ -5,14 +5,14 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   import Phoenix.LiveViewTest
   import SkepticBot.PromptFixtures
 
-  alias SkepticBot.PromptsMock
+  alias SkepticBot.Prompts
   alias SkepticBotWeb.PodcastComponents
 
   setup :verify_on_exit!
 
   defp create_question_setup(%{conn: conn}) do
     question = question_fixture(%{query: "American Ponzi with Lee Camp"})
-
+    _random_episodes = create_multiple_episodes(4)
     %{conn: conn, question: question}
   end
 
@@ -24,22 +24,15 @@ defmodule SkepticBotWeb.QuestionLiveTest do
            conn: conn,
            question: question
          } do
-      related_episodes = create_multiple_episodes(4)
-      other_episodes = create_multiple_episodes(3)
-
-      expect(PromptsMock, :get_question_episodes, 2, fn _question_episodes ->
-        related_episodes
-      end)
-
-      expect(PromptsMock, :get_other_podcast_episodes, 2, fn _most_related_episode_embedding ->
-        other_episodes
-      end)
-
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
       assert html =~ question.query
       assert html =~ "Related Podcasts"
       assert html =~ "Other Podcasts"
+
+      related_episodes = Prompts.get_question_episodes(question.episodes)
+      [most_related_episode | _other_related_episodes] = related_episodes
+      other_episodes = Prompts.get_other_podcast_episodes(most_related_episode.embedding)
 
       Enum.each(related_episodes, fn related_episode ->
         assert html =~ PodcastComponents.first_n_words(related_episode.title, 2)
