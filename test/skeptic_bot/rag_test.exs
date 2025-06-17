@@ -9,22 +9,21 @@ defmodule SkepticBot.RagTest do
   setup :verify_on_exit!
 
   defp create_episodes(_attrs) do
-    episode = episode_fixture()
     embedding = embedding_fixture()
+    episode = episode_fixture()
     response = "Just a simple response from a large language model"
-    %{episode: episode, embedding: embedding, response: response}
+    _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+    %{embedding: embedding, episode: episode, response: response}
   end
 
   describe "generate/1" do
     setup [:create_episodes]
 
     test "with valid query returns episodes and description", %{
-      episode: episode,
       embedding: embedding,
+      episode: episode,
       response: response
     } do
-      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
@@ -41,11 +40,7 @@ defmodule SkepticBot.RagTest do
                true
     end
 
-    test "returns an error tuple if generation process was unsuccessful", %{
-      episode: episode
-    } do
-      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-
+    test "returns an error tuple if generation process was unsuccessful" do
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:error, "Generation process was unsuccessful"}
       end)
@@ -55,11 +50,8 @@ defmodule SkepticBot.RagTest do
     end
 
     test "returns an error tuple if prediction process was unsuccessful", %{
-      episode: episode,
       embedding: embedding
     } do
-      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
