@@ -108,7 +108,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             <button
               phx-click="next_other_episodes"
               class="disabled:opacity-50"
-              disabled={@other_episodes_index >= length(@related_episodes) - 1}
+              disabled={@other_episodes_index >= length(@other_episodes) - 1}
             >
               <div>
                 <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
