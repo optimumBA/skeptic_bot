@@ -139,6 +139,11 @@ defmodule SkepticBot.PodcastsTest do
           podcast_episode_id: episode.id,
           timestamp: %{secs: 10, months: 0, days: 0},
           transcription: "First part"
+        },
+        %{
+          transcription: "Second part",
+          timestamp: %{secs: 20, months: 0, days: 0},
+          podcast_episode_id: episode.id
         }
       ]
 
@@ -147,7 +152,7 @@ defmodule SkepticBot.PodcastsTest do
       end)
 
       assert {:ok, result} = Podcasts.get_episode_transcriptions(episode.id)
-      assert result == "First part\nSample episode transcription"
+      assert result == "First part\nSecond part\nSample episode transcription"
     end
   end
 
