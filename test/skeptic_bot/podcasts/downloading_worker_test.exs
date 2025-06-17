@@ -8,6 +8,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
   alias SkepticBot.Podcasts.DownloadingWorker
   alias SkepticBot.Podcasts.TranscribingWorker
 
+  @external_id "a909da70-13b7-4717-b1c0-c2d001521dc3"
   @id "012eb1cb-5b41-405f-bcab-7a5236eee471"
 
   setup :verify_on_exit!
@@ -20,7 +21,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
 
       assert :ok =
                perform_job(DownloadingWorker, %{
-                 external_id: "a909da70-13b7-4717-b1c0-c2d001521dc3",
+                 external_id: @external_id,
                  id: @id
                })
 
@@ -40,7 +41,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
 
       assert {:error, "Could not process the file"} =
                perform_job(DownloadingWorker, %{
-                 external_id: "a909da70-13b7-4717-b1c0-c2d001521dc3",
+                 external_id: @external_id,
                  id: @id
                })
 
@@ -61,7 +62,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
       log =
         capture_log(fn ->
           perform_job(DownloadingWorker, %{
-            external_id: "a909da70-13b7-4717-b1c0-c2d001521dc3",
+            external_id: @external_id,
             id: @id
           })
         end)

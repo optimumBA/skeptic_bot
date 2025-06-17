@@ -10,7 +10,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Rag.MockEmbedder
 
-  @external_id "a909da70-13b7-4717-b1c0-c2d001521dc3"
+  @id "a909da70-13b7-4717-b1c0-c2d001521dc3"
 
   setup :verify_on_exit!
 
@@ -27,7 +27,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
     test "returns an error when an episode does not exist" do
       assert {:error, "Episode not found"} =
                perform_job(EmbeddingsGeneratingWorker, %{
-                 "id" => @external_id
+                 "id" => @id
                })
     end
 
@@ -35,7 +35,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
       log =
         capture_log(fn ->
           perform_job(EmbeddingsGeneratingWorker, %{
-            "id" => "a909da70-13b7-4717-b1c0-c2d001521dc3"
+            "id" => @id
           })
         end)
 
