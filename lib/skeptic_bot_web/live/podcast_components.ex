@@ -231,7 +231,6 @@ defmodule SkepticBotWeb.PodcastComponents do
 
   defp get_other_episode_vector(random) do
     inverted_random = 6 - random
-
     assigns = %{random: inverted_random}
     absolute_vectors(assigns)
   end

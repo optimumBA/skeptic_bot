@@ -9,9 +9,6 @@ defmodule SkepticBot.Prompts do
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Repo
 
-  @callback get_other_podcast_episodes(embedding()) :: [episode()]
-  @callback get_question_episodes([question_episode()]) :: [episode()]
-
   @type attrs :: map()
   @type changeset :: Ecto.Changeset.t()
   @type embedding :: [float()]

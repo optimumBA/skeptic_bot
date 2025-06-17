@@ -2,6 +2,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
   use SkepticBotWeb, :live_view
 
   alias SkepticBot.Prompts
+  alias SkepticBot.Rag.Embedder
   alias SkepticBotWeb.HomeLive.QuestionFormComponent
 
   @impl Phoenix.LiveView
@@ -54,7 +55,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:generation_done, {description, list_of_episodes, query}}, socket) do
-    {:ok, [embedding]} = get_rag_embedding_module().generate(query)
+    {:ok, [embedding]} = Embedder.generate(query)
 
     episode_details = Prompts.get_episode_details(list_of_episodes)
 
@@ -87,9 +88,5 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @impl Phoenix.LiveView
   def handle_info(:no_episodes_found, socket) do
     {:noreply, put_flash(socket, :error, "No related podcast was found")}
-  end
-
-  defp get_rag_embedding_module do
-    Application.get_env(:skeptic_bot, :rag_embedding_module, SkepticBot.Rag.Embedding)
   end
 end

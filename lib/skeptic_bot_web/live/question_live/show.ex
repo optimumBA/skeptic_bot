@@ -135,12 +135,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     question = Prompts.get_question!(id)
 
     related_episodes =
-      get_prompts_context_module().get_question_episodes(question.episodes)
+      Prompts.get_question_episodes(question.episodes)
 
     [most_related_episode | _other_related_episodes] = related_episodes
 
     other_episodes =
-      get_prompts_context_module().get_other_podcast_episodes(most_related_episode.embedding)
+      Prompts.get_other_podcast_episodes(most_related_episode.embedding)
 
     {:noreply,
      socket
@@ -172,9 +172,5 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     index = socket.assigns.other_episodes_index
     new_index = max(index - 1, 0)
     {:noreply, assign(socket, :other_episodes_index, new_index)}
-  end
-
-  defp get_prompts_context_module do
-    Application.get_env(:skeptic_bot, :prompts_context_module, SkepticBot.Prompts)
   end
 end
