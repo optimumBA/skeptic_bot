@@ -9,7 +9,6 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
   defp create_question_setup(%{conn: conn}) do
     question = question_fixture(%{query: "American Ponzi with Lee Camp"})
-
     %{conn: conn, question: question}
   end
 

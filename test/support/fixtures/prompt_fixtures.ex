@@ -29,7 +29,7 @@ defmodule SkepticBot.PromptFixtures do
       Enum.into(attrs, %{
         description: description_fixture(),
         embedding: embedding_fixture(),
-        episode_details: episode_details
+        episodes: episode_details
       })
 
     {:ok, question} =
