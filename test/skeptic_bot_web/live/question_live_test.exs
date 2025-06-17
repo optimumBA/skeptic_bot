@@ -1,14 +1,11 @@
 defmodule SkepticBotWeb.QuestionLiveTest do
   use SkepticBotWeb.ConnCase, async: true
 
-  import Mox
   import Phoenix.LiveViewTest
   import SkepticBot.PromptFixtures
 
   alias SkepticBot.Prompts
   alias SkepticBotWeb.PodcastComponents
-
-  setup :verify_on_exit!
 
   defp create_question_setup(%{conn: conn}) do
     question = question_fixture(%{query: "American Ponzi with Lee Camp"})

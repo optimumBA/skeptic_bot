@@ -8,6 +8,7 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
 
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
+  alias SkepticBot.Rag
 
   @type socket :: Phoenix.LiveView.Socket.t()
   @impl Phoenix.LiveComponent
@@ -94,7 +95,7 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
     send(caller, {:loading_state, true})
 
     Task.start(fn ->
-      {:ok, {description, list_of_episodes}} = get_rag_module().generate(query)
+      {:ok, {description, list_of_episodes}} = Rag.generate(query)
 
       if list_of_episodes == [] do
         send(caller, :no_episodes_found)
@@ -108,9 +109,5 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
   @spec assign_form(socket()) :: socket()
   def assign_form(%{assigns: %{question: question}} = socket) do
     assign(socket, :form, to_form(Prompts.change_prompt_question(question), as: "prompt"))
-  end
-
-  defp get_rag_module do
-    Application.get_env(:skeptic_bot, :rag_module, SkepticBot.Rag)
   end
 end

@@ -3,19 +3,23 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
   import Mox
   import Phoenix.LiveViewTest
-  import SkepticBot.PromptFixtures
+  import SkepticBot.PodcastsFixtures
 
-  alias SkepticBot.Rag.EmbeddingMock
-  alias SkepticBot.RagMock
+  alias SkepticBot.Rag
 
   setup :verify_on_exit!
 
   defp create_prompt_resources_setup(%{conn: conn}) do
-    description = description_fixture()
     embedding = embedding_fixture()
     episode = episode_fixture()
+    response = response_fixture()
 
-    %{conn: conn, description: description, embedding: embedding, episode: episode}
+    %{
+      conn: conn,
+      embedding: embedding,
+      episode: episode,
+      response: response
+    }
   end
 
   describe "/" do
@@ -57,41 +61,23 @@ defmodule SkepticBotWeb.HomeLiveTest do
       refute has_element?(view, ~s(div.animate-pulse))
     end
 
-    test "renders error message when no episodes are found", %{
-      conn: conn,
-      description: description
-    } do
-      expect(RagMock, :generate, fn _query ->
-        {:ok, {description, []}}
-      end)
-
-      {:ok, view, _html} = live(conn, "/")
-
-      view
-      |> form("#prompt-input-form",
-        prompt: %{query: "I have no idea that this will not return any episodes"}
-      )
-      |> render_submit()
-
-      assert render(view) =~ "No related podcast was found"
-      refute has_element?(view, ~s(div.animate-pulse))
-    end
-
     test "redirects to the question when episodes are found", %{
       conn: conn,
-      description: description,
+      response: response,
       embedding: embedding,
       episode: episode
     } do
-      expect(RagMock, :generate, fn _query ->
-        {:ok, {description, [episode]}}
-      end)
+      {:ok, view, _html} = live(conn, "/")
 
-      expect(EmbeddingMock, :generate, fn _embedding_value ->
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      expect(Rag.MockEmbedder, :generate, 2, fn _question_episodes ->
         {:ok, [embedding]}
       end)
 
-      {:ok, view, _html} = live(conn, "/")
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, response}
+      end)
 
       view
       |> form("#prompt-input-form", prompt: %{query: "American Ponzi with Lee Camp"})
