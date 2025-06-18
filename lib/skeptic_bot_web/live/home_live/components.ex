@@ -1,4 +1,4 @@
-defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
+defmodule SkepticBotWeb.HomeLive.Components do
   @moduledoc """
   Holds our form
   """
@@ -8,8 +8,8 @@ defmodule SkepticBotWeb.HomeLive.QuestionFormComponent do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
-  @spec component(assigns()) :: rendered()
-  def component(assigns) do
+  @spec form_component(assigns()) :: rendered()
+  def form_component(assigns) do
     ~H"""
     <div>
       <.form for={@form} phx-change="validate" phx-submit="save" id="prompt-input-form">

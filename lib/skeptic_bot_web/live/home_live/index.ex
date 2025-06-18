@@ -5,7 +5,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Rag
   alias SkepticBot.Rag.Embedder
-  alias SkepticBotWeb.HomeLive.QuestionFormComponent
+  alias SkepticBotWeb.HomeLive
 
   # alias Phoenix.LiveView.AsyncResult
 
@@ -46,7 +46,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             Questions everything
           </section>
           <section class="w-[60%] mx-auto">
-            <QuestionFormComponent.component form={@form} />
+            <HomeLive.Components.form_component form={@form} />
           </section>
         </section>
       </div>
