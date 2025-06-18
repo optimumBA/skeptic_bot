@@ -98,17 +98,14 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
     start_async(socket, :prompt_results, fn ->
       {:ok, result} = Rag.generate(query)
-      %{prompt_results: result}
+      result
     end)
   end
 
   @impl Phoenix.LiveView
   def handle_async(
         :prompt_results,
-        {:ok,
-         %{
-           prompt_results: {description, list_of_episodes}
-         }},
+        {:ok, {description, list_of_episodes}},
         socket
       ) do
     case list_of_episodes do
@@ -124,7 +121,13 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   def handle_async(:prompt_results, {:exit, _reason}, socket) do
     send(self(), {:loading_state, false})
-    {:noreply, put_flash(socket, :error, "An error occurred while processing your prompt")}
+
+    {:noreply,
+     put_flash(
+       socket,
+       :error,
+       "An error occurred while processing your prompt. Please try again."
+     )}
   end
 
   defp handle_prompt_results(description, list_of_episodes, %{assigns: %{query: query}} = socket) do
