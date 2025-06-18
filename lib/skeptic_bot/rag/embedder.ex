@@ -3,10 +3,10 @@ defmodule SkepticBot.Rag.Embedder do
 
   alias SkepticBot.Rag.ReqEmbedder
 
+  @callback generate([text()]) :: {:ok, [embedding()]} | {:error, any()}
+
   @type embedding :: [float()]
   @type text :: String.t()
-
-  @callback generate([text()]) :: {:ok, [embedding()]} | {:error, any()}
 
   @spec generate(text()) :: {:ok, [embedding()]} | {:error, any()}
   def generate(text) when is_binary(text), do: generate([text])

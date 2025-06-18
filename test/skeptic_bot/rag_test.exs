@@ -11,7 +11,7 @@ defmodule SkepticBot.RagTest do
   defp create_episodes(_attrs) do
     episode = episode_fixture()
     embedding = embedding_fixture()
-    response = "Just a simple response from a large language model"
+    response = response_fixture()
     _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
     %{episode: episode, embedding: embedding, response: response}
   end

@@ -21,7 +21,6 @@ defmodule SkepticBot.PodcastsTest do
     timestamp: %{secs: :rand.uniform(3000), months: 0, days: 0},
     transcription: "Sample episode transcription"
   }
-
   @invalid_episode_transcription_attrs %{
     embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
     timestamp: %{secs: 44.900, months: 0, days: 0},
@@ -186,12 +185,12 @@ defmodule SkepticBot.PodcastsTest do
           podcast_episode_id: episode.id
         },
         %{
-          transcription: "Transcription 3",
+          transcription: "Transcription 4",
           timestamp: %{secs: 40, months: 0, days: 0},
           podcast_episode_id: episode.id
         },
         %{
-          transcription: "Transcription 3",
+          transcription: "Transcription 5",
           timestamp: %{secs: 60, months: 0, days: 0},
           podcast_episode_id: episode.id
         }
