@@ -85,7 +85,9 @@ defmodule SkepticBot.MixProject do
       {:faker, "~> 0.18", only: :test},
       {:github_workflows_generator, "~> 0.1", only: :dev, runtime: false},
       {:mix_audit, "~> 2.1", only: :test, runtime: false},
-      {:sobelow, "~> 0.13", only: :test, runtime: false}
+      {:optimum_credo, "~> 0.1", only: :test, runtime: false},
+      {:sobelow, "~> 0.13", only: :test, runtime: false},
+      {:tidewave, "~> 0.1", only: :dev}
     ]
   end
 
