@@ -6,7 +6,7 @@ defmodule SkepticBot.Storage.StorageProvider do
   @type filename :: String.t()
   @type reason :: String.t()
 
-  @callback delete_file(String.t()) :: :ok | {:error, reason()}
+  @callback delete_file(filename()) :: :ok | {:error, reason()}
 
   @spec delete_file(filename()) :: :ok | {:error, reason()}
   def delete_file(filename), do: impl().delete_file(filename)
