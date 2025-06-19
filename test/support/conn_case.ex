@@ -26,8 +26,8 @@ defmodule SkepticBotWeb.ConnCase do
       use SkepticBotWeb, :verified_routes
 
       # Import conveniences for testing with connections
-      import Plug.Conn
       import Phoenix.ConnTest
+      import Plug.Conn
       import SkepticBotWeb.ConnCase
     end
   end
