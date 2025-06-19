@@ -8,9 +8,10 @@ defmodule SkepticBot.PodcastsFixtures do
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Podcasts.EpisodeTranscription
 
-  @spec embedding_fixture() :: [float()]
-  def embedding_fixture do
-    Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end)
+  defp generate_id do
+    12
+    |> :crypto.strong_rand_bytes()
+    |> Base.encode64()
   end
 
   @doc """
@@ -22,18 +23,14 @@ defmodule SkepticBot.PodcastsFixtures do
       attrs
       |> Enum.into(%{
         description: "Sample description",
+        episode_length: :rand.uniform(3000),
         external_id: generate_id(),
+        thumbnail: "cover1.svg",
         title: "Test Episode"
       })
       |> Podcasts.create_episode()
 
     episode
-  end
-
-  defp generate_id do
-    12
-    |> :crypto.strong_rand_bytes()
-    |> Base.encode64()
   end
 
   @doc """
@@ -44,7 +41,7 @@ defmodule SkepticBot.PodcastsFixtures do
     {:ok, episode_transcription} =
       attrs
       |> Enum.into(%{
-        embedding: embedding_fixture(),
+        embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
         timestamp: %{secs: :rand.uniform(3000), months: 0, days: 0},
         transcription: "Sample episode transcription"
       })

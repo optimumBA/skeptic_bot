@@ -1,6 +1,7 @@
 defmodule SkepticBot.Podcasts.TinfoilScraper do
   @moduledoc false
 
+  alias SkepticBot.HttpClient
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
 
@@ -9,13 +10,16 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
 
   @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
 
+  @spec get_url() :: String.t()
+  def get_url, do: @url
+
   @spec scrape(start()) :: :ok | {:error, any()}
   def scrape(start \\ 0)
 
   def scrape(start) do
     url = String.replace(@url, "<start>", Integer.to_string(start))
 
-    case Req.get(url) do
+    case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
         Enum.each(body["data"], fn episode ->
           maybe_download_episode(episode)
@@ -36,7 +40,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   def scrape_episode(uuid, start \\ 0) do
     url = String.replace(@url, "<start>", Integer.to_string(start))
 
-    case Req.get(url) do
+    case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: %{"data" => []}}} ->
         {:error, :episode_not_found}
 
@@ -61,7 +65,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
       {:ok, %Podcasts.Episode{} = episode} =
         Podcasts.create_episode(%{
           "description" => episode["description"],
+          "episode_length" => episode["duration"],
           "external_id" => episode["uuid"],
+          "thumbnail" => episode["thumbnailPath"],
           "title" => episode["name"]
         })
 

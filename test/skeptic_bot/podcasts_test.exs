@@ -11,7 +11,9 @@ defmodule SkepticBot.PodcastsTest do
   @valid_episode_attrs %{
     description: "Sample description",
     embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
+    episode_length: 4000,
     external_id: "test-123",
+    thumbnail: "/static/thumbnail.png",
     title: "Test Episode"
   }
   @valid_episode_transcription_attrs %{
@@ -19,7 +21,6 @@ defmodule SkepticBot.PodcastsTest do
     timestamp: %{secs: :rand.uniform(3000), months: 0, days: 0},
     transcription: "Sample episode transcription"
   }
-
   @invalid_episode_transcription_attrs %{
     embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
     timestamp: %{secs: 44.900, months: 0, days: 0},
@@ -141,9 +142,9 @@ defmodule SkepticBot.PodcastsTest do
           transcription: "First part"
         },
         %{
-          transcription: "Second part",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 20, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Second part"
         }
       ]
 
@@ -181,12 +182,12 @@ defmodule SkepticBot.PodcastsTest do
         %{
           podcast_episode_id: episode.id,
           timestamp: %{secs: 40, months: 0, days: 0},
-          transcription: "Transcription 3"
+          transcription: "Transcription 4"
         },
         %{
           podcast_episode_id: episode.id,
           timestamp: %{secs: 60, months: 0, days: 0},
-          transcription: "Transcription 3"
+          transcription: "Transcription 5"
         }
       ]
 
