@@ -2,8 +2,14 @@ defmodule SkepticBotWeb.HomeLive.Index do
   use SkepticBotWeb, :live_view
 
   alias SkepticBot.Prompts
+  alias SkepticBot.Prompts.UserQuestion
+  alias SkepticBot.Rag
   alias SkepticBot.Rag.Embedder
-  alias SkepticBotWeb.HomeLive.QuestionFormComponent
+  alias SkepticBotWeb.HomeLive
+
+  # alias Phoenix.LiveView.AsyncResult
+
+  @type socket :: Phoenix.LiveView.Socket.t()
 
   @impl Phoenix.LiveView
   def render(assigns) do
@@ -40,7 +46,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             Questions everything
           </section>
           <section class="w-[60%] mx-auto">
-            <.live_component module={QuestionFormComponent} id="prompt form" />
+            <HomeLive.Components.form_component form={@form} />
           </section>
         </section>
       </div>
@@ -50,11 +56,81 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :loading, false)}
+    {:ok,
+     socket
+     |> assign(:question, %UserQuestion{})
+     |> assign(:loading, false)
+     |> assign_form()}
   end
 
   @impl Phoenix.LiveView
-  def handle_info({:generation_done, {description, list_of_episodes, query}}, socket) do
+  def handle_event(
+        "validate",
+        %{"prompt" => prompt_params},
+        %{assigns: %{question: question}} = socket
+      ) do
+    changeset =
+      question
+      |> Prompts.change_prompt_question(prompt_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, :form, to_form(changeset, as: "prompt"))}
+  end
+
+  def handle_event(
+        "save",
+        %{"prompt" => %{"query" => query} = prompt_params},
+        %{assigns: %{question: question}} = socket
+      ) do
+    changeset =
+      Prompts.change_prompt_question(question, prompt_params)
+
+    socket = assign(socket, :query, query)
+
+    {:noreply, maybe_generate_prompt_results(changeset.valid?, socket)}
+  end
+
+  defp maybe_generate_prompt_results(false, socket), do: socket
+
+  defp maybe_generate_prompt_results(true, %{assigns: %{query: query}} = socket) do
+    caller = self()
+    send(caller, {:loading_state, true})
+
+    start_async(socket, :prompt_results, fn ->
+      {:ok, result} = Rag.generate(query)
+      result
+    end)
+  end
+
+  @impl Phoenix.LiveView
+  def handle_async(
+        :prompt_results,
+        {:ok, {description, list_of_episodes}},
+        socket
+      ) do
+    case list_of_episodes do
+      [] ->
+        send(self(), :no_episodes_found)
+        send(self(), {:loading_state, false})
+        {:noreply, socket}
+
+      _list_of_episodes ->
+        handle_prompt_results(description, list_of_episodes, socket)
+    end
+  end
+
+  def handle_async(:prompt_results, {:exit, _reason}, socket) do
+    send(self(), {:loading_state, false})
+
+    {:noreply,
+     put_flash(
+       socket,
+       :error,
+       "An error occurred while processing your prompt. Please try again."
+     )}
+  end
+
+  defp handle_prompt_results(description, list_of_episodes, %{assigns: %{query: query}} = socket) do
     {:ok, [embedding]} = Embedder.generate(query)
 
     episode_details = Prompts.get_episode_details(list_of_episodes)
@@ -70,10 +146,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
       {:ok, question} ->
         send(self(), {:loading_state, false})
 
-        {
-          :noreply,
-          push_navigate(socket, to: ~p"/questions/#{question.id}")
-        }
+        {:noreply, push_navigate(socket, to: ~p"/questions/#{question.id}")}
 
       {:error, _changeset} ->
         {:noreply, put_flash(socket, :error, "There was an error processing your prompt")}
@@ -85,8 +158,12 @@ defmodule SkepticBotWeb.HomeLive.Index do
     {:noreply, assign(socket, :loading, value)}
   end
 
-  @impl Phoenix.LiveView
   def handle_info(:no_episodes_found, socket) do
     {:noreply, put_flash(socket, :error, "No related podcast was found")}
+  end
+
+  @spec assign_form(socket()) :: socket()
+  def assign_form(%{assigns: %{question: question}} = socket) do
+    assign(socket, :form, to_form(Prompts.change_prompt_question(question), as: "prompt"))
   end
 end
