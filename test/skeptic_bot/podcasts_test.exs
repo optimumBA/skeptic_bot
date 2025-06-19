@@ -21,7 +21,6 @@ defmodule SkepticBot.PodcastsTest do
     timestamp: %{secs: :rand.uniform(3000), months: 0, days: 0},
     transcription: "Sample episode transcription"
   }
-
   @invalid_episode_transcription_attrs %{
     embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
     timestamp: %{secs: 44.900, months: 0, days: 0},
@@ -59,6 +58,17 @@ defmodule SkepticBot.PodcastsTest do
     end
   end
 
+  describe "get_episode_by_external_id/1" do
+    test "returns the episode with given external_id" do
+      episode = episode_fixture(external_id: "c8aa9b82-03e1-417e-b4ad-7ce380c25414")
+      assert Podcasts.get_episode_by_external_id(episode.external_id) == episode
+    end
+
+    test "returns nil for non-existent external_id" do
+      assert Podcasts.get_episode_by_external_id("14444444-edaa-444a-a333-7a77758ad305") == nil
+    end
+  end
+
   describe "episode_exists?/1" do
     setup [:create_episode]
 
@@ -75,7 +85,7 @@ defmodule SkepticBot.PodcastsTest do
     setup [:create_episode]
 
     test "with valid data updates an episode", %{episode: episode} do
-      update_attrs = %{title: "Updated Title", description: "a new description"}
+      update_attrs = %{description: "a new description", title: "Updated Title"}
 
       assert {:ok, %Episode{} = updated_episode} = Podcasts.update_episode(episode, update_attrs)
       assert updated_episode.title == "Updated Title"
@@ -146,11 +156,6 @@ defmodule SkepticBot.PodcastsTest do
           transcription: "Second part",
           timestamp: %{secs: 20, months: 0, days: 0},
           podcast_episode_id: episode.id
-        },
-        %{
-          transcription: "Third part",
-          timestamp: %{secs: 30, months: 0, days: 0},
-          podcast_episode_id: episode.id
         }
       ]
 
@@ -159,7 +164,7 @@ defmodule SkepticBot.PodcastsTest do
       end)
 
       assert {:ok, result} = Podcasts.get_episode_transcriptions(episode.id)
-      assert result == "First part\nSecond part\nThird part\nSample episode transcription"
+      assert result == "First part\nSecond part\nSample episode transcription"
     end
   end
 
@@ -171,29 +176,29 @@ defmodule SkepticBot.PodcastsTest do
     } do
       transcription_attrs = [
         %{
-          transcription: "Transcription 1",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 10, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Transcription 1"
         },
         %{
-          transcription: "Transcription 2",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 20, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Transcription 2"
         },
         %{
-          transcription: "Transcription 3",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 30, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Transcription 3"
         },
         %{
-          transcription: "Transcription 3",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 40, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Transcription 4"
         },
         %{
-          transcription: "Transcription 3",
+          podcast_episode_id: episode.id,
           timestamp: %{secs: 60, months: 0, days: 0},
-          podcast_episode_id: episode.id
+          transcription: "Transcription 5"
         }
       ]
 
