@@ -8,6 +8,8 @@ defmodule SkepticBotWeb.HomeLive.Components do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
+  attr :form, :map, required: true
+
   @spec form_component(assigns()) :: rendered()
   def form_component(assigns) do
     ~H"""

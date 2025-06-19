@@ -7,8 +7,6 @@ defmodule SkepticBotWeb.HomeLive.Index do
   alias SkepticBot.Rag.Embedder
   alias SkepticBotWeb.HomeLive
 
-  # alias Phoenix.LiveView.AsyncResult
-
   @type socket :: Phoenix.LiveView.Socket.t()
 
   @impl Phoenix.LiveView
