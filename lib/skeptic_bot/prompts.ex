@@ -15,8 +15,8 @@ defmodule SkepticBot.Prompts do
   @type question :: UserQuestion.t()
   @type question_episode :: map()
 
-  @spec get_question!(id()) :: question() | nil
-  def get_question!(id), do: Repo.get!(UserQuestion, id)
+  @spec get_question(id()) :: question() | nil
+  def get_question(id), do: Repo.get(UserQuestion, id)
 
   @spec get_question_episodes([question_episode()]) :: [episode()]
   def get_question_episodes(question_episodes) do

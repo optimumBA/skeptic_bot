@@ -1,7 +1,7 @@
 defmodule SkepticBot.PromptFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `SkepticBot.Podcasts` context.
+  entities via the `SkepticBot.Prompts` context.
   """
 
   import SkepticBot.PodcastsFixtures
@@ -19,7 +19,7 @@ defmodule SkepticBot.PromptFixtures do
   """
 
   @spec question_fixture(map()) :: question()
-  def question_fixture(attrs) do
+  def question_fixture(attrs \\ %{}) do
     episode_details =
       2
       |> create_multiple_episodes()
@@ -29,7 +29,8 @@ defmodule SkepticBot.PromptFixtures do
       Enum.into(attrs, %{
         description: description_fixture(),
         embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
-        episodes: episode_details
+        episodes: episode_details,
+        query: "American Ponzi with Lee Camp"
       })
 
     {:ok, question} =

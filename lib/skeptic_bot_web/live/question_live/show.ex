@@ -83,7 +83,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _uri, socket) do
-    question = Prompts.get_question!(id)
+    question = Prompts.get_question(id)
 
     related_episodes =
       Prompts.get_question_episodes(question.episodes)

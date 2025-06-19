@@ -8,7 +8,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   alias SkepticBotWeb.PodcastComponents
 
   defp create_question_setup(%{conn: conn}) do
-    question = question_fixture(%{query: "American Ponzi with Lee Camp"})
+    question = question_fixture()
     %{conn: conn, question: question}
   end
 
