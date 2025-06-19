@@ -11,7 +11,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   setup :verify_on_exit!
 
   defp create_question_setup(%{conn: conn}) do
-    question = question_fixture(%{query: "American Ponzi with Lee Camp"})
+    question = question_fixture()
     _random_episodes = create_multiple_episodes(4)
     %{conn: conn, question: question}
   end
