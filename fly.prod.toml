@@ -5,8 +5,8 @@ kill_signal = 'SIGTERM'
 [build]
 
 [deploy]
-strategy = 'bluegreen'
 release_command = '/app/bin/migrate'
+strategy = 'bluegreen'
 
 [env]
 PHX_HOST = 'skeptic-bot.fly.dev'
@@ -27,11 +27,11 @@ hard_limit = 1000
 soft_limit = 1000
 
 [[http_service.checks]]
-interval = '30s'
-timeout = '5s'
-grace_period = '10s'
+grace_period = '15s'
+interval = '10s'
 method = 'GET'
 path = '/health'
+timeout = '2s'
 
 [[vm]]
 memory = '512mb'
