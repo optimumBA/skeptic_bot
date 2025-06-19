@@ -28,7 +28,7 @@ defmodule SkepticBot.PromptFixtures do
     question_attrs =
       Enum.into(attrs, %{
         description: description_fixture(),
-        embedding: embedding_fixture(),
+        embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
         episodes: episode_details
       })
 
