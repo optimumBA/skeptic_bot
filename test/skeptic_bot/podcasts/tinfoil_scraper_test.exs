@@ -2,8 +2,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
   use SkepticBot.DataCase, async: true
 
   import Mox
-  import SkepticBot.ScrapingFixtures
   import SkepticBot.PodcastsFixtures
+  import SkepticBot.ScrapingFixtures
 
   alias SkepticBot.MockHttpClient
   alias SkepticBot.Podcasts
