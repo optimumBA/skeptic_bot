@@ -58,6 +58,17 @@ defmodule SkepticBot.PodcastsTest do
     end
   end
 
+  describe "get_episode_by_external_id/1" do
+    test "returns the episode with given external_id" do
+      episode = episode_fixture(external_id: "c8aa9b82-03e1-417e-b4ad-7ce380c25414")
+      assert Podcasts.get_episode_by_external_id(episode.external_id) == episode
+    end
+
+    test "returns nil for non-existent external_id" do
+      assert Podcasts.get_episode_by_external_id("14444444-edaa-444a-a333-7a77758ad305") == nil
+    end
+  end
+
   describe "episode_exists?/1" do
     setup [:create_episode]
 
@@ -137,14 +148,14 @@ defmodule SkepticBot.PodcastsTest do
     test "returns concatenated transcriptions", %{episode: episode} do
       transcription_attrs = [
         %{
-          podcast_episode_id: episode.id,
+          transcription: "First part",
           timestamp: %{secs: 10, months: 0, days: 0},
-          transcription: "First part"
+          podcast_episode_id: episode.id
         },
         %{
-          podcast_episode_id: episode.id,
+          transcription: "Second part",
           timestamp: %{secs: 20, months: 0, days: 0},
-          transcription: "Second part"
+          podcast_episode_id: episode.id
         }
       ]
 
