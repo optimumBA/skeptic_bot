@@ -106,5 +106,37 @@ defmodule SkepticBotWeb.HomeLiveTest do
       assert render(view) =~
                "An error occurred while processing your prompt. Please try again."
     end
+
+    test "renders an error message if question creation fails", %{
+      conn: conn,
+      embedding: embedding,
+      episode: episode,
+      response: response
+    } do
+      {:ok, view, _html} = live(conn, "/")
+
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:ok, [embedding]}
+      end)
+
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:error, "failed to generate embeddings for the question"}
+      end)
+
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, response}
+      end)
+
+      view
+      |> form("#prompt-input-form", prompt: %{query: "American Ponzi with Lee Camp"})
+      |> render_submit()
+
+      open_browser(view)
+
+      assert render(view) =~
+               "There was an error processing your prompt"
+    end
   end
 end

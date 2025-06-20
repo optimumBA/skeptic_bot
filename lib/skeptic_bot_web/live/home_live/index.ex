@@ -141,7 +141,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
     else
       {:error, reason} ->
         send(self(), {:loading_state, false})
-        Logger.error("Failed to create a question with reason #{reason}")
+        Logger.error("Failed to create a question with reason: #{reason}")
         {:noreply, put_flash(socket, :error, "There was an error processing your prompt")}
     end
   end
