@@ -13,6 +13,7 @@ defmodule SkepticBot.Podcasts do
   @type changeset :: Ecto.Changeset.t()
   @type episode :: Episode.t()
   @type episode_transcription :: EpisodeTranscription.t()
+  @type external_id :: String.t()
   @type id :: String.t()
 
   @doc """
@@ -87,6 +88,9 @@ defmodule SkepticBot.Podcasts do
   """
   @spec get_episode(id()) :: episode() | nil
   def get_episode(id), do: Repo.get(Episode, id)
+
+  @spec get_episode_by_external_id(external_id()) :: episode() | nil
+  def get_episode_by_external_id(external_id), do: Repo.get_by(Episode, external_id: external_id)
 
   @doc """
   Gets all transcriptions for an episode.
