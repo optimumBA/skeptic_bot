@@ -15,7 +15,6 @@ defmodule SkepticBot.Podcasts.Episode do
     field :episode_length, :integer
     field :external_id, :string
     field :thumbnail, :string
-    field :timestamp, EctoInterval, virtual: true
     field :title, :string
     field :transcription, :string, virtual: true
 

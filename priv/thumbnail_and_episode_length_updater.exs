@@ -40,5 +40,4 @@ defmodule ThumbnailAndEpisodeLengthUpdater do
   end
 end
 
-{:ok, _} = Application.ensure_all_started(:skeptic_bot)
 ThumbnailAndEpisodeLengthUpdater.update()
