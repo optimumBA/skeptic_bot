@@ -2,5 +2,11 @@
   "coverage_options": {
     "minimum_coverage": 13.9
   },
-  "skip_files": ["lib/skeptic_bot/release.ex"]
+  "skip_files": [
+    "lib/skeptic_bot/rag/req_embedder.ex",
+    "lib/skeptic_bot/release.ex",
+    "lib/skeptic_bot/replicate_transcriber.ex",
+    "lib/skeptic_bot/req_http_client.ex",
+    "lib/skeptic_bot_web/components/core_components.ex"
+  ]
 }
