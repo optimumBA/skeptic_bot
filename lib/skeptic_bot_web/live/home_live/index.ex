@@ -7,6 +7,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
   alias SkepticBot.Rag.Embedder
   alias SkepticBotWeb.HomeLive
 
+  require Logger
+
   @type socket :: Phoenix.LiveView.Socket.t()
 
   @impl Phoenix.LiveView
@@ -129,24 +131,20 @@ defmodule SkepticBotWeb.HomeLive.Index do
   end
 
   defp handle_prompt_results(description, list_of_episodes, %{assigns: %{query: query}} = socket) do
-    {:ok, [embedding]} = Embedder.generate(query)
-
-    episode_details = Prompts.get_episode_details(list_of_episodes)
-
-    question_attrs = %{
-      description: description,
-      embedding: embedding,
-      episodes: episode_details,
-      query: query
-    }
-
-    case Prompts.create_question(question_attrs) do
-      {:ok, question} ->
+    with {:ok, [embedding]} <- Embedder.generate(query),
+         episode_details <- Prompts.get_episode_details(list_of_episodes),
+         question_attrs <- %{
+           description: description,
+           embedding: embedding,
+           episodes: episode_details,
+           query: query
+         },
+         {:ok, question} <- Prompts.create_question(question_attrs) do
+      {:noreply, push_navigate(socket, to: ~p"/questions/#{question.id}")}
+    else
+      {:error, reason} ->
         send(self(), {:loading_state, false})
-
-        {:noreply, push_navigate(socket, to: ~p"/questions/#{question.id}")}
-
-      {:error, _changeset} ->
+        Logger.error("Failed to create a question with reason #{reason}")
         {:noreply, put_flash(socket, :error, "There was an error processing your prompt")}
     end
   end

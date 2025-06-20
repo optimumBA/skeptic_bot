@@ -86,5 +86,25 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
       assert_redirect(view)
     end
+
+    test "renders an error message when the RAG process fails", %{
+      conn: conn,
+      episode: episode
+    } do
+      {:ok, view, _html} = live(conn, "/")
+
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:error, "failed to generate embeddings"}
+      end)
+
+      view
+      |> form("#prompt-input-form", prompt: %{query: "American Ponzi with Lee Camp"})
+      |> render_submit()
+
+      assert render(view) =~
+               "An error occurred while processing your prompt. Please try again."
+    end
   end
 end
