@@ -19,6 +19,13 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
     %{body: body}
   end
 
+  describe "get_url/0" do
+    test "returns Sam Tripoli url for making api requests" do
+      assert "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both" ==
+               TinfoilScraper.get_url()
+    end
+  end
+
   describe "scrape/1" do
     setup [:create_scraper_resources]
 
