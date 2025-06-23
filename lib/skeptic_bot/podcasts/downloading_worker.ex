@@ -75,7 +75,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
         {:ok, url}
       else
         {:error, reason} ->
-          Logger.error("Transcoding video failed")
+          Logger.error("download_transcode_and_upload/3 failed with reason : #{reason}")
           {:error, reason}
       end
 
