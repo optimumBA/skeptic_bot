@@ -10,6 +10,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     queue: :downloading,
     unique: [period: :infinity, states: Oban.Job.states()]
 
+  alias SkepticBot.DownloadingRunner
   alias SkepticBot.Podcasts.Downloader
   alias SkepticBot.Podcasts.Transcoder
   alias SkepticBot.Podcasts.TranscribingWorker
@@ -71,7 +72,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
       with {:ok, _video_path} <- Downloader.download(url, video_path),
            :ok <- Transcoder.transcode_video(video_path, audio_path),
            {:ok, url} <- StorageProvider.upload_file(audio_path) do
-        url
+        {:ok, url}
       else
         {:error, reason} ->
           Logger.error("Transcoding video failed")
