@@ -5,9 +5,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
   import SkepticBot.PodcastsFixtures
   import SkepticBot.ScrapingFixtures
 
-  alias SkepticBot.MockHttpClient
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
+  alias SkepticBot.Podcasts.MockHttpClient
   alias SkepticBot.Podcasts.TinfoilScraper
 
   @external_id "a909da70-13b7-4717-b1c0-c2d001521dc3"

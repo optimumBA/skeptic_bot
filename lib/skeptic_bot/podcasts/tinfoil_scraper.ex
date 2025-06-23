@@ -1,9 +1,9 @@
 defmodule SkepticBot.Podcasts.TinfoilScraper do
   @moduledoc false
 
-  alias SkepticBot.HttpClient
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
+  alias SkepticBot.Podcasts.HttpClient
 
   @type episode_id :: String.t()
   @type start :: integer()
