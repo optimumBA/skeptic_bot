@@ -10,7 +10,7 @@ defmodule SkepticBot.Rag.ReplicateEmbedder do
   require Logger
 
   @behaviour Embedder
-  @behaviour SkepticBot.ReplicateClient
+  @behaviour ReplicateClient
 
   @model "beautyyuyanli/multilingual-e5-large:a06276a89f1a902d5fc225a9ca32b6e8e6292b7f3b136518878da97c458e2bad"
 
