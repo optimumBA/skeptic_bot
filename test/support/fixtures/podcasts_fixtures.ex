@@ -8,10 +8,14 @@ defmodule SkepticBot.PodcastsFixtures do
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Podcasts.EpisodeTranscription
 
-  defp generate_id do
-    12
-    |> :crypto.strong_rand_bytes()
-    |> Base.encode64()
+  @type embedding :: [float()]
+
+  @doc """
+  create an embedding.
+  """
+  @spec embedding_fixture :: embedding()
+  def embedding_fixture do
+    Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end)
   end
 
   @doc """
@@ -31,6 +35,12 @@ defmodule SkepticBot.PodcastsFixtures do
       |> Podcasts.create_episode()
 
     episode
+  end
+
+  defp generate_id do
+    12
+    |> :crypto.strong_rand_bytes()
+    |> Base.encode64()
   end
 
   @doc """

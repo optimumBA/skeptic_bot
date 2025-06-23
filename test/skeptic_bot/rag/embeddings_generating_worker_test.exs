@@ -4,7 +4,6 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
   import ExUnit.CaptureLog
   import Mox
   import SkepticBot.PodcastsFixtures
-  import SkepticBot.ScrapingFixtures
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
