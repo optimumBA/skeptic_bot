@@ -13,8 +13,8 @@ Application.put_env(:skeptic_bot, :storage_provider, SkepticBot.Storage.MockStor
 Mox.defmock(SkepticBot.Podcasts.MockTranscoder, for: SkepticBot.Podcasts.Transcoder)
 Application.put_env(:skeptic_bot, :transcoder, SkepticBot.Podcasts.MockTranscoder)
 
-Mox.defmock(SkepticBot.MockTranscriber, for: SkepticBot.Transcriber)
-Application.put_env(:skeptic_bot, :transcriber, SkepticBot.MockTranscriber)
+Mox.defmock(SkepticBot.Podcasts.MockTranscriber, for: SkepticBot.Podcasts.Transcriber)
+Application.put_env(:skeptic_bot, :transcriber, SkepticBot.Podcasts.MockTranscriber)
 
 ExUnit.start()
 Ecto.Adapters.SQL.Sandbox.mode(SkepticBot.Repo, :manual)
