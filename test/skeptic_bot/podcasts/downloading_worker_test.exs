@@ -55,13 +55,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
                  id: @id
                })
 
-      refute_enqueued(
-        worker: TranscribingWorker,
-        args: %{
-          "audio_url" => "song.mp3",
-          "id" => @id
-        }
-      )
+      refute_enqueued(worker: TranscribingWorker)
     end
 
     test "does not enqueue a transcribing job if trancoding process is unsuccessful" do
@@ -79,13 +73,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
                  id: @id
                })
 
-      refute_enqueued(
-        worker: TranscribingWorker,
-        args: %{
-          "audio_url" => "song.mp3",
-          "id" => @id
-        }
-      )
+      refute_enqueued(worker: TranscribingWorker)
     end
 
     test "does not enqueue a transcribing job if uploading process is unsuccessful" do
@@ -107,13 +95,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
                  id: @id
                })
 
-      refute_enqueued(
-        worker: TranscribingWorker,
-        args: %{
-          "audio_url" => "song.mp3",
-          "id" => @id
-        }
-      )
+      refute_enqueued(worker: TranscribingWorker)
     end
   end
 end
