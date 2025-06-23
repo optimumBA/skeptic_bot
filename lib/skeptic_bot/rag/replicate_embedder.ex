@@ -1,4 +1,4 @@
-defmodule SkepticBot.Rag.ReqEmbedder do
+defmodule SkepticBot.Rag.ReplicateEmbedder do
   @moduledoc """
   Handles generation of text embeddings for the RAG system.
   Uses multilingual embedding models to convert text into dense vector representations.
