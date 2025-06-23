@@ -1,4 +1,4 @@
-defmodule SkepticBot.Rag.ReqGenerator do
+defmodule SkepticBot.Rag.ReplicateGenerator do
   @moduledoc """
   Handles generation of responses using Replicate's language models.
   """
