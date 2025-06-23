@@ -1,7 +1,7 @@
-defmodule SkepticBot.HttpClient do
+defmodule SkepticBot.Podcasts.HttpClient do
   @moduledoc false
 
-  alias SkepticBot.ReqHttpClient
+  alias SkepticBot.Podcasts.ReqHttpClient
 
   @type reason :: String.t()
   @type response :: %Req.Response{}

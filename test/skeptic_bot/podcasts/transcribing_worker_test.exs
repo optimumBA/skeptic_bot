@@ -6,7 +6,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
   import SkepticBot.PodcastsFixtures
   import SkepticBot.ScrapingFixtures
 
-  alias SkepticBot.MockTranscriber
+  alias SkepticBot.Podcasts.MockTranscriber
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Storage.MockStorageProvider

@@ -1,7 +1,7 @@
-defmodule SkepticBot.ReqHttpClient do
+defmodule SkepticBot.Podcasts.ReqHttpClient do
   @moduledoc false
 
-  alias SkepticBot.HttpClient
+  alias SkepticBot.Podcasts.HttpClient
 
   @behaviour HttpClient
 

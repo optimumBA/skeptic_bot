@@ -1,7 +1,7 @@
 defmodule SkepticBot.Rag.Embedder do
   @moduledoc false
 
-  alias SkepticBot.Rag.ReqEmbedder
+  alias SkepticBot.Rag.ReplicateEmbedder
 
   @type embedding :: [float()]
   @type text :: String.t()
@@ -16,5 +16,5 @@ defmodule SkepticBot.Rag.Embedder do
     impl().generate(texts)
   end
 
-  defp impl, do: Application.get_env(:skeptic_bot, :embedder, ReqEmbedder)
+  defp impl, do: Application.get_env(:skeptic_bot, :embedder, ReplicateEmbedder)
 end

@@ -1,7 +1,7 @@
-defmodule SkepticBot.Transcriber do
+defmodule SkepticBot.Podcasts.Transcriber do
   @moduledoc false
 
-  alias SkepticBot.ReplicateTranscriber
+  alias SkepticBot.Podcasts.ReplicateTranscriber
 
   @type audio_url :: String.t()
 

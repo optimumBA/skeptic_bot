@@ -10,21 +10,18 @@ defmodule SkepticBot.PodcastsTest do
   @invalid_episode_attrs %{external_id: nil, title: nil}
   @valid_episode_attrs %{
     description: "Sample description",
-    embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
     episode_length: 4000,
     external_id: "test-123",
     thumbnail: "/static/thumbnail.png",
     title: "Test Episode"
   }
-  @valid_episode_transcription_attrs %{
-    embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
-    timestamp: %{secs: :rand.uniform(3000), months: 0, days: 0},
-    transcription: "Sample episode transcription"
-  }
   @invalid_episode_transcription_attrs %{
-    embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
     timestamp: %{secs: 44.900, months: 0, days: 0},
     transcription: nil
+  }
+  @valid_episode_transcription_attrs %{
+    timestamp: %{secs: :rand.uniform(3000), months: 0, days: 0},
+    transcription: "Sample episode transcription"
   }
 
   defp create_episode(_attrs) do
@@ -85,10 +82,10 @@ defmodule SkepticBot.PodcastsTest do
     setup [:create_episode]
 
     test "with valid data updates an episode", %{episode: episode} do
-      update_attrs = %{description: "a new description", title: "Updated Title"}
+      update_attrs = %{description: "a new description", title: "updated title"}
 
       assert {:ok, %Episode{} = updated_episode} = Podcasts.update_episode(episode, update_attrs)
-      assert updated_episode.title == "Updated Title"
+      assert updated_episode.title == "updated title"
       assert updated_episode.description == "a new description"
     end
 
@@ -135,10 +132,11 @@ defmodule SkepticBot.PodcastsTest do
     test "with invalid data returns error changeset", %{
       transcription: transcription
     } do
-      update_attrs = %{transcription: nil}
-
       assert {:error, %Ecto.Changeset{}} =
-               Podcasts.update_episode_transcription(transcription, update_attrs)
+               Podcasts.update_episode_transcription(
+                 transcription,
+                 @invalid_episode_transcription_attrs
+               )
     end
   end
 

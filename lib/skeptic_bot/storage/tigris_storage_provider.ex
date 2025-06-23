@@ -33,7 +33,7 @@ defmodule SkepticBot.Storage.TigrisStorageProvider do
   @doc """
   Uploads a file to Tigris Storage and returns the public URL.
   """
-  @spec upload_file(String.t(), String.t()) :: {:ok, String.t()} | {:error, reason()}
+  @impl StorageProvider
   def upload_file(file_path, content_type \\ "audio/mpeg") do
     {:ok, file_binary} = File.read(file_path)
     file_name = Path.basename(file_path)
