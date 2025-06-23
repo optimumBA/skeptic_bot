@@ -9,7 +9,7 @@ defmodule SkepticBot.Rag.ReplicateGenerator do
   require Logger
 
   @behaviour Generator
-  @behaviour SkepticBot.ReplicateClient
+  @behaviour ReplicateClient
 
   @model "meta/meta-llama-3-8b-instruct"
 
