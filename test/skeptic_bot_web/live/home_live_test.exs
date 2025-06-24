@@ -9,7 +9,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
   setup :verify_on_exit!
 
-  defp create_prompt_resources_setup(%{conn: conn}) do
+  defp create_prompt_resources(%{conn: conn}) do
     embedding = embedding_fixture()
     episode = episode_fixture()
     response = response_fixture()
@@ -23,7 +23,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
   end
 
   describe "/" do
-    setup [:create_prompt_resources_setup]
+    setup [:create_prompt_resources]
 
     test "shows heading and subtitle", %{conn: conn} do
       {:ok, view, html} = live(conn, "/")

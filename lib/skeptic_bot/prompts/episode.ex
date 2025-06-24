@@ -1,12 +1,13 @@
 defmodule SkepticBot.Prompts.Episode do
   @moduledoc """
-  Used as an embedded schema inside a SkepticBot.Prompt.UserQuestion
+  Used as an embedded schema inside SkepticBot.Prompt.UserQuestion
   """
 
   use Ecto.Schema
 
   import Ecto.Changeset
 
+  @type attrs :: map()
   @type t :: %__MODULE__{}
 
   embedded_schema do
@@ -14,7 +15,7 @@ defmodule SkepticBot.Prompts.Episode do
     field :timestamp, EctoInterval
   end
 
-  @spec changeset(t(), map()) :: Ecto.Changeset.t()
+  @spec changeset(t(), attrs()) :: Ecto.Changeset.t()
   def changeset(episode, attrs) do
     episode
     |> cast(attrs, [:episode_id, :timestamp])

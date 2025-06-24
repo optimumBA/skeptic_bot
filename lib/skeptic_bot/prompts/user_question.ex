@@ -8,6 +8,7 @@ defmodule SkepticBot.Prompts.UserQuestion do
 
   alias SkepticBot.Prompts.Episode
 
+  @type attrs :: map()
   @type t :: %__MODULE__{}
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -21,7 +22,7 @@ defmodule SkepticBot.Prompts.UserQuestion do
     embeds_many :episodes, Episode, on_replace: :delete
   end
 
-  @spec changeset(t(), map()) :: Ecto.Changeset.t()
+  @spec changeset(t(), attrs()) :: Ecto.Changeset.t()
   def changeset(question, attrs) do
     question
     |> cast(attrs, [:description, :embedding, :query])
@@ -33,7 +34,7 @@ defmodule SkepticBot.Prompts.UserQuestion do
     |> cast_embed(:episodes)
   end
 
-  @spec question_changeset(t(), map()) :: Ecto.Changeset.t()
+  @spec question_changeset(t(), attrs()) :: Ecto.Changeset.t()
   def question_changeset(question, attrs) do
     question
     |> cast(attrs, [:query])
