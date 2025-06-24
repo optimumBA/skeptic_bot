@@ -101,8 +101,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @impl Phoenix.LiveView
   def handle_async(:prompt_results, {:ok, prompt_results}, socket) do
     case prompt_results do
-      {:ok, {description, list_of_episodes}} ->
-        handle_prompt_results(description, list_of_episodes, socket)
+      {:ok, {description, podcast_episodes}} ->
+        handle_prompt_results(description, podcast_episodes, socket)
 
       {:error, _reason} ->
         {:noreply,
@@ -125,9 +125,9 @@ defmodule SkepticBotWeb.HomeLive.Index do
      )}
   end
 
-  defp handle_prompt_results(description, list_of_episodes, %{assigns: %{query: query}} = socket) do
+  defp handle_prompt_results(description, podcast_episodes, %{assigns: %{query: query}} = socket) do
     with {:ok, [embedding]} <- Embedder.generate(query),
-         episode_details <- Prompts.get_episode_details(list_of_episodes),
+         episode_details <- Prompts.get_episode_details(podcast_episodes),
          question_attrs <- %{
            description: description,
            embedding: embedding,
@@ -135,7 +135,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
            query: query
          },
          {:ok, question} <- Prompts.create_question(question_attrs) do
-      {:noreply, push_navigate(socket, to: ~p"/questions/#{question.id}")}
+      {:noreply, push_navigate(socket, to: "/questions/#{question.id}")}
     else
       {:error, reason} ->
         send(self(), {:loading_state, false})
