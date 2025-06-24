@@ -4,7 +4,6 @@ defmodule SkepticBotWeb.HomeLive.Index do
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Rag
-  alias SkepticBot.Rag.Embedder
   alias SkepticBotWeb.HomeLive
 
   require Logger
@@ -126,7 +125,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
   end
 
   defp handle_prompt_results(description, podcast_episodes, %{assigns: %{query: query}} = socket) do
-    with {:ok, [embedding]} <- Embedder.generate(query),
+    with {:ok, [embedding]} <- Rag.Embedder.generate(query),
          episode_details <- Prompts.get_episode_details(podcast_episodes),
          question_attrs <- %{
            description: description,

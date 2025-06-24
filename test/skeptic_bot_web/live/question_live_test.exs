@@ -7,13 +7,13 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   alias SkepticBot.Prompts
   alias SkepticBotWeb.PodcastComponents
 
-  defp create_question_setup(%{conn: conn}) do
+  defp create_question(%{conn: conn}) do
     question = question_fixture()
     %{conn: conn, question: question}
   end
 
   describe "/questions/:id/" do
-    setup [:create_question_setup]
+    setup [:create_question]
 
     test "displays the question query and episodes' information plus \"Related Podcasts\"", %{
       conn: conn,
