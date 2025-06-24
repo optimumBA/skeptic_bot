@@ -116,7 +116,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
-      expect(Rag.MockEmbedder, :generate, 2, fn _question_episodes ->
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
 
