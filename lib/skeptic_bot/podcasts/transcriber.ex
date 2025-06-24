@@ -5,7 +5,7 @@ defmodule SkepticBot.Podcasts.Transcriber do
 
   @type audio_url :: String.t()
   @type chunks :: list()
-  @type reason :: any()
+  @type reason :: String.t()
 
   @callback transcribe(audio_url()) :: {:ok, chunks()} | {:error, reason()}
 
