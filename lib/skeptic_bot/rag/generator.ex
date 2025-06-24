@@ -3,7 +3,7 @@ defmodule SkepticBot.Rag.Generator do
 
   alias SkepticBot.Rag.ReplicateGenerator
 
-  @type reason :: any()
+  @type reason :: String.t()
   @type response :: String.t()
 
   @callback predict([LangChain.Message.t()]) :: {:ok, response()} | {:error, reason()}
