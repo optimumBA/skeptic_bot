@@ -1,7 +1,7 @@
 defmodule SkepticBot.Rag.Generator do
   @moduledoc false
 
-  alias SkepticBot.Rag.ReqGenerator
+  alias SkepticBot.Rag.ReplicateGenerator
 
   @callback predict([LangChain.Message.t()]) :: {:ok, response()} | {:error, any()}
 
@@ -10,5 +10,5 @@ defmodule SkepticBot.Rag.Generator do
   @spec predict([LangChain.Message.t()]) :: {:ok, response()} | {:error, any()}
   def predict(messages), do: impl().predict(messages)
 
-  defp impl, do: Application.get_env(:skeptic_bot, :generator, ReqGenerator)
+  defp impl, do: Application.get_env(:skeptic_bot, :generator, ReplicateGenerator)
 end

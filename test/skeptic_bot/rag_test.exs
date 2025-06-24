@@ -3,7 +3,6 @@ defmodule SkepticBot.RagTest do
 
   import Mox
   import SkepticBot.PodcastsFixtures
-  import SkepticBot.ScrapingFixtures
 
   alias SkepticBot.Rag
 

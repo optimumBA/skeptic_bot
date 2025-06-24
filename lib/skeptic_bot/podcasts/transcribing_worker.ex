@@ -10,9 +10,9 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.Podcasts
+  alias SkepticBot.Podcasts.Transcriber
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Storage.StorageProvider
-  alias SkepticBot.Transcriber
 
   require Logger
 

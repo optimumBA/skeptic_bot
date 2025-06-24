@@ -1,11 +1,11 @@
-defmodule SkepticBot.ReplicateTranscriber do
+defmodule SkepticBot.Podcasts.ReplicateTranscriber do
   @moduledoc """
   Provides audio transcription capabilities using Replicate's speech recognition models.
   Handles the conversion of audio to text and processes the chunked output.
   """
 
+  alias SkepticBot.Podcasts.Transcriber
   alias SkepticBot.ReplicateClient
-  alias SkepticBot.Transcriber
 
   require Logger
 

@@ -4,16 +4,6 @@ defmodule SkepticBot.ScrapingFixtures do
   entities used in the scraping process.
   """
 
-  @type embedding :: [float()]
-
-  @doc """
-  create an embedding.
-  """
-  @spec embedding_fixture :: embedding()
-  def embedding_fixture do
-    Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end)
-  end
-
   @spec body_fixture :: map()
   def body_fixture do
     %{

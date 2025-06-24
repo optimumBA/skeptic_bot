@@ -1,4 +1,4 @@
-defmodule SkepticBot.Rag.ReqGenerator do
+defmodule SkepticBot.Rag.ReplicateGenerator do
   @moduledoc """
   Handles generation of responses using Replicate's language models.
   """
@@ -9,7 +9,7 @@ defmodule SkepticBot.Rag.ReqGenerator do
   require Logger
 
   @behaviour Generator
-  @behaviour SkepticBot.ReplicateClient
+  @behaviour ReplicateClient
 
   @model "meta/meta-llama-3-8b-instruct"
 
