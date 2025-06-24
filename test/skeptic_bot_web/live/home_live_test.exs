@@ -4,7 +4,6 @@ defmodule SkepticBotWeb.HomeLiveTest do
   import Mox
   import Phoenix.LiveViewTest
   import SkepticBot.PodcastsFixtures
-  import SkepticBot.ScrapingFixtures
 
   alias SkepticBot.Rag
 
