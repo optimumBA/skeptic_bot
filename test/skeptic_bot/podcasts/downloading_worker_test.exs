@@ -18,7 +18,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
   describe "process_with_flame/3" do
     test "enqueues a transcribing job if successful" do
       expect(MockDownloader, :download, fn _url, _video_path ->
-        {:ok, "https://open.spotify.com/london.mp3"}
+        {:ok,
+         "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3.mp4"}
       end)
 
       expect(MockTranscoder, :transcode_video, fn _video_path, _audio_path ->
@@ -26,7 +27,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
       end)
 
       expect(MockStorageProvider, :upload_file, fn _audio_path ->
-        {:ok, "song.mp3"}
+        {:ok, "https://skeptic-bot-dev.fly.storage.tigris.dev/song.mp3"}
       end)
 
       assert :ok =
@@ -38,7 +39,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
       assert_enqueued(
         worker: TranscribingWorker,
         args: %{
-          "audio_url" => "song.mp3",
+          "audio_url" => "https://skeptic-bot-dev.fly.storage.tigris.dev/song.mp3",
           "id" => @id
         }
       )
@@ -60,7 +61,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
 
     test "does not enqueue a transcribing job if trancoding process is unsuccessful" do
       expect(MockDownloader, :download, fn _url, _video_path ->
-        {:ok, "https://open.spotify.com/london.mp3"}
+        {:ok,
+         "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3.mp4"}
       end)
 
       expect(MockTranscoder, :transcode_video, fn _video_path, _audio_path ->
@@ -78,7 +80,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
 
     test "does not enqueue a transcribing job if uploading process is unsuccessful" do
       expect(MockDownloader, :download, fn _url, _video_path ->
-        {:ok, "https://open.spotify.com/london.mp3"}
+        {:ok,
+         "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3.mp4"}
       end)
 
       expect(MockTranscoder, :transcode_video, fn _video_path, _audio_path ->
