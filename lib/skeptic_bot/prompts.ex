@@ -45,10 +45,10 @@ defmodule SkepticBot.Prompts do
 
   @spec get_episode_details([episode()]) :: [episode_details()]
   def get_episode_details(podcast_episodes) do
-    Enum.reduce(podcast_episodes, [], fn podcast_episode, question_episodes ->
+    Enum.reduce(podcast_episodes, [], fn podcast_episode, episode_details ->
       [
         %{episode_id: podcast_episode.id, timestamp: podcast_episode.timestamp}
-        | question_episodes
+        | episode_details
       ]
     end)
   end
