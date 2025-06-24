@@ -4,10 +4,10 @@ defmodule SkepticBot.Repo.Migrations.AddQuestionsTable do
   def change do
     create table(:user_questions, primary_key: false) do
       add :id, :binary_id, primary_key: true
-      add :description, :text
-      add :embedding, :vector, null: true, size: 1024
+      add :description, :text, null: false
+      add :embedding, :vector, null: false, size: 1024
       add :episodes, :map
-      add :query, :string
+      add :query, :string, null: false
 
       timestamps(type: :utc_datetime)
     end
