@@ -9,8 +9,6 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   require Logger
 
-  @type socket :: Phoenix.LiveView.Socket.t()
-
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
@@ -151,8 +149,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
     {:noreply, assign(socket, :loading, value)}
   end
 
-  @spec assign_form(socket()) :: socket()
-  def assign_form(%{assigns: %{question: question}} = socket) do
+  defp assign_form(%{assigns: %{question: question}} = socket) do
     assign(socket, :form, to_form(Prompts.change_prompt_question(question), as: "prompt"))
   end
 end
