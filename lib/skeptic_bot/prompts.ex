@@ -40,7 +40,7 @@ defmodule SkepticBot.Prompts do
 
   @spec change_prompt_question(question(), attrs()) :: Ecto.Changeset.t()
   def change_prompt_question(%UserQuestion{} = question, attrs \\ %{}) do
-    UserQuestion.question_changeset(question, attrs)
+    UserQuestion.query_changeset(question, attrs)
   end
 
   @spec get_episode_details([episode()]) :: [episode_details()]

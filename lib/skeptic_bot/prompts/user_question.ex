@@ -34,8 +34,8 @@ defmodule SkepticBot.Prompts.UserQuestion do
     |> cast_embed(:episodes)
   end
 
-  @spec question_changeset(t(), attrs()) :: Ecto.Changeset.t()
-  def question_changeset(question, attrs) do
+  @spec query_changeset(t(), attrs()) :: Ecto.Changeset.t()
+  def query_changeset(question, attrs) do
     question
     |> cast(attrs, [:query])
     |> validate_required([:query])

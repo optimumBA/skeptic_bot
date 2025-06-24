@@ -125,7 +125,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       end)
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        {:error, "failed to generate embeddings for the question"}
+        {:ok, [0]}
       end)
 
       view
