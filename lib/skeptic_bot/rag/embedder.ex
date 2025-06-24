@@ -4,7 +4,7 @@ defmodule SkepticBot.Rag.Embedder do
   alias SkepticBot.Rag.ReplicateEmbedder
 
   @type embedding :: [float()]
-  @type reason :: any()
+  @type reason :: String.t()
   @type text :: String.t()
 
   @callback generate([text()]) :: {:ok, [embedding()]} | {:error, reason()}
