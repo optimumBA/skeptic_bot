@@ -45,6 +45,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
       )
     end
 
+    @tag :capture_log
     test "does not enqueue a transcribing job if download process is unsuccessful" do
       expect(MockDownloader, :download, fn _url, _video_path ->
         {:error, "HTTP error: status 500"}
@@ -59,6 +60,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
       refute_enqueued(worker: TranscribingWorker)
     end
 
+    @tag :capture_log
     test "does not enqueue a transcribing job if trancoding process is unsuccessful" do
       expect(MockDownloader, :download, fn _url, _video_path ->
         {:ok,
@@ -78,6 +80,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
       refute_enqueued(worker: TranscribingWorker)
     end
 
+    @tag :capture_log
     test "does not enqueue a transcribing job if uploading process is unsuccessful" do
       expect(MockDownloader, :download, fn _url, _video_path ->
         {:ok,

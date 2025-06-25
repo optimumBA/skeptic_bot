@@ -23,6 +23,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
   describe "generate_embeddings/1" do
     setup [:create_episode]
 
+    @tag :capture_log
     test "returns an error when an episode does not exist" do
       assert {:error, "Episode not found"} =
                perform_job(EmbeddingsGeneratingWorker, %{
@@ -58,6 +59,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
       assert updated_episode.embedding
     end
 
+    @tag :capture_log
     test "returns an error when embedding generation fails", %{
       episode: episode
     } do
