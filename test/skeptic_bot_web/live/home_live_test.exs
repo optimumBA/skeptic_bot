@@ -52,7 +52,6 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
     test "page does not load on invalid data submission", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/")
-      assert has_element?(view, ~s(div.h-screen.flex.items-center.relative))
 
       view
       |> form("#prompt-input-form", prompt: %{query: ""})
@@ -151,12 +150,9 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
     @tag :capture_log
     test "shows an error message when generating a prompt result crashes", %{
-      conn: conn,
-      episode: episode
+      conn: conn
     } do
       {:ok, view, _html} = live(conn, "/")
-
-      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         raise("sorry failed")

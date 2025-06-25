@@ -8,7 +8,6 @@ defmodule SkepticBot.Prompts do
   alias SkepticBot.Repo
 
   @type attrs :: map()
-  @type embedding :: [float()]
   @type episode :: Episode.t()
   @type episode_details :: map()
   @type id :: Ecto.UUID.t()
