@@ -21,7 +21,7 @@ defmodule SkepticBot.PromptFixtures do
   @spec question_fixture(map()) :: question()
   def question_fixture(attrs \\ %{}) do
     episode_details =
-      2
+      5
       |> create_multiple_episodes()
       |> Prompts.get_episode_details()
 
