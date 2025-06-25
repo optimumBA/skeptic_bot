@@ -61,6 +61,13 @@ defmodule SkepticBotWeb.HomeLiveTest do
       refute has_element?(view, ~s(div.animate-pulse))
     end
 
+    test "sending a message to the liveview changes its loading state", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/")
+      refute has_element?(view, ~s(div.animate-pulse))
+      send(view.pid, {:loading_state, true})
+      assert has_element?(view, ~s(div.animate-pulse))
+    end
+
     test "redirects to the question when episodes are found", %{
       conn: conn,
       embedding: embedding,
