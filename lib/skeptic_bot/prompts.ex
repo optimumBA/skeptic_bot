@@ -20,13 +20,10 @@ defmodule SkepticBot.Prompts do
 
   @spec get_question_episodes([prompts_episode()]) :: [episode()]
   def get_question_episodes(question_episodes) do
-    Enum.reduce(question_episodes, [], fn episode, podcast_episodes ->
-      episode =
-        Episode
-        |> Repo.get!(episode.episode_id)
-        |> Map.put(:timestamp, episode.timestamp)
-
-      [episode | podcast_episodes]
+    Enum.map(question_episodes, fn episode ->
+      Episode
+      |> Repo.get!(episode.episode_id)
+      |> Map.put(:timestamp, episode.timestamp)
     end)
   end
 
@@ -45,11 +42,8 @@ defmodule SkepticBot.Prompts do
 
   @spec get_episode_details([episode()]) :: [episode_details()]
   def get_episode_details(podcast_episodes) do
-    Enum.reduce(podcast_episodes, [], fn podcast_episode, episode_details ->
-      [
-        %{episode_id: podcast_episode.id, timestamp: podcast_episode.timestamp}
-        | episode_details
-      ]
+    Enum.map(podcast_episodes, fn podcast_episode ->
+      %{episode_id: podcast_episode.id, timestamp: podcast_episode.timestamp}
     end)
   end
 end
