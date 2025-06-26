@@ -18,6 +18,7 @@ defmodule SkepticBotWeb.HomeLive.Components do
         <div class="flex justify-between mt-8 items-center rounded-xl hover:cursor-pointer form-input-shadow border bg-[#FFFFFF] py-2 gap-2">
           <div class="w-2/3 grow pl-4">
             <.input
+              class="montserrat-alternates-medium placeholder:text-sm w-full border-none bg-[#FFFFFF] outline-none rounded-lg py-[3px] px-[11px] remove-outline placeholder:text-[#4D4D4D] sm:text-lg sm:leading-6"
               placeholder="Ask anything"
               field={@form[:query]}
               autocomplete="off"
