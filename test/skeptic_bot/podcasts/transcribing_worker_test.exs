@@ -48,6 +48,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
       )
     end
 
+    @tag :capture_log
     test "returns an error tuple if transcription process fails", %{
       episode: episode
     } do

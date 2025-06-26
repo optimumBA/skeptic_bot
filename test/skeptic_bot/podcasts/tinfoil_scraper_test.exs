@@ -129,7 +129,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       )
     end
 
-    test "downloads the episode if it finds it in the returned body", %{body: body} do
+    test "enqueues the episode if it finds it in the returned body", %{body: body} do
       expect(MockHttpClient, :make_request, fn _url ->
         {:ok,
          %Req.Response{
@@ -148,7 +148,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       )
     end
 
-    test "does not insert a downloading job if the HTTP request is unsuccessful" do
+    test "does not enqueue a downloading job if the HTTP request is unsuccessful" do
       expect(MockHttpClient, :make_request, fn _url ->
         {:error, "Could not make request"}
       end)
