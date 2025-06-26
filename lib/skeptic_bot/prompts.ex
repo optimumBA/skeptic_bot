@@ -3,11 +3,15 @@ defmodule SkepticBot.Prompts do
   The Prompts context.
   """
 
+  import Ecto.Query
+  import Pgvector.Ecto.Query, only: [l2_distance: 2]
+
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Repo
 
   @type attrs :: map()
+  @type embedding :: [float()]
   @type episode :: Episode.t()
   @type episode_details :: map()
   @type id :: Ecto.UUID.t()
@@ -24,6 +28,20 @@ defmodule SkepticBot.Prompts do
       |> Repo.get!(episode.episode_id)
       |> Map.put(:timestamp, episode.timestamp)
     end)
+  end
+
+  @spec get_other_podcast_episodes(embedding()) :: [episode()]
+  def get_other_podcast_episodes(embedding) do
+    Episode
+    |> select([e], %{
+      episode_length: e.episode_length,
+      title: e.title,
+      external_id: e.external_id,
+      thumbnail: e.thumbnail
+    })
+    |> order_by([e], desc: l2_distance(e.embedding, ^embedding))
+    |> limit(3)
+    |> Repo.all()
   end
 
   @spec create_question(attrs()) ::
