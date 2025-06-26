@@ -19,7 +19,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
     %{chunks: chunks, episode: episode}
   end
 
-  describe "transcribe_episode/2" do
+  describe "perform/1" do
     setup [:create_chunks]
 
     test "enqueues a transcribing job if successful", %{
@@ -49,7 +49,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
     end
 
     @tag :capture_log
-    test "returns an error tuple if transcription process fails", %{
+    test "returns an error tuple if transcribing process fails", %{
       episode: episode
     } do
       expect(MockTranscriber, :transcribe, fn _audio_url ->

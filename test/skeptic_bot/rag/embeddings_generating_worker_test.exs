@@ -20,8 +20,25 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
     %{embedding: embedding, episode: episode}
   end
 
-  describe "generate_embeddings/1" do
+  describe "perform/1" do
     setup [:create_episode]
+
+    test "generates an embedding for an episode", %{embedding: embedding, episode: episode} do
+      refute episode.embedding
+
+      expect(MockEmbedder, :generate, 2, fn _text ->
+        {:ok, [embedding]}
+      end)
+
+      assert :ok =
+               perform_job(EmbeddingsGeneratingWorker, %{
+                 "id" => episode.id
+               })
+
+      updated_episode = Podcasts.get_episode(episode.id)
+
+      assert updated_episode.embedding
+    end
 
     @tag :capture_log
     test "returns an error when an episode does not exist" do
@@ -40,23 +57,6 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
         end)
 
       assert log =~ "Failed to generate embeddings for episode"
-    end
-
-    test "generates an embedding for an episode", %{embedding: embedding, episode: episode} do
-      refute episode.embedding
-
-      expect(MockEmbedder, :generate, 2, fn _text ->
-        {:ok, [embedding]}
-      end)
-
-      assert :ok =
-               perform_job(EmbeddingsGeneratingWorker, %{
-                 "id" => episode.id
-               })
-
-      updated_episode = Podcasts.get_episode(episode.id)
-
-      assert updated_episode.embedding
     end
 
     @tag :capture_log
