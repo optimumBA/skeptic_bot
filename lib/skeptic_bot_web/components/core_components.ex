@@ -380,7 +380,7 @@ defmodule SkepticBotWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "montserrat-alternates-medium placeholder:text-sm caret-[#0079FF] mono-400 w-full border-none bg-[#FFFFFF] outline-none rounded-lg py-[7px] px-[11px] remove-outline",
+          "montserrat-alternates-medium placeholder:text-sm w-full border-none bg-[#FFFFFF] outline-none rounded-lg py-[3px] px-[11px] remove-outline",
           "placeholder:text-[#4D4D4D]  sm:text-lg sm:leading-6",
           @errors != [] && "border-rose-400 focus:border-rose-400 focus:ring-rose-400/10"
         ]}
