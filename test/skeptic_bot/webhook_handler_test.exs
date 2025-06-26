@@ -77,7 +77,7 @@ defmodule SkepticBot.WebhookHandlerTest do
       assert_receive {:prediction_failed, "canceled-id", "Prediction was canceled"}
     end
 
-    test "logs an error message if the payload does not have a prediction_id" do
+    test "logs a warning message if the payload does not have a prediction_id" do
       log =
         capture_log([level: :warning], fn ->
           WebhookHandler.handle_webhook(%{"status" => "completed", "output" => "good output"})
@@ -86,7 +86,7 @@ defmodule SkepticBot.WebhookHandlerTest do
       assert log =~ "Received webhook without prediction ID"
     end
 
-    test "logs an error message if the payload has an unknown status" do
+    test "logs a warning message if the payload has an unknown status" do
       log =
         capture_log([level: :warning], fn ->
           WebhookHandler.handle_webhook(%{
