@@ -15,7 +15,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
   setup :set_mox_from_context
   setup :verify_on_exit!
 
-  describe "process_with_flame/3" do
+  describe "perform/1" do
     test "enqueues a transcribing job if successful" do
       expect(MockDownloader, :download, fn _url, _video_path ->
         {:ok,
