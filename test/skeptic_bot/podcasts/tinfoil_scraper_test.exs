@@ -109,6 +109,25 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
   describe "scrape_episode/2" do
     setup [:create_body]
 
+    test "enqueues the episode if it finds it in the returned body", %{body: body} do
+      expect(MockHttpClient, :make_request, fn _url ->
+        {:ok,
+         %Req.Response{
+           status: 200,
+           body: body
+         }}
+      end)
+
+      TinfoilScraper.scrape_episode(@external_id)
+
+      assert Podcasts.episode_exists?(@external_id)
+
+      assert_enqueued(
+        worker: DownloadingWorker,
+        args: %{external_id: @external_id}
+      )
+    end
+
     test "returns an episode_not_found error if there are no episodes in the return data" do
       expect(MockHttpClient, :make_request, fn _url ->
         {:ok,
@@ -124,25 +143,6 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
                TinfoilScraper.scrape_episode(@external_id)
 
       refute_enqueued(
-        worker: DownloadingWorker,
-        args: %{external_id: @external_id}
-      )
-    end
-
-    test "enqueues the episode if it finds it in the returned body", %{body: body} do
-      expect(MockHttpClient, :make_request, fn _url ->
-        {:ok,
-         %Req.Response{
-           status: 200,
-           body: body
-         }}
-      end)
-
-      TinfoilScraper.scrape_episode(@external_id)
-
-      assert Podcasts.episode_exists?(@external_id)
-
-      assert_enqueued(
         worker: DownloadingWorker,
         args: %{external_id: @external_id}
       )
