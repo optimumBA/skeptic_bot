@@ -11,8 +11,10 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.DownloadingRunner
+  alias SkepticBot.Podcasts.Downloader
+  alias SkepticBot.Podcasts.Transcoder
   alias SkepticBot.Podcasts.TranscribingWorker
-  alias SkepticBot.Storage.Tigris
+  alias SkepticBot.Storage.StorageProvider
 
   require Logger
 
@@ -66,66 +68,21 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     |> Path.dirname()
     |> File.mkdir_p!()
 
-    download_result = download_video_file(url, video_path)
-
     result =
-      case download_result do
-        {:ok, _audio_path} -> process_video(video_path, audio_path)
-        {:error, _reason} = error -> error
+      with {:ok, _video_path} <- Downloader.download(url, video_path),
+           :ok <- Transcoder.transcode_video(video_path, audio_path),
+           {:ok, url} <- StorageProvider.upload_file(audio_path) do
+        {:ok, url}
+      else
+        {:error, reason} ->
+          Logger.error("download_transcode_and_upload/3 failed with reason : #{reason}")
+          {:error, reason}
       end
 
     File.rm(video_path)
     File.rm(audio_path)
 
     result
-  end
-
-  defp download_video_file(url, path) do
-    case Req.get(
-           url,
-           raw: true,
-           receive_timeout: 600_000,
-           connect_options: [timeout: 60_000],
-           retry: :transient,
-           max_retries: 3,
-           into: File.stream!(path, [:write, :binary, :delayed_write])
-         ) do
-      {:ok, %{status: status}} when status in 200..299 ->
-        {:ok, path}
-
-      {:ok, %{status: status}} ->
-        {:error, "HTTP error: status #{status}"}
-
-      error ->
-        {:error, "Request error: #{inspect(error)}"}
-    end
-  rescue
-    e -> {:error, "Download error: #{Exception.message(e)}"}
-  end
-
-  defp process_video(video_path, audio_path) do
-    case System.cmd(
-           "ffmpeg",
-           [
-             "-hide_banner",
-             "-i",
-             video_path,
-             "-b:a",
-             "192K",
-             "-vn",
-             audio_path
-           ],
-           env: [],
-           stderr_to_stdout: true
-         ) do
-      {_result, 0} ->
-        Tigris.upload_file(audio_path)
-
-      {_result, exit_code} ->
-        {:error, "Transcoding failed with exit code: #{exit_code}"}
-    end
-  rescue
-    e -> {:error, "Processing error: #{Exception.message(e)}"}
   end
 
   @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}

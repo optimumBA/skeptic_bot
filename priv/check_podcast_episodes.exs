@@ -5,7 +5,7 @@ defmodule SkepticBot.CheckPodcastEpisodes do
 
   alias SkepticBot.Repo
   alias SkepticBot.Podcasts.Episode
-  alias SkepticBot.Storage.Tigris
+  alias SkepticBot.Storage.TigrisStorageProvider
 
   def run do
     episodes = get_all_episodes()
@@ -89,7 +89,7 @@ defmodule SkepticBot.CheckPodcastEpisodes do
     # We need to check if the file exists in Tigris
     # This is a simplified approach since Tigris doesn't provide a direct way to check
     # if a file exists. We attempt to make a HEAD request to the file.
-    req = Tigris.new()
+    req = TigrisStorageProvider.new()
 
     case Req.head(req, url: file_name) do
       {:ok, %{status: status}} when status in 200..299 -> true

@@ -10,9 +10,9 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.Podcasts
+  alias SkepticBot.Podcasts.Transcriber
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
-  alias SkepticBot.Storage.Tigris
-  alias SkepticBot.Transcription
+  alias SkepticBot.Storage.StorageProvider
 
   require Logger
 
@@ -27,7 +27,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
       :ok ->
         file_name = Path.basename(audio_url)
 
-        case Tigris.delete_file(file_name) do
+        case StorageProvider.delete_file(file_name) do
           :ok ->
             :ok
 
@@ -46,7 +46,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
 
   @spec transcribe_episode(id(), audio_url()) :: :ok | {:error, any()}
   defp transcribe_episode(id, audio_url) do
-    case Transcription.transcribe(audio_url) do
+    case Transcriber.transcribe(audio_url) do
       {:ok, chunks} when is_list(chunks) ->
         chunks
         |> Stream.reject(fn %{"timestamp" => [start, _end]} -> is_nil(start) end)

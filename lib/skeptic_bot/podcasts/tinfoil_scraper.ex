@@ -3,6 +3,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
+  alias SkepticBot.Podcasts.HttpClient
 
   @type episode_id :: String.t()
   @type start :: integer()
@@ -18,7 +19,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   def scrape(start) do
     url = String.replace(@url, "<start>", Integer.to_string(start))
 
-    case Req.get(url) do
+    case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
         Enum.each(body["data"], fn episode ->
           maybe_download_episode(episode)
@@ -39,7 +40,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   def scrape_episode(uuid, start \\ 0) do
     url = String.replace(@url, "<start>", Integer.to_string(start))
 
-    case Req.get(url) do
+    case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: %{"data" => []}}} ->
         {:error, :episode_not_found}
 

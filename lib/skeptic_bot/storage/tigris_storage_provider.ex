@@ -1,8 +1,12 @@
-defmodule SkepticBot.Storage.Tigris do
+defmodule SkepticBot.Storage.TigrisStorageProvider do
   @moduledoc """
   Module for handling file uploads to Tigris Storage using S3-compatible API.
   """
+  alias SkepticBot.Storage.StorageProvider
+
   require Logger
+
+  @behaviour StorageProvider
 
   @type reason :: String.t()
 
@@ -29,7 +33,7 @@ defmodule SkepticBot.Storage.Tigris do
   @doc """
   Uploads a file to Tigris Storage and returns the public URL.
   """
-  @spec upload_file(String.t(), String.t()) :: {:ok, String.t()} | {:error, reason()}
+  @impl StorageProvider
   def upload_file(file_path, content_type \\ "audio/mpeg") do
     {:ok, file_binary} = File.read(file_path)
     file_name = Path.basename(file_path)
@@ -69,7 +73,7 @@ defmodule SkepticBot.Storage.Tigris do
   @doc """
   Deletes a file from Tigris Storage.
   """
-  @spec delete_file(String.t()) :: :ok | {:error, reason()}
+  @impl StorageProvider
   def delete_file(file_name) do
     response =
       Req.delete!(
