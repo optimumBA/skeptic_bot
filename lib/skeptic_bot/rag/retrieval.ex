@@ -24,20 +24,18 @@ defmodule SkepticBot.Rag.Retrieval do
     )
     |> Repo.all()
     |> Enum.map(fn %Podcasts.Episode{} = episode ->
-      most_relevant_transcription =
-        from(et in Podcasts.EpisodeTranscription,
-          where: et.podcast_episode_id == ^episode.id,
-          order_by: [asc: l2_distance(et.embedding, ^embedding)],
-          limit: 1
-        )
+      most_relevant_episode_transcription =
+        Podcasts.EpisodeTranscription
+        |> where([et], et.podcast_episode_id == ^episode.id)
+        |> order_by([et], asc: l2_distance(et.embedding, ^embedding))
+        |> limit(1)
         |> Repo.one()
-        |> Map.get(:transcription)
 
       transcriptions_before =
         from(et in Podcasts.EpisodeTranscription,
           select: %{transcription: et.transcription},
           where: et.podcast_episode_id == ^episode.id,
-          where: et.timestamp < ^most_relevant_transcription.timestamp,
+          where: et.timestamp < ^most_relevant_episode_transcription.timestamp,
           order_by: [desc: et.timestamp],
           limit: @num_transcriptions_surrounding_the_target / 2
         )
@@ -49,7 +47,7 @@ defmodule SkepticBot.Rag.Retrieval do
         from(et in Podcasts.EpisodeTranscription,
           select: %{transcription: et.transcription},
           where: et.podcast_episode_id == ^episode.id,
-          where: et.timestamp > ^most_relevant_transcription.timestamp,
+          where: et.timestamp > ^most_relevant_episode_transcription.timestamp,
           order_by: [asc: et.timestamp],
           limit: @num_transcriptions_surrounding_the_target / 2
         )
@@ -57,9 +55,11 @@ defmodule SkepticBot.Rag.Retrieval do
         |> Enum.map_join("\n", & &1.transcription)
 
       transcription =
-        "#{transcriptions_before}\n#{most_relevant_transcription}\n#{transcriptions_after}"
+        "#{transcriptions_before}\n#{most_relevant_episode_transcription.transcription}\n#{transcriptions_after}"
 
-      Map.put(episode, :transcription, transcription)
+      episode
+      |> Map.put(:timestamp, most_relevant_episode_transcription.timestamp)
+      |> Map.put(:transcription, transcription)
     end)
   end
 end
