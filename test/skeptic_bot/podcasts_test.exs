@@ -51,7 +51,7 @@ defmodule SkepticBot.PodcastsTest do
     end
 
     test "returns nil for non-existent id" do
-      assert Podcasts.get_episode("14444444-edaa-444a-a333-7a77758ad305") == nil
+      refute Podcasts.get_episode("14444444-edaa-444a-a333-7a77758ad305")
     end
   end
 
@@ -62,7 +62,7 @@ defmodule SkepticBot.PodcastsTest do
     end
 
     test "returns nil for non-existent external_id" do
-      assert Podcasts.get_episode_by_external_id("14444444-edaa-444a-a333-7a77758ad305") == nil
+      refute Podcasts.get_episode_by_external_id("14444444-edaa-444a-a333-7a77758ad305")
     end
   end
 
@@ -70,11 +70,11 @@ defmodule SkepticBot.PodcastsTest do
     setup [:create_episode]
 
     test "returns true for existing episode", %{episode: episode} do
-      assert Podcasts.episode_exists?(episode.external_id) == true
+      assert Podcasts.episode_exists?(episode.external_id)
     end
 
     test "returns false for non-existent episode" do
-      assert Podcasts.episode_exists?("14444444-edaa-444a-a333-7a77758ad305") == false
+      refute Podcasts.episode_exists?("14444444-edaa-444a-a333-7a77758ad305")
     end
   end
 
