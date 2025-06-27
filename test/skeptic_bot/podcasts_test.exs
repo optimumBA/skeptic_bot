@@ -221,7 +221,10 @@ defmodule SkepticBot.PodcastsTest do
       processed_chunks = Process.get(:processed_chunks)
 
       assert length(processed_chunks) == 3
-      assert length(hd(processed_chunks)) == 1
+      [chunk_1, chunk_2, chunk_3] = processed_chunks
+      assert length(chunk_1) == 1
+      assert length(chunk_2) == 2
+      assert length(chunk_3) == 2
     end
   end
 end
