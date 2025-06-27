@@ -9,7 +9,6 @@ defmodule SkepticBot.PodcastsFixtures do
   alias SkepticBot.Podcasts.EpisodeTranscription
 
   @type embedding :: [float()]
-  @type response :: String.t()
 
   @doc """
   create an embedding.
@@ -29,32 +28,13 @@ defmodule SkepticBot.PodcastsFixtures do
       |> Enum.into(%{
         description: "Sample description",
         episode_length: :rand.uniform(3000),
-        external_id: generate_id(),
+        external_id: Ecto.UUID.generate(),
         thumbnail: "cover1.svg",
         title: "Test Episode"
       })
       |> Podcasts.create_episode()
 
     episode
-  end
-
-  defp generate_id do
-    12
-    |> :crypto.strong_rand_bytes()
-    |> Base.encode64()
-  end
-
-  @doc """
-  create a response.
-  """
-  @spec response_fixture :: response()
-  def response_fixture do
-    random_string =
-      12
-      |> :crypto.strong_rand_bytes()
-      |> Base.encode64()
-
-    "A random response with #{random_string}"
   end
 
   @doc """

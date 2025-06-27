@@ -26,8 +26,7 @@ defmodule SkepticBot.PodcastsTest do
 
   defp create_episode(_attrs) do
     episode = episode_fixture()
-    transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-    %{episode: episode, transcription: transcription}
+    %{episode: episode}
   end
 
   describe "create_episode/1" do
@@ -51,7 +50,7 @@ defmodule SkepticBot.PodcastsTest do
     end
 
     test "returns nil for non-existent id" do
-      assert Podcasts.get_episode("14444444-edaa-444a-a333-7a77758ad305") == nil
+      refute Podcasts.get_episode("14444444-edaa-444a-a333-7a77758ad305")
     end
   end
 
@@ -62,7 +61,7 @@ defmodule SkepticBot.PodcastsTest do
     end
 
     test "returns nil for non-existent external_id" do
-      assert Podcasts.get_episode_by_external_id("14444444-edaa-444a-a333-7a77758ad305") == nil
+      refute Podcasts.get_episode_by_external_id("14444444-edaa-444a-a333-7a77758ad305")
     end
   end
 
@@ -70,11 +69,11 @@ defmodule SkepticBot.PodcastsTest do
     setup [:create_episode]
 
     test "returns true for existing episode", %{episode: episode} do
-      assert Podcasts.episode_exists?(episode.external_id) == true
+      assert Podcasts.episode_exists?(episode.external_id)
     end
 
     test "returns false for non-existent episode" do
-      assert Podcasts.episode_exists?("14444444-edaa-444a-a333-7a77758ad305") == false
+      refute Podcasts.episode_exists?("14444444-edaa-444a-a333-7a77758ad305")
     end
   end
 
@@ -117,6 +116,11 @@ defmodule SkepticBot.PodcastsTest do
 
   describe "update_episode_transcription/2" do
     setup [:create_episode]
+
+    setup %{episode: episode} do
+      transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+      %{transcription: transcription}
+    end
 
     test "with valid data updates the transcription", %{
       transcription: transcription
@@ -162,7 +166,7 @@ defmodule SkepticBot.PodcastsTest do
       end)
 
       assert {:ok, result} = Podcasts.get_episode_transcriptions(episode.id)
-      assert result == "First part\nSecond part\nSample episode transcription"
+      assert result == "First part\nSecond part"
     end
   end
 
@@ -217,7 +221,10 @@ defmodule SkepticBot.PodcastsTest do
       processed_chunks = Process.get(:processed_chunks)
 
       assert length(processed_chunks) == 3
-      assert length(hd(processed_chunks)) == 2
+      [chunk_1, chunk_2, chunk_3] = processed_chunks
+      assert length(chunk_1) == 1
+      assert length(chunk_2) == 2
+      assert length(chunk_3) == 2
     end
   end
 end

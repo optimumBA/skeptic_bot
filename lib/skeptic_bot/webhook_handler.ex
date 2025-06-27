@@ -52,8 +52,8 @@ defmodule SkepticBot.WebhookHandler do
   defp handle_prediction_result(%{"status" => "succeeded", "output" => output}, prediction_id) do
     case Registry.lookup(@registry_name, prediction_id) do
       [{pid, _ref}] ->
-        send(pid, {:prediction_completed, prediction_id, output})
         unregister_prediction(prediction_id)
+        send(pid, {:prediction_completed, prediction_id, output})
 
       [] ->
         Logger.warning("No process waiting for prediction #{prediction_id}")
