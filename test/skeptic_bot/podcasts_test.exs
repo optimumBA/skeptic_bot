@@ -26,8 +26,7 @@ defmodule SkepticBot.PodcastsTest do
 
   defp create_episode(_attrs) do
     episode = episode_fixture()
-    transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-    %{episode: episode, transcription: transcription}
+    %{episode: episode}
   end
 
   describe "create_episode/1" do
@@ -118,6 +117,11 @@ defmodule SkepticBot.PodcastsTest do
   describe "update_episode_transcription/2" do
     setup [:create_episode]
 
+    setup %{episode: episode} do
+      transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+      %{transcription: transcription}
+    end
+
     test "with valid data updates the transcription", %{
       transcription: transcription
     } do
@@ -162,7 +166,7 @@ defmodule SkepticBot.PodcastsTest do
       end)
 
       assert {:ok, result} = Podcasts.get_episode_transcriptions(episode.id)
-      assert result == "First part\nSecond part\nSample episode transcription"
+      assert result == "First part\nSecond part"
     end
   end
 
@@ -217,7 +221,7 @@ defmodule SkepticBot.PodcastsTest do
       processed_chunks = Process.get(:processed_chunks)
 
       assert length(processed_chunks) == 3
-      assert length(hd(processed_chunks)) == 2
+      assert length(hd(processed_chunks)) == 1
     end
   end
 end

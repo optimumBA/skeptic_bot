@@ -10,7 +10,7 @@ defmodule SkepticBot.RagTest do
 
   defp create_episodes(_attrs) do
     embedding = embedding_fixture()
-    episode = episode_fixture()
+    episode = episode_fixture(embedding: embedding)
     response = "Just a simple response from a large language model"
     _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
     %{embedding: embedding, episode: episode, response: response}
@@ -36,8 +36,7 @@ defmodule SkepticBot.RagTest do
 
       assert description == response
 
-      assert Enum.any?(context, fn context_episode -> context_episode.id == episode.id end) ==
-               true
+      assert Enum.any?(context, fn context_episode -> context_episode.id == episode.id end)
     end
 
     test "returns an error tuple if generation process was unsuccessful" do
