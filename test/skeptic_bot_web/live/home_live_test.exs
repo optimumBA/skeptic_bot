@@ -34,30 +34,22 @@ defmodule SkepticBotWeb.HomeLiveTest do
       assert has_element?(view, ~s(input[placeholder*="Ask anything"]))
     end
 
-    test "shows errors if prompt is missing or is not meeting the required length", %{conn: conn} do
+    test "shows errors if the question is missing or is not meeting the required length", %{
+      conn: conn
+    } do
       {:ok, view, _html} = live(conn, "/")
 
       assert view
-             |> form("#prompt-input-form", prompt: %{query: ""})
+             |> form("#question-input-form", user_question: %{query: ""})
              |> render_change() =~ "can&#39;t be blank"
 
       assert view
-             |> form("#prompt-input-form", prompt: %{query: "de"})
+             |> form("#question-input-form", user_question: %{query: "de"})
              |> render_change() =~ "Your prompt must be at least 4 characters in length"
 
       refute view
-             |> form("#prompt-input-form", prompt: %{query: "Who killed Two Pac Shakur"})
+             |> form("#question-input-form", user_question: %{query: "Who killed Two Pac Shakur"})
              |> render_change() =~ "Your prompt must be at least 4 characters in length"
-    end
-
-    test "page does not load on invalid data submission", %{conn: conn} do
-      {:ok, view, _html} = live(conn, "/")
-
-      view
-      |> form("#prompt-input-form", prompt: %{query: ""})
-      |> render_submit()
-
-      refute has_element?(view, ~s(div.animate-pulse))
     end
 
     test "sending a message to the liveview changes its loading state", %{conn: conn} do
@@ -67,7 +59,17 @@ defmodule SkepticBotWeb.HomeLiveTest do
       assert has_element?(view, ~s(div.animate-pulse))
     end
 
-    test "redirects to the question when episodes are found", %{
+    test "page does not load on invalid data submission", %{conn: conn} do
+      {:ok, view, _html} = live(conn, "/")
+
+      view
+      |> form("#question-input-form", user_question: %{query: ""})
+      |> render_submit()
+
+      refute has_element?(view, ~s(div.animate-pulse))
+    end
+
+    test "redirects to the question when episodes are found in the RAG process", %{
       conn: conn,
       embedding: embedding,
       episode: episode,
@@ -86,7 +88,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       end)
 
       view
-      |> form("#prompt-input-form", prompt: %{query: "American Ponzi with Lee Camp"})
+      |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
       |> render_submit()
 
       {path, _flash} = assert_redirect(view)
@@ -106,7 +108,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       end)
 
       view
-      |> form("#prompt-input-form", prompt: %{query: "American Ponzi with Lee Camp"})
+      |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
       |> render_submit()
 
       assert render(view) =~
@@ -137,7 +139,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       end)
 
       view
-      |> form("#prompt-input-form", prompt: %{query: "American Ponzi with Lee Camp"})
+      |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
       |> render_submit()
 
       with_retries(
@@ -149,17 +151,15 @@ defmodule SkepticBotWeb.HomeLiveTest do
     end
 
     @tag :capture_log
-    test "shows an error message when generating a prompt result crashes", %{
-      conn: conn
-    } do
+    test "shows an error message when the RAG process crashes", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        raise("sorry failed")
+        raise("failed to generate embeddings")
       end)
 
       view
-      |> form("#prompt-input-form", prompt: %{query: "American Ponzi with Lee Camp"})
+      |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
       |> render_submit()
 
       assert render(view) =~

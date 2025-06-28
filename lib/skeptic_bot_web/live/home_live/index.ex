@@ -63,24 +63,24 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @impl Phoenix.LiveView
   def handle_event(
         "validate",
-        %{"prompt" => prompt_params},
+        %{"user_question" => question_params},
         %{assigns: %{question: question}} = socket
       ) do
     changeset =
       question
-      |> Prompts.change_prompt_question(prompt_params)
+      |> Prompts.change_prompt_question(question_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :form, to_form(changeset, as: "prompt"))}
+    {:noreply, assign(socket, :form, to_form(changeset))}
   end
 
   def handle_event(
         "save",
-        %{"prompt" => %{"query" => query} = prompt_params},
+        %{"user_question" => %{"query" => query} = question_params},
         %{assigns: %{question: question}} = socket
       ) do
     changeset =
-      Prompts.change_prompt_question(question, prompt_params)
+      Prompts.change_prompt_question(question, question_params)
 
     socket = assign(socket, :query, query)
 
@@ -149,6 +149,6 @@ defmodule SkepticBotWeb.HomeLive.Index do
   end
 
   defp assign_form(%{assigns: %{question: question}} = socket) do
-    assign(socket, :form, to_form(Prompts.change_prompt_question(question), as: "prompt"))
+    assign(socket, :form, to_form(Prompts.change_prompt_question(question)))
   end
 end
