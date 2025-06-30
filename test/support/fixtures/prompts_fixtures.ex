@@ -27,7 +27,7 @@ defmodule SkepticBot.PromptsFixtures do
     question_attrs =
       Enum.into(attrs, %{
         description: "A simple description",
-        embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
+        embedding: embedding_fixture(),
         episodes: episode_details,
         query: "American Ponzi with Lee Camp"
       })

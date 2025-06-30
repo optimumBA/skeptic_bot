@@ -69,7 +69,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       refute has_element?(view, ~s(div.animate-pulse))
     end
 
-    test "redirects to the question when episodes are found in the RAG process", %{
+    test "redirects to the question if episodes are found in the RAG process", %{
       conn: conn,
       embedding: embedding,
       episode: episode,
@@ -95,7 +95,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       assert path =~ ~r|/questions/|
     end
 
-    test "renders an error message when the RAG process fails", %{
+    test "renders an error message if the RAG process fails", %{
       conn: conn
     } do
       {:ok, view, _html} = live(conn, "/")
@@ -113,7 +113,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
     end
 
     @tag :capture_log
-    test "renders an error message when question creation fails", %{
+    test "renders an error message if question creation fails", %{
       conn: conn,
       embedding: embedding,
       episode: episode,
@@ -148,7 +148,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
     end
 
     @tag :capture_log
-    test "shows an error message when the RAG process crashes", %{conn: conn} do
+    test "shows an error message if the RAG process crashes", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
