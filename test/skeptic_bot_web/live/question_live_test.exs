@@ -2,7 +2,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   use SkepticBotWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
-  import SkepticBot.PromptFixtures
+  import SkepticBot.PromptsFixtures
 
   alias SkepticBot.Prompts
   alias SkepticBotWeb.PodcastComponents
@@ -15,7 +15,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   describe "/questions/:id/" do
     setup [:create_question]
 
-    test "displays the question query and episodes' information plus \"Related Podcasts\"", %{
+    test "displays the question query, related episodes and other episodes", %{
       conn: conn,
       question: question
     } do
@@ -25,9 +25,9 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       assert html =~ "Related Podcasts"
       assert html =~ "Other Podcasts"
 
-      related_episodes = Prompts.get_question_episodes(question.episodes)
+      related_episodes = Prompts.get_related_episodes(question.episodes)
       [most_related_episode | _other_related_episodes] = related_episodes
-      other_episodes = Prompts.get_other_podcast_episodes(most_related_episode.embedding)
+      other_episodes = Prompts.get_other_episodes(most_related_episode.embedding)
 
       Enum.each(related_episodes, fn related_episode ->
         assert html =~ PodcastComponents.first_n_words(related_episode.title, 2)

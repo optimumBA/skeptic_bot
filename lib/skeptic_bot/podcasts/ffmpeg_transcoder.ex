@@ -1,5 +1,6 @@
 defmodule SkepticBot.Podcasts.FfmpegTranscoder do
   @moduledoc false
+
   alias SkepticBot.Podcasts.Transcoder
 
   @behaviour Transcoder

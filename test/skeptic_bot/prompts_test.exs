@@ -1,7 +1,7 @@
 defmodule SkepticBot.PromptsTest do
   use SkepticBot.DataCase, async: true
 
-  import SkepticBot.PromptFixtures
+  import SkepticBot.PromptsFixtures
 
   alias SkepticBot.Prompts
 
@@ -25,26 +25,27 @@ defmodule SkepticBot.PromptsTest do
 
   defp create_question(_attrs) do
     question = question_fixture()
-    %{question: question}
+    episodes = create_multiple_episodes(2)
+    %{question: question, episodes: episodes}
   end
 
   describe "get_question/1" do
     setup [:create_question]
 
-    test "returns the episode with the given id", %{question: question} do
+    test "returns the question with the given id", %{question: question} do
       assert Prompts.get_question(question.id) == question
     end
 
-    test "returns nil for non-existent id" do
-      assert Prompts.get_question("14444444-edaa-444a-a333-7a77758ad305") == nil
+    test "returns nil for non-existent question_id" do
+      refute Prompts.get_question("14444444-edaa-444a-a333-7a77758ad305")
     end
   end
 
-  describe "get_question_episodes/1" do
+  describe "get_related_episodes/1" do
     setup [:create_question]
 
     test "returns a list of podcast episodes", %{question: question} do
-      episodes = Prompts.get_question_episodes(question.episodes)
+      episodes = Prompts.get_related_episodes(question.episodes)
       assert Enum.all?(episodes, &is_struct(&1, SkepticBot.Podcasts.Episode))
     end
   end
@@ -62,23 +63,19 @@ defmodule SkepticBot.PromptsTest do
   end
 
   describe "get_episode_details/1" do
-    test "with valid data returns a list of episode timestamps and ids" do
-      episode_details =
-        2
-        |> create_multiple_episodes()
-        |> Prompts.get_episode_details()
+    setup [:create_question]
 
-      Enum.all?(episode_details, fn details ->
-        assert details.timestamp
-        assert details.episode_id
+    test "with valid data returns a list of episode timestamps and ids", %{episodes: episodes} do
+      episode_details = Prompts.get_episode_details(episodes)
+
+      Enum.all?(episode_details, fn detail ->
+        assert detail.timestamp
+        assert detail.episode_id
       end)
     end
 
     test "with invalid data returns an empty list" do
-      episode_details =
-        Prompts.get_episode_details([])
-
-      assert episode_details == []
+      assert Prompts.get_episode_details([]) == []
     end
   end
 end

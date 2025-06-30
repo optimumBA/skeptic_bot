@@ -1,4 +1,4 @@
-defmodule SkepticBot.PromptFixtures do
+defmodule SkepticBot.PromptsFixtures do
   @moduledoc """
   This module defines test helpers for creating
   entities via the `SkepticBot.Prompts` context.
@@ -15,7 +15,7 @@ defmodule SkepticBot.PromptFixtures do
   @type question :: UserQuestion.t()
 
   @doc """
-  create a question.
+  creates a question.
   """
 
   @spec question_fixture(map()) :: question()
@@ -40,7 +40,7 @@ defmodule SkepticBot.PromptFixtures do
   end
 
   @doc """
-  create a description.
+  creates a description.
   """
   @spec description_fixture :: description()
   def description_fixture do

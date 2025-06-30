@@ -135,12 +135,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     question = Prompts.get_question(id)
 
     related_episodes =
-      Prompts.get_question_episodes(question.episodes)
+      Prompts.get_related_episodes(question.episodes)
 
     [most_related_episode | _other_related_episodes] = related_episodes
 
     other_episodes =
-      Prompts.get_other_podcast_episodes(most_related_episode.embedding)
+      Prompts.get_other_episodes(most_related_episode.embedding)
 
     {:noreply,
      socket

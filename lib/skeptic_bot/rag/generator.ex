@@ -3,12 +3,13 @@ defmodule SkepticBot.Rag.Generator do
 
   alias SkepticBot.Rag.ReplicateGenerator
 
+  @type messages :: [LangChain.Message.t()]
   @type reason :: String.t()
   @type response :: String.t()
 
-  @callback predict([LangChain.Message.t()]) :: {:ok, response()} | {:error, reason()}
+  @callback predict(messages()) :: {:ok, response()} | {:error, reason()}
 
-  @spec predict([LangChain.Message.t()]) :: {:ok, response()} | {:error, reason()}
+  @spec predict(messages()) :: {:ok, response()} | {:error, reason()}
   def predict(messages), do: impl().predict(messages)
 
   defp impl, do: Application.get_env(:skeptic_bot, :generator, ReplicateGenerator)
