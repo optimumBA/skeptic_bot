@@ -18,7 +18,7 @@ defmodule SkepticBot.PromptsTest do
   }
   @invalid_question_attrs %{
     description: "A question description",
-    embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
+    embedding: nil,
     episodes: nil,
     query: nil
   }
