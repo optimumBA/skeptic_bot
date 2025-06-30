@@ -19,12 +19,12 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       conn: conn,
       question: question
     } do
-      related_episodes = Prompts.get_related_episodes(question.episodes)
-
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
       assert html =~ question.query
       assert html =~ "Related Podcasts"
+
+      related_episodes = Prompts.get_related_episodes(question.episodes)
 
       Enum.each(related_episodes, fn episode ->
         assert html =~ PodcastComponents.first_n_words(episode.title, 2)
