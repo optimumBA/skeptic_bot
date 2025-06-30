@@ -10,7 +10,6 @@ defmodule SkepticBot.PromptsFixtures do
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
 
-  @type description :: String.t()
   @type episode :: Episode.t()
   @type question :: UserQuestion.t()
 
