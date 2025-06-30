@@ -96,12 +96,9 @@ defmodule SkepticBotWeb.HomeLiveTest do
     end
 
     test "renders an error message when the RAG process fails", %{
-      conn: conn,
-      episode: episode
+      conn: conn
     } do
       {:ok, view, _html} = live(conn, "/")
-
-      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:error, "failed to generate embeddings"}

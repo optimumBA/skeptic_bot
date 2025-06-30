@@ -17,12 +17,12 @@ defmodule SkepticBot.Prompts do
   @spec get_question(id()) :: question() | nil
   def get_question(id), do: Repo.get(UserQuestion, id)
 
-  @spec get_question_episodes([prompts_episode()]) :: [episode()]
-  def get_question_episodes(question_episodes) do
-    Enum.map(question_episodes, fn episode ->
+  @spec get_related_episodes([prompts_episode()]) :: [episode()]
+  def get_related_episodes(question_episodes) do
+    Enum.map(question_episodes, fn question_episode ->
       Episode
-      |> Repo.get!(episode.episode_id)
-      |> Map.put(:timestamp, episode.timestamp)
+      |> Repo.get!(question_episode.episode_id)
+      |> Map.put(:timestamp, question_episode.timestamp)
     end)
   end
 
@@ -34,8 +34,8 @@ defmodule SkepticBot.Prompts do
     |> Repo.insert()
   end
 
-  @spec change_prompt_question(question(), attrs()) :: Ecto.Changeset.t()
-  def change_prompt_question(%UserQuestion{} = question, attrs \\ %{}) do
+  @spec change_question_query(question(), attrs()) :: Ecto.Changeset.t()
+  def change_question_query(%UserQuestion{} = question, attrs \\ %{}) do
     UserQuestion.query_changeset(question, attrs)
   end
 

@@ -68,7 +68,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
       ) do
     changeset =
       question
-      |> Prompts.change_prompt_question(question_params)
+      |> Prompts.change_question_query(question_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :form, to_form(changeset))}
@@ -80,7 +80,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
         %{assigns: %{question: question}} = socket
       ) do
     changeset =
-      Prompts.change_prompt_question(question, question_params)
+      Prompts.change_question_query(question, question_params)
 
     socket = assign(socket, :query, query)
 
@@ -149,6 +149,6 @@ defmodule SkepticBotWeb.HomeLive.Index do
   end
 
   defp assign_form(%{assigns: %{question: question}} = socket) do
-    assign(socket, :form, to_form(Prompts.change_prompt_question(question)))
+    assign(socket, :form, to_form(Prompts.change_question_query(question)))
   end
 end
