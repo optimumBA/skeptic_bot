@@ -27,7 +27,7 @@ defmodule SkepticBot.PromptsFixtures do
 
     question_attrs =
       Enum.into(attrs, %{
-        description: description_fixture(),
+        description: "A simple description",
         embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
         episodes: episode_details,
         query: "American Ponzi with Lee Camp"
@@ -37,19 +37,6 @@ defmodule SkepticBot.PromptsFixtures do
       Prompts.create_question(question_attrs)
 
     question
-  end
-
-  @doc """
-  creates a description.
-  """
-  @spec description_fixture :: description()
-  def description_fixture do
-    random_string =
-      12
-      |> :crypto.strong_rand_bytes()
-      |> Base.encode64()
-
-    "A random description #{random_string}"
   end
 
   @doc """
