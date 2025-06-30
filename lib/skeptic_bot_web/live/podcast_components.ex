@@ -49,7 +49,7 @@ defmodule SkepticBotWeb.PodcastComponents do
   attr :thumbnail, :string, required: true
   attr :video_length, :string, required: true
 
-  @spec other_episode_card(assigns()) :: Phoenix.LiveView.Rendered.t()
+  @spec other_episode_card(assigns()) :: rendered()
   def other_episode_card(assigns) do
     ~H"""
     <a href={"https://vid.samtripoli.com/w/" <> @external_id}>
