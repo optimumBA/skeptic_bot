@@ -55,8 +55,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:question, %UserQuestion{})
      |> assign(:loading, false)
+     |> assign(:question, %UserQuestion{})
      |> assign_form()}
   end
 

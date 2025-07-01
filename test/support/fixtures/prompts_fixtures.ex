@@ -46,9 +46,9 @@ defmodule SkepticBot.PromptsFixtures do
     for episode <- 1..number_of_episodes do
       episode =
         episode_fixture(%{
+          description: "a random description #{episode}",
           thumbnail: "cover#{episode}.svg",
-          title: "episode #{episode} is great",
-          description: "a random description #{episode}"
+          title: "episode #{episode} is great"
         })
 
       Map.put(episode, :timestamp, %{secs: :rand.uniform(3000), months: 0, days: 0})
