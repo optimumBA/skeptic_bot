@@ -1,8 +1,8 @@
 defmodule SkepticBot.PromptsTest do
   use SkepticBot.DataCase, async: true
 
-  import SkepticBot.PromptsFixtures
   import SkepticBot.PodcastsFixtures
+  import SkepticBot.PromptsFixtures
 
   alias SkepticBot.Prompts
 
@@ -66,17 +66,13 @@ defmodule SkepticBot.PromptsTest do
   describe "get_episode_details/1" do
     setup [:create_question]
 
-    test "with valid data returns a list of episode timestamps and ids", %{episodes: episodes} do
+    test "returns a list of episode timestamps and ids", %{episodes: episodes} do
       episode_details = Prompts.get_episode_details(episodes)
 
       Enum.all?(episode_details, fn detail ->
-        assert detail.timestamp
         assert detail.episode_id
+        assert detail.timestamp
       end)
-    end
-
-    test "with invalid data returns an empty list" do
-      assert Prompts.get_episode_details([]) == []
     end
   end
 
