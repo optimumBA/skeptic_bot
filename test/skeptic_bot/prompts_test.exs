@@ -2,12 +2,13 @@ defmodule SkepticBot.PromptsTest do
   use SkepticBot.DataCase, async: true
 
   import SkepticBot.PromptsFixtures
+  import SkepticBot.PodcastsFixtures
 
   alias SkepticBot.Prompts
 
   @valid_question_attrs %{
     description: "A question description",
-    embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
+    embedding: embedding_fixture(),
     episodes: [
       %{
         episode_id: "dc6d45bc-b3ab-43ba-b106-0969e8a51c4b",
@@ -76,6 +77,21 @@ defmodule SkepticBot.PromptsTest do
 
     test "with invalid data returns an empty list" do
       assert Prompts.get_episode_details([]) == []
+    end
+  end
+
+  describe "get_other_episodes/1" do
+    setup [:create_question]
+
+    test "with valid data returns maps with episode information" do
+      other_episodes = Prompts.get_other_episodes(embedding_fixture())
+
+      Enum.all?(other_episodes, fn other_episode ->
+        assert other_episode.episode_length
+        assert other_episode.external_id
+        assert other_episode.thumbnail
+        assert other_episode.title
+      end)
     end
   end
 end
