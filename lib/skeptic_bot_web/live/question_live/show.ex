@@ -144,8 +144,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:noreply,
      socket
-     |> assign(:query, question.query)
      |> assign(:other_episodes, other_episodes)
+     |> assign(:query, question.query)
      |> assign(:related_episodes, related_episodes)}
   end
 
