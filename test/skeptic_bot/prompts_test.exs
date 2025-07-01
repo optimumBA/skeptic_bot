@@ -26,6 +26,8 @@ defmodule SkepticBot.PromptsTest do
   defp create_question(_attrs) do
     question = question_fixture()
     episodes = create_multiple_episodes(2)
+    _questions = create_multiple_questions(2)
+    # dbg(questions)
     %{question: question, episodes: episodes}
   end
 
@@ -82,14 +84,20 @@ defmodule SkepticBot.PromptsTest do
   describe "get_related_questions/2" do
     setup [:create_question]
 
-    test "with valid data returns a list of questions", %{question: question} do
+    test "with valid data returns maps containing question details", %{question: question} do
       related_questions = Prompts.get_related_questions(question.embedding, question.id)
-      assert Enum.all?(related_questions, &is_struct(&1, SkepticBot.Prompts.UserQuestion))
+
+      Enum.all?(related_questions, fn related_question ->
+        assert related_question.id
+        assert related_question.query
+        assert related_question.description
+      end)
     end
 
     test "with invalid data returns an empty list", %{question: question} do
       related_questions = Prompts.get_related_questions(nil, question.id)
-      dbg(related_questions)
+
+      assert related_questions == []
     end
   end
 end

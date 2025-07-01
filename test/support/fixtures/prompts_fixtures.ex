@@ -54,4 +54,17 @@ defmodule SkepticBot.PromptsFixtures do
       Map.put(episode, :timestamp, %{secs: :rand.uniform(3000), months: 0, days: 0})
     end
   end
+
+  @doc """
+  creates multiple questions.
+  """
+  @spec create_multiple_questions(integer()) :: list(question())
+  def create_multiple_questions(number_of_questions) do
+    for question <- 1..number_of_questions do
+      question_fixture(%{
+        description: "Number #{question} description",
+        query: "Number #{question} query"
+      })
+    end
+  end
 end
