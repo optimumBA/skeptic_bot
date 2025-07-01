@@ -78,4 +78,18 @@ defmodule SkepticBot.PromptsTest do
       assert Prompts.get_episode_details([]) == []
     end
   end
+
+  describe "get_related_questions/2" do
+    setup [:create_question]
+
+    test "with valid data returns a list of questions", %{question: question} do
+      related_questions = Prompts.get_related_questions(question.embedding, question.id)
+      assert Enum.all?(related_questions, &is_struct(&1, SkepticBot.Prompts.UserQuestion))
+    end
+
+    test "with invalid data returns an empty list", %{question: question} do
+      related_questions = Prompts.get_related_questions(nil, question.id)
+      dbg(related_questions)
+    end
+  end
 end

@@ -44,6 +44,21 @@ defmodule SkepticBot.Prompts do
     |> Repo.all()
   end
 
+  @spec get_related_questions(embedding(), id()) :: [question()]
+  def get_related_questions(embedding, id) do
+    UserQuestion
+    |> select([uq], %{
+      id: uq.id,
+      description: uq.description,
+      query: uq.query
+    })
+    |> where([uq], uq.id != ^id)
+    |> where([uq], fragment("? <-> ? >= ?", uq.embedding, ^embedding, 0.55555))
+    |> order_by([uq], asc: l2_distance(uq.embedding, ^embedding))
+    |> limit(6)
+    |> Repo.all()
+  end
+
   @spec create_question(attrs()) ::
           {:ok, question()} | {:error, Ecto.Changeset.t()}
   def create_question(attrs \\ %{}) do
