@@ -28,7 +28,6 @@ defmodule SkepticBot.PromptsTest do
     question = question_fixture()
     episodes = create_multiple_episodes(2)
     _questions = create_multiple_questions(2)
-    # dbg(questions)
     %{question: question, episodes: episodes}
   end
 
