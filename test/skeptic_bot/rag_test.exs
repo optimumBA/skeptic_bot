@@ -32,7 +32,7 @@ defmodule SkepticBot.RagTest do
         {:ok, response}
       end)
 
-      {:ok, {description, context}} = Rag.generate("Who Killed Two Pac Shakur")
+      {:ok, {description, context, _embedding}} = Rag.generate("Who Killed Two Pac Shakur")
 
       assert description == response
 
