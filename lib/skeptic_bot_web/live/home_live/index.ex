@@ -82,8 +82,6 @@ defmodule SkepticBotWeb.HomeLive.Index do
     changeset =
       Prompts.change_question_query(question, question_params)
 
-    socket = assign(socket, :query, query)
-
     {:noreply,
      socket
      |> assign(:query, query)
