@@ -6,7 +6,7 @@ defmodule SkepticBot.Prompts.UserQuestion do
 
   import Ecto.Changeset
 
-  alias SkepticBot.Prompts.Episode
+  alias SkepticBot.Prompts.PodcastEpisode
 
   @type attrs :: map()
   @type t :: %__MODULE__{}
@@ -19,7 +19,7 @@ defmodule SkepticBot.Prompts.UserQuestion do
 
     timestamps(type: :utc_datetime)
 
-    embeds_many :episodes, Episode, on_replace: :delete
+    embeds_many :episodes, PodcastEpisode, on_replace: :delete
   end
 
   @spec changeset(t(), attrs()) :: Ecto.Changeset.t()

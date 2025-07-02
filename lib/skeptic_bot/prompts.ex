@@ -3,7 +3,10 @@ defmodule SkepticBot.Prompts do
   The Prompts context.
   """
 
+  import Ecto.Query
+
   alias SkepticBot.Podcasts.Episode
+  alias SkepticBot.Prompts.PodcastEpisode
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Repo
 
@@ -11,7 +14,7 @@ defmodule SkepticBot.Prompts do
   @type episode :: Episode.t()
   @type episode_details :: map()
   @type id :: Ecto.UUID.t()
-  @type prompts_episode :: SkepticBot.Prompts.Episode.t()
+  @type prompts_episode :: PodcastEpisode.t()
   @type question :: UserQuestion.t()
 
   @spec get_question(id()) :: question() | nil
@@ -19,10 +22,17 @@ defmodule SkepticBot.Prompts do
 
   @spec get_related_episodes([prompts_episode()]) :: [episode()]
   def get_related_episodes(question_episodes) do
-    Enum.map(question_episodes, fn question_episode ->
-      Episode
-      |> Repo.get!(question_episode.episode_id)
-      |> Map.put(:timestamp, question_episode.timestamp)
+    {question_episodes_ids, question_episodes_timestamps} =
+      Enum.reduce(question_episodes, {[], %{}}, fn episode, {ids, timestamps} ->
+        {[episode.episode_id | ids], Map.put(timestamps, episode.episode_id, episode.timestamp)}
+      end)
+
+    Episode
+    |> where([e], e.id in ^question_episodes_ids)
+    |> Repo.all()
+    |> Enum.map(fn episode ->
+      timestamp = question_episodes_timestamps[episode.id]
+      %{episode | timestamp: timestamp}
     end)
   end
 
