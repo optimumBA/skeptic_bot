@@ -28,7 +28,7 @@ defmodule SkepticBot.RagTest do
         {:ok, [embedding]}
       end)
 
-      expect(Rag.MockGenerator, :predict, fn _messages ->
+      expect(Rag.MockGenerator, :predict, 2, fn _messages ->
         {:ok, response}
       end)
 
@@ -39,7 +39,11 @@ defmodule SkepticBot.RagTest do
       assert Enum.any?(context, fn context_episode -> context_episode.id == episode.id end)
     end
 
-    test "returns an error tuple if generation process was unsuccessful" do
+    test "returns an error tuple if generation process was unsuccessful", %{response: response} do
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, response}
+      end)
+
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:error, "Generation process was unsuccessful"}
       end)
@@ -48,13 +52,7 @@ defmodule SkepticBot.RagTest do
                Rag.generate("Who Killed Two Pac Shakur")
     end
 
-    test "returns an error tuple if prediction process was unsuccessful", %{
-      embedding: embedding
-    } do
-      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        {:ok, [embedding]}
-      end)
-
+    test "returns an error tuple if prediction process was unsuccessful" do
       expect(Rag.MockGenerator, :predict, fn _messages ->
         {:error, "Prediction process was unsuccessful"}
       end)

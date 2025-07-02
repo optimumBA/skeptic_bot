@@ -83,7 +83,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
         {:ok, [embedding]}
       end)
 
-      expect(Rag.MockGenerator, :predict, fn _messages ->
+      expect(Rag.MockGenerator, :predict, 2, fn _messages ->
         {:ok, response}
       end)
 
@@ -100,7 +100,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
     } do
       {:ok, view, _html} = live(conn, "/")
 
-      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+      expect(Rag.MockGenerator, :predict, fn _messages ->
         {:error, "failed to generate embeddings"}
       end)
 
@@ -131,7 +131,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
         {:error, "failed to generate embeddings for the question"}
       end)
 
-      expect(Rag.MockGenerator, :predict, fn _messages ->
+      expect(Rag.MockGenerator, :predict, 2, fn _messages ->
         {:ok, response}
       end)
 
@@ -151,7 +151,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
     test "shows an error message if the RAG process crashes", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/")
 
-      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+      expect(Rag.MockGenerator, :predict, fn _messages ->
         raise("failed to generate embeddings")
       end)
 
