@@ -98,10 +98,10 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:noreply,
      socket
-     |> assign(:related_episodes_visible?, related_episodes_visible?)
      |> assign(:description, question.description)
      |> assign(:query, question.query)
-     |> assign(:related_episodes, related_episodes)}
+     |> assign(:related_episodes, related_episodes)
+     |> assign(:related_episodes_visible?, related_episodes_visible?)}
   end
 
   @impl Phoenix.LiveView
