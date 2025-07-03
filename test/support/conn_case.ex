@@ -36,17 +36,4 @@ defmodule SkepticBotWeb.ConnCase do
     SkepticBot.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
-
-  @spec with_retries(fun(), integer()) :: true | no_return()
-  def with_retries(assert_fun, tries) do
-    assert_fun.()
-  rescue
-    e ->
-      if tries > 1 do
-        Process.sleep(10)
-        with_retries(assert_fun, tries - 1)
-      else
-        reraise e, __STACKTRACE__
-      end
-  end
 end

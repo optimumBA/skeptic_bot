@@ -14,7 +14,7 @@ defmodule SkepticBot.Rag do
          context <- Rag.Retrieval.retrieve(embedding),
          prompt <- format_prompt(context, query),
          {:ok, response} <- Rag.Generator.predict(prompt) do
-      {:ok, {response, context}}
+      {:ok, {response, context, embedding}}
     else
       {:error, reason} ->
         {:error, reason}

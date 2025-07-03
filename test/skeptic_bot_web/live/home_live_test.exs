@@ -79,7 +79,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
-      expect(Rag.MockEmbedder, :generate, 2, fn _question_episodes ->
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
 
@@ -110,41 +110,6 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
       assert render(view) =~
                "An error occurred while processing your prompt. Please try again."
-    end
-
-    @tag :capture_log
-    test "renders an error message if question creation fails", %{
-      conn: conn,
-      embedding: embedding,
-      episode: episode,
-      response: response
-    } do
-      {:ok, view, _html} = live(conn, "/")
-
-      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-
-      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        {:ok, [embedding]}
-      end)
-
-      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        {:error, "failed to generate embeddings for the question"}
-      end)
-
-      expect(Rag.MockGenerator, :predict, fn _messages ->
-        {:ok, response}
-      end)
-
-      view
-      |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
-      |> render_submit()
-
-      with_retries(
-        fn ->
-          assert render(view) =~ "There was an error processing your prompt"
-        end,
-        2
-      )
     end
 
     @tag :capture_log

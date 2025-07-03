@@ -1,4 +1,4 @@
-defmodule SkepticBot.Prompts.Episode do
+defmodule SkepticBot.Prompts.PodcastEpisode do
   @moduledoc """
   Used as an embedded schema inside SkepticBot.Prompt.UserQuestion
   """
