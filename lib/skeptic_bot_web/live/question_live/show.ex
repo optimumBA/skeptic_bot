@@ -63,7 +63,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             <button
               phx-click="next_related_episodes"
               class="disabled:opacity-50"
-              disabled={length(@related_episodes) - @related_episodes_index <= 3}
+              disabled={@related_episodes_visible?}
             >
               <div>
                 <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
@@ -94,8 +94,11 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     related_episodes =
       Prompts.get_related_episodes(question.episodes)
 
+    related_episodes_visible? = length(related_episodes) <= 3
+
     {:noreply,
      socket
+     |> assign(:related_episodes_visible?, related_episodes_visible?)
      |> assign(:description, question.description)
      |> assign(:query, question.query)
      |> assign(:related_episodes, related_episodes)}
@@ -104,8 +107,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   @impl Phoenix.LiveView
   def handle_event("next_related_episodes", _params, socket) do
     index = socket.assigns.related_episodes_index
-    new_index = min(index + 1, length(socket.assigns.related_episodes) - 1)
-    {:noreply, assign(socket, :related_episodes_index, new_index)}
+    related_episodes = socket.assigns.related_episodes
+    new_index = min(index + 1, length(related_episodes) - 1)
+    related_episodes_visible? = length(related_episodes) - new_index <= 3
+
+    {:noreply,
+     socket
+     |> assign(:related_episodes_index, new_index)
+     |> assign(:related_episodes_visible?, related_episodes_visible?)}
   end
 
   def handle_event("prev_related_episodes", _params, socket) do
