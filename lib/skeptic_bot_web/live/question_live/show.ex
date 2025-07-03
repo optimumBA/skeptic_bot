@@ -113,8 +113,17 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             </button>
             <button
               phx-click="next_other_episodes"
-              class="disabled:opacity-50"
-              disabled={@other_episodes_index >= length(@other_episodes) - 1}
+              class="2xl:hidden disabled:opacity-50"
+              disabled={length(@other_episodes) - @other_episodes_index <= 2}
+            >
+              <div>
+                <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
+              </div>
+            </button>
+            <button
+              phx-click="next_other_episodes"
+              class="hidden 2xl:block disabled:opacity-50"
+              disabled={length(@other_episodes) - @other_episodes_index <= 3}
             >
               <div>
                 <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
