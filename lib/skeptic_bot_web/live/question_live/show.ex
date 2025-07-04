@@ -34,7 +34,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               style={"transform: translateX(-#{@related_episodes_index * 20.6875}rem);"}
             >
               <%= for episode <- @related_episodes do %>
-                <PodcastComponents.related_episode_card
+                <PodcastComponents.episode_card
                   external_id={episode.external_id}
                   podcast_title={episode.title}
                   random={
@@ -63,7 +63,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             <button
               phx-click="next_related_episodes"
               class="disabled:opacity-50"
-              disabled={@related_episodes_visible?}
+              disabled={@has_all_related_episode_pages?}
             >
               <div>
                 <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
@@ -94,14 +94,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     related_episodes =
       Prompts.get_related_episodes(question.episodes)
 
-    related_episodes_visible? = length(related_episodes) <= 3
+    has_all_related_episode_pages? = length(related_episodes) <= 3
 
     {:noreply,
      socket
      |> assign(:description, question.description)
      |> assign(:query, question.query)
      |> assign(:related_episodes, related_episodes)
-     |> assign(:related_episodes_visible?, related_episodes_visible?)}
+     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)}
   end
 
   @impl Phoenix.LiveView
@@ -109,12 +109,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     index = socket.assigns.related_episodes_index
     related_episodes = socket.assigns.related_episodes
     new_index = min(index + 1, length(related_episodes) - 1)
-    related_episodes_visible? = length(related_episodes) - new_index <= 3
+    has_all_related_episode_pages? = length(related_episodes) - new_index <= 3
 
     {:noreply,
      socket
      |> assign(:related_episodes_index, new_index)
-     |> assign(:related_episodes_visible?, related_episodes_visible?)}
+     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)}
   end
 
   def handle_event("prev_related_episodes", _params, socket) do
