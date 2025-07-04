@@ -34,7 +34,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               style={"transform: translateX(-#{@related_episodes_index * 20.6875}rem);"}
             >
               <%= for episode <- @related_episodes do %>
-                <PodcastComponents.related_episode_card
+                <PodcastComponents.episode_card
                   external_id={episode.external_id}
                   podcast_title={episode.title}
                   random={
@@ -63,7 +63,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             <button
               phx-click="next_related_episodes"
               class="disabled:opacity-50"
-              disabled={@related_episodes_visible?}
+              disabled={@has_all_related_episode_pages?}
             >
               <div>
                 <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
@@ -86,16 +86,17 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               style={"transform: translateX(-#{@other_episodes_index * 23.9}rem);"}
             >
               <%= for episode <- @other_episodes do %>
-                <PodcastComponents.other_episode_card
+                <PodcastComponents.episode_card
                   external_id={episode.external_id}
                   podcast_title={episode.title}
                   random={
                     Enum.at(
-                      @vector_numbers,
+                      Enum.shuffle(@vector_numbers),
                       Enum.find_index(@other_episodes, fn x -> x == episode end)
                     )
                   }
                   thumbnail={episode.thumbnail}
+                  timestamp="0"
                   video_length={episode.episode_length}
                 />
               <% end %>
@@ -113,17 +114,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             </button>
             <button
               phx-click="next_other_episodes"
-              class="2xl:hidden disabled:opacity-50"
-              disabled={length(@other_episodes) - @other_episodes_index <= 2}
-            >
-              <div>
-                <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
-              </div>
-            </button>
-            <button
-              phx-click="next_other_episodes"
-              class="hidden 2xl:block disabled:opacity-50"
-              disabled={length(@other_episodes) - @other_episodes_index <= 3}
+              class="disabled:opacity-50"
+              disabled={@has_all_other_episode_pages?}
             >
               <div>
                 <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
@@ -152,20 +144,23 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     related_episodes =
       Prompts.get_related_episodes(question.episodes)
 
-    related_episodes_visible? = length(related_episodes) <= 3
+    has_all_related_episode_pages? = length(related_episodes) <= 3
 
     [most_related_episode | _other_related_episodes] = related_episodes
 
     other_episodes =
       Prompts.get_other_episodes(most_related_episode.embedding)
 
+    has_all_other_episode_pages? = length(other_episodes) <= 3
+
     {:noreply,
      socket
      |> assign(:description, question.description)
+     |> assign(:has_all_other_episode_pages?, has_all_other_episode_pages?)
+     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)
      |> assign(:other_episodes, other_episodes)
      |> assign(:query, question.query)
-     |> assign(:related_episodes, related_episodes)
-     |> assign(:related_episodes_visible?, related_episodes_visible?)}
+     |> assign(:related_episodes, related_episodes)}
   end
 
   @impl Phoenix.LiveView
@@ -173,12 +168,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     index = socket.assigns.related_episodes_index
     related_episodes = socket.assigns.related_episodes
     new_index = min(index + 1, length(related_episodes) - 1)
-    related_episodes_visible? = length(related_episodes) - new_index <= 3
+    has_all_related_episode_pages? = length(related_episodes) - new_index <= 3
 
     {:noreply,
      socket
      |> assign(:related_episodes_index, new_index)
-     |> assign(:related_episodes_visible?, related_episodes_visible?)}
+     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)}
   end
 
   def handle_event("prev_related_episodes", _params, socket) do
@@ -189,8 +184,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   def handle_event("next_other_episodes", _params, socket) do
     index = socket.assigns.other_episodes_index
-    new_index = min(index + 1, length(socket.assigns.other_episodes) - 1)
-    {:noreply, assign(socket, :other_episodes_index, new_index)}
+    other_episodes = socket.assigns.other_episodes
+    new_index = min(index + 1, length(other_episodes) - 1)
+    has_all_other_episode_pages? = length(other_episodes) - new_index <= 3
+
+    {:noreply,
+     socket
+     |> assign(:other_episodes_index, new_index)
+     |> assign(:has_all_other_episode_pages?, has_all_other_episode_pages?)}
   end
 
   def handle_event("prev_other_episodes", _params, socket) do

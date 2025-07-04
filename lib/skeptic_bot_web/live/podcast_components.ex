@@ -15,8 +15,8 @@ defmodule SkepticBotWeb.PodcastComponents do
   attr :timestamp, :string, required: true
   attr :video_length, :string, required: true
 
-  @spec related_episode_card(assigns()) :: rendered()
-  def related_episode_card(assigns) do
+  @spec episode_card(assigns()) :: rendered()
+  def episode_card(assigns) do
     ~H"""
     <a href={"https://vid.samtripoli.com/w/" <> @external_id <> "?start=" <> @timestamp}>
       <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative">
@@ -27,7 +27,7 @@ defmodule SkepticBotWeb.PodcastComponents do
             class="w-full h-full object-cover"
           />
         </div>
-        <%= get_related_episode_vector(@random) %>
+        <%= get_episode_vector(@random) %>
         <div class="absolute bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
           <%= first_n_words(@podcast_title, 2) %>
         </div>
@@ -36,41 +36,6 @@ defmodule SkepticBotWeb.PodcastComponents do
           <div>
             <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
           </div>
-          <div class="text-sm"><%= get_time_from_seconds(@video_length) %></div>
-        </div>
-      </section>
-    </a>
-    """
-  end
-
-  attr :external_id, :string, required: true
-  attr :podcast_title, :string, required: true
-  attr :random, :integer, required: true
-  attr :thumbnail, :string, required: true
-  attr :video_length, :string, required: true
-
-  @spec other_episode_card(assigns()) :: rendered()
-  def other_episode_card(assigns) do
-    ~H"""
-    <a href={"https://vid.samtripoli.com/w/" <> @external_id}>
-      <section class="w-[23.4rem] h-[23.4rem] shrink-0 relative">
-        <div class="rounded-xl w-full h-full overflow-hidden">
-          <img
-            src={"https://vid.samtripoli.com/" <> @thumbnail}
-            alt="Cover 1"
-            class="w-full h-full object-cover"
-          />
-        </div>
-        <%= get_other_episode_vector(@random) %>
-        <div class="absolute  bottom-[4rem] left-[1rem] text-3xl montserrat-alternates-bold text-[#FFFFFF]">
-          <%= first_n_words(@podcast_title, 2) %>
-        </div>
-
-        <div class="absolute bottom-[2rem] left-[1.2rem] flex gap-2 montserrat-alternates-bold text-[#FFFFFF]">
-          <div>
-            <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
-          </div>
-
           <div class="text-sm"><%= get_time_from_seconds(@video_length) %></div>
         </div>
       </section>
@@ -224,14 +189,8 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
-  defp get_related_episode_vector(random) do
+  defp get_episode_vector(random) do
     assigns = %{random: random}
-    absolute_vectors(assigns)
-  end
-
-  defp get_other_episode_vector(random) do
-    inverted_random = 6 - random
-    assigns = %{random: inverted_random}
     absolute_vectors(assigns)
   end
 
