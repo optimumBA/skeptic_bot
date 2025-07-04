@@ -172,8 +172,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:noreply,
      socket
-     |> assign(:related_episodes_index, new_index)
-     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)}
+     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)
+     |> assign(:related_episodes_index, new_index)}
   end
 
   def handle_event("prev_related_episodes", _params, socket) do
@@ -190,8 +190,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:noreply,
      socket
-     |> assign(:other_episodes_index, new_index)
-     |> assign(:has_all_other_episode_pages?, has_all_other_episode_pages?)}
+     |> assign(:has_all_other_episode_pages?, has_all_other_episode_pages?)
+     |> assign(:other_episodes_index, new_index)}
   end
 
   def handle_event("prev_other_episodes", _params, socket) do
