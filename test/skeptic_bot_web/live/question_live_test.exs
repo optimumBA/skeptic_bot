@@ -39,5 +39,33 @@ defmodule SkepticBotWeb.QuestionLiveTest do
         assert html =~ PodcastComponents.get_time_from_seconds(other_episode.episode_length)
       end)
     end
+
+    test "renders carousel with related episodes and translates appropriately with click events",
+         %{
+           conn: conn,
+           question: question
+         } do
+      {:ok, view, _html} = live(conn, "/questions/#{question.id}")
+
+      assert render(view) =~ "style=\"transform: translateX(-0.0rem);\""
+      render_click(view, :next_related_episodes)
+      assert render(view) =~ "style=\"transform: translateX(-20.6875rem);\""
+      render_click(view, :prev_related_episodes)
+      assert render(view) =~ "style=\"transform: translateX(-0.0rem);\""
+    end
+
+    test "renders carousel with other episodes and translates appropriately with click events",
+         %{
+           conn: conn,
+           question: question
+         } do
+      {:ok, view, _html} = live(conn, "/questions/#{question.id}")
+
+      assert render(view) =~ "style=\"transform: translateX(-0.0rem);\""
+      render_click(view, :next_other_episodes)
+      assert render(view) =~ "style=\"transform: translateX(-20.6875rem);\""
+      render_click(view, :prev_other_episodes)
+      assert render(view) =~ "style=\"transform: translateX(-0.0rem);\""
+    end
   end
 end

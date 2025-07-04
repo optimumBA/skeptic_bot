@@ -83,7 +83,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           <section class="ml-5 overflow-hidden pt-12 relative mb-12">
             <div
               class="flex gap-4 transition-transform duration-300 ease-in-out"
-              style={"transform: translateX(-#{@other_episodes_index * 23.9}rem);"}
+              style={"transform: translateX(-#{@other_episodes_index * 20.6875}rem);"}
             >
               <%= for episode <- @other_episodes do %>
                 <PodcastComponents.episode_card
