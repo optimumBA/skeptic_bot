@@ -99,9 +99,9 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:noreply,
      socket
      |> assign(:description, question.description)
+     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)
      |> assign(:query, question.query)
-     |> assign(:related_episodes, related_episodes)
-     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)}
+     |> assign(:related_episodes, related_episodes)}
   end
 
   @impl Phoenix.LiveView
@@ -113,8 +113,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:noreply,
      socket
-     |> assign(:related_episodes_index, new_index)
-     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)}
+     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)
+     |> assign(:related_episodes_index, new_index)}
   end
 
   def handle_event("prev_related_episodes", _params, socket) do
