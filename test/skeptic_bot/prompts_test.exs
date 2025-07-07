@@ -41,11 +41,11 @@ defmodule SkepticBot.PromptsTest do
     end
   end
 
-  describe "get_related_episodes/1" do
+  describe "get_related_episodes/4" do
     setup [:create_question]
 
     test "returns a list of podcast episodes", %{question: question} do
-      episodes = Prompts.get_related_episodes(question.episodes)
+      episodes = Prompts.get_related_episodes(question.episodes, question.embedding, 3, 0)
       assert Enum.all?(episodes, &is_struct(&1, SkepticBot.Podcasts.Episode))
     end
   end

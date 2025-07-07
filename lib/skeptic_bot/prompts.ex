@@ -55,11 +55,12 @@ defmodule SkepticBot.Prompts do
     |> Repo.aggregate(:count)
   end
 
-  @spec get_related_episodes([prompts_episode()], embedding(), integer(), integer()) :: episode()
+  @spec get_related_episodes([prompts_episode()], embedding(), integer(), integer()) ::
+          [episode()]
   def get_related_episodes(question_episodes, question_embedding, limit, offset) do
     question_episodes_timestamps =
       question_episodes
-      |> Enum.map(&{&1.id, &1.timestamp})
+      |> Enum.map(&{&1.episode_id, &1.timestamp})
       |> Enum.into(%{})
 
     Episode
@@ -69,7 +70,7 @@ defmodule SkepticBot.Prompts do
     |> Repo.all()
     |> Enum.map(fn episode ->
       timestamp = question_episodes_timestamps[episode.id]
-      %{episode | timestamp: timestamp}
+      Map.put(episode, :timestamp, timestamp)
     end)
   end
 end

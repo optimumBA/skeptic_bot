@@ -38,13 +38,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               class="flex gap-4 transition-transform duration-300 ease-in-out"
               style={"transform: translateX(-#{@related_episodes_index * 20.6875}rem);"}
             >
-              <%= for {_id, episode} <- @streams.related_episodes do %>
+              <%= for {id, episode} <- @streams.related_episodes do %>
                 <PodcastComponents.episode_card
+                  dom_id={id}
                   external_id={episode.external_id}
                   podcast_title={episode.title}
                   random={episode.random_number}
                   thumbnail={episode.thumbnail}
-                  timestamp={if(episode.timestamp, do: to_string(episode.timestamp.secs), else: "0")}
+                  timestamp={to_string(episode.timestamp.secs)}
                   video_length={episode.episode_length}
                 />
               <% end %>
@@ -119,7 +120,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     new_page = get_new_episode_page(total_pages, current_page, new_index)
 
     related_episodes =
-      get_new_related_episodes(new_page, current_page, question, 3, [4, 5, 2])
+      get_new_related_episodes(new_page, current_page, question, 3, Enum.shuffle([4, 5, 2]))
 
     has_all_related_episodes? = has_all_episodes?(new_index, total_pages)
 
