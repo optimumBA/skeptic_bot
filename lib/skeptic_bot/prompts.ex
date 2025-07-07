@@ -4,6 +4,7 @@ defmodule SkepticBot.Prompts do
   """
 
   import Ecto.Query
+  import Pgvector.Ecto.Query, only: [l2_distance: 2]
 
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Prompts.PodcastEpisode
@@ -11,30 +12,17 @@ defmodule SkepticBot.Prompts do
   alias SkepticBot.Repo
 
   @type attrs :: map()
+  @type embedding :: [float()]
   @type episode :: Episode.t()
   @type episode_details :: map()
   @type id :: Ecto.UUID.t()
   @type prompts_episode :: PodcastEpisode.t()
   @type question :: UserQuestion.t()
 
+  @related_distance_threshold 0.55555
+
   @spec get_question(id()) :: question() | nil
   def get_question(id), do: Repo.get(UserQuestion, id)
-
-  @spec get_related_episodes([prompts_episode()]) :: [episode()]
-  def get_related_episodes(question_episodes) do
-    {question_episodes_ids, question_episodes_timestamps} =
-      Enum.reduce(question_episodes, {[], %{}}, fn episode, {ids, timestamps} ->
-        {[episode.episode_id | ids], Map.put(timestamps, episode.episode_id, episode.timestamp)}
-      end)
-
-    Episode
-    |> where([e], e.id in ^question_episodes_ids)
-    |> Repo.all()
-    |> Enum.map(fn episode ->
-      timestamp = question_episodes_timestamps[episode.id]
-      %{episode | timestamp: timestamp}
-    end)
-  end
 
   @spec create_question(attrs()) ::
           {:ok, question()} | {:error, Ecto.Changeset.t()}
@@ -53,6 +41,35 @@ defmodule SkepticBot.Prompts do
   def get_episode_details(podcast_episodes) do
     Enum.map(podcast_episodes, fn podcast_episode ->
       %{episode_id: podcast_episode.id, timestamp: podcast_episode.timestamp}
+    end)
+  end
+
+  @spec count_related_episodes(embedding(), integer()) :: integer()
+  def count_related_episodes(question_embedding, max_episodes) do
+    Episode
+    |> where(
+      [e],
+      fragment("? <-> ? >= ?", e.embedding, ^question_embedding, ^@related_distance_threshold)
+    )
+    |> limit(^max_episodes)
+    |> Repo.aggregate(:count)
+  end
+
+  @spec get_related_episodes([prompts_episode()], embedding(), integer(), integer()) :: episode()
+  def get_related_episodes(question_episodes, question_embedding, limit, offset) do
+    question_episodes_timestamps =
+      question_episodes
+      |> Enum.map(&{&1.id, &1.timestamp})
+      |> Enum.into(%{})
+
+    Episode
+    |> order_by([e], asc: l2_distance(e.embedding, ^question_embedding))
+    |> limit(^limit)
+    |> offset(^offset)
+    |> Repo.all()
+    |> Enum.map(fn episode ->
+      timestamp = question_episodes_timestamps[episode.id]
+      %{episode | timestamp: timestamp}
     end)
   end
 end
