@@ -80,11 +80,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   end
 
   @impl Phoenix.LiveView
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :related_episodes_index, 0)}
-  end
-
-  @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _uri, socket) do
     question = Prompts.get_question(id)
 
@@ -106,10 +101,10 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      socket
      |> assign(:has_all_related_episodes?, has_all_related_episodes?)
      |> assign(:question, question)
+     |> stream(:related_episodes, related_episodes)
      |> assign(:related_episodes_index, 0)
      |> assign(:related_episodes_page, related_episodes_page)
-     |> assign(:related_episodes_pages, related_episodes_pages)
-     |> stream(:related_episodes, related_episodes)}
+     |> assign(:related_episodes_pages, related_episodes_pages)}
   end
 
   @impl Phoenix.LiveView
@@ -131,9 +126,9 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:noreply,
      socket
      |> assign(:has_all_related_episodes?, has_all_related_episodes?)
+     |> stream(:related_episodes, related_episodes)
      |> assign(:related_episodes_page, new_page)
-     |> assign(:related_episodes_index, new_index)
-     |> stream(:related_episodes, related_episodes)}
+     |> assign(:related_episodes_index, new_index)}
   end
 
   def handle_event("prev_related_episodes", _params, socket) do
@@ -145,8 +140,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:noreply,
      socket
-     |> assign(:related_episodes_index, new_index)
-     |> assign(:has_all_related_episodes?, has_all_related_episodes?)}
+     |> assign(:has_all_related_episodes?, has_all_related_episodes?)
+     |> assign(:related_episodes_index, new_index)}
   end
 
   defp has_all_episodes?(index, total_pages), do: index == total_pages * @episode_batch_size - 3
