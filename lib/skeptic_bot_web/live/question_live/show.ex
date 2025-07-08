@@ -6,8 +6,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   @episode_batch_size 3
   @episode_limit 6
-  @visible_episodes 3
   @vector_numbers [1, 2, 3, 4, 5]
+  @visible_episodes 3
 
   @impl Phoenix.LiveView
   def render(assigns) do
@@ -135,8 +135,9 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:related_episodes_index, current_index)}
   end
 
-  defp has_all_episodes?(_current_index, episode_count) when episode_count <= 3,
-    do: true
+  defp has_all_episodes?(_current_index, episode_count)
+       when episode_count <= @episode_batch_size,
+       do: true
 
   defp has_all_episodes?(current_index, episode_count),
     do: current_index == episode_count - @episode_batch_size

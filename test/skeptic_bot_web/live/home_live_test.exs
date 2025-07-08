@@ -11,7 +11,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
   defp create_prompt_resources(%{conn: conn}) do
     embedding = embedding_fixture()
-    episode = episode_fixture()
+    episode = episode_fixture(embedding: embedding)
     response = "A simple response from a large language model"
 
     %{
