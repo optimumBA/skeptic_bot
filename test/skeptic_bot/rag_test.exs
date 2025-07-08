@@ -8,22 +8,22 @@ defmodule SkepticBot.RagTest do
 
   setup :verify_on_exit!
 
-  defp create_episodes(_attrs) do
+  defp create_embedding(_attrs) do
     embedding = embedding_fixture()
-    episode = episode_fixture(embedding: embedding)
     response = "Just a simple response from a large language model"
-    _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-    %{embedding: embedding, episode: episode, response: response}
+    %{embedding: embedding, response: response}
   end
 
   describe "generate/1" do
-    setup [:create_episodes]
+    setup [:create_embedding]
 
     test "with valid query returns episodes and description", %{
       embedding: embedding,
-      episode: episode,
       response: response
     } do
+      episode = episode_fixture(embedding: embedding)
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
@@ -39,6 +39,16 @@ defmodule SkepticBot.RagTest do
       assert Enum.any?(context, fn context_episode -> context_episode.id == episode.id end)
     end
 
+    test "returns :no_episodes_found if no episodes fit the threshold", %{
+      embedding: embedding
+    } do
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:ok, [embedding]}
+      end)
+
+      assert :no_episodes_found = Rag.generate("Who Killed Two Pac Shakur")
+    end
+
     test "returns an error tuple if generation process was unsuccessful" do
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:error, "Generation process was unsuccessful"}
@@ -51,6 +61,9 @@ defmodule SkepticBot.RagTest do
     test "returns an error tuple if prediction process was unsuccessful", %{
       embedding: embedding
     } do
+      episode = episode_fixture(embedding: embedding)
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
