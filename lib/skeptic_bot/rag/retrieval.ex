@@ -20,7 +20,7 @@ defmodule SkepticBot.Rag.Retrieval do
     from(e in Podcasts.Episode,
       select: e,
       order_by: [asc: l2_distance(e.embedding, ^embedding)],
-      limit: 3
+      limit: 6
     )
     |> Repo.all()
     |> Enum.map(fn %Podcasts.Episode{} = episode ->

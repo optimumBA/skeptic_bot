@@ -4,6 +4,11 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   alias SkepticBot.Prompts
   alias SkepticBotWeb.PodcastComponents
 
+  @episode_batch_size 3
+  @episode_limit 6
+  @visible_episodes 3
+  @vector_numbers [1, 2, 3, 4, 5]
+
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
@@ -141,6 +146,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   def handle_params(%{"id" => id}, _uri, socket) do
     question = Prompts.get_question(id)
 
+    vector_numbers =
+      @vector_numbers
+      |> Stream.cycle()
+      |> Enum.take(@episode_limit)
+      |> Enum.shuffle()
+
     related_episodes =
       Prompts.get_related_episodes(question.episodes)
 
@@ -160,7 +171,9 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)
      |> assign(:other_episodes, other_episodes)
      |> assign(:query, question.query)
-     |> assign(:related_episodes, related_episodes)}
+     |> assign(:related_episodes, related_episodes)
+     |> assign(:vector_numbers, vector_numbers)
+     |> assign(:visible_episodes, @visible_episodes)}
   end
 
   @impl Phoenix.LiveView
