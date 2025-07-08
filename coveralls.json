@@ -1,6 +1,6 @@
 {
   "coverage_options": {
-    "minimum_coverage": 71.6
+    "minimum_coverage": 72
   },
   "skip_files": [
     "lib/skeptic_bot/podcasts/ffmpeg_transcoder.ex",

@@ -16,7 +16,7 @@ defmodule SkepticBot.Rag.Retrieval do
   @episode_threshold 0.65555555
   @num_transcriptions_surrounding_the_target 100
 
-  @spec retrieve(embedding()) :: [episode()]
+  @spec retrieve(embedding()) :: [episode()] | []
   def retrieve(embedding) do
     from(e in Podcasts.Episode,
       select: e,
