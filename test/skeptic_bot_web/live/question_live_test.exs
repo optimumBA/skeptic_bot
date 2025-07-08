@@ -25,7 +25,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       assert html =~ "Related Podcasts"
 
       related_episodes =
-        Prompts.get_related_episodes(question.episodes, question.embedding, 3, 0)
+        Prompts.get_related_episodes(question.episodes, question.embedding, 6)
 
       Enum.each(related_episodes, fn episode ->
         assert html =~ PodcastComponents.first_n_words(episode.title, 2)

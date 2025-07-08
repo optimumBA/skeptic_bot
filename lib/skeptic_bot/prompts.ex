@@ -19,8 +19,6 @@ defmodule SkepticBot.Prompts do
   @type prompts_episode :: PodcastEpisode.t()
   @type question :: UserQuestion.t()
 
-  @related_distance_threshold 0.55555
-
   @spec get_question(id()) :: question() | nil
   def get_question(id), do: Repo.get(UserQuestion, id)
 
@@ -44,20 +42,9 @@ defmodule SkepticBot.Prompts do
     end)
   end
 
-  @spec count_related_episodes(embedding(), integer()) :: integer()
-  def count_related_episodes(question_embedding, max_episodes) do
-    Episode
-    |> where(
-      [e],
-      fragment("? <-> ? >= ?", e.embedding, ^question_embedding, ^@related_distance_threshold)
-    )
-    |> limit(^max_episodes)
-    |> Repo.aggregate(:count)
-  end
-
-  @spec get_related_episodes([prompts_episode()], embedding(), integer(), integer()) ::
+  @spec get_related_episodes([prompts_episode()], embedding(), integer()) ::
           [episode()]
-  def get_related_episodes(question_episodes, question_embedding, limit, offset) do
+  def get_related_episodes(question_episodes, question_embedding, limit) do
     question_episodes_timestamps =
       question_episodes
       |> Enum.map(&{&1.episode_id, &1.timestamp})
@@ -66,7 +53,6 @@ defmodule SkepticBot.Prompts do
     Episode
     |> order_by([e], asc: l2_distance(e.embedding, ^question_embedding))
     |> limit(^limit)
-    |> offset(^offset)
     |> Repo.all()
     |> Enum.map(fn episode ->
       timestamp = question_episodes_timestamps[episode.id]
