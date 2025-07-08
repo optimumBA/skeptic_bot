@@ -52,7 +52,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
                     )
                   }
                   thumbnail={episode.thumbnail}
-                  timestamp={to_string(episode.timestamp.secs)}
+                  timestamp={if episode.timestamp, do: to_string(episode.timestamp.secs), else: "0"}
                   video_length={episode.episode_length}
                 />
               <% end %>
@@ -100,10 +100,13 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
 
+    episode_count = Enum.count(related_episodes)
+
     {:noreply,
      socket
      |> assign(:description, question.description)
-     |> assign(:has_all_related_episodes?, false)
+     |> assign(:episode_count, episode_count)
+     |> assign(:has_all_related_episodes?, has_all_episodes?(0, episode_count))
      |> assign(:query, question.query)
      |> assign(:related_episodes, related_episodes)
      |> assign(:related_episodes_index, 0)
@@ -114,21 +117,27 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   @impl Phoenix.LiveView
   def handle_event("next_related_episodes", _params, socket) do
     current_index = socket.assigns.related_episodes_index + 1
+    episode_count = socket.assigns.episode_count
 
     {:noreply,
      socket
-     |> assign(:has_all_related_episodes?, has_all_episodes?(current_index))
+     |> assign(:has_all_related_episodes?, has_all_episodes?(current_index, episode_count))
      |> assign(:related_episodes_index, current_index)}
   end
 
   def handle_event("prev_related_episodes", _params, socket) do
     current_index = socket.assigns.related_episodes_index - 1
+    episode_count = socket.assigns.episode_count
 
     {:noreply,
      socket
-     |> assign(:has_all_related_episodes?, has_all_episodes?(current_index))
+     |> assign(:has_all_related_episodes?, has_all_episodes?(current_index, episode_count))
      |> assign(:related_episodes_index, current_index)}
   end
 
-  defp has_all_episodes?(current_index), do: current_index == @episode_limit - @episode_batch_size
+  defp has_all_episodes?(_current_index, episode_count) when episode_count <= 3,
+    do: true
+
+  defp has_all_episodes?(current_index, episode_count),
+    do: current_index == episode_count - @episode_batch_size
 end

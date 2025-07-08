@@ -11,6 +11,8 @@ defmodule SkepticBot.Prompts do
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Repo
 
+  @episode_threshold 0.65555555
+
   @type attrs :: map()
   @type embedding :: [float()]
   @type episode :: Episode.t()
@@ -51,6 +53,7 @@ defmodule SkepticBot.Prompts do
       |> Enum.into(%{})
 
     Episode
+    |> where([e], fragment("? <-> ? <= ?", e.embedding, ^question_embedding, @episode_threshold))
     |> order_by([e], asc: l2_distance(e.embedding, ^question_embedding))
     |> limit(^limit)
     |> Repo.all()
