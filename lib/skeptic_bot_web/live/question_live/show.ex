@@ -6,8 +6,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   @episode_batch_size 3
   @episode_limit 6
-  @visible_episodes 3
   @vector_numbers [1, 2, 3, 4, 5]
+  @visible_episodes 3
 
   @impl Phoenix.LiveView
   def render(assigns) do
@@ -28,7 +28,10 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         </p>
       </section>
 
-      <section class="max-w-[75.0625rem] mx-auto">
+      <section
+        class="mx-auto"
+        style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 20.8rem)"}
+      >
         <section class="ml-5 montserrat-alternates-bold text-[#000000] text-2xl">
           Related Podcasts
         </section>
@@ -49,7 +52,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
                     )
                   }
                   thumbnail={episode.thumbnail}
-                  timestamp={to_string(episode.timestamp.secs)}
+                  timestamp={if episode.timestamp, do: to_string(episode.timestamp.secs), else: "0"}
                   video_length={episode.episode_length}
                 />
               <% end %>
@@ -68,7 +71,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             <button
               phx-click="next_related_episodes"
               class="disabled:opacity-50"
-              disabled={@has_all_related_episode_pages?}
+              disabled={@has_all_related_episodes?}
             >
               <div>
                 <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
@@ -120,7 +123,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             <button
               phx-click="next_other_episodes"
               class="disabled:opacity-50"
-              disabled={@has_all_other_episode_pages?}
+              disabled={@has_all_other_episodes?}
             >
               <div>
                 <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
@@ -139,7 +142,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      socket
      |> assign(:other_episodes_index, 0)
      |> assign(:related_episodes_index, 0)
-     |> assign(:vector_numbers, Enum.shuffle([1, 2, 3, 4, 5]))}
+     |> assign(:visible_episodes, @visible_episodes)}
   end
 
   @impl Phoenix.LiveView
@@ -153,63 +156,75 @@ defmodule SkepticBotWeb.QuestionLive.Show do
       |> Enum.shuffle()
 
     related_episodes =
-      Prompts.get_related_episodes(question.episodes)
+      Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
 
-    has_all_related_episode_pages? = length(related_episodes) <= 3
+    related_episode_count = Enum.count(related_episodes)
 
     [most_related_episode | _other_related_episodes] = related_episodes
 
     other_episodes =
-      Prompts.get_other_episodes(most_related_episode.embedding)
+      Prompts.get_other_episodes(most_related_episode.embedding, @episode_limit)
 
-    has_all_other_episode_pages? = length(other_episodes) <= 3
+    other_episode_count = Enum.count(other_episodes)
 
     {:noreply,
      socket
      |> assign(:description, question.description)
-     |> assign(:has_all_other_episode_pages?, has_all_other_episode_pages?)
-     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)
+     |> assign(:has_all_other_episodes?, has_all_episodes?(0, other_episode_count))
+     |> assign(:has_all_related_episodes?, has_all_episodes?(0, related_episode_count))
      |> assign(:other_episodes, other_episodes)
+     |> assign(:other_episode_count, other_episode_count)
      |> assign(:query, question.query)
      |> assign(:related_episodes, related_episodes)
-     |> assign(:vector_numbers, vector_numbers)
-     |> assign(:visible_episodes, @visible_episodes)}
+     |> assign(:related_episode_count, related_episode_count)
+     |> assign(:vector_numbers, vector_numbers)}
   end
 
   @impl Phoenix.LiveView
   def handle_event("next_related_episodes", _params, socket) do
-    index = socket.assigns.related_episodes_index
-    related_episodes = socket.assigns.related_episodes
-    new_index = min(index + 1, length(related_episodes) - 1)
-    has_all_related_episode_pages? = length(related_episodes) - new_index <= 3
+    current_index = socket.assigns.related_episodes_index + 1
+    episode_count = socket.assigns.related_episode_count
 
     {:noreply,
      socket
-     |> assign(:has_all_related_episode_pages?, has_all_related_episode_pages?)
-     |> assign(:related_episodes_index, new_index)}
+     |> assign(:has_all_related_episodes?, has_all_episodes?(current_index, episode_count))
+     |> assign(:related_episodes_index, current_index)}
   end
 
   def handle_event("prev_related_episodes", _params, socket) do
-    index = socket.assigns.related_episodes_index
-    new_index = max(index - 1, 0)
-    {:noreply, assign(socket, :related_episodes_index, new_index)}
-  end
-
-  def handle_event("next_other_episodes", _params, socket) do
-    index = socket.assigns.other_episodes_index
-    other_episodes = socket.assigns.other_episodes
-    new_index = min(index + 1, length(other_episodes) - 1)
-    has_all_other_episode_pages? = length(other_episodes) - new_index <= 3
+    current_index = socket.assigns.related_episodes_index - 1
+    episode_count = socket.assigns.related_episode_count
 
     {:noreply,
      socket
-     |> assign(:has_all_other_episode_pages?, has_all_other_episode_pages?)
-     |> assign(:other_episodes_index, new_index)}
+     |> assign(:has_all_related_episodes?, has_all_episodes?(current_index, episode_count))
+     |> assign(:related_episodes_index, current_index)}
+  end
+
+  def handle_event("next_other_episodes", _params, socket) do
+    current_index = socket.assigns.other_episodes_index + 1
+    episode_count = socket.assigns.other_episode_count
+
+    {:noreply,
+     socket
+     |> assign(:has_all_other_episodes?, has_all_episodes?(current_index, episode_count))
+     |> assign(:other_episodes_index, current_index)}
   end
 
   def handle_event("prev_other_episodes", _params, socket) do
-    index = socket.assigns.other_episodes_index
-    new_index = max(index - 1, 0)
-    {:noreply, assign(socket, :other_episodes_index, new_index)}
+    current_index = socket.assigns.other_episodes_index - 1
+    episode_count = socket.assigns.other_episode_count
+
+    {:noreply,
+     socket
+     |> assign(:has_all_other_episodes?, has_all_episodes?(current_index, episode_count))
+     |> assign(:other_episodes_index, current_index)}
   end
+
+  defp has_all_episodes?(_current_index, episode_count)
+       when episode_count <= @episode_batch_size,
+       do: true
+
+  defp has_all_episodes?(current_index, episode_count),
+    do: current_index == episode_count - @episode_batch_size
 end

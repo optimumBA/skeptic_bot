@@ -104,6 +104,12 @@ defmodule SkepticBotWeb.HomeLive.Index do
       {:ok, {description, podcast_episodes, embedding}} ->
         handle_prompt_results(description, podcast_episodes, embedding, socket)
 
+      :no_episodes_found ->
+        send(self(), {:loading_state, false})
+
+        {:noreply,
+         put_flash(socket, :error, "Sorry, we currently have no podcasts discussing this topic.")}
+
       {:error, _reason} ->
         {:noreply,
          put_flash(

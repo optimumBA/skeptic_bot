@@ -9,21 +9,19 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
   setup :verify_on_exit!
 
-  defp create_prompt_resources(%{conn: conn}) do
+  defp create_embedding(%{conn: conn}) do
     embedding = embedding_fixture()
-    episode = episode_fixture()
     response = "A simple response from a large language model"
 
     %{
       conn: conn,
       embedding: embedding,
-      episode: episode,
       response: response
     }
   end
 
   describe "/" do
-    setup [:create_prompt_resources]
+    setup [:create_embedding]
 
     test "shows heading and subtitle", %{conn: conn} do
       {:ok, view, html} = live(conn, "/")
@@ -69,15 +67,15 @@ defmodule SkepticBotWeb.HomeLiveTest do
       refute has_element?(view, ~s(div.animate-pulse))
     end
 
-    test "redirects to the question if episodes are found in the RAG process", %{
+    test "redirects to the question if episodes are found in the retrieval process", %{
       conn: conn,
       embedding: embedding,
-      episode: episode,
       response: response
     } do
-      {:ok, view, _html} = live(conn, "/")
-
+      episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      {:ok, view, _html} = live(conn, "/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
@@ -93,6 +91,32 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
       {path, _flash} = assert_redirect(view)
       assert path =~ ~r|/questions/|
+    end
+
+    test "renders an error message when no episodes are found in the retrieval process", %{
+      conn: conn,
+      embedding: embedding
+    } do
+      episode = episode_fixture(embedding: embedding_fixture())
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      {:ok, view, _html} = live(conn, "/")
+
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:ok, [embedding]}
+      end)
+
+      view
+      |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
+      |> render_submit()
+
+      with_retries(
+        fn ->
+          assert render(view) =~
+                   "Sorry, we currently have no podcasts discussing this topic."
+        end,
+        2
+      )
     end
 
     test "renders an error message if the RAG process fails", %{
