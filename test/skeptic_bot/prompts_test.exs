@@ -41,7 +41,7 @@ defmodule SkepticBot.PromptsTest do
     end
   end
 
-  describe "get_related_episodes/4" do
+  describe "get_related_episodes/3" do
     setup [:create_question]
 
     test "returns a list of podcast episodes", %{question: question} do
