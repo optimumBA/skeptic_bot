@@ -2,13 +2,21 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   use SkepticBotWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
+  import SkepticBot.PodcastsFixtures
   import SkepticBot.PromptsFixtures
 
   alias SkepticBot.Prompts
   alias SkepticBotWeb.PodcastComponents
 
   defp create_question(%{conn: conn}) do
-    question = question_fixture()
+    embedding = embedding_fixture()
+
+    episode_details =
+      5
+      |> create_multiple_episodes(embedding)
+      |> Prompts.get_episode_details()
+
+    question = question_fixture(embedding: embedding, episodes: episode_details)
     %{conn: conn, question: question}
   end
 
@@ -38,13 +46,15 @@ defmodule SkepticBotWeb.QuestionLiveTest do
            conn: conn,
            question: question
          } do
-      {:ok, view, _html} = live(conn, "/questions/#{question.id}")
+      {:ok, view, html} = live(conn, "/questions/#{question.id}")
 
-      assert render(view) =~ "style=\"transform: translateX(-0.0rem);\""
-      render_click(view, :next_related_episodes)
-      assert render(view) =~ "style=\"transform: translateX(-20.6875rem);\""
-      render_click(view, :prev_related_episodes)
-      assert render(view) =~ "style=\"transform: translateX(-0.0rem);\""
+      assert html =~ ~s'style="transform: translateX(-0.0rem);"'
+
+      assert render_click(view, :next_related_episodes) =~
+               ~s'style="transform: translateX(-20.6875rem);"'
+
+      assert render_click(view, :prev_related_episodes) =~
+               ~s'style="transform: translateX(-0.0rem);"'
     end
   end
 end

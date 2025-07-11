@@ -1,6 +1,7 @@
 defmodule SkepticBot.PromptsTest do
   use SkepticBot.DataCase, async: true
 
+  import SkepticBot.PodcastsFixtures
   import SkepticBot.PromptsFixtures
 
   alias SkepticBot.Prompts
@@ -24,9 +25,22 @@ defmodule SkepticBot.PromptsTest do
   }
 
   defp create_question(_attrs) do
-    question = question_fixture()
-    episodes = create_multiple_episodes(2)
-    %{question: question, episodes: episodes}
+    embedding = embedding_fixture()
+    question = question_fixture(embedding: embedding)
+
+    %{embedding: embedding, question: question}
+  end
+
+  describe "create_question/1" do
+    test "with valid data creates a question" do
+      assert {:ok, question} = Prompts.create_question(@valid_question_attrs)
+      assert question.description == "A question description"
+      assert question.query == "American Ponzi with Lee Camp"
+    end
+
+    test "with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Prompts.create_question(@invalid_question_attrs)
+    end
   end
 
   describe "get_question/1" do
@@ -42,28 +56,27 @@ defmodule SkepticBot.PromptsTest do
   end
 
   describe "get_related_episodes/3" do
-    setup [:create_question]
+    setup do
+      embedding = embedding_fixture()
+      create_multiple_episodes(4, embedding)
 
-    test "returns a list of podcast episodes", %{question: question} do
-      episodes = Prompts.get_related_episodes(question.episodes, question.embedding, 3)
+      %{embedding: embedding}
+    end
+
+    test "returns a list of podcast episodes", %{embedding: embedding} do
+      episodes = Prompts.get_related_episodes([], embedding, 3)
+
+      assert length(episodes) == 3
       assert Enum.all?(episodes, &is_struct(&1, SkepticBot.Podcasts.Episode))
     end
   end
 
-  describe "create_question/1" do
-    test "with valid data creates a question" do
-      assert {:ok, question} = Prompts.create_question(@valid_question_attrs)
-      assert question.description == "A question description"
-      assert question.query == "American Ponzi with Lee Camp"
-    end
-
-    test "with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Prompts.create_question(@invalid_question_attrs)
-    end
-  end
-
   describe "get_episode_details/1" do
-    setup [:create_question]
+    setup do
+      episodes = create_multiple_episodes(1)
+
+      %{episodes: episodes}
+    end
 
     test "returns a list of episode timestamps and ids", %{episodes: episodes} do
       episode_details = Prompts.get_episode_details(episodes)

@@ -22,16 +22,10 @@ defmodule SkepticBot.PromptsFixtures do
   def question_fixture(attrs \\ %{}) do
     embedding = embedding_fixture()
 
-    episode_details =
-      5
-      |> create_multiple_episodes(embedding)
-      |> Prompts.get_episode_details()
-
     question_attrs =
       Enum.into(attrs, %{
         description: "A simple description",
         embedding: embedding,
-        episodes: episode_details,
         query: "American Ponzi with Lee Camp"
       })
 
