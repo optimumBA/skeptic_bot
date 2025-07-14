@@ -7,57 +7,23 @@ defmodule SkepticBot.Prompts do
   import Pgvector.Ecto.Query, only: [l2_distance: 2]
 
   alias SkepticBot.Podcasts.Episode
+  alias SkepticBot.Prompts.PodcastEpisode
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Repo
+
+  @episode_threshold 0.688
+  @question_threshold 0.55555
 
   @type attrs :: map()
   @type embedding :: [float()]
   @type episode :: Episode.t()
   @type episode_details :: map()
   @type id :: Ecto.UUID.t()
-  @type prompts_episode :: SkepticBot.Prompts.Episode.t()
+  @type prompts_episode :: PodcastEpisode.t()
   @type question :: UserQuestion.t()
 
   @spec get_question(id()) :: question() | nil
   def get_question(id), do: Repo.get(UserQuestion, id)
-
-  @spec get_related_episodes([prompts_episode()]) :: [episode()]
-  def get_related_episodes(question_episodes) do
-    Enum.map(question_episodes, fn question_episode ->
-      Episode
-      |> Repo.get!(question_episode.episode_id)
-      |> Map.put(:timestamp, question_episode.timestamp)
-    end)
-  end
-
-  @spec get_other_episodes(embedding()) :: [episode()]
-  def get_other_episodes(embedding) do
-    Episode
-    |> select([e], %{
-      episode_length: e.episode_length,
-      title: e.title,
-      external_id: e.external_id,
-      thumbnail: e.thumbnail
-    })
-    |> order_by([e], desc: l2_distance(e.embedding, ^embedding))
-    |> limit(3)
-    |> Repo.all()
-  end
-
-  @spec get_related_questions(embedding(), id()) :: [question()]
-  def get_related_questions(embedding, id) do
-    UserQuestion
-    |> select([uq], %{
-      id: uq.id,
-      description: uq.description,
-      query: uq.query
-    })
-    |> where([uq], uq.id != ^id)
-    |> where([uq], fragment("? <-> ? >= ?", uq.embedding, ^embedding, 0.55555))
-    |> order_by([uq], asc: l2_distance(uq.embedding, ^embedding))
-    |> limit(6)
-    |> Repo.all()
-  end
 
   @spec create_question(attrs()) ::
           {:ok, question()} | {:error, Ecto.Changeset.t()}
@@ -77,5 +43,45 @@ defmodule SkepticBot.Prompts do
     Enum.map(podcast_episodes, fn podcast_episode ->
       %{episode_id: podcast_episode.id, timestamp: podcast_episode.timestamp}
     end)
+  end
+
+  @spec get_related_episodes([prompts_episode()], embedding(), integer()) ::
+          [episode()]
+  def get_related_episodes(question_episodes, question_embedding, limit) do
+    question_episodes_timestamps =
+      question_episodes
+      |> Enum.map(&{&1.episode_id, &1.timestamp})
+      |> Enum.into(%{})
+
+    Episode
+    |> where([e], fragment("? <-> ? <= ?", e.embedding, ^question_embedding, @episode_threshold))
+    |> order_by([e], asc: l2_distance(e.embedding, ^question_embedding))
+    |> limit(^limit)
+    |> Repo.all()
+    |> Enum.map(fn episode ->
+      timestamp = question_episodes_timestamps[episode.id]
+      Map.put(episode, :timestamp, timestamp)
+    end)
+  end
+
+  @spec get_other_episodes(embedding(), integer()) :: [episode()]
+  def get_other_episodes(question_embedding, limit) do
+    Episode
+    |> order_by([e], desc: l2_distance(e.embedding, ^question_embedding))
+    |> limit(^limit)
+    |> Repo.all()
+  end
+
+  @spec get_related_questions(embedding(), id()) :: [question()]
+  def get_related_questions(question_embedding, question_id) do
+    UserQuestion
+    |> where([uq], uq.id != ^question_id)
+    |> where(
+      [uq],
+      fragment("? <-> ? >= ?", uq.embedding, ^question_embedding, @question_threshold)
+    )
+    |> order_by([uq], asc: l2_distance(uq.embedding, ^question_embedding))
+    |> limit(6)
+    |> Repo.all()
   end
 end

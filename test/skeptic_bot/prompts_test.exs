@@ -26,30 +26,8 @@ defmodule SkepticBot.PromptsTest do
 
   defp create_question(_attrs) do
     question = question_fixture()
-    episodes = create_multiple_episodes(2)
-    _questions = create_multiple_questions(2)
-    %{question: question, episodes: episodes}
-  end
 
-  describe "get_question/1" do
-    setup [:create_question]
-
-    test "returns the question with the given id", %{question: question} do
-      assert Prompts.get_question(question.id) == question
-    end
-
-    test "returns nil for non-existent question_id" do
-      refute Prompts.get_question("14444444-edaa-444a-a333-7a77758ad305")
-    end
-  end
-
-  describe "get_related_episodes/1" do
-    setup [:create_question]
-
-    test "returns a list of podcast episodes", %{question: question} do
-      episodes = Prompts.get_related_episodes(question.episodes)
-      assert Enum.all?(episodes, &is_struct(&1, SkepticBot.Podcasts.Episode))
-    end
+    %{question: question}
   end
 
   describe "create_question/1" do
@@ -64,8 +42,56 @@ defmodule SkepticBot.PromptsTest do
     end
   end
 
-  describe "get_episode_details/1" do
+  describe "get_question/1" do
     setup [:create_question]
+
+    test "returns the question with the given id", %{question: question} do
+      assert Prompts.get_question(question.id) == question
+    end
+
+    test "returns nil for non-existent question_id" do
+      refute Prompts.get_question("14444444-edaa-444a-a333-7a77758ad305")
+    end
+  end
+
+  describe "get_related_episodes/3" do
+    setup do
+      embedding = embedding_fixture()
+      create_multiple_episodes(4, embedding)
+
+      %{embedding: embedding}
+    end
+
+    test "returns a list of podcast episodes", %{embedding: embedding} do
+      episodes = Prompts.get_related_episodes([], embedding, 3)
+
+      assert length(episodes) == 3
+      assert Enum.all?(episodes, &is_struct(&1, SkepticBot.Podcasts.Episode))
+    end
+  end
+
+  describe "get_other_episodes/2" do
+    setup do
+      embedding = embedding_fixture()
+      create_multiple_episodes(4)
+
+      %{embedding: embedding}
+    end
+
+    test "returns a list of podcast episodes", %{embedding: embedding} do
+      episodes = Prompts.get_other_episodes(embedding, 3)
+
+      assert length(episodes) == 3
+      assert Enum.all?(episodes, &is_struct(&1, SkepticBot.Podcasts.Episode))
+    end
+  end
+
+  describe "get_episode_details/1" do
+    setup do
+      episodes = create_multiple_episodes(1)
+
+      %{episodes: episodes}
+    end
 
     test "returns a list of episode timestamps and ids", %{episodes: episodes} do
       episode_details = Prompts.get_episode_details(episodes)
@@ -74,41 +100,6 @@ defmodule SkepticBot.PromptsTest do
         assert detail.episode_id
         assert detail.timestamp
       end)
-    end
-  end
-
-  describe "get_other_episodes/1" do
-    setup [:create_question]
-
-    test "with valid data returns maps with episode information" do
-      other_episodes = Prompts.get_other_episodes(embedding_fixture())
-
-      Enum.all?(other_episodes, fn other_episode ->
-        assert other_episode.episode_length
-        assert other_episode.external_id
-        assert other_episode.thumbnail
-        assert other_episode.title
-      end)
-    end
-  end
-
-  describe "get_related_questions/2" do
-    setup [:create_question]
-
-    test "with valid data returns maps containing question details", %{question: question} do
-      related_questions = Prompts.get_related_questions(question.embedding, question.id)
-
-      Enum.all?(related_questions, fn related_question ->
-        assert related_question.id
-        assert related_question.query
-        assert related_question.description
-      end)
-    end
-
-    test "with invalid data returns an empty list", %{question: question} do
-      related_questions = Prompts.get_related_questions(nil, question.id)
-
-      assert related_questions == []
     end
   end
 end

@@ -13,14 +13,16 @@ defmodule SkepticBot.Rag.Retrieval do
   @type embedding :: [float()]
   @type episode :: map()
 
+  @episode_threshold 0.688
   @num_transcriptions_surrounding_the_target 100
 
   @spec retrieve(embedding()) :: [episode()]
   def retrieve(embedding) do
     from(e in Podcasts.Episode,
       select: e,
+      where: fragment("? <-> ? <= ?", e.embedding, ^embedding, @episode_threshold),
       order_by: [asc: l2_distance(e.embedding, ^embedding)],
-      limit: 3
+      limit: 6
     )
     |> Repo.all()
     |> Enum.map(fn %Podcasts.Episode{} = episode ->

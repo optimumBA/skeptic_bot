@@ -82,14 +82,15 @@ defmodule SkepticBotWeb.HomeLive.Index do
     changeset =
       Prompts.change_question_query(question, question_params)
 
-    socket = assign(socket, :query, query)
-
-    {:noreply, maybe_generate_prompt_results(changeset.valid?, socket)}
+    {:noreply,
+     socket
+     |> assign(:query, query)
+     |> maybe_generate_prompt_results(changeset.valid?)}
   end
 
-  defp maybe_generate_prompt_results(false, socket), do: socket
+  defp maybe_generate_prompt_results(socket, false), do: socket
 
-  defp maybe_generate_prompt_results(true, %{assigns: %{query: query}} = socket) do
+  defp maybe_generate_prompt_results(%{assigns: %{query: query}} = socket, true) do
     send(self(), {:loading_state, true})
 
     start_async(socket, :prompt_results, fn ->
@@ -100,8 +101,14 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @impl Phoenix.LiveView
   def handle_async(:prompt_results, {:ok, prompt_results}, socket) do
     case prompt_results do
-      {:ok, {description, podcast_episodes}} ->
-        handle_prompt_results(description, podcast_episodes, socket)
+      {:ok, {description, podcast_episodes, embedding}} ->
+        handle_prompt_results(description, podcast_episodes, embedding, socket)
+
+      {:error, :no_episodes_found} ->
+        send(self(), {:loading_state, false})
+
+        {:noreply,
+         put_flash(socket, :error, "Sorry, we currently have no podcasts discussing this topic.")}
 
       {:error, _reason} ->
         {:noreply,
@@ -124,9 +131,13 @@ defmodule SkepticBotWeb.HomeLive.Index do
      )}
   end
 
-  defp handle_prompt_results(description, podcast_episodes, %{assigns: %{query: query}} = socket) do
-    with {:ok, [embedding]} <- Rag.Embedder.generate(query),
-         episode_details <- Prompts.get_episode_details(podcast_episodes),
+  defp handle_prompt_results(
+         description,
+         podcast_episodes,
+         embedding,
+         %{assigns: %{query: query}} = socket
+       ) do
+    with episode_details <- Prompts.get_episode_details(podcast_episodes),
          question_attrs <- %{
            description: description,
            embedding: embedding,
@@ -149,6 +160,11 @@ defmodule SkepticBotWeb.HomeLive.Index do
   end
 
   defp assign_form(%{assigns: %{question: question}} = socket) do
-    assign(socket, :form, to_form(Prompts.change_question_query(question)))
+    form =
+      question
+      |> Prompts.change_question_query()
+      |> to_form()
+
+    assign(socket, :form, form)
   end
 end
