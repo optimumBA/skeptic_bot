@@ -88,17 +88,11 @@ defmodule SkepticBot.PromptsTest do
   end
 
   describe "get_other_episodes/2" do
-    setup [:create_question]
+    test "returns a list of podcast episodes" do
+      episodes = Prompts.get_other_episodes(embedding_fixture(), 3)
 
-    test "with valid data returns maps with episode information" do
-      other_episodes = Prompts.get_other_episodes(embedding_fixture(), 6)
-
-      Enum.all?(other_episodes, fn other_episode ->
-        assert other_episode.episode_length
-        assert other_episode.external_id
-        assert other_episode.thumbnail
-        assert other_episode.title
-      end)
+      assert length(episodes) == 3
+      assert Enum.all?(episodes, &is_struct(&1, SkepticBot.Podcasts.Episode))
     end
   end
 end

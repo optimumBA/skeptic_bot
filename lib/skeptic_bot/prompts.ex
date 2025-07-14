@@ -66,12 +66,6 @@ defmodule SkepticBot.Prompts do
   @spec get_other_episodes(embedding(), integer()) :: [episode()]
   def get_other_episodes(embedding, limit) do
     Episode
-    |> select([e], %{
-      episode_length: e.episode_length,
-      title: e.title,
-      external_id: e.external_id,
-      thumbnail: e.thumbnail
-    })
     |> order_by([e], desc: l2_distance(e.embedding, ^embedding))
     |> limit(^limit)
     |> Repo.all()
