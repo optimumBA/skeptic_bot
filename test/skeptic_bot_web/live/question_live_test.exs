@@ -78,27 +78,24 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       assert render_click(view, :prev_other_episodes) =~
                ~s'style="transform: translateX(-0.0rem);"'
+    end
 
-      open_browser(view)
+    test "displays the related questions", %{
+      conn: conn,
+      question: question
+    } do
+      create_multiple_questions(2)
+
+      {:ok, _view, html} = live(conn, "/questions/#{question.id}")
+
+      assert html =~ "Related Questions"
+
+      related_questions = Prompts.get_related_questions(question.embedding, question.id)
+
+      Enum.each(related_questions, fn related_question ->
+        assert html =~ PodcastComponents.first_n_words(related_question.description, 40)
+        assert html =~ related_question.query
+      end)
     end
   end
-
-  # test "displays the related questions", %{
-  #   conn: conn,
-  #   question: question
-  # } do
-  #   {:ok, view, _html} = live(conn, "/questions/#{question.id}")
-
-  # assert html =~ "Related Questions"
-
-  # related_questions =
-  #   question.embedding
-  #   |> Prompts.get_related_questions(question.id)
-  #   |> Enum.with_index(fn element, index -> {element, index + 1} end)
-
-  # Enum.each(related_questions, fn related_question ->
-  #   assert html =~ PodcastComponents.first_n_words(related_question.description, 40)
-  #   assert html =~ related_question.query
-  # end)
-  # end
 end
