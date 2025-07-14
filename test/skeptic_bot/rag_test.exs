@@ -10,19 +10,18 @@ defmodule SkepticBot.RagTest do
 
   defp create_embedding(_attrs) do
     embedding = embedding_fixture()
-    response = "Just a simple response from a large language model"
-    %{embedding: embedding, response: response}
+    %{embedding: embedding}
   end
 
   describe "generate/1" do
     setup [:create_embedding]
 
     test "with valid query returns episodes and description", %{
-      embedding: embedding,
-      response: response
+      embedding: embedding
     } do
       episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+      response = "Just a simple response from a large language model"
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}

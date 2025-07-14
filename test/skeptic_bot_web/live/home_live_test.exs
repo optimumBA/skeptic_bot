@@ -9,20 +9,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
   setup :verify_on_exit!
 
-  defp create_embedding(%{conn: conn}) do
-    embedding = embedding_fixture()
-    response = "A simple response from a large language model"
-
-    %{
-      conn: conn,
-      embedding: embedding,
-      response: response
-    }
-  end
-
   describe "/" do
-    setup [:create_embedding]
-
     test "shows heading and subtitle", %{conn: conn} do
       {:ok, view, html} = live(conn, "/")
       assert html =~ "Skeptic."
@@ -68,10 +55,9 @@ defmodule SkepticBotWeb.HomeLiveTest do
     end
 
     test "redirects to the question if episodes are found in the retrieval process", %{
-      conn: conn,
-      embedding: embedding,
-      response: response
+      conn: conn
     } do
+      embedding = embedding_fixture()
       episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
@@ -82,7 +68,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       end)
 
       expect(Rag.MockGenerator, :predict, fn _messages ->
-        {:ok, response}
+        {:ok, "A response from a large language model"}
       end)
 
       view
@@ -94,9 +80,9 @@ defmodule SkepticBotWeb.HomeLiveTest do
     end
 
     test "renders an error message when no episodes are found in the retrieval process", %{
-      conn: conn,
-      embedding: embedding
+      conn: conn
     } do
+      embedding = embedding_fixture()
       episode = episode_fixture(embedding: embedding_fixture())
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
