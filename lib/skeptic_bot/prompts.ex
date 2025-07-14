@@ -11,7 +11,7 @@ defmodule SkepticBot.Prompts do
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Repo
 
-  @episode_threshold 0.65555555
+  @episode_threshold 0.688
 
   @type attrs :: map()
   @type embedding :: [float()]
