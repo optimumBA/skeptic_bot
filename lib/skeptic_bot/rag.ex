@@ -11,13 +11,14 @@ defmodule SkepticBot.Rag do
   @type embedding :: [float()]
 
   @spec generate(String.t()) ::
-          {:ok, {String.t(), list(), embedding()}} | {:error, any()} | :no_episodes_found
+          {:ok, {String.t(), list(), embedding()}}
+          | {:error, any()}
   def generate(query) do
     case Rag.Embedder.generate("query: " <> query) do
       {:ok, [embedding]} ->
         case Rag.Retrieval.retrieve(embedding) do
           [] ->
-            :no_episodes_found
+            {:error, :no_episodes_found}
 
           context ->
             predict_query(context, query, embedding)

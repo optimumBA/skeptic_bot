@@ -10,19 +10,18 @@ defmodule SkepticBot.RagTest do
 
   defp create_embedding(_attrs) do
     embedding = embedding_fixture()
-    response = "Just a simple response from a large language model"
-    %{embedding: embedding, response: response}
+    %{embedding: embedding}
   end
 
   describe "generate/1" do
     setup [:create_embedding]
 
     test "with valid query returns episodes and description", %{
-      embedding: embedding,
-      response: response
+      embedding: embedding
     } do
       episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+      response = "Just a simple response from a large language model"
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
@@ -39,14 +38,14 @@ defmodule SkepticBot.RagTest do
       assert Enum.any?(context, fn context_episode -> context_episode.id == episode.id end)
     end
 
-    test "returns :no_episodes_found if no episodes fit the threshold", %{
+    test "returns error tuple if no episodes fit the threshold", %{
       embedding: embedding
     } do
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
 
-      assert :no_episodes_found = Rag.generate("Who Killed Two Pac Shakur")
+      assert {:error, :no_episodes_found} = Rag.generate("Who Killed Two Pac Shakur")
     end
 
     test "returns an error tuple if generation process was unsuccessful" do

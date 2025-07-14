@@ -140,9 +140,9 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   def mount(_params, _session, socket) do
     vector_numbers =
       @vector_numbers
+      |> Enum.shuffle()
       |> Stream.cycle()
       |> Enum.take(@episode_limit)
-      |> Enum.shuffle()
 
     {:ok,
      socket
