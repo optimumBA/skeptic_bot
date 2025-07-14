@@ -8,7 +8,7 @@ defmodule SkepticBot.PromptsTest do
 
   @valid_question_attrs %{
     description: "A question description",
-    embedding: Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end),
+    embedding: embedding_fixture(),
     episodes: [
       %{
         episode_id: "dc6d45bc-b3ab-43ba-b106-0969e8a51c4b",
@@ -25,10 +25,9 @@ defmodule SkepticBot.PromptsTest do
   }
 
   defp create_question(_attrs) do
-    embedding = embedding_fixture()
-    question = question_fixture(embedding: embedding)
+    question = question_fixture()
 
-    %{embedding: embedding, question: question}
+    %{question: question}
   end
 
   describe "create_question/1" do
