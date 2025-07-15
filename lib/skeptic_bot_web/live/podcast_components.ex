@@ -71,9 +71,7 @@ defmodule SkepticBotWeb.PodcastComponents do
             <img src={~p"/images/podcasts/xmark.svg"} alt="X Mark" />
           </div>
         </section>
-        <div class="divider">
-          &zwj;
-        </div>
+        <div class="divider"></div>
         <section class="text-sm w-[88%] montserrat-alternates-medium">
           <%= first_n_words(@body, 40) %>...
         </section>

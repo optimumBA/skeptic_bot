@@ -86,6 +86,22 @@ defmodule SkepticBot.PromptsTest do
     end
   end
 
+  describe "get_related_questions/2" do
+    setup do
+      question = question_fixture()
+      create_multiple_questions(2)
+
+      %{question: question}
+    end
+
+    test "returns a list of questions", %{question: question} do
+      questions = Prompts.get_related_questions(question.embedding, question.id)
+
+      assert length(questions) == 2
+      assert Enum.all?(questions, &is_struct(&1, SkepticBot.Prompts.UserQuestion))
+    end
+  end
+
   describe "get_episode_details/1" do
     setup do
       episodes = create_multiple_episodes(1)
