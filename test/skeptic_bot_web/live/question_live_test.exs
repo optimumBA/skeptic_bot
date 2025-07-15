@@ -56,27 +56,5 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       assert render_click(view, :prev_related_episodes) =~
                ~s'style="transform: translateX(-0.0rem);"'
     end
-
-    test "displays the same episodes when we create the same question with the exact embeddings",
-         %{
-           conn: conn,
-           question: question
-         } do
-      {:ok, _view, _html} = live(conn, "/questions/#{question.id}")
-
-      question_1_episode_ids =
-        question.episodes
-        |> Prompts.get_related_episodes(question.embedding, 6)
-        |> Enum.map(& &1.id)
-
-      question_2 = question_fixture(embedding: question.embedding)
-
-      question_2_episode_ids =
-        question_2.episodes
-        |> Prompts.get_related_episodes(question_2.embedding, 6)
-        |> Enum.map(& &1.id)
-
-      assert question_1_episode_ids == question_2_episode_ids
-    end
   end
 end

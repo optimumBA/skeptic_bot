@@ -55,29 +55,34 @@ defmodule SkepticBot.PromptsTest do
   end
 
   describe "get_related_episodes/3" do
-    setup do
+    test "returns a list of podcast episodes" do
       embedding = embedding_fixture()
-      create_multiple_episodes(4, embedding)
 
-      %{embedding: embedding}
-    end
+      episode_details =
+        2
+        |> create_multiple_episodes(embedding)
+        |> Prompts.get_episode_details()
 
-    test "returns a list of podcast episodes", %{embedding: embedding} do
-      episodes = Prompts.get_related_episodes([], embedding, 3)
+      question = question_fixture(embedding: embedding, episodes: episode_details)
+      _irrelevant_episodes = create_multiple_episodes(2)
 
-      assert length(episodes) == 3
-      assert Enum.all?(episodes, &is_struct(&1, SkepticBot.Podcasts.Episode))
+      initial_episodes = Prompts.get_related_episodes(question.episodes, question.embedding, 6)
+
+      assert length(initial_episodes) == 2
+      assert Enum.all?(initial_episodes, &is_struct(&1, SkepticBot.Podcasts.Episode))
+
+      _additional_relevant_episodes = create_multiple_episodes(2, embedding)
+
+      final_episodes = Prompts.get_related_episodes(question.episodes, question.embedding, 6)
+
+      assert length(final_episodes) == 4
     end
   end
 
   describe "get_episode_details/1" do
-    setup do
+    test "returns a list of episode timestamps and ids" do
       episodes = create_multiple_episodes(1)
 
-      %{episodes: episodes}
-    end
-
-    test "returns a list of episode timestamps and ids", %{episodes: episodes} do
       episode_details = Prompts.get_episode_details(episodes)
 
       Enum.all?(episode_details, fn detail ->
