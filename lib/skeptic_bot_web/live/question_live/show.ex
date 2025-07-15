@@ -134,12 +134,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
       </section>
 
       <section class="bg-[#FFF5F5] pt-20 pb-16">
-        <section class="max-w-[75.0625rem] ml-5 mb-10 montserrat-alternates-bold text-[#000000] text-2xl xl:mx-auto xl:pl-5">
-          Related Questions
-        </section>
-
-        <section class="max-w-[75.0625rem] mx-5 xl:mx-auto xl:px-5">
-          <div class="grid grid-cols-2 items-stretch gap-[1.125rem] lg:grid-cols-3">
+        <section
+          class="mx-auto"
+          style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 20.8rem)"}
+        >
+          <section class="ml-5 mb-10 montserrat-alternates-bold text-[#000000] text-2xl">
+            Related Questions
+          </section>
+          <div class="ml-5 grid grid-cols-2 items-stretch gap-[2rem] lg:grid-cols-3 lg:gap-[1.2rem]">
             <%= for {question, number_on_list} <- @related_questions do %>
               <PodcastComponents.related_question_card
                 body={question.description}
