@@ -81,6 +81,7 @@ defmodule SkepticBot.PromptsTest do
 
   describe "get_other_episodes/2" do
     test "returns a list of podcast episodes" do
+      create_multiple_episodes(4)
       embedding = embedding_fixture()
       episodes = Prompts.get_other_episodes(embedding, 3)
 
