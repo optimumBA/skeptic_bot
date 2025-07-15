@@ -23,6 +23,7 @@ defmodule SkepticBotWeb.Router do
     pipe_through :browser
 
     live "/", HomeLive.Index, :index
+    live "/questions/:id", QuestionLive.Show, :show
   end
 
   scope "/webhook", SkepticBotWeb do

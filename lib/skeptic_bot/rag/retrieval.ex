@@ -13,10 +13,10 @@ defmodule SkepticBot.Rag.Retrieval do
   @type embedding :: [float()]
   @type episode :: map()
 
-  @episode_threshold 0.65555555
+  @episode_threshold 0.688
   @num_transcriptions_surrounding_the_target 100
 
-  @spec retrieve(embedding()) :: [episode()] | []
+  @spec retrieve(embedding()) :: [episode()]
   def retrieve(embedding) do
     from(e in Podcasts.Episode,
       select: e,

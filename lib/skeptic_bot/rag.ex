@@ -8,17 +8,20 @@ defmodule SkepticBot.Rag do
   alias SkepticBot.Podcasts
   alias SkepticBot.Rag
 
+  @type embedding :: [float()]
+
   @spec generate(String.t()) ::
-          {:ok, {String.t(), list()}} | {:error, any()} | :no_episodes_found
+          {:ok, {String.t(), list(), embedding()}}
+          | {:error, any()}
   def generate(query) do
     case Rag.Embedder.generate("query: " <> query) do
       {:ok, [embedding]} ->
         case Rag.Retrieval.retrieve(embedding) do
           [] ->
-            :no_episodes_found
+            {:error, :no_episodes_found}
 
           context ->
-            predict_query(context, query)
+            predict_query(context, query, embedding)
         end
 
       {:error, reason} ->
@@ -26,10 +29,10 @@ defmodule SkepticBot.Rag do
     end
   end
 
-  defp predict_query(context, query) do
+  defp predict_query(context, query, embedding) do
     with prompt <- format_prompt(context, query),
          {:ok, response} <- Rag.Generator.predict(prompt) do
-      {:ok, {response, context}}
+      {:ok, {response, context, embedding}}
     else
       {:error, reason} ->
         {:error, reason}

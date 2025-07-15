@@ -1,5 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@500;600;700&display=swap');
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* This file is for your main application CSS */
+.montserrat-alternates-medium {
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.montserrat-alternates-semibold {
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.montserrat-alternates-bold {
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.form-input-shadow {
+  box-shadow: 5px 5px #81adc8;
+}
+
+.remove-outline:focus {
+  outline-style: none;
+  box-shadow: none;
+}
