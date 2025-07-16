@@ -65,7 +65,7 @@ defmodule SkepticBot.RagTest do
                Rag.generate("Who Killed Two Pac Shakur")
     end
 
-    test "returns an error tuple if the prediction process was unsuccessful", %{
+    test "returns an error tuple if prediction process was unsuccessful", %{
       embedding: embedding
     } do
       episode = episode_fixture(embedding: embedding)
