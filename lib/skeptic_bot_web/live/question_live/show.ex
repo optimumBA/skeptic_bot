@@ -47,7 +47,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
                   podcast_title={episode.title}
                   random={
                     Enum.at(
-                      @vector_numbers,
+                      @related_episodes_vectors,
                       Enum.find_index(@related_episodes, fn x -> x == episode end)
                     )
                   }
@@ -99,7 +99,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
                   podcast_title={episode.title}
                   random={
                     Enum.at(
-                      Enum.shuffle(@vector_numbers),
+                      @other_episodes_vectors,
                       Enum.find_index(@other_episodes, fn x -> x == episode end)
                     )
                   }
@@ -138,17 +138,20 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
-    vector_numbers =
+    related_episodes_vectors =
       @vector_numbers
       |> Enum.shuffle()
       |> Stream.cycle()
       |> Enum.take(@episode_limit)
 
+    other_episodes_vectors = Enum.shuffle(related_episodes_vectors)
+
     {:ok,
      socket
      |> assign(:other_episodes_index, 0)
+     |> assign(:other_episodes_vectors, other_episodes_vectors)
      |> assign(:related_episodes_index, 0)
-     |> assign(:vector_numbers, vector_numbers)
+     |> assign(:related_episodes_vectors, related_episodes_vectors)
      |> assign(:visible_episodes, @visible_episodes)}
   end
 
