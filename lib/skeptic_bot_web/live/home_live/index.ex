@@ -101,8 +101,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @impl Phoenix.LiveView
   def handle_async(:prompt_results, {:ok, prompt_results}, socket) do
     case prompt_results do
-      {:ok, {description, podcast_episodes, embedding}} ->
-        handle_prompt_results(description, podcast_episodes, embedding, socket)
+      {:ok, {description, podcast_episodes}} ->
+        handle_prompt_results(description, podcast_episodes, socket)
 
       {:error, :no_episodes_found} ->
         send(self(), {:loading_state, false})
@@ -134,10 +134,10 @@ defmodule SkepticBotWeb.HomeLive.Index do
   defp handle_prompt_results(
          description,
          podcast_episodes,
-         embedding,
          %{assigns: %{query: query}} = socket
        ) do
-    with episode_details <- Prompts.get_episode_details(podcast_episodes),
+    with {:ok, [embedding]} <- Rag.Embedder.generate(query),
+         episode_details <- Prompts.get_episode_details(podcast_episodes),
          question_attrs <- %{
            description: description,
            embedding: embedding,

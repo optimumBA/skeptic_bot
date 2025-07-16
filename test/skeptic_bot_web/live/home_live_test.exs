@@ -63,11 +63,11 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
       {:ok, view, _html} = live(conn, "/")
 
-      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+      expect(Rag.MockEmbedder, :generate, 2, fn _question_episodes ->
         {:ok, [embedding]}
       end)
 
-      expect(Rag.MockGenerator, :predict, fn _messages ->
+      expect(Rag.MockGenerator, :predict, 2, fn _messages ->
         {:ok, "A response from a large language model"}
       end)
 
@@ -87,6 +87,10 @@ defmodule SkepticBotWeb.HomeLiveTest do
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
       {:ok, view, _html} = live(conn, "/")
+
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, "A response from a large language model"}
+      end)
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
@@ -110,6 +114,10 @@ defmodule SkepticBotWeb.HomeLiveTest do
     } do
       {:ok, view, _html} = live(conn, "/")
 
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, "A response from a large language model"}
+      end)
+
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:error, "failed to generate embeddings"}
       end)
@@ -126,8 +134,8 @@ defmodule SkepticBotWeb.HomeLiveTest do
     test "shows an error message if the RAG process crashes", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/")
 
-      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        raise("failed to generate embeddings")
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        raise("failed to generate hypothetical answer")
       end)
 
       view
@@ -136,6 +144,42 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
       assert render(view) =~
                "An error occurred while processing your prompt. Please try again."
+    end
+
+    @tag :capture_log
+    test "renders an error message if question creation fails", %{
+      conn: conn
+    } do
+      embedding = embedding_fixture()
+      episode = episode_fixture(embedding: embedding)
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      {:ok, view, _html} = live(conn, "/")
+
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:ok, [embedding]}
+      end)
+
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:error, "failed to generate embeddings for the question"}
+      end)
+
+      expect(Rag.MockGenerator, :predict, 2, fn _messages ->
+        {:ok, "A response from a large language model"}
+      end)
+
+      view
+      |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
+      |> render_submit()
+
+      with_retries(
+        fn ->
+          assert render(view) =~ "There was an error processing your prompt"
+        end,
+        2
+      )
     end
   end
 end

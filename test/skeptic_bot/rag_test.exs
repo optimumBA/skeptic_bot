@@ -27,11 +27,11 @@ defmodule SkepticBot.RagTest do
         {:ok, [embedding]}
       end)
 
-      expect(Rag.MockGenerator, :predict, fn _messages ->
+      expect(Rag.MockGenerator, :predict, 2, fn _messages ->
         {:ok, response}
       end)
 
-      {:ok, {description, context, _embedding}} = Rag.generate("Who Killed Two Pac Shakur")
+      {:ok, {description, context}} = Rag.generate("Who Killed Two Pac Shakur")
 
       assert description == response
 
@@ -41,6 +41,10 @@ defmodule SkepticBot.RagTest do
     test "returns error tuple if no episodes fit the threshold", %{
       embedding: embedding
     } do
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, "Just a simple response from a large language model"}
+      end)
+
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
@@ -49,6 +53,10 @@ defmodule SkepticBot.RagTest do
     end
 
     test "returns an error tuple if generation process was unsuccessful" do
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, "Just a simple response from a large language model"}
+      end)
+
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:error, "Generation process was unsuccessful"}
       end)
@@ -57,11 +65,15 @@ defmodule SkepticBot.RagTest do
                Rag.generate("Who Killed Two Pac Shakur")
     end
 
-    test "returns an error tuple if prediction process was unsuccessful", %{
+    test "returns an error tuple if the prediction process was unsuccessful", %{
       embedding: embedding
     } do
       episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, "Just a simple response from a large language model"}
+      end)
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
@@ -72,6 +84,20 @@ defmodule SkepticBot.RagTest do
       end)
 
       assert {:error, "Prediction process was unsuccessful"} =
+               Rag.generate("Who Killed Two Pac Shakur")
+    end
+
+    test "returns an error tuple if HyDE process was unsuccessful", %{
+      embedding: embedding
+    } do
+      episode = episode_fixture(embedding: embedding)
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:error, "HyDE process was unsuccessful"}
+      end)
+
+      assert {:error, "HyDE process was unsuccessful"} =
                Rag.generate("Who Killed Two Pac Shakur")
     end
   end

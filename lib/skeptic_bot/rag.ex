@@ -8,31 +8,27 @@ defmodule SkepticBot.Rag do
   alias SkepticBot.Podcasts
   alias SkepticBot.Rag
 
-  @type embedding :: [float()]
-
-  @spec generate(String.t()) ::
-          {:ok, {String.t(), list(), embedding()}}
-          | {:error, any()}
+  @spec generate(String.t()) :: {:ok, {String.t(), list()}} | {:error, any()}
   def generate(query) do
-    case Rag.Embedder.generate("query: " <> query) do
-      {:ok, [embedding]} ->
-        case Rag.Retrieval.retrieve(embedding) do
-          [] ->
-            {:error, :no_episodes_found}
+    with {:ok, expanded_query} <- expand_query(query),
+         {:ok, [embedding]} <- Rag.Embedder.generate("query: " <> expanded_query) do
+      case Rag.Retrieval.retrieve(embedding) do
+        [] ->
+          {:error, :no_episodes_found}
 
-          context ->
-            predict_query(context, query, embedding)
-        end
-
+        context ->
+          predict_query(context, query)
+      end
+    else
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  defp predict_query(context, query, embedding) do
+  defp predict_query(context, query) do
     with prompt <- format_prompt(context, query),
          {:ok, response} <- Rag.Generator.predict(prompt) do
-      {:ok, {response, context, embedding}}
+      {:ok, {response, context}}
     else
       {:error, reason} ->
         {:error, reason}
@@ -74,5 +70,29 @@ defmodule SkepticBot.Rag do
     Title: #{episode.title}
     Transcription: #{episode.transcription}
     """
+  end
+
+  defp prepare_for_expansion(query) do
+    system_message =
+      ~s"""
+      For the given question try to generate a hypothetical answer.
+      Only generate the answer and nothing else.
+      """
+
+    [
+      Message.new_system!(system_message)
+    ] ++
+      [
+        Message.new_user!(~s"""
+
+        Question: #{query}
+        """)
+      ]
+  end
+
+  defp expand_query(query) do
+    query
+    |> prepare_for_expansion()
+    |> Rag.Generator.predict()
   end
 end
