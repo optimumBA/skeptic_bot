@@ -29,7 +29,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         </div>
         <%= get_episode_vector(@random) %>
         <div class="absolute bottom-[3rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
-          <%= first_n_words(@podcast_title, 10) %>...
+          <%= trim_string(@podcast_title, 60) %>...
         </div>
 
         <div class="absolute bottom-[1rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
@@ -194,13 +194,8 @@ defmodule SkepticBotWeb.PodcastComponents do
     absolute_vectors(assigns)
   end
 
-  @spec first_n_words(String.t(), integer()) :: String.t()
-  def first_n_words(string, number_of_words) do
-    string
-    |> String.split(~r/\s+/, trim: true)
-    |> Enum.take(number_of_words)
-    |> Enum.join(" ")
-  end
+  @spec trim_string(String.t(), integer()) :: String.t()
+  def trim_string(string, last_index), do: String.slice(string, 0..last_index)
 
   @spec get_time_from_seconds(integer()) :: String.t()
   def get_time_from_seconds(seconds) when is_integer(seconds) and seconds >= 0 do
