@@ -65,7 +65,7 @@ defmodule SkepticBotWeb.PodcastComponents do
               "text-[#CD4631]"
             end
           ]}>
-            <%= @title %>
+            <%= first_n_words(@title, 5) %>
           </div>
           <div class="shrink-0 pr-4">
             <img src={~p"/images/podcasts/xmark.svg"} alt="X Mark" />
