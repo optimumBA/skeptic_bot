@@ -89,7 +89,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       {:ok, view, _html} = live(conn, "/")
 
       expect(Rag.MockGenerator, :predict, fn _messages ->
-        {:ok, "A response from a large language model"}
+        {:ok, "HyDE process result"}
       end)
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
