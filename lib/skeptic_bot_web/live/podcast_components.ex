@@ -29,7 +29,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         </div>
         <%= get_episode_vector(@random) %>
         <div class="absolute bottom-[3rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
-          <%= first_n_words(@podcast_title, 10) %>
+          <%= first_n_words(@podcast_title, 10) %>...
         </div>
 
         <div class="absolute bottom-[1rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
