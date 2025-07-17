@@ -26,7 +26,7 @@ defmodule SkepticBot.PromptsFixtures do
       Enum.into(attrs, %{
         description: "A simple description",
         embedding: embedding,
-        query: "American Ponzi with Lee Camp and Sam Tripoli"
+        query: "American Ponzi with Lee Camp"
       })
 
     {:ok, question} =
@@ -44,6 +44,7 @@ defmodule SkepticBot.PromptsFixtures do
       episode =
         episode_fixture(%{
           description: "a random description #{episode}",
+          episode_length: 3000,
           thumbnail: "cover#{episode}.svg",
           title: "Consistency truly is key to mastering any skill over time and effort.",
           embedding: embedding

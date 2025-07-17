@@ -27,7 +27,7 @@ defmodule SkepticBot.PodcastsFixtures do
       attrs
       |> Enum.into(%{
         description: "Sample description",
-        episode_length: 3000,
+        episode_length: :rand.uniform(3000),
         external_id: Ecto.UUID.generate(),
         thumbnail: "cover1.svg",
         title: "Test Episode"

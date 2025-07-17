@@ -11,11 +11,17 @@ defmodule SkepticBotWeb.QuestionLiveTest do
     embedding = embedding_fixture()
 
     episode_details =
-      5
+      4
       |> create_multiple_episodes(embedding)
       |> Prompts.get_episode_details()
 
-    question = question_fixture(embedding: embedding, episodes: episode_details)
+    question =
+      question_fixture(
+        query: "American Ponzi with Lee Camp and Sam Tripoli",
+        embedding: embedding,
+        episodes: episode_details
+      )
+
     %{conn: conn, question: question}
   end
 
