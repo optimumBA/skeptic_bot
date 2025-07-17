@@ -15,7 +15,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     <div>
       <section class="relative max-w-[33.6rem] mx-auto mt-16 mb-8">
         <p class="text-[#000000] text-[3.75rem] leading-[1.2] montserrat-alternates-bold">
-          <%= PodcastComponents.trim_query(@query) %>
+          <%= @query %>
         </p>
         <div class="absolute top-[-2.1rem] left-[-2.8rem]">
           <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />

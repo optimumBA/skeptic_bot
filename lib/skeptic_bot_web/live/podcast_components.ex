@@ -29,7 +29,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         </div>
         <%= get_episode_vector(@random) %>
         <div class="absolute bottom-[3rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
-          <%= trim_title(@podcast_title) %>...
+          <%= trim_title(@podcast_title) %>
         </div>
 
         <div class="absolute bottom-[1rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
@@ -194,16 +194,9 @@ defmodule SkepticBotWeb.PodcastComponents do
     absolute_vectors(assigns)
   end
 
-  @spec trim_query(String.t()) :: String.t()
-  def trim_query(string) do
-    string
-    |> String.split(~r/\s+/, trim: true)
-    |> Enum.take(6)
-    |> Enum.join(" ")
-  end
-
   @spec trim_title(String.t()) :: String.t()
-  def trim_title(string), do: String.slice(string, 0..60)
+  def trim_title(<<title::binary-size(60), _rest::binary>>), do: title <> "..."
+  def trim_title(title), do: title
 
   @spec get_time_from_seconds(integer()) :: String.t()
   def get_time_from_seconds(seconds) when is_integer(seconds) and seconds >= 0 do

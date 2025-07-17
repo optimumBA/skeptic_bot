@@ -5,31 +5,14 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   import SkepticBot.PodcastsFixtures
   import SkepticBot.PromptsFixtures
 
-  alias SkepticBot.Prompts
-
   defp create_question(%{conn: conn}) do
     embedding = embedding_fixture()
 
-    episode_details =
-      4
-      |> create_multiple_episodes(embedding)
-      |> Prompts.get_episode_details()
+    create_multiple_episodes(4, embedding)
 
-    _asserting_episode =
-      episode_fixture(%{
-        episode_length: 3000,
-        title: "Consistency truly is key to mastering any skill over time and effort.",
-        embedding: embedding
-      })
+    question = question_fixture(embedding: embedding)
 
-    question =
-      question_fixture(
-        query: "American Ponzi with Lee Camp and Sam Tripoli",
-        embedding: embedding,
-        episodes: episode_details
-      )
-
-    %{conn: conn, question: question}
+    %{conn: conn, embedding: embedding, question: question}
   end
 
   describe "/questions/:id/" do
@@ -37,15 +20,37 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
     test "displays the question query, related episodes and other episodes", %{
       conn: conn,
-      question: question
+      embedding: embedding
     } do
+      question =
+        question_fixture(
+          query: "American Ponzi with Lee Camp and Sam Tripoli",
+          embedding: embedding,
+          episodes: []
+        )
+
+      episode_fixture(%{
+        episode_length: 3000,
+        title: "Consistency truly is key to mastering any skill over time and effort",
+        embedding: embedding
+      })
+
+      episode_fixture(%{
+        episode_length: 1200,
+        title:
+          "For binaries, the default is the size of the binary. Only the last binary in a match can use the default size.",
+        embedding: nil
+      })
+
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
-      assert html =~ "American Ponzi with Lee Camp and"
+      assert html =~ ~r|American Ponzi with Lee Camp and Sam Tripoli\s+</p>|
       assert html =~ "Related Podcasts"
       assert html =~ "Other Podcasts"
-      assert html =~ "Consistency truly is key to mastering any skill over time and"
+      assert html =~ ~r|Consistency truly is key to mastering any skill over time an...\s+</div>|
       assert html =~ "00:50:00"
+      assert html =~ ~r|For binaries, the default is the size of the binary. Only th...\s+</div>|
+      assert html =~ "00:20:00"
     end
 
     test "renders carousel with related episodes and translates appropriately with click events",
