@@ -55,13 +55,13 @@ defmodule SkepticBotWeb.QuestionLiveTest do
          } do
       {:ok, view, html} = live(conn, "/questions/#{question.id}")
 
-      assert html =~ ~s'style="transform: translateX(-0.0rem);"'
+      assert html =~ ~s'id="related-episodes-carousel" style="transform: translateX(-0.0rem);"'
 
       assert render_click(view, :next_related_episodes) =~
-               ~s'style="transform: translateX(-20.6875rem);"'
+               ~s'id="related-episodes-carousel" style="transform: translateX(-20.6875rem);"'
 
       assert render_click(view, :prev_related_episodes) =~
-               ~s'style="transform: translateX(-0.0rem);"'
+               ~s'id="related-episodes-carousel" style="transform: translateX(-0.0rem);"'
     end
 
     test "renders carousel with other episodes and translates appropriately with click events",
@@ -71,13 +71,13 @@ defmodule SkepticBotWeb.QuestionLiveTest do
          } do
       {:ok, view, html} = live(conn, "/questions/#{question.id}")
 
-      assert html =~ ~s'style="transform: translateX(-0.0rem);"'
+      assert html =~ ~s'id="other-episodes-carousel" style="transform: translateX(-0.0rem);"'
 
       assert render_click(view, :next_other_episodes) =~
-               ~s'style="transform: translateX(-20.6875rem);"'
+               ~s'id="other-episodes-carousel" style="transform: translateX(-20.6875rem);"'
 
       assert render_click(view, :prev_other_episodes) =~
-               ~s'style="transform: translateX(-0.0rem);"'
+               ~s'id="other-episodes-carousel" style="transform: translateX(-0.0rem);"'
     end
 
     test "displays the related questions", %{
