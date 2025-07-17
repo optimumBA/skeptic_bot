@@ -29,7 +29,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
     } do
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
-      assert html =~ PodcastComponents.trim_string(question.query, 40)
+      assert html =~ question.query
       assert html =~ "Related Podcasts"
       assert html =~ "Other Podcasts"
 
@@ -38,12 +38,12 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       other_episodes = Prompts.get_other_episodes(most_related_episode.embedding, 6)
 
       Enum.each(related_episodes, fn related_episode ->
-        assert html =~ PodcastComponents.trim_string(related_episode.title, 60)
+        assert html =~ PodcastComponents.trim_title(related_episode.title)
         assert html =~ PodcastComponents.get_time_from_seconds(related_episode.episode_length)
       end)
 
       Enum.each(other_episodes, fn other_episode ->
-        assert html =~ PodcastComponents.trim_string(other_episode.title, 60)
+        assert html =~ PodcastComponents.trim_title(other_episode.title)
         assert html =~ PodcastComponents.get_time_from_seconds(other_episode.episode_length)
       end)
     end
