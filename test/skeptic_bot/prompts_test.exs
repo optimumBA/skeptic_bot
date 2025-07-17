@@ -79,6 +79,17 @@ defmodule SkepticBot.PromptsTest do
     end
   end
 
+  describe "get_other_episodes/2" do
+    test "returns a list of podcast episodes" do
+      create_multiple_episodes(4)
+      embedding = embedding_fixture()
+      episodes = Prompts.get_other_episodes(embedding, 3)
+
+      assert length(episodes) == 3
+      assert Enum.all?(episodes, &is_struct(&1, SkepticBot.Podcasts.Episode))
+    end
+  end
+
   describe "get_episode_details/1" do
     test "returns a list of episode timestamps and ids" do
       episodes = create_multiple_episodes(1)
