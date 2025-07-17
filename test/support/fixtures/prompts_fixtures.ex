@@ -46,7 +46,7 @@ defmodule SkepticBot.PromptsFixtures do
           description: "a random description #{episode}",
           episode_length: 3000,
           thumbnail: "cover#{episode}.svg",
-          title: "Consistency truly is key to mastering any skill over time and effort.",
+          title: "episode #{episode} is great",
           embedding: embedding
         })
 
