@@ -39,6 +39,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           <section class="ml-5 overflow-hidden pt-12 relative mb-12">
             <div
               class="flex gap-4 transition-transform duration-300 ease-in-out"
+              id="related-episodes-carousel"
               style={"transform: translateX(-#{@related_episodes_index * 20.6875}rem);"}
             >
               <%= for episode <- @related_episodes do %>
@@ -91,6 +92,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           <section class="ml-5 overflow-hidden pt-12 relative mb-12">
             <div
               class="flex gap-4 transition-transform duration-300 ease-in-out"
+              id="other-episodes-carousel"
               style={"transform: translateX(-#{@other_episodes_index * 20.6875}rem);"}
             >
               <%= for episode <- @other_episodes do %>
