@@ -44,7 +44,6 @@ defmodule SkepticBot.PromptsFixtures do
       episode =
         episode_fixture(%{
           description: "a random description #{episode}",
-          episode_length: 3000,
           thumbnail: "cover#{episode}.svg",
           title: "episode #{episode} is great",
           embedding: embedding

@@ -15,7 +15,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       |> create_multiple_episodes(embedding)
       |> Prompts.get_episode_details()
 
-    _assert_episode =
+    _asserting_episode =
       episode_fixture(%{
         episode_length: 3000,
         title: "Consistency truly is key to mastering any skill over time and effort.",
