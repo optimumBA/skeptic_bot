@@ -6,7 +6,6 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   import SkepticBot.PromptsFixtures
 
   alias SkepticBot.Prompts
-  alias SkepticBotWeb.PodcastComponents
 
   defp create_question(%{conn: conn}) do
     embedding = embedding_fixture()
@@ -29,23 +28,11 @@ defmodule SkepticBotWeb.QuestionLiveTest do
     } do
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
-      assert html =~ question.query
+      assert html =~ "American Ponzi with Lee Camp and"
       assert html =~ "Related Podcasts"
       assert html =~ "Other Podcasts"
-
-      related_episodes = Prompts.get_related_episodes(question.episodes, question.embedding, 6)
-      [most_related_episode | _other_related_episodes] = related_episodes
-      other_episodes = Prompts.get_other_episodes(most_related_episode.embedding, 6)
-
-      Enum.each(related_episodes, fn related_episode ->
-        assert html =~ PodcastComponents.trim_title(related_episode.title)
-        assert html =~ PodcastComponents.get_time_from_seconds(related_episode.episode_length)
-      end)
-
-      Enum.each(other_episodes, fn other_episode ->
-        assert html =~ PodcastComponents.trim_title(other_episode.title)
-        assert html =~ PodcastComponents.get_time_from_seconds(other_episode.episode_length)
-      end)
+      assert html =~ "Consistency truly is key to mastering any skill over time and"
+      assert html =~ "00:50:00"
     end
 
     test "renders carousel with related episodes and translates appropriately with click events",

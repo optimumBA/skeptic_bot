@@ -194,6 +194,14 @@ defmodule SkepticBotWeb.PodcastComponents do
     absolute_vectors(assigns)
   end
 
+  @spec trim_query(String.t()) :: String.t()
+  def trim_query(string) do
+    string
+    |> String.split(~r/\s+/, trim: true)
+    |> Enum.take(6)
+    |> Enum.join(" ")
+  end
+
   @spec trim_title(String.t()) :: String.t()
   def trim_title(string), do: String.slice(string, 0..60)
 
