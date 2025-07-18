@@ -29,7 +29,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         </div>
         <%= get_episode_vector(@random) %>
         <div class="absolute bottom-[3rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
-          <%= first_n_words(@podcast_title, 10) %>...
+          <%= trim_title(@podcast_title) %>
         </div>
 
         <div class="absolute bottom-[1rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
@@ -65,7 +65,7 @@ defmodule SkepticBotWeb.PodcastComponents do
               "text-[#CD4631]"
             end
           ]}>
-            <%= first_n_words(@title, 5) %>
+            <%= @title %>
           </div>
           <div class="shrink-0 pr-4">
             <img src={~p"/images/podcasts/xmark.svg"} alt="X Mark" />
@@ -73,7 +73,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         </section>
         <div class="divider"></div>
         <section class="text-sm w-[88%] montserrat-alternates-medium">
-          <%= first_n_words(@body, 40) %>...
+          <%= @body %>...
         </section>
       </div>
     </div>
@@ -231,13 +231,9 @@ defmodule SkepticBotWeb.PodcastComponents do
     absolute_vectors(assigns)
   end
 
-  @spec first_n_words(String.t(), integer()) :: String.t()
-  def first_n_words(string, number_of_words) do
-    string
-    |> String.split(~r/\s+/, trim: true)
-    |> Enum.take(number_of_words)
-    |> Enum.join(" ")
-  end
+  @spec trim_title(String.t()) :: String.t()
+  def trim_title(<<title::binary-size(60), _rest::binary>>), do: title <> "..."
+  def trim_title(title), do: title
 
   @spec get_time_from_seconds(integer()) :: String.t()
   def get_time_from_seconds(seconds) when is_integer(seconds) and seconds >= 0 do
