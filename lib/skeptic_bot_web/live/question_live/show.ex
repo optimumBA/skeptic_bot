@@ -144,11 +144,11 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             Related Questions
           </section>
           <div class="ml-5 grid grid-cols-2 items-stretch gap-[2rem] lg:grid-cols-3 lg:gap-[1.2rem]">
-            <%= for {question, question_number} <- @related_questions do %>
+            <%= for {question, question_index} <- @related_questions do %>
               <PodcastComponents.related_question_card
                 description={question.description}
                 question_id={question.id}
-                question_number={question_number}
+                question_index={question_index}
                 title={question.query}
               />
             <% end %>
@@ -197,7 +197,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     related_questions =
       question.embedding
       |> Prompts.get_related_questions(question.id)
-      |> Enum.with_index(fn element, index -> {element, index + 1} end)
+      |> Enum.with_index()
 
     {:noreply,
      socket
