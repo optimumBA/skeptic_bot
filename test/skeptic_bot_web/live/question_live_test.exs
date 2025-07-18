@@ -89,18 +89,18 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       conn: conn,
       question: question
     } do
-      create_multiple_questions(2)
+      question_fixture(
+        description: "He was allegedly killed by some gang members",
+        embedding: embedding_fixture(),
+        episodes: [],
+        query: "Who killed Two Pac Shakur?"
+      )
 
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
       assert html =~ "Related Questions"
-
-      related_questions = Prompts.get_related_questions(question.embedding, question.id)
-
-      Enum.each(related_questions, fn related_question ->
-        assert html =~ PodcastComponents.first_n_words(related_question.description, 40)
-        assert html =~ related_question.query
-      end)
+      assert html =~ "Who killed Two Pac Shakur?"
+      assert html =~ "He was allegedly killed by some gang members"
     end
   end
 end
