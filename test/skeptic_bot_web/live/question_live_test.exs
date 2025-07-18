@@ -5,6 +5,8 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   import SkepticBot.PodcastsFixtures
   import SkepticBot.PromptsFixtures
 
+  alias SkepticBot.Prompts
+
   defp create_question(%{conn: conn}) do
     embedding = embedding_fixture()
 
@@ -89,10 +91,12 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       conn: conn,
       question: question
     } do
+      embedding = Pgvector.to_list(question.embedding)
+
       question_fixture(
         description:
           "Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davis's own admissions in interviews and a memoir, he was in the car from which the fatal shots were fired and allegedly handed the gun to the shooter. While the exact individual who pulled the trigger has not been definitively confirmed in court, Davis’s arrest has provided the strongest legal and investigative breakthrough in the case to date.",
-        embedding: embedding_fixture(),
+        embedding: Prompts.return_similar_embedding(embedding),
         episodes: [],
         query: "Who killed Two Pac Shakur?"
       )

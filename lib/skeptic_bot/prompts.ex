@@ -12,7 +12,9 @@ defmodule SkepticBot.Prompts do
   alias SkepticBot.Repo
 
   @episode_threshold 0.688
-  @question_threshold 0.55555
+  @max_question_distance_threshold 0.60
+  @min_question_distance_threshold 0.55
+  @vector_offset 0.58
 
   @type attrs :: map()
   @type embedding :: [float()]
@@ -78,10 +80,31 @@ defmodule SkepticBot.Prompts do
     |> where([uq], uq.id != ^question_id)
     |> where(
       [uq],
-      fragment("? <-> ? >= ?", uq.embedding, ^question_embedding, @question_threshold)
+      fragment(
+        "? <-> ? >= ?",
+        uq.embedding,
+        ^question_embedding,
+        @min_question_distance_threshold
+      )
+    )
+    |> where(
+      [uq],
+      fragment(
+        "? <-> ? <= ?",
+        uq.embedding,
+        ^question_embedding,
+        @max_question_distance_threshold
+      )
     )
     |> order_by([uq], asc: l2_distance(uq.embedding, ^question_embedding))
     |> limit(6)
     |> Repo.all()
+  end
+
+  @spec return_similar_embedding(embedding) :: [float()]
+  def return_similar_embedding(embedding) do
+    vector = Enum.at(embedding, 1023)
+    new_vector = vector - @vector_offset
+    List.replace_at(embedding, 1023, new_vector)
   end
 end

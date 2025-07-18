@@ -5,6 +5,8 @@ defmodule SkepticBotWeb.PodcastComponents do
 
   use SkepticBotWeb, :html
 
+  require Integer
+
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
@@ -59,11 +61,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         <section class="flex justify-between items-center">
           <div class={[
             "text-2xl montserrat-alternates-bold",
-            if rem(@question_index, 2) == 0 do
-              "text-[#000000]"
-            else
-              "text-[#CD4631]"
-            end
+            related_question_title_class(@question_index)
           ]}>
             <%= @title %>
           </div>
@@ -238,6 +236,11 @@ defmodule SkepticBotWeb.PodcastComponents do
   @spec trim_description(String.t()) :: String.t()
   def trim_description(<<description::binary-size(300), _rest::binary>>), do: description <> "..."
   def trim_description(description), do: description
+
+  defp related_question_title_class(question_index) when Integer.is_odd(question_index),
+    do: "text-[#000000]"
+
+  defp related_question_title_class(_question_index), do: "text-[#CD4631]"
 
   @spec get_time_from_seconds(integer()) :: String.t()
   def get_time_from_seconds(seconds) when is_integer(seconds) and seconds >= 0 do
