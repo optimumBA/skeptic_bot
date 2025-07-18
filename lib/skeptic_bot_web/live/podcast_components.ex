@@ -43,9 +43,9 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
-  attr :body, :string, required: true
-  attr :number, :integer, required: true
+  attr :description, :string, required: true
   attr :question_id, :string, required: true
+  attr :question_number, :integer, required: true
   attr :title, :string, required: true
 
   @spec related_question_card(assigns()) :: rendered()
@@ -59,7 +59,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         <section class="flex justify-between items-center">
           <div class={[
             "text-2xl montserrat-alternates-bold",
-            if rem(@number, 2) == 0 do
+            if rem(@question_number, 2) == 0 do
               "text-[#000000]"
             else
               "text-[#CD4631]"
@@ -73,7 +73,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         </section>
         <div class="divider"></div>
         <section class="text-sm w-[88%] montserrat-alternates-medium">
-          <%= @body %>...
+          <%= @description %>
         </section>
       </div>
     </div>

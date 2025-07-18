@@ -144,11 +144,11 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             Related Questions
           </section>
           <div class="ml-5 grid grid-cols-2 items-stretch gap-[2rem] lg:grid-cols-3 lg:gap-[1.2rem]">
-            <%= for {question, number_on_list} <- @related_questions do %>
+            <%= for {question, question_number} <- @related_questions do %>
               <PodcastComponents.related_question_card
-                body={question.description}
-                number={number_on_list}
+                description={question.description}
                 question_id={question.id}
+                question_number={question_number}
                 title={question.query}
               />
             <% end %>
