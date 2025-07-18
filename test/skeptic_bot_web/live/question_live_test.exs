@@ -90,7 +90,8 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       question: question
     } do
       question_fixture(
-        description: "He was allegedly killed by some gang members",
+        description:
+          "Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davis's own admissions in interviews and a memoir, he was in the car from which the fatal shots were fired and allegedly handed the gun to the shooter. While the exact individual who pulled the trigger has not been definitively confirmed in court, Davis’s arrest has provided the strongest legal and investigative breakthrough in the case to date.",
         embedding: embedding_fixture(),
         episodes: [],
         query: "Who killed Two Pac Shakur?"
@@ -100,7 +101,9 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       assert html =~ "Related Questions"
       assert html =~ "Who killed Two Pac Shakur?"
-      assert html =~ "He was allegedly killed by some gang members"
+
+      assert html =~
+               ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
     end
   end
 end

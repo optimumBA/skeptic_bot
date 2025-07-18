@@ -72,9 +72,9 @@ defmodule SkepticBotWeb.PodcastComponents do
           </div>
         </section>
         <div class="divider"></div>
-        <section class="text-sm w-[88%] montserrat-alternates-medium">
-          <%= @description %>
-        </section>
+        <div class="text-sm w-[88%] montserrat-alternates-medium">
+          <%= trim_description(@description) %>
+        </div>
       </div>
     </div>
     """
@@ -234,6 +234,10 @@ defmodule SkepticBotWeb.PodcastComponents do
   @spec trim_title(String.t()) :: String.t()
   def trim_title(<<title::binary-size(60), _rest::binary>>), do: title <> "..."
   def trim_title(title), do: title
+
+  @spec trim_description(String.t()) :: String.t()
+  def trim_description(<<description::binary-size(300), _rest::binary>>), do: description <> "..."
+  def trim_description(description), do: description
 
   @spec get_time_from_seconds(integer()) :: String.t()
   def get_time_from_seconds(seconds) when is_integer(seconds) and seconds >= 0 do
