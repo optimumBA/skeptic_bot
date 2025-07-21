@@ -20,7 +20,6 @@ defmodule SkepticBot.Prompts do
   @type episode :: Episode.t()
   @type episode_details :: map()
   @type id :: Ecto.UUID.t()
-  @type offset :: float()
   @type prompts_episode :: PodcastEpisode.t()
   @type question :: UserQuestion.t()
 
