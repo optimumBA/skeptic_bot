@@ -98,12 +98,12 @@ defmodule SkepticBot.PromptsTest do
         for question <- 1..2 do
           question_fixture(
             description: "Number #{question} description",
-            embedding: Prompts.offset_embedding(embedding),
+            embedding: offset_embedding_fixture(embedding),
             query: "Number #{question} query"
           )
         end
 
-      _irrelevant_question = question_fixture(embedding: Prompts.offset_embedding(embedding, 0.8))
+      _irrelevant_question = question_fixture(embedding: offset_embedding_fixture(embedding, 0.8))
 
       question = question_fixture(embedding: embedding)
 
