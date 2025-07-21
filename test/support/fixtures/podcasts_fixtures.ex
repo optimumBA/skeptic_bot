@@ -8,7 +8,10 @@ defmodule SkepticBot.PodcastsFixtures do
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Podcasts.EpisodeTranscription
 
+  @valid_l2_distance_offset 0.58
+
   @type embedding :: [float()]
+  @type offset :: float()
 
   @doc """
   create an embedding.
@@ -16,6 +19,11 @@ defmodule SkepticBot.PodcastsFixtures do
   @spec embedding_fixture :: embedding()
   def embedding_fixture do
     Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end)
+  end
+
+  @spec offset_embedding_fixture(embedding(), offset()) :: embedding()
+  def offset_embedding_fixture(embedding, offset \\ @valid_l2_distance_offset) do
+    List.update_at(embedding, -1, &(&1 - offset))
   end
 
   @doc """

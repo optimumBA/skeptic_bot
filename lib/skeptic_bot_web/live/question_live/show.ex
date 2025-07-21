@@ -134,6 +134,27 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           </div>
         </section>
       </section>
+
+      <section class="bg-[#FFF5F5] pt-20 pb-16">
+        <section
+          class="mx-auto"
+          style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 20.8rem)"}
+        >
+          <section class="ml-5 mb-10 montserrat-alternates-bold text-[#000000] text-2xl">
+            Related Questions
+          </section>
+          <div class="ml-5 grid grid-cols-2 items-stretch gap-[2rem] lg:grid-cols-3 lg:gap-[1.2rem]">
+            <%= for {question, question_index} <- @related_questions do %>
+              <PodcastComponents.related_question_card
+                description={question.description}
+                question_id={question.id}
+                question_index={question_index}
+                title={question.query}
+              />
+            <% end %>
+          </div>
+        </section>
+      </section>
     </div>
     """
   end
@@ -173,6 +194,11 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     other_episode_count = Enum.count(other_episodes)
 
+    related_questions =
+      question.embedding
+      |> Prompts.get_related_questions(question.id)
+      |> Enum.with_index()
+
     {:noreply,
      socket
      |> assign(:description, question.description)
@@ -182,7 +208,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:other_episode_count, other_episode_count)
      |> assign(:query, question.query)
      |> assign(:related_episodes, related_episodes)
-     |> assign(:related_episode_count, related_episode_count)}
+     |> assign(:related_episode_count, related_episode_count)
+     |> assign(:related_questions, related_questions)}
   end
 
   @impl Phoenix.LiveView

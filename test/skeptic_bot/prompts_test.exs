@@ -90,6 +90,30 @@ defmodule SkepticBot.PromptsTest do
     end
   end
 
+  describe "get_related_questions/2" do
+    test "returns a list of questions" do
+      embedding = embedding_fixture()
+
+      _relevant_questions =
+        for question <- 1..2 do
+          question_fixture(
+            description: "Number #{question} description",
+            embedding: offset_embedding_fixture(embedding),
+            query: "Number #{question} query"
+          )
+        end
+
+      _irrelevant_question = question_fixture(embedding: offset_embedding_fixture(embedding, 0.8))
+
+      question = question_fixture(embedding: embedding)
+
+      related_questions = Prompts.get_related_questions(question.embedding, question.id)
+
+      assert length(related_questions) == 2
+      assert Enum.all?(related_questions, &is_struct(&1, SkepticBot.Prompts.UserQuestion))
+    end
+  end
+
   describe "get_episode_details/1" do
     test "returns a list of episode timestamps and ids" do
       episodes = create_multiple_episodes(1)

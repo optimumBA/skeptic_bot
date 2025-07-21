@@ -5,6 +5,8 @@ defmodule SkepticBotWeb.PodcastComponents do
 
   use SkepticBotWeb, :html
 
+  require Integer
+
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
@@ -40,6 +42,39 @@ defmodule SkepticBotWeb.PodcastComponents do
         </div>
       </section>
     </a>
+    """
+  end
+
+  attr :description, :string, required: true
+  attr :question_id, :string, required: true
+  attr :question_index, :integer, required: true
+  attr :title, :string, required: true
+
+  @spec related_question_card(assigns()) :: rendered()
+  def related_question_card(assigns) do
+    ~H"""
+    <div
+      class="border-2 border-[#000000] bg-[#FFFFFF] rounded-2xl cursor-pointer question-card-shadow"
+      phx-click={JS.navigate(~p"/questions/#{@question_id}")}
+    >
+      <div class="flex flex-col px-3 pt-4 pb-2 text-[#4D4D4D]">
+        <section class="flex justify-between items-center">
+          <div class={[
+            "text-2xl montserrat-alternates-bold",
+            related_question_title_class(@question_index)
+          ]}>
+            <%= @title %>
+          </div>
+          <div class="shrink-0 pr-4">
+            <img src={~p"/images/podcasts/xmark.svg"} alt="X Mark" />
+          </div>
+        </section>
+        <div class="divider"></div>
+        <div class="text-sm w-[88%] montserrat-alternates-medium">
+          <%= trim_description(@description) %>
+        </div>
+      </div>
+    </div>
     """
   end
 
@@ -197,6 +232,15 @@ defmodule SkepticBotWeb.PodcastComponents do
   @spec trim_title(String.t()) :: String.t()
   def trim_title(<<title::binary-size(60), _rest::binary>>), do: title <> "..."
   def trim_title(title), do: title
+
+  @spec trim_description(String.t()) :: String.t()
+  def trim_description(<<description::binary-size(300), _rest::binary>>), do: description <> "..."
+  def trim_description(description), do: description
+
+  defp related_question_title_class(question_index) when Integer.is_odd(question_index),
+    do: "text-[#000000]"
+
+  defp related_question_title_class(_question_index), do: "text-[#CD4631]"
 
   @spec get_time_from_seconds(integer()) :: String.t()
   def get_time_from_seconds(seconds) when is_integer(seconds) and seconds >= 0 do

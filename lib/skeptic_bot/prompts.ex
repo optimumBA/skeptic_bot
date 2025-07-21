@@ -12,6 +12,8 @@ defmodule SkepticBot.Prompts do
   alias SkepticBot.Repo
 
   @episode_threshold 0.688
+  @max_question_distance_threshold 0.60
+  @min_question_distance_threshold 0.55
 
   @type attrs :: map()
   @type embedding :: [float()]
@@ -68,6 +70,33 @@ defmodule SkepticBot.Prompts do
     Episode
     |> order_by([e], desc: l2_distance(e.embedding, ^question_embedding))
     |> limit(^limit)
+    |> Repo.all()
+  end
+
+  @spec get_related_questions(embedding(), id()) :: [question()]
+  def get_related_questions(question_embedding, question_id) do
+    UserQuestion
+    |> where([uq], uq.id != ^question_id)
+    |> where(
+      [uq],
+      fragment(
+        "? <-> ? >= ?",
+        uq.embedding,
+        ^question_embedding,
+        @min_question_distance_threshold
+      )
+    )
+    |> where(
+      [uq],
+      fragment(
+        "? <-> ? <= ?",
+        uq.embedding,
+        ^question_embedding,
+        @max_question_distance_threshold
+      )
+    )
+    |> order_by([uq], asc: l2_distance(uq.embedding, ^question_embedding))
+    |> limit(6)
     |> Repo.all()
   end
 end
