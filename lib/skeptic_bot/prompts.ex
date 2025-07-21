@@ -14,7 +14,6 @@ defmodule SkepticBot.Prompts do
   @episode_threshold 0.688
   @max_question_distance_threshold 0.60
   @min_question_distance_threshold 0.55
-  @vector_offset 0.58
 
   @type attrs :: map()
   @type embedding :: [float()]
@@ -100,12 +99,5 @@ defmodule SkepticBot.Prompts do
     |> order_by([uq], asc: l2_distance(uq.embedding, ^question_embedding))
     |> limit(6)
     |> Repo.all()
-  end
-
-  @spec offset_embedding(embedding(), offset()) :: embedding()
-  def offset_embedding(embedding, offset \\ @vector_offset) do
-    vector = Enum.at(embedding, 1023)
-    new_vector = vector - offset
-    List.replace_at(embedding, 1023, new_vector)
   end
 end
