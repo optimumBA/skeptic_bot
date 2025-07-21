@@ -92,8 +92,21 @@ defmodule SkepticBot.PromptsTest do
 
   describe "get_related_questions/2" do
     test "returns a list of questions" do
-      create_multiple_questions(2)
-      question = question_fixture()
+      embedding = embedding_fixture()
+
+      _relevant_questions =
+        for question <- 1..2 do
+          question_fixture(
+            description: "Number #{question} description",
+            embedding: Prompts.offset_embedding(embedding),
+            query: "Number #{question} query"
+          )
+        end
+
+      _irrelevant_question = question_fixture(embedding: Prompts.offset_embedding(embedding, 0.8))
+
+      question = question_fixture(embedding: embedding)
+
       related_questions = Prompts.get_related_questions(question.embedding, question.id)
 
       assert length(related_questions) == 2

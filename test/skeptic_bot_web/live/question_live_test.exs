@@ -6,18 +6,15 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   import SkepticBot.PromptsFixtures
 
   alias SkepticBot.Prompts
-  alias SkepticBotWeb.PodcastComponents
 
   defp create_question(%{conn: conn}) do
     embedding = embedding_fixture()
 
-    episode_details =
-      5
-      |> create_multiple_episodes(embedding)
-      |> Prompts.get_episode_details()
+    create_multiple_episodes(4, embedding)
 
-    question = question_fixture(embedding: embedding, episodes: episode_details)
-    %{conn: conn, question: question}
+    question = question_fixture(embedding: embedding)
+
+    %{conn: conn, embedding: embedding, question: question}
   end
 
   describe "/questions/:id/" do
@@ -25,27 +22,37 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
     test "displays the question query, related episodes and other episodes", %{
       conn: conn,
-      question: question
+      embedding: embedding
     } do
+      question =
+        question_fixture(
+          query: "American Ponzi with Lee Camp and Sam Tripoli",
+          embedding: embedding,
+          episodes: []
+        )
+
+      episode_fixture(%{
+        episode_length: 3000,
+        title: "Consistency truly is key to mastering any skill over time and effort",
+        embedding: embedding
+      })
+
+      episode_fixture(%{
+        episode_length: 1200,
+        title:
+          "For binaries, the default is the size of the binary. Only the last binary in a match can use the default size.",
+        embedding: nil
+      })
+
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
-      assert html =~ question.query
+      assert html =~ ~r|American Ponzi with Lee Camp and Sam Tripoli\s+</p>|
       assert html =~ "Related Podcasts"
       assert html =~ "Other Podcasts"
-
-      related_episodes = Prompts.get_related_episodes(question.episodes, question.embedding, 6)
-      [most_related_episode | _other_related_episodes] = related_episodes
-      other_episodes = Prompts.get_other_episodes(most_related_episode.embedding, 6)
-
-      Enum.each(related_episodes, fn related_episode ->
-        assert html =~ PodcastComponents.first_n_words(related_episode.title, 2)
-        assert html =~ PodcastComponents.get_time_from_seconds(related_episode.episode_length)
-      end)
-
-      Enum.each(other_episodes, fn other_episode ->
-        assert html =~ PodcastComponents.first_n_words(other_episode.title, 2)
-        assert html =~ PodcastComponents.get_time_from_seconds(other_episode.episode_length)
-      end)
+      assert html =~ ~r|Consistency truly is key to mastering any skill over time an...\s+</div>|
+      assert html =~ "00:50:00"
+      assert html =~ ~r|For binaries, the default is the size of the binary. Only th...\s+</div>|
+      assert html =~ "00:20:00"
     end
 
     test "renders carousel with related episodes and translates appropriately with click events",
@@ -84,18 +91,23 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       conn: conn,
       question: question
     } do
-      create_multiple_questions(2)
+      embedding = Pgvector.to_list(question.embedding)
+
+      question_fixture(
+        description:
+          "Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davis's own admissions in interviews and a memoir, he was in the car from which the fatal shots were fired and allegedly handed the gun to the shooter. While the exact individual who pulled the trigger has not been definitively confirmed in court, Davis’s arrest has provided the strongest legal and investigative breakthrough in the case to date.",
+        embedding: Prompts.offset_embedding(embedding),
+        episodes: [],
+        query: "Who killed Two Pac Shakur?"
+      )
 
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
       assert html =~ "Related Questions"
+      assert html =~ "Who killed Two Pac Shakur?"
 
-      related_questions = Prompts.get_related_questions(question.embedding, question.id)
-
-      Enum.each(related_questions, fn related_question ->
-        assert html =~ PodcastComponents.first_n_words(related_question.description, 40)
-        assert html =~ related_question.query
-      end)
+      assert html =~
+               ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
     end
   end
 end
