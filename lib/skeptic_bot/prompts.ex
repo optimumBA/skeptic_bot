@@ -21,6 +21,7 @@ defmodule SkepticBot.Prompts do
   @type episode :: Episode.t()
   @type episode_details :: map()
   @type id :: Ecto.UUID.t()
+  @type offset :: float()
   @type prompts_episode :: PodcastEpisode.t()
   @type question :: UserQuestion.t()
 
@@ -101,10 +102,10 @@ defmodule SkepticBot.Prompts do
     |> Repo.all()
   end
 
-  @spec offset_embedding(embedding()) :: embedding()
-  def offset_embedding(embedding) do
+  @spec offset_embedding(embedding(), offset()) :: embedding()
+  def offset_embedding(embedding, offset \\ @vector_offset) do
     vector = Enum.at(embedding, 1023)
-    new_vector = vector - @vector_offset
+    new_vector = vector - offset
     List.replace_at(embedding, 1023, new_vector)
   end
 end

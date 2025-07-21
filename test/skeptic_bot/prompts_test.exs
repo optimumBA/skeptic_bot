@@ -94,7 +94,7 @@ defmodule SkepticBot.PromptsTest do
     test "returns a list of questions" do
       embedding = embedding_fixture()
 
-      _questions =
+      _relevant_questions =
         for question <- 1..2 do
           question_fixture(
             description: "Number #{question} description",
@@ -102,6 +102,8 @@ defmodule SkepticBot.PromptsTest do
             query: "Number #{question} query"
           )
         end
+
+      _irrelevant_question = question_fixture(embedding: Prompts.offset_embedding(embedding, 0.8))
 
       question = question_fixture(embedding: embedding)
 
