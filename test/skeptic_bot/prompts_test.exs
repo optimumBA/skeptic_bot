@@ -96,11 +96,11 @@ defmodule SkepticBot.PromptsTest do
 
       _questions =
         for question <- 1..2 do
-          question_fixture(%{
+          question_fixture(
             description: "Number #{question} description",
-            query: "Number #{question} query",
-            embedding: Prompts.return_similar_embedding(embedding)
-          })
+            embedding: Prompts.offset_embedding(embedding),
+            query: "Number #{question} query"
+          )
         end
 
       question = question_fixture(embedding: embedding)

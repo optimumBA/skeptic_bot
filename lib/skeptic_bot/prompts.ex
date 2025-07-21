@@ -101,8 +101,8 @@ defmodule SkepticBot.Prompts do
     |> Repo.all()
   end
 
-  @spec return_similar_embedding(embedding) :: [float()]
-  def return_similar_embedding(embedding) do
+  @spec offset_embedding(embedding()) :: embedding()
+  def offset_embedding(embedding) do
     vector = Enum.at(embedding, 1023)
     new_vector = vector - @vector_offset
     List.replace_at(embedding, 1023, new_vector)
