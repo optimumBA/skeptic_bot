@@ -32,7 +32,7 @@ defmodule SkepticBot.Rag do
   defp predict_query(context, query, embedding) do
     with prompt <- format_prompt(context, query),
          {:ok, response} <- Rag.Generator.predict(prompt) do
-      {:ok, {response, context, embedding}}
+      {:ok, {String.trim(response), context, embedding}}
     else
       {:error, reason} ->
         {:error, reason}
@@ -46,6 +46,13 @@ defmodule SkepticBot.Rag do
       You don't believe official naratives and are open to all opinions.
       Respond to the following query using only the context I pass to you and no other knowledge.
       Context is composed of conspiracy podcast episodes talking about various topics.
+      Avoid mentioning me in the response. For example avoid something like : "you provided some episodes..."
+      Please include a concise title (it MUST be one statement) which clearly explains what the response is about.
+      The entire response MUST be in the following format with the title coming first then its value
+      then the response coming second with its value. Here are some examples:
+
+      Example 1 : "{\"title\":\"Global Controls\",\"response\":\"The world is controlled by elite individuals\"}"
+      Example 2 : "{\"title\":\"American Ponzi schemes\",\"response\":\"Wake up now before it is too late\"}"
       """
 
     [
