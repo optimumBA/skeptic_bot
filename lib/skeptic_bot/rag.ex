@@ -47,12 +47,13 @@ defmodule SkepticBot.Rag do
       Respond to the following query using only the context I pass to you and no other knowledge.
       Context is composed of conspiracy podcast episodes talking about various topics.
       Avoid mentioning me in the response. For example avoid something like : "you provided some episodes..."
-      Please include a concise title (it MUST be one statement) which clearly explains what the response is about.
-      The entire response MUST be in the following format with the title coming first then its value
-      then the response coming second with its value. Here are some examples:
+      Your response MUST inlude a title and a summary. The summary is just a shortened version (MUST not EXCEED 200 words)
+      of the context I pass to you. The title (MUST be one statement) should clearly explain what the response is about.
+      Your response MUST be in the following format with the title coming first with its value
+      then the summary coming second with its corresponding value. Here are some examples:
 
-      Example 1 : "{\"title\":\"Global Controls\",\"response\":\"The world is controlled by elite individuals\"}"
-      Example 2 : "{\"title\":\"American Ponzi schemes\",\"response\":\"Wake up now before it is too late\"}"
+      Example 1 : "{\"title\":\"Global Controls\",\"summary\":\"The world is controlled by elite individuals\"}"
+      Example 2 : "{\"title\":\"American Ponzi schemes\",\"summary\":\"Wake up now before it is too late\"}"
       """
 
     [

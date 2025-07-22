@@ -182,7 +182,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   def handle_params(%{"id" => id}, _uri, socket) do
     question = Prompts.get_question(id)
 
-    {title, description} = get_title_and_summary(question)
+    {title, summary} = get_title_and_summary(question)
 
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
@@ -203,7 +203,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:noreply,
      socket
-     |> assign(:description, description)
+     |> assign(:description, summary)
      |> assign(:has_all_other_episodes?, has_all_episodes?(0, other_episode_count))
      |> assign(:has_all_related_episodes?, has_all_episodes?(0, related_episode_count))
      |> assign(:other_episodes, other_episodes)
@@ -264,8 +264,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   defp get_title_and_summary(question) do
     case Jason.decode(question.description) do
-      {:ok, %{"response" => response, "title" => title}} ->
-        {title, response}
+      {:ok, %{"summary" => summary, "title" => title}} ->
+        {title, summary}
 
       {:error, _error} ->
         {question.query, question.description}
