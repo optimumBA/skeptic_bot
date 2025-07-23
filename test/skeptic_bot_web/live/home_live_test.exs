@@ -60,6 +60,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       embedding = embedding_fixture()
       episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+      response = response_fixture()
 
       {:ok, view, _html} = live(conn, "/")
 
@@ -68,7 +69,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       end)
 
       expect(Rag.MockGenerator, :predict, fn _messages ->
-        {:ok, "A response from a large language model"}
+        {:ok, response}
       end)
 
       view
