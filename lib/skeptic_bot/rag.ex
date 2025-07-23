@@ -47,8 +47,10 @@ defmodule SkepticBot.Rag do
       Respond to the following query using only the context I pass to you and no other knowledge.
       Context is composed of conspiracy podcast episodes talking about various topics.
       Avoid mentioning me in the response. For example avoid something like : "you provided some episodes..."
-      Your response MUST inlude a title and a summary. The summary is just a shortened version (MUST not EXCEED 200 words)
-      of the context I pass to you. The title (MUST be one statement) should clearly explain what the response is about.
+      Avoid mentioning "the context".
+      Your response MUST inlude a title and a summary. The summary is a paragraph (MUST not EXCEED 200 words)
+      of the context I pass to you. Please refrain from providing exact details in the summary rather provide
+      just enough to capture the interest of the reader.The title (MUST be one statement) should clearly explain what the response is about.
       Your response MUST be in the following format with the title coming first with its value
       then the summary coming second with its corresponding value. Here are some examples:
 
@@ -72,7 +74,7 @@ defmodule SkepticBot.Rag do
 
   defp format_context(context) do
     context
-    |> Enum.take(3)
+    |> Enum.take(6)
     |> Enum.map_join("\n--------------------------------------\n", &format_episode/1)
   end
 

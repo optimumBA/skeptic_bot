@@ -11,7 +11,7 @@ defmodule SkepticBot.Rag.ReplicateGenerator do
   @behaviour Generator
   @behaviour ReplicateClient
 
-  @model "meta/meta-llama-3-8b-instruct"
+  @model "openai/gpt-4.1"
 
   @impl ReplicateClient
   def get_type, do: "generation"

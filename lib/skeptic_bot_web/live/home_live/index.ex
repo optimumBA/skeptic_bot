@@ -167,4 +167,14 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
     assign(socket, :form, form)
   end
+
+  # defp get_title_and_description(description, query) do
+  #   case Jason.decode(description) do
+  #     {:ok, %{"summary" => summary, "title" => title}} ->
+  #       {title, summary}
+
+  #     {:error, _error} ->
+  #       {query, ""}
+  #   end
+  # end
 end
