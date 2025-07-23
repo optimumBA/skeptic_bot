@@ -32,7 +32,7 @@ defmodule SkepticBot.Rag do
   defp predict_query(context, query, embedding) do
     with prompt <- format_prompt(context, query),
          {:ok, response} <- Rag.Generator.predict(prompt) do
-      {:ok, {String.trim(response), context, embedding}}
+      {:ok, {response, context, embedding}}
     else
       {:error, reason} ->
         {:error, reason}
