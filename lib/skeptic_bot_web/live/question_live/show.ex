@@ -15,7 +15,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     <div>
       <section class="relative max-w-[33.6rem] mx-auto mt-16 mb-8">
         <p class="text-[#000000] text-[3.75rem] leading-[1.2] montserrat-alternates-bold">
-          <%= @query %>
+          <%= @title %>
         </p>
         <div class="absolute top-[-2.1rem] left-[-2.8rem]">
           <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
@@ -149,7 +149,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
                 description={question.description}
                 question_id={question.id}
                 question_index={question_index}
-                title={question.query}
+                title={question.title}
               />
             <% end %>
           </div>
@@ -182,8 +182,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   def handle_params(%{"id" => id}, _uri, socket) do
     question = Prompts.get_question(id)
 
-    {title, description} = get_title_and_description(question)
-
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
 
@@ -203,15 +201,15 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:noreply,
      socket
-     |> assign(:description, description)
+     |> assign(:description, question.description)
      |> assign(:has_all_other_episodes?, has_all_episodes?(0, other_episode_count))
      |> assign(:has_all_related_episodes?, has_all_episodes?(0, related_episode_count))
      |> assign(:other_episodes, other_episodes)
      |> assign(:other_episode_count, other_episode_count)
-     |> assign(:query, title)
      |> assign(:related_episodes, related_episodes)
      |> assign(:related_episode_count, related_episode_count)
-     |> assign(:related_questions, related_questions)}
+     |> assign(:related_questions, related_questions)
+     |> assign(:title, question.title)}
   end
 
   @impl Phoenix.LiveView
@@ -261,14 +259,4 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   defp has_all_episodes?(current_index, episode_count),
     do: current_index == episode_count - @episode_batch_size
-
-  defp get_title_and_description(question) do
-    case Jason.decode(question.description) do
-      {:ok, %{"summary" => summary, "title" => title}} ->
-        {title, summary}
-
-      {:error, _error} ->
-        {question.query, ""}
-    end
-  end
 end
