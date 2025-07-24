@@ -149,9 +149,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
          {:ok, question} <- Prompts.create_question(question_attrs) do
       {:noreply, push_navigate(socket, to: "/questions/#{question.id}")}
     else
-      {:error, reason} ->
+      {:error, _reason} ->
         send(self(), {:loading_state, false})
-        Logger.error("Failed to create a question with reason: #{reason}")
         {:noreply, put_flash(socket, :error, "There was an error processing your prompt")}
     end
   end
