@@ -75,9 +75,7 @@ defmodule SkepticBot.Rag do
   end
 
   defp format_context(context) do
-    context
-    |> Enum.take(6)
-    |> Enum.map_join("\n--------------------------------------\n", &format_episode/1)
+    Enum.map_join(context, "\n--------------------------------------\n", &format_episode/1)
   end
 
   defp format_episode(%Podcasts.Episode{} = episode) do
