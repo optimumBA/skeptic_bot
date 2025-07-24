@@ -52,6 +52,7 @@ defmodule SkepticBot.Rag do
       Your response MUST inlude a title and a description.
       The description is a paragraph (MUST not EXCEED 200 words) of your response to the query using only the context I pass to you.
       Please refrain from providing exact details in the description, rather provide just enough to capture the interest of the reader.
+      Kindly urge the reader to listen to the podcast episodes to get the full story.
       The title (MUST be one statement) MUST clearly explain what the entire response is about.
       Your response MUST be in the following format with the title coming first with its value
       then the description coming second with its corresponding value. Here are some examples:
