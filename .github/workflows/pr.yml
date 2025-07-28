@@ -391,6 +391,7 @@ jobs:
           FLY_REGION: fra
           PHX_HOST: skeptic-bot-pr-${{ github.event.number }}.fly.dev
           REPO_NAME: skeptic_bot
+          INPUT_MEMORY: 1024
         with:
           name: skeptic-bot-pr-${{ github.event.number }}
           postgres_image: almirsarajcic/fly-pgvector
