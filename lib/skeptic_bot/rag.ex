@@ -68,15 +68,11 @@ defmodule SkepticBot.Rag do
         Message.new_user!(~s"""
         Context:
         --------------------------------------
-        #{format_context(context)}
+        #{Enum.map_join(context, "\n--------------------------------------\n", &format_episode/1)}
         --------------------------------------
         Query: #{query}
         """)
       ]
-  end
-
-  defp format_context(context) do
-    Enum.map_join(context, "\n--------------------------------------\n", &format_episode/1)
   end
 
   defp format_episode(%Podcasts.Episode{} = episode) do

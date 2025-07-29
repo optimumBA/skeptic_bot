@@ -16,7 +16,7 @@ defmodule SkepticBot.PromptsTest do
       }
     ],
     query: "American Ponzi with Lee Camp",
-    title: "American is full of Ponzi schemes"
+    title: "America is full of Ponzi schemes"
   }
   @invalid_question_attrs %{
     description: "A question description",
