@@ -384,7 +384,7 @@ jobs:
           ref: ${{ github.head_ref }}
           onlyRemoveDeployments: true
       - name: Deploy preview app
-        uses: optimumBA/fly-preview-apps@main
+        uses: Deankinyua/fly-preview-apps@main
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           FLY_ORG: optimum-bh
