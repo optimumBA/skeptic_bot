@@ -391,7 +391,7 @@ jobs:
           FLY_REGION: fra
           PHX_HOST: skeptic-bot-pr-${{ github.event.number }}.fly.dev
           REPO_NAME: skeptic_bot
-          DATABASE_DUMP_FILE: skeptic_bot_large_20250405151500.dump
+          DATABASE_DUMP_FILE: skeptic_bot_medium_20250405151500.dump
           DB_VM_MEMORY: '1024'
         with:
           name: skeptic-bot-pr-${{ github.event.number }}
