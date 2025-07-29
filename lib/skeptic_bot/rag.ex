@@ -46,6 +46,19 @@ defmodule SkepticBot.Rag do
       You don't believe official naratives and are open to all opinions.
       Respond to the following query using only the context I pass to you and no other knowledge.
       Context is composed of conspiracy podcast episodes talking about various topics.
+      Avoid mentioning me in the response. For example avoid something like : "you provided some episodes..."
+      Avoid mentioning "the context" and the exact episodes where a topic is being discussed.
+      You MUST not reveal your identity or that you are a skeptic.
+      Your response MUST inlude a title and a description.
+      The description is a paragraph (MUST not EXCEED 200 words) of your response to the query using only the context I pass to you.
+      Please refrain from providing exact details in the description, rather provide just enough to capture the interest of the reader.
+      Kindly urge the reader to listen to the podcast episodes to get the full story.
+      The title (MUST be one statement) MUST clearly explain what the entire response is about.
+      Your response MUST be in the following format with the title coming first with its value
+      then the description coming second with its corresponding value. Here are some examples:
+
+      Example 1 : "{\"title\":\"Global Controls\",\"description\":\"The world is controlled by elite individuals\"}"
+      Example 2 : "{\"title\":\"American Ponzi schemes\",\"description\":\"Wake up now before it is too late\"}"
       """
 
     [
@@ -55,17 +68,11 @@ defmodule SkepticBot.Rag do
         Message.new_user!(~s"""
         Context:
         --------------------------------------
-        #{format_context(context)}
+        #{Enum.map_join(context, "\n--------------------------------------\n", &format_episode/1)}
         --------------------------------------
         Query: #{query}
         """)
       ]
-  end
-
-  defp format_context(context) do
-    context
-    |> Enum.take(3)
-    |> Enum.map_join("\n--------------------------------------\n", &format_episode/1)
   end
 
   defp format_episode(%Podcasts.Episode{} = episode) do

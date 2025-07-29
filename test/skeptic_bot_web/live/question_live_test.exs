@@ -24,9 +24,9 @@ defmodule SkepticBotWeb.QuestionLiveTest do
     } do
       question =
         question_fixture(
-          query: "American Ponzi with Lee Camp and Sam Tripoli",
           embedding: embedding,
-          episodes: []
+          episodes: [],
+          title: "American Ponzi with Lee Camp and Sam Tripoli"
         )
 
       episode_fixture(%{
@@ -96,7 +96,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
           "Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davis's own admissions in interviews and a memoir, he was in the car from which the fatal shots were fired and allegedly handed the gun to the shooter. While the exact individual who pulled the trigger has not been definitively confirmed in court, Davis’s arrest has provided the strongest legal and investigative breakthrough in the case to date.",
         embedding: offset_embedding_fixture(embedding),
         episodes: [],
-        query: "Who killed Two Pac Shakur?"
+        title: "Who killed Two Pac Shakur?"
       )
 
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")

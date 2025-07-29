@@ -16,6 +16,7 @@ defmodule SkepticBot.Prompts.UserQuestion do
     field :description, :string
     field :embedding, Pgvector.Ecto.Vector
     field :query, :string
+    field :title, :string
 
     timestamps(type: :utc_datetime)
 
@@ -25,8 +26,8 @@ defmodule SkepticBot.Prompts.UserQuestion do
   @spec changeset(t(), attrs()) :: Ecto.Changeset.t()
   def changeset(question, attrs) do
     question
-    |> cast(attrs, [:description, :embedding, :query])
-    |> validate_required([:description, :embedding, :query])
+    |> cast(attrs, [:description, :embedding, :query, :title])
+    |> validate_required([:description, :embedding, :query, :title])
     |> validate_length(:query,
       min: 4,
       message: "Your prompt must be at least 4 characters in length"

@@ -21,19 +21,19 @@ defmodule SkepticBot.RagTest do
     } do
       episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-      response = "Just a simple response from a large language model"
+      llm_response = response_fixture()
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
 
       expect(Rag.MockGenerator, :predict, fn _messages ->
-        {:ok, response}
+        {:ok, llm_response}
       end)
 
-      {:ok, {description, context, _embedding}} = Rag.generate("Who Killed Two Pac Shakur")
+      {:ok, {response, context, _embedding}} = Rag.generate("Who Killed Two Pac Shakur")
 
-      assert description == response
+      assert llm_response == response
 
       assert Enum.any?(context, fn context_episode -> context_episode.id == episode.id end)
     end

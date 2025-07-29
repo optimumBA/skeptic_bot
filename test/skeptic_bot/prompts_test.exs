@@ -15,7 +15,8 @@ defmodule SkepticBot.PromptsTest do
         timestamp: %{secs: 300, months: 0, days: 0}
       }
     ],
-    query: "American Ponzi with Lee Camp"
+    query: "American Ponzi with Lee Camp",
+    title: "America is full of Ponzi schemes"
   }
   @invalid_question_attrs %{
     description: "A question description",

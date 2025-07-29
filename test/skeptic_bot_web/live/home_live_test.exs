@@ -1,6 +1,7 @@
 defmodule SkepticBotWeb.HomeLiveTest do
   use SkepticBotWeb.ConnCase, async: true
 
+  import ExUnit.CaptureLog
   import Mox
   import Phoenix.LiveViewTest
   import SkepticBot.PodcastsFixtures
@@ -60,6 +61,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       embedding = embedding_fixture()
       episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+      response = response_fixture()
 
       {:ok, view, _html} = live(conn, "/")
 
@@ -68,7 +70,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       end)
 
       expect(Rag.MockGenerator, :predict, fn _messages ->
-        {:ok, "A response from a large language model"}
+        {:ok, response}
       end)
 
       view
@@ -136,6 +138,69 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
       assert render(view) =~
                "An error occurred while processing your prompt. Please try again."
+    end
+
+    @tag :capture_log
+    test "renders an error message if question creation fails", %{
+      conn: conn
+    } do
+      embedding = embedding_fixture()
+      episode = episode_fixture(embedding: embedding)
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      {:ok, view, _html} = live(conn, "/")
+
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:ok, [embedding]}
+      end)
+
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, "An invalid result from the LLM"}
+      end)
+
+      view
+      |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
+      |> render_submit()
+
+      with_retries(
+        fn ->
+          assert render(view) =~ "There was an error processing your prompt"
+        end,
+        2
+      )
+    end
+
+    test "logs an error message if question creation fails", %{
+      conn: conn
+    } do
+      embedding = embedding_fixture()
+      episode = episode_fixture(embedding: embedding)
+      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
+
+      {:ok, view, _html} = live(conn, "/")
+
+      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
+        {:ok, [embedding]}
+      end)
+
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, "An invalid result from the LLM"}
+      end)
+
+      assert capture_log(fn ->
+               view
+               |> form("#question-input-form",
+                 user_question: %{query: "American Ponzi with Lee Camp"}
+               )
+               |> render_submit()
+
+               with_retries(
+                 fn ->
+                   assert render(view) =~ "There was an error processing your prompt"
+                 end,
+                 2
+               )
+             end) =~ "Question creation failed. Reason:"
     end
   end
 end

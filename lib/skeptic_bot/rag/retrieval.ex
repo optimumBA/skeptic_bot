@@ -14,7 +14,7 @@ defmodule SkepticBot.Rag.Retrieval do
   @type episode :: map()
 
   @episode_threshold 0.688
-  @num_transcriptions_surrounding_the_target 100
+  @num_transcriptions_surrounding_the_target 600
 
   @spec retrieve(embedding()) :: [episode()]
   def retrieve(embedding) do

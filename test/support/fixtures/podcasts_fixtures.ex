@@ -12,6 +12,7 @@ defmodule SkepticBot.PodcastsFixtures do
 
   @type embedding :: [float()]
   @type offset :: float()
+  @type response :: String.t()
 
   @doc """
   create an embedding.
@@ -19,6 +20,11 @@ defmodule SkepticBot.PodcastsFixtures do
   @spec embedding_fixture :: embedding()
   def embedding_fixture do
     Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end)
+  end
+
+  @spec response_fixture :: response()
+  def response_fixture do
+    "{\"title\":\"American Ponzi schemes\",\"description\":\"Wake up now before it is too late\"}"
   end
 
   @spec offset_embedding_fixture(embedding(), offset()) :: embedding()

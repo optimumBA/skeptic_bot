@@ -26,7 +26,8 @@ defmodule SkepticBot.PromptsFixtures do
       Enum.into(attrs, %{
         description: "A simple description",
         embedding: embedding,
-        query: "American Ponzi with Lee Camp"
+        query: "American Ponzi with Lee Camp",
+        title: "Ponzi schemes in America"
       })
 
     {:ok, question} =
