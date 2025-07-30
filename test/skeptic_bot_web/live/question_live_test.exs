@@ -44,6 +44,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       {:ok, _view, html} = live(conn, "/questions/#{question.id}")
 
+      assert html =~ ~r|<title>\s+#{question.title}\s+</title>|
       assert html =~ ~r|American Ponzi with Lee Camp and Sam Tripoli\s+</p>|
       assert html =~ "Related Podcasts"
       assert html =~ "Other Podcasts"
