@@ -209,7 +209,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:related_episodes, related_episodes)
      |> assign(:related_episode_count, related_episode_count)
      |> assign(:related_questions, related_questions)
-     |> assign(:title, question.title)}
+     |> assign(:title, question.title)
+     |> assign_seo_attributes(question, most_related_episode)}
   end
 
   @impl Phoenix.LiveView
@@ -259,4 +260,19 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   defp has_all_episodes?(current_index, episode_count),
     do: current_index == episode_count - @episode_batch_size
+
+  defp assign_seo_attributes(socket, question, episode) do
+    attributes = %{
+      description: question.description,
+      image_url: get_image_url(episode),
+      type: "question",
+      url: url(~p"/questions/#{question.id}")
+    }
+
+    assign(socket, :seo_attributes, attributes)
+  end
+
+  defp get_image_url(episode) do
+    "https://vid.samtripoli.com/" <> episode.thumbnail
+  end
 end
