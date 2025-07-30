@@ -10,7 +10,6 @@ defmodule SkepticBotWeb.SeoMetaTagsComponents do
   @type rendered :: rendered()
 
   @default_description "Questions Everything"
-
   @default_title "Skeptic.bot"
   @default_type "website"
 
