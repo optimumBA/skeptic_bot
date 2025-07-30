@@ -1,4 +1,4 @@
-defmodule SkepticBotWeb.SeoMetaTagsComponent do
+defmodule SkepticBotWeb.SeoMetaTagsComponents do
   @moduledoc false
 
   use SkepticBotWeb, :verified_routes
@@ -11,7 +11,7 @@ defmodule SkepticBotWeb.SeoMetaTagsComponent do
 
   @default_description "Questions Everything"
 
-  @default_title "Skeptic Bot"
+  @default_title "Skeptic.bot"
   @default_type "website"
 
   attr :attributes, :map
