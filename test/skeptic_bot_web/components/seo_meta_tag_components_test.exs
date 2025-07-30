@@ -7,24 +7,24 @@ defmodule SkepticBotWeb.SeoMetaTagsComponentsTest do
 
   describe "seo_meta_tags/1" do
     test "renders meta tags with the values passed" do
-      assigns = %{
+      attributes = %{
         description: "Listen to the podcast episodes",
         title: "American Ponzi"
       }
 
-      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: assigns) =~
+      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
                "<meta name=\"twitter:card\" content=\"summary_large_image\">\n"
 
-      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: assigns) =~
+      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
                "<meta name=\"twitter:site\" content=\"@optimumBA\">\n"
 
-      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: assigns) =~
+      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
                "<meta property=\"description\" content=\"Listen to the podcast episodes\">\n"
 
-      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: assigns) =~
+      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
                "<meta property=\"og:description\" content=\"Listen to the podcast episodes\">\n"
 
-      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: assigns) =~
+      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
                "<meta property=\"og:title\" content=\"American Ponzi\">"
     end
 

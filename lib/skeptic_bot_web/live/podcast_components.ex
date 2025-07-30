@@ -29,16 +29,16 @@ defmodule SkepticBotWeb.PodcastComponents do
             class="w-full h-full object-cover"
           />
         </div>
-        <%= get_episode_vector(@random) %>
+        {get_episode_vector(@random)}
         <div class="absolute bottom-[3rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
-          <%= trim_title(@podcast_title) %>
+          {trim_title(@podcast_title)}
         </div>
 
         <div class="absolute bottom-[1rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
           <div>
             <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
           </div>
-          <div class="text-sm"><%= get_time_from_seconds(@video_length) %></div>
+          <div class="text-sm">{get_time_from_seconds(@video_length)}</div>
         </div>
       </section>
     </a>
@@ -63,7 +63,7 @@ defmodule SkepticBotWeb.PodcastComponents do
             "text-2xl montserrat-alternates-bold",
             related_question_title_class(@question_index)
           ]}>
-            <%= @title %>
+            {@title}
           </div>
           <div class="shrink-0 pr-4">
             <img src={~p"/images/podcasts/xmark.svg"} alt="X Mark" />
@@ -71,7 +71,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         </section>
         <div class="divider"></div>
         <div class="text-sm w-[88%] montserrat-alternates-medium">
-          <%= trim_description(@description) %>
+          {trim_description(@description)}
         </div>
       </div>
     </div>
