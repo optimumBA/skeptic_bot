@@ -206,6 +206,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:has_all_related_episodes?, has_all_episodes?(0, related_episode_count))
      |> assign(:other_episodes, other_episodes)
      |> assign(:other_episode_count, other_episode_count)
+     |> assign(:page_title, question.title)
      |> assign(:related_episodes, related_episodes)
      |> assign(:related_episode_count, related_episode_count)
      |> assign(:related_questions, related_questions)
