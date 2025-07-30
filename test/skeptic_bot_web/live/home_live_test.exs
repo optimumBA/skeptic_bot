@@ -13,6 +13,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
   describe "/" do
     test "shows heading and subtitle", %{conn: conn} do
       {:ok, view, html} = live(conn, "/")
+      assert html =~ ~r|<title>\s+Skeptic.bot\s+</title>|
       assert html =~ "Skeptic."
       assert html =~ "bot"
       assert html =~ "Questions everything"
