@@ -9,7 +9,8 @@ defmodule SkepticBotWeb.SeoMetaTagsComponentsTest do
     test "renders meta tags with the values passed" do
       attributes = %{
         description: "Listen to the podcast episodes",
-        title: "American Ponzi"
+        title: "American Ponzi",
+        type: "article"
       }
 
       assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
@@ -26,6 +27,9 @@ defmodule SkepticBotWeb.SeoMetaTagsComponentsTest do
 
       assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
                "<meta property=\"og:title\" content=\"American Ponzi\">"
+
+      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
+               "<meta property=\"og:type\" content=\"article\">"
     end
 
     test "renders meta tags with default values if no attributes are given" do
