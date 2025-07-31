@@ -15,7 +15,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     <div>
       <section class="relative max-w-[33.6rem] mx-auto mt-16 mb-8">
         <p class="text-[#000000] text-[3.75rem] leading-[1.2] montserrat-alternates-bold">
-          <%= @title %>
+          {@title}
         </p>
         <div class="absolute top-[-2.1rem] left-[-2.8rem]">
           <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
@@ -24,7 +24,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
       <section class="max-w-[36.6rem] mx-auto mt-8 mb-10">
         <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium">
-          <%= @description %>
+          {@description}
         </p>
       </section>
 
@@ -210,7 +210,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:related_episodes, related_episodes)
      |> assign(:related_episode_count, related_episode_count)
      |> assign(:related_questions, related_questions)
-     |> assign(:title, question.title)}
+     |> assign(:title, question.title)
+     |> assign_seo_attributes(question, most_related_episode)}
   end
 
   @impl Phoenix.LiveView
@@ -260,4 +261,19 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   defp has_all_episodes?(current_index, episode_count),
     do: current_index == episode_count - @episode_batch_size
+
+  defp assign_seo_attributes(socket, question, episode) do
+    attributes = %{
+      description: question.description,
+      image_url: get_image_url(episode),
+      type: "article",
+      url: url(~p"/questions/#{question.id}")
+    }
+
+    assign(socket, :seo_attributes, attributes)
+  end
+
+  defp get_image_url(episode) do
+    "https://vid.samtripoli.com/" <> episode.thumbnail
+  end
 end

@@ -86,6 +86,7 @@ defmodule SkepticBotWeb do
       # Core UI components and translation
       import SkepticBotWeb.CoreComponents
       import SkepticBotWeb.Gettext
+      import SkepticBotWeb.SeoMetaTagsComponents
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
