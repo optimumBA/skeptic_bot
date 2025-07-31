@@ -10,14 +10,12 @@ defmodule SkepticBotWeb.SeoMetaTagsComponentsTest do
       attributes = %{
         description: "Listen to the podcast episodes",
         title: "American Ponzi",
-        type: "article"
+        type: "article",
+        url: url(~p"/questions/adhd647")
       }
 
       assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
                "<meta name=\"twitter:card\" content=\"summary_large_image\">\n"
-
-      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
-               "<meta name=\"twitter:site\" content=\"@optimumBA\">\n"
 
       assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
                "<meta property=\"description\" content=\"Listen to the podcast episodes\">\n"
@@ -30,6 +28,9 @@ defmodule SkepticBotWeb.SeoMetaTagsComponentsTest do
 
       assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
                "<meta property=\"og:type\" content=\"article\">"
+
+      assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: attributes) =~
+               "<meta property=\"og:url\" content=\"#{url(~p"/questions/adhd647")}\">"
     end
 
     test "renders meta tags with default values if no attributes are given" do
@@ -43,7 +44,7 @@ defmodule SkepticBotWeb.SeoMetaTagsComponentsTest do
                "<meta name=\"twitter:image\" content=\"#{url(~p"/images/seo_default_image.png")}\">"
 
       assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: nil) =~
-               "<meta name=\"twitter:site\" content=\"@optimumBA\">"
+               "<meta name=\"twitter:site\" content=\"@MostSkepticBot\">"
 
       assert render_component(&SeoMetaTagsComponents.seo_meta_tags/1, attributes: nil) =~
                "<meta name=\"twitter:url\" content=\"#{url(~p"/")}\">"

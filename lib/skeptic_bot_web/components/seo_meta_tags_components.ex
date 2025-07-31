@@ -117,7 +117,7 @@ defmodule SkepticBotWeb.SeoMetaTagsComponents do
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:description" content={@description} />
     <meta name="twitter:image" content={@image_url} />
-    <meta name="twitter:site" content="@optimumBA" />
+    <meta name="twitter:site" content="@MostSkepticBot" />
     <meta name="twitter:title" content={@title} />
     <meta name="twitter:type" content={@type} />
     <meta name="twitter:url" content={@url} />
