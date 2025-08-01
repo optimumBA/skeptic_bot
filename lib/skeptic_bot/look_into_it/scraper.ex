@@ -5,6 +5,8 @@ defmodule SkepticBot.LookIntoIt.Scraper do
 
   require Logger
 
+  alias SkepticBot.Podcasts
+
   @type reason :: String.t()
 
   @channel "https://rokfin.com/eddiebravo"
@@ -14,10 +16,8 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     case System.cmd(
            "yt-dlp_macos",
            [
-             "--flat-playlist",
              "--print",
-             #  "url",
-             "%(title)s$$%(url)s",
+             "%(title)s$$%(duration)s$$%(thumbnail)s$$%(webpage_url)s$$%(url)s",
              @channel
            ],
            env: [],
@@ -32,6 +32,11 @@ defmodule SkepticBot.LookIntoIt.Scraper do
             |> String.split("$$")
             |> List.to_tuple()
           end)
+          |> List.delete_at(110)
+
+        # ["https://rokfin.com/post/80732"]
+
+        Enum.map(urls, &maybe_download_episode/1)
 
         urls
 
@@ -39,5 +44,25 @@ defmodule SkepticBot.LookIntoIt.Scraper do
         Logger.error("Unable to get channel data. Reason : #{error}")
         {:error, error}
     end
+  end
+
+  defp maybe_download_episode({title, duration, thumbnail, webpage_url, _video_url} = details) do
+    unless Podcasts.episode_exists?(webpage_url) do
+      {:ok, %Podcasts.Episode{} = episode} =
+        Podcasts.create_episode(%{
+          "episode_length" => get_video_length(duration),
+          "external_id" => webpage_url,
+          "thumbnail" => thumbnail,
+          "title" => title
+        })
+
+      episode
+    end
+  end
+
+  defp get_video_length(duration) do
+    duration
+    |> String.to_float()
+    |> round()
   end
 end
