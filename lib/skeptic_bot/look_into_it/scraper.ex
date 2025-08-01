@@ -2,25 +2,38 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   @moduledoc """
   Scrapes all Eddie Bravo episodes from Rofkin
   """
+
   require Logger
 
-  @channel "https://rokfin.com/eddiebravo"
-  # @list "yt-dlp_macos --flat-playlist --print url https://www.rokfin.com/eddiebravo"
+  @type reason :: String.t()
 
-  def scrape() do
+  @channel "https://rokfin.com/eddiebravo"
+
+  @spec scrape :: {:error, reason()} | list()
+  def scrape do
     case System.cmd(
            "yt-dlp_macos",
            [
              "--flat-playlist",
              "--print",
-             "url",
+             #  "url",
+             "%(title)s$$%(url)s",
              @channel
            ],
            env: [],
            stderr_to_stdout: true
          ) do
       {video_urls, 0} ->
-        video_urls
+        urls =
+          video_urls
+          |> String.split("\n")
+          |> Enum.map(fn x ->
+            x
+            |> String.split("$$")
+            |> List.to_tuple()
+          end)
+
+        urls
 
       {error, 1} ->
         Logger.error("Unable to get channel data. Reason : #{error}")
