@@ -4,6 +4,9 @@ Application.put_env(:skeptic_bot, :downloader, SkepticBot.Podcasts.MockDownloade
 Mox.defmock(SkepticBot.Rag.MockEmbedder, for: SkepticBot.Rag.Embedder)
 Application.put_env(:skeptic_bot, :embedder, SkepticBot.Rag.MockEmbedder)
 
+Mox.defmock(SkepticBot.LookIntoIt.MockEpisodeClient, for: SkepticBot.LookIntoIt.EpisodeClient)
+Application.put_env(:skeptic_bot, :episode_client, SkepticBot.LookIntoIt.MockEpisodeClient)
+
 Mox.defmock(SkepticBot.Rag.MockGenerator, for: SkepticBot.Rag.Generator)
 Application.put_env(:skeptic_bot, :generator, SkepticBot.Rag.MockGenerator)
 

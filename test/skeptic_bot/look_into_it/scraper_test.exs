@@ -1,186 +1,80 @@
-# defmodule SkepticBot.LookIntoIt.ScraperTest do
-#   use SkepticBot.DataCase, async: true
+defmodule SkepticBot.LookIntoIt.ScraperTest do
+  use SkepticBot.DataCase, async: true
 
-#   import Mox
-#   import SkepticBot.PodcastsFixtures
-#   import SkepticBot.ScrapingFixtures
+  import Mox
+  import SkepticBot.PodcastsFixtures
+  import SkepticBot.ScrapingFixtures
 
-#   alias SkepticBot.Podcasts
-#   alias SkepticBot.Podcasts.DownloadingWorker
-#   alias SkepticBot.Podcasts.MockHttpClient
-#   alias SkepticBot.Podcasts.TinfoilScraper
+  alias SkepticBot.LookIntoIt.DownloadingWorker
+  alias SkepticBot.LookIntoIt.MockEpisodeClient
+  alias SkepticBot.LookIntoIt.Scraper
+  alias SkepticBot.Podcasts
 
-#   @video_url "https://rkfn-media.global.ssl.fastly.net/QjbX4kN101bkX5wpKISHVxA3HaSR74n5D4gXCKId7JBM/v.mp4"
+  @video_url "https://rkfn-media.global.ssl.fastly.net/jGrM0w/v.mp4"
+  @webpage_url "https://rokfin.com/post/177589"
 
-#   setup :verify_on_exit!
+  setup :verify_on_exit!
 
-#   defp create_body(_attrs) do
-#     body = body_fixture()
-#     %{body: body}
-#   end
+  defp get_channel_data(_attrs) do
+    channel_data = channel_fixture()
+    %{channel_data: channel_data}
+  end
 
-#   describe "scrape/1" do
-#     setup [:create_body]
+  describe "scrape/0" do
+    setup [:get_channel_data]
 
-#     test "enqueues a downloading job if episode does not already exist", %{body: body} do
-#       refute Podcasts.episode_exists?(@video_url)
+    test "enqueues a downloading job if episode does not already exist", %{
+      channel_data: channel_data
+    } do
+      refute Podcasts.episode_exists?(@webpage_url)
 
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:ok, %Req.Response{status: 200, body: body}}
-#       end)
+      expect(MockEpisodeClient, :get_channel_data, fn ->
+        {:ok, channel_data}
+      end)
 
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:ok,
-#          %Req.Response{
-#            status: 200,
-#            body: %{
-#              "data" => []
-#            }
-#          }}
-#       end)
+      Scraper.scrape()
 
-#       TinfoilScraper.scrape()
+      assert_enqueued(
+        worker: DownloadingWorker,
+        args: %{video_url: @video_url}
+      )
+    end
 
-#       assert_enqueued(
-#         worker: DownloadingWorker,
-#         args: %{external_id: @external_id}
-#       )
-#     end
+    test "does not enqueue a downloading job if episode already exists", %{
+      channel_data: channel_data
+    } do
+      _episode = episode_fixture(external_id: @webpage_url)
 
-#     test "does not enqueue a downloading job if episode already exists", %{body: body} do
-#       _episode = episode_fixture(external_id: @external_id)
+      expect(MockEpisodeClient, :get_channel_data, fn ->
+        {:ok, channel_data}
+      end)
 
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:ok, %Req.Response{status: 200, body: body}}
-#       end)
+      Scraper.scrape()
 
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:ok,
-#          %Req.Response{
-#            status: 200,
-#            body: %{
-#              "data" => []
-#            }
-#          }}
-#       end)
+      refute_enqueued(
+        worker: DownloadingWorker,
+        args: %{video_url: @video_url}
+      )
+    end
 
-#       TinfoilScraper.scrape()
+    test "does not enqueue a downloading job if there are no episodes in the return data" do
+      expect(MockEpisodeClient, :get_channel_data, fn ->
+        {:ok, ""}
+      end)
 
-#       refute_enqueued(
-#         worker: DownloadingWorker,
-#         args: %{external_id: @external_id}
-#       )
-#     end
+      Scraper.scrape()
 
-#     test "does not enqueue a downloading job if there are no episodes in the return data" do
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:ok,
-#          %Req.Response{
-#            status: 200,
-#            body: %{
-#              "data" => []
-#            }
-#          }}
-#       end)
+      refute_enqueued(worker: DownloadingWorker)
+    end
 
-#       TinfoilScraper.scrape()
+    test "does not enqueue a downloading job if the HTTP request is unsuccessful" do
+      expect(MockEpisodeClient, :get_channel_data, fn ->
+        {:error, "Too many retries"}
+      end)
 
-#       refute_enqueued(worker: DownloadingWorker)
-#     end
+      Scraper.scrape()
 
-#     test "does not enqueue a downloading job if the HTTP request is unsuccessful" do
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:error, "Could not make request"}
-#       end)
-
-#       TinfoilScraper.scrape()
-
-#       refute_enqueued(worker: DownloadingWorker)
-#     end
-#   end
-
-#   describe "scrape_episode/2" do
-#     setup [:create_body]
-
-#     test "enqueues the episode if it finds it in the returned body", %{body: body} do
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:ok,
-#          %Req.Response{
-#            status: 200,
-#            body: body
-#          }}
-#       end)
-
-#       TinfoilScraper.scrape_episode(@external_id)
-
-#       assert Podcasts.episode_exists?(@external_id)
-
-#       assert_enqueued(
-#         worker: DownloadingWorker,
-#         args: %{external_id: @external_id}
-#       )
-#     end
-
-#     test "returns an episode_not_found error if there are no episodes in the return data" do
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:ok,
-#          %Req.Response{
-#            status: 200,
-#            body: %{
-#              "data" => []
-#            }
-#          }}
-#       end)
-
-#       assert {:error, :episode_not_found} ==
-#                TinfoilScraper.scrape_episode(@external_id)
-
-#       refute_enqueued(
-#         worker: DownloadingWorker,
-#         args: %{external_id: @external_id}
-#       )
-#     end
-
-#     test "does not enqueue a downloading job if the HTTP request is unsuccessful" do
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:error, "Could not make request"}
-#       end)
-
-#       TinfoilScraper.scrape_episode(@external_id)
-
-#       refute_enqueued(
-#         worker: DownloadingWorker,
-#         args: %{external_id: @external_id}
-#       )
-#     end
-
-#     test "does not enqueue a downloading job if it doesn't find the episode in the body", %{
-#       body: body
-#     } do
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:ok,
-#          %Req.Response{
-#            status: 200,
-#            body: body
-#          }}
-#       end)
-
-#       expect(MockHttpClient, :make_request, fn _url ->
-#         {:ok,
-#          %Req.Response{
-#            status: 200,
-#            body: %{
-#              "data" => []
-#            }
-#          }}
-#       end)
-
-#       TinfoilScraper.scrape_episode("a909da70-13b7-4717-b1c0-c2d001521ec3")
-
-#       refute_enqueued(
-#         worker: DownloadingWorker,
-#         args: %{external_id: @external_id}
-#       )
-#     end
-#   end
-# end
+      refute_enqueued(worker: DownloadingWorker)
+    end
+  end
+end

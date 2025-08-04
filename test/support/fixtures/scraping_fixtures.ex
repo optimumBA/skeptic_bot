@@ -19,6 +19,11 @@ defmodule SkepticBot.ScrapingFixtures do
     }
   end
 
+  @spec channel_fixture :: String.t()
+  def channel_fixture do
+    "Episode #109$$6234.0$$https://rokfin.com/eyJidWNrZXQiOiJya2ZuLXBydsLzdmY$$https://rokfin.com/post/177589$$https://rkfn-media.global.ssl.fastly.net/jGrM0w/v.mp4\n"
+  end
+
   @spec chunks_fixture :: list()
   def chunks_fixture do
     [
