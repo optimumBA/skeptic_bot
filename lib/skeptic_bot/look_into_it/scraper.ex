@@ -3,10 +3,10 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   Scrapes all Eddie Bravo episodes from Rofkin and downloads them
   """
 
-  require Logger
-
-  alias SkepticBot.Podcasts
   alias SkepticBot.LookIntoIt.DownloadingWorker
+  alias SkepticBot.Podcasts
+
+  require Logger
 
   @type reason :: String.t()
 

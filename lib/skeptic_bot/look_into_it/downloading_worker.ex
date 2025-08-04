@@ -12,7 +12,7 @@ defmodule SkepticBot.LookIntoIt.DownloadingWorker do
 
   alias SkepticBot.DownloadingRunner
   alias SkepticBot.LookIntoIt.Downloader
-  # alias SkepticBot.Podcasts.TranscribingWorker
+  alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.StorageProvider
 
   require Logger
@@ -23,8 +23,8 @@ defmodule SkepticBot.LookIntoIt.DownloadingWorker do
   @spec perform(job()) :: :ok | {:error, String.t()}
   def perform(%Oban.Job{args: %{"id" => id, "video_url" => video_url}}) do
     case process_with_flame(id, video_url) do
-      {:ok, _audio_url} ->
-        # TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
+      {:ok, audio_url} ->
+        TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
         :ok
 
       {:error, reason} ->
@@ -67,7 +67,7 @@ defmodule SkepticBot.LookIntoIt.DownloadingWorker do
         {:ok, url}
       else
         {:error, reason} ->
-          Logger.error("download_and_upload/3 failed with reason : #{reason}")
+          Logger.error("download_and_upload/2 failed with reason : #{reason}")
           {:error, reason}
       end
 

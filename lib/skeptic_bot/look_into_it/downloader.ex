@@ -12,5 +12,5 @@ defmodule SkepticBot.LookIntoIt.Downloader do
   @spec download(url(), path()) :: {:ok, path()} | {:error, reason()}
   def download(url, path), do: impl().download(url, path)
 
-  defp impl, do: Application.get_env(:skeptic_bot, :downloader, YtDlpDownloader)
+  defp impl, do: Application.get_env(:skeptic_bot, :yt_dlp_downloader, YtDlpDownloader)
 end
