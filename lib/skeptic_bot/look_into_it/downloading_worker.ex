@@ -1,7 +1,7 @@
 defmodule SkepticBot.LookIntoIt.DownloadingWorker do
   @moduledoc """
   Handles combined downloading and transcoding of podcast episodes from external sources.
-  Downloads the media file, transcodes it, and uploads the audio to Tigris.
+  Downloads the media file and uploads the audio to Tigris.
   Uses FLAME to handle both processes in a separate memory space.
   """
 

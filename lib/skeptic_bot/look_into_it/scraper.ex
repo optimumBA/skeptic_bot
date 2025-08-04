@@ -1,44 +1,38 @@
 defmodule SkepticBot.LookIntoIt.Scraper do
   @moduledoc """
-  Scrapes all Eddie Bravo episodes from Rofkin and downloads them
+  Scrapes Eddie Bravo episodes from Rofkin and downloads them
   """
-
   alias SkepticBot.LookIntoIt.DownloadingWorker
+  alias SkepticBot.LookIntoIt.EpisodeClient
   alias SkepticBot.Podcasts
 
   require Logger
 
   @type reason :: String.t()
 
-  @channel "https://rokfin.com/eddiebravo"
-
-  @spec scrape :: {:error, reason()} | list()
+  @spec scrape :: :ok | {:error, reason()}
   def scrape do
-    case System.cmd(
-           "yt-dlp_macos",
-           [
-             "--print",
-             "%(title)s$$%(duration)s$$%(thumbnail)s$$%(webpage_url)s$$%(url)s",
-             @channel
-           ],
-           env: [],
-           stderr_to_stdout: true
-         ) do
-      {result, 0} ->
+    case EpisodeClient.get_channel_data() do
+      {:ok, result} ->
         result
-        |> String.split("\n")
-        |> Enum.map(fn x ->
-          x
-          |> String.split("$$")
-          |> List.to_tuple()
-        end)
-        |> Enum.drop(-1)
-        |> Enum.map(&maybe_download_episode/1)
+        |> format_channel_data()
+        |> Enum.each(&maybe_download_episode/1)
 
-      {error, 1} ->
-        Logger.error("Unable to get channel data. Reason : #{error}")
-        {:error, error}
+      {:error, reason} ->
+        Logger.error("Unable to get channel data. Reason : #{reason}")
+        {:error, reason}
     end
+  end
+
+  defp format_channel_data(result) do
+    result
+    |> String.split("\n")
+    |> Enum.map(fn x ->
+      x
+      |> String.split("$$")
+      |> List.to_tuple()
+    end)
+    |> Enum.drop(-1)
   end
 
   defp maybe_download_episode({title, duration, thumbnail, webpage_url, video_url}) do
