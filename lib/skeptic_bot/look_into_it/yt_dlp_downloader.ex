@@ -1,0 +1,35 @@
+defmodule SkepticBot.LookIntoIt.YtDlpDownloader do
+  @moduledoc false
+
+  alias SkepticBot.LookIntoIt.Downloader
+
+  require Logger
+
+  @behaviour Downloader
+
+  @impl Downloader
+  def download(video_url, audio_path) do
+    case System.cmd(
+           "yt-dlp_macos",
+           [
+             "-x",
+             "--audio-format",
+             "mp3",
+             "-o",
+             "#{audio_path}",
+             video_url
+           ],
+           env: [],
+           stderr_to_stdout: true
+         ) do
+      {_success_message_logs, 0} ->
+        {:ok, audio_path}
+
+      {error, 1} ->
+        {:error, "Download Error: #{error}"}
+    end
+  rescue
+    e ->
+      {:error, "Download error: #{Exception.message(e)}"}
+  end
+end

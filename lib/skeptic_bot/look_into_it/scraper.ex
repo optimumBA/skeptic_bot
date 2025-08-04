@@ -1,11 +1,12 @@
 defmodule SkepticBot.LookIntoIt.Scraper do
   @moduledoc """
-  Scrapes all Eddie Bravo episodes from Rofkin
+  Scrapes all Eddie Bravo episodes from Rofkin and downloads them
   """
 
   require Logger
 
   alias SkepticBot.Podcasts
+  alias SkepticBot.LookIntoIt.DownloadingWorker
 
   @type reason :: String.t()
 
@@ -23,22 +24,16 @@ defmodule SkepticBot.LookIntoIt.Scraper do
            env: [],
            stderr_to_stdout: true
          ) do
-      {video_urls, 0} ->
-        urls =
-          video_urls
-          |> String.split("\n")
-          |> Enum.map(fn x ->
-            x
-            |> String.split("$$")
-            |> List.to_tuple()
-          end)
-          |> List.delete_at(110)
-
-        # ["https://rokfin.com/post/80732"]
-
-        Enum.map(urls, &maybe_download_episode/1)
-
-        urls
+      {result, 0} ->
+        result
+        |> String.split("\n")
+        |> Enum.map(fn x ->
+          x
+          |> String.split("$$")
+          |> List.to_tuple()
+        end)
+        |> Enum.drop(-1)
+        |> Enum.map(&maybe_download_episode/1)
 
       {error, 1} ->
         Logger.error("Unable to get channel data. Reason : #{error}")
@@ -46,7 +41,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     end
   end
 
-  defp maybe_download_episode({title, duration, thumbnail, webpage_url, _video_url} = details) do
+  defp maybe_download_episode({title, duration, thumbnail, webpage_url, video_url}) do
     unless Podcasts.episode_exists?(webpage_url) do
       {:ok, %Podcasts.Episode{} = episode} =
         Podcasts.create_episode(%{
@@ -56,7 +51,10 @@ defmodule SkepticBot.LookIntoIt.Scraper do
           "title" => title
         })
 
-      episode
+      DownloadingWorker.enqueue(%{
+        "id" => episode.id,
+        "video_url" => video_url
+      })
     end
   end
 
