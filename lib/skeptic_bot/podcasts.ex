@@ -61,10 +61,10 @@ defmodule SkepticBot.Podcasts do
   Creates a podcast_episode_transcription.
   """
 
-  @spec create_podcast(attrs()) :: {:ok, episode()} | {:error, changeset()}
+  @spec create_podcast(attrs()) :: {:ok, podcast()} | {:error, changeset()}
   def create_podcast(attrs \\ %{}) do
-    %Episode{}
-    |> Episode.changeset(attrs)
+    %Podcast{}
+    |> Podcast.changeset(attrs)
     |> Repo.insert()
   end
 
