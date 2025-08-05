@@ -14,11 +14,6 @@ defmodule SkepticBot.Podcasts.Downloader do
   @spec download(url(), path(), downloader_type()) :: {:ok, path()} | {:error, reason()}
   def download(url, path, which_downloader), do: impl(which_downloader).download(url, path)
 
-  defp impl(which_downloader) do
-    if which_downloader == :req do
-      Application.get_env(:skeptic_bot, :downloader, ReqDownloader)
-    else
-      Application.get_env(:skeptic_bot, :downloader, YtDlpDownloader)
-    end
-  end
+  defp impl(:req), do: Application.get_env(:skeptic_bot, :downloader, ReqDownloader)
+  defp impl(:yt_dlp), do: Application.get_env(:skeptic_bot, :downloader, YtDlpDownloader)
 end

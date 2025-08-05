@@ -4,7 +4,7 @@ defmodule SkepticBot.LookIntoIt.DownloadingWorkerTest do
   import Mox
 
   alias SkepticBot.LookIntoIt.DownloadingWorker
-  alias SkepticBot.LookIntoIt.MockDownloader
+  alias SkepticBot.Podcasts.MockDownloader
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.MockStorageProvider
 

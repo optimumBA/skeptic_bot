@@ -22,8 +22,5 @@ Application.put_env(:skeptic_bot, :transcoder, SkepticBot.Podcasts.MockTranscode
 Mox.defmock(SkepticBot.Podcasts.MockTranscriber, for: SkepticBot.Podcasts.Transcriber)
 Application.put_env(:skeptic_bot, :transcriber, SkepticBot.Podcasts.MockTranscriber)
 
-Mox.defmock(SkepticBot.LookIntoIt.MockDownloader, for: SkepticBot.LookIntoIt.Downloader)
-Application.put_env(:skeptic_bot, :yt_dlp_downloader, SkepticBot.LookIntoIt.MockDownloader)
-
 ExUnit.start()
 Ecto.Adapters.SQL.Sandbox.mode(SkepticBot.Repo, :manual)
