@@ -8,6 +8,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   @type episode_id :: String.t()
   @type start :: integer()
 
+  @podcast_name "Tin Foil Hat"
   @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
 
   @spec get_url() :: String.t()
@@ -22,7 +23,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
         Enum.each(body["data"], fn episode ->
-          podcast = Podcasts.get_podcast_by_name("tin_foil_hat")
+          podcast = Podcasts.get_podcast_by_name(@podcast_name)
           maybe_download_episode(episode, podcast.id)
         end)
 
@@ -53,7 +54,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
             scrape_episode(uuid, start + 100)
 
           episode ->
-            podcast = Podcasts.get_podcast_by_name("tin_foil_hat")
+            podcast = Podcasts.get_podcast_by_name(@podcast_name)
 
             maybe_download_episode(episode, podcast.id)
         end

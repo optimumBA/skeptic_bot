@@ -60,7 +60,7 @@ defmodule SkepticBot.PodcastsFixtures do
     {:ok, podcast} =
       attrs
       |> Enum.into(%{
-        name: "tinfoilhat"
+        name: "Tin Foil Hat"
       })
       |> Podcasts.create_podcast()
 
