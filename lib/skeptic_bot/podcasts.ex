@@ -7,6 +7,7 @@ defmodule SkepticBot.Podcasts do
 
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Podcasts.EpisodeTranscription
+  alias SkepticBot.Podcasts.Podcast
   alias SkepticBot.Repo
 
   @type attrs :: map()
@@ -15,6 +16,7 @@ defmodule SkepticBot.Podcasts do
   @type episode_transcription :: EpisodeTranscription.t()
   @type external_id :: String.t()
   @type id :: String.t()
+  @type podcast :: Podcast.t()
 
   @doc """
   Creates a podcast_episode.
@@ -52,6 +54,17 @@ defmodule SkepticBot.Podcasts do
   def create_episode_transcription(attrs \\ %{}) do
     %EpisodeTranscription{}
     |> EpisodeTranscription.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Creates a podcast_episode_transcription.
+  """
+
+  @spec create_podcast(attrs()) :: {:ok, episode()} | {:error, changeset()}
+  def create_podcast(attrs \\ %{}) do
+    %Episode{}
+    |> Episode.changeset(attrs)
     |> Repo.insert()
   end
 

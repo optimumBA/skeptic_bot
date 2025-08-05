@@ -1,4 +1,4 @@
-defmodule SkepticBot.Podcasts.Podcasts do
+defmodule SkepticBot.Podcasts.Podcast do
   @moduledoc false
 
   use Ecto.Schema
