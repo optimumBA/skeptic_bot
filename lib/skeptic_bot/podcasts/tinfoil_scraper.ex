@@ -22,7 +22,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
         Enum.each(body["data"], fn episode ->
-          maybe_download_episode(episode)
+          podcast = Podcasts.get_podcast_by_name("tin_foil_hat")
+          maybe_download_episode(episode, podcast.id)
         end)
 
         if Enum.empty?(body["data"]) do
@@ -52,7 +53,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
             scrape_episode(uuid, start + 100)
 
           episode ->
-            maybe_download_episode(episode)
+            podcast = Podcasts.get_podcast_by_name("tin_foil_hat")
+
+            maybe_download_episode(episode, podcast.id)
         end
 
       {:error, reason} ->
@@ -60,13 +63,14 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     end
   end
 
-  defp maybe_download_episode(episode) do
+  defp maybe_download_episode(episode, podcast_id) do
     unless Podcasts.episode_exists?(episode["uuid"]) do
       {:ok, %Podcasts.Episode{} = episode} =
         Podcasts.create_episode(%{
           "description" => episode["description"],
           "episode_length" => episode["duration"],
           "external_id" => episode["uuid"],
+          "podcast_id" => podcast_id,
           "thumbnail" => episode["thumbnailPath"],
           "title" => episode["name"]
         })

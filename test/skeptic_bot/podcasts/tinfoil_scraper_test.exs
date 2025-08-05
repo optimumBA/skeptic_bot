@@ -16,6 +16,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
   defp create_body(_attrs) do
     body = body_fixture()
+    _podcast = Podcasts.create_podcast(%{name: "tin_foil_hat"})
     %{body: body}
   end
 
