@@ -3,8 +3,8 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   Scrapes Eddie Bravo episodes from Rofkin and downloads them
   """
 
+  alias SkepticBot.LookIntoIt.ChannelClient
   alias SkepticBot.LookIntoIt.DownloadingWorker
-  alias SkepticBot.LookIntoIt.EpisodeClient
   alias SkepticBot.Podcasts
 
   require Logger
@@ -13,7 +13,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
 
   @spec scrape :: :ok | {:error, reason()}
   def scrape do
-    case EpisodeClient.get_channel_data() do
+    case ChannelClient.get_channel_data() do
       {:ok, result} ->
         result
         |> format_channel_data()

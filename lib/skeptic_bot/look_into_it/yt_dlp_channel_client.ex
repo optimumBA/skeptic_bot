@@ -1,16 +1,16 @@
-defmodule SkepticBot.LookIntoIt.YtDlpEpisodeClient do
+defmodule SkepticBot.LookIntoIt.YtDlpChannelClient do
   @moduledoc """
   Getting channel data using yt-dlp
   """
-  alias SkepticBot.LookIntoIt.EpisodeClient
+  alias SkepticBot.LookIntoIt.ChannelClient
 
   require Logger
 
-  @behaviour EpisodeClient
+  @behaviour ChannelClient
 
   @channel "https://rokfin.com/eddiebravo"
 
-  @impl EpisodeClient
+  @impl ChannelClient
   def get_channel_data do
     case System.cmd(
            "yt-dlp_macos",

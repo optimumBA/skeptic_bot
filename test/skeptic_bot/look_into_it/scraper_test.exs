@@ -6,7 +6,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
   import SkepticBot.ScrapingFixtures
 
   alias SkepticBot.LookIntoIt.DownloadingWorker
-  alias SkepticBot.LookIntoIt.MockEpisodeClient
+  alias SkepticBot.LookIntoIt.MockChannelClient
   alias SkepticBot.LookIntoIt.Scraper
   alias SkepticBot.Podcasts
 
@@ -28,7 +28,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
     } do
       refute Podcasts.episode_exists?(@webpage_url)
 
-      expect(MockEpisodeClient, :get_channel_data, fn ->
+      expect(MockChannelClient, :get_channel_data, fn ->
         {:ok, channel_data}
       end)
 
@@ -45,7 +45,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
     } do
       _episode = episode_fixture(external_id: @webpage_url)
 
-      expect(MockEpisodeClient, :get_channel_data, fn ->
+      expect(MockChannelClient, :get_channel_data, fn ->
         {:ok, channel_data}
       end)
 
@@ -58,7 +58,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
     end
 
     test "does not enqueue a downloading job if there are no episodes in the return data" do
-      expect(MockEpisodeClient, :get_channel_data, fn ->
+      expect(MockChannelClient, :get_channel_data, fn ->
         {:ok, ""}
       end)
 
@@ -68,7 +68,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
     end
 
     test "does not enqueue a downloading job if the HTTP request is unsuccessful" do
-      expect(MockEpisodeClient, :get_channel_data, fn ->
+      expect(MockChannelClient, :get_channel_data, fn ->
         {:error, "Too many retries"}
       end)
 

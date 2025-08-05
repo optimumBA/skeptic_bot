@@ -42,10 +42,10 @@ defmodule SkepticBot.LookIntoIt.DownloadingWorkerTest do
     @tag :capture_log
     test "does not enqueue a transcribing job if download process is unsuccessful" do
       expect(MockDownloader, :download, fn _url, _video_path ->
-        {:error, "Download error: status 500"}
+        {:error, "Download error: Connection Lost"}
       end)
 
-      assert {:error, "Download error: status 500"} =
+      assert {:error, "Download error: Connection Lost"} =
                perform_job(DownloadingWorker, %{
                  id: @id,
                  video_url: @video_url
