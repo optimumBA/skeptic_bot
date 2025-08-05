@@ -41,7 +41,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
       {:ok, %Podcasts.Episode{} = episode} =
         Podcasts.create_episode(%{
           "episode_length" => get_video_length(duration),
-          "external_id" => webpage_url,
+          "external_id" => get_external_id(webpage_url, video_url),
           "thumbnail" => thumbnail,
           "title" => title
         })
@@ -57,5 +57,16 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     duration
     |> String.to_float()
     |> round()
+  end
+
+  defp get_external_id(webpage_url, video_url) do
+    <<"https://rokfin.com/post/", webpage_id::binary>> = webpage_url
+
+    <<"https://rkfn-media.global.ssl.fastly.net/", rest::binary>> =
+      video_url
+
+    video_id = String.replace_trailing(rest, "/v.mp4", "")
+
+    webpage_id <> "-" <> video_id
   end
 end
