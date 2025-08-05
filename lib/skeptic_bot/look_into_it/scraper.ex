@@ -2,6 +2,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   @moduledoc """
   Scrapes Eddie Bravo episodes from Rofkin and downloads them
   """
+
   alias SkepticBot.LookIntoIt.DownloadingWorker
   alias SkepticBot.LookIntoIt.EpisodeClient
   alias SkepticBot.Podcasts

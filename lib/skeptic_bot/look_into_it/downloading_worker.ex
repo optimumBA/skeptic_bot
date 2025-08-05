@@ -34,17 +34,11 @@ defmodule SkepticBot.LookIntoIt.DownloadingWorker do
   end
 
   defp process_with_flame(id, video_url) do
-    result =
-      FLAME.call(
-        DownloadingRunner,
-        fn -> download_and_upload(id, video_url) end,
-        timeout: 1_800_000
-      )
-
-    case result do
-      {:ok, audio_url} -> {:ok, audio_url}
-      {:error, reason} -> {:error, reason}
-    end
+    FLAME.call(
+      DownloadingRunner,
+      fn -> download_and_upload(id, video_url) end,
+      timeout: 1_800_000
+    )
   rescue
     e ->
       Logger.error("FLAME process failed: #{Exception.message(e)}")
