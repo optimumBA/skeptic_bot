@@ -69,7 +69,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     |> File.mkdir_p!()
 
     result =
-      with {:ok, _video_path} <- Downloader.download(url, video_path),
+      with {:ok, _video_path} <- Downloader.download(url, video_path, :req),
            :ok <- Transcoder.transcode_video(video_path, audio_path),
            {:ok, url} <- StorageProvider.upload_file(audio_path) do
         {:ok, url}

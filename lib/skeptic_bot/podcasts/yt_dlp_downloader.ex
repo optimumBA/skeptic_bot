@@ -1,7 +1,7 @@
-defmodule SkepticBot.LookIntoIt.YtDlpDownloader do
+defmodule SkepticBot.Podcasts.YtDlpDownloader do
   @moduledoc false
 
-  alias SkepticBot.LookIntoIt.Downloader
+  alias SkepticBot.Podcasts.Downloader
 
   require Logger
 

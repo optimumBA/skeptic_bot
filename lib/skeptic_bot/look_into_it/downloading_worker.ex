@@ -11,7 +11,7 @@ defmodule SkepticBot.LookIntoIt.DownloadingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.DownloadingRunner
-  alias SkepticBot.LookIntoIt.Downloader
+  alias SkepticBot.Podcasts.Downloader
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.StorageProvider
 
@@ -56,7 +56,7 @@ defmodule SkepticBot.LookIntoIt.DownloadingWorker do
     |> File.mkdir_p!()
 
     result =
-      with {:ok, _audio_path} <- Downloader.download(video_url, audio_path),
+      with {:ok, _audio_path} <- Downloader.download(video_url, audio_path, :yt_dlp),
            {:ok, url} <- StorageProvider.upload_file(audio_path) do
         {:ok, url}
       else
