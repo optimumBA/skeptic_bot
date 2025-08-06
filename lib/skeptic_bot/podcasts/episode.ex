@@ -14,7 +14,7 @@ defmodule SkepticBot.Podcasts.Episode do
     field :embedding, Pgvector.Ecto.Vector
     field :episode_length, :integer
     field :external_id, :string
-    belongs_to :podcast, SkepticBot.Podcasts.Podcasts
+    belongs_to :podcast, SkepticBot.Podcasts.Podcast
     field :thumbnail, :string
     field :timestamp, EctoInterval, virtual: true
     field :title, :string
@@ -37,5 +37,14 @@ defmodule SkepticBot.Podcasts.Episode do
     ])
     |> validate_required([:episode_length, :external_id, :podcast_id, :thumbnail, :title])
     |> unique_constraint(:external_id)
+  end
+
+  @spec podcast_changeset(t(), map()) :: Ecto.Changeset.t()
+  def podcast_changeset(episode, attrs) do
+    episode
+    |> cast(attrs, [
+      :podcast_id
+    ])
+    |> validate_required([:podcast_id])
   end
 end

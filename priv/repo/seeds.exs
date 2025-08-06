@@ -9,15 +9,3 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-
-alias SkepticBot.Podcasts
-alias SkepticBot.Podcasts.Episode
-alias SkepticBot.Repo
-
-{:ok, podcast} = Podcasts.create_podcast(%{name: "Tin Foil Hat"})
-
-Episode
-|> Repo.all()
-|> Enum.each(fn episode ->
-  Podcasts.update_episode(episode, %{podcast_id: podcast.id})
-end)
