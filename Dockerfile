@@ -70,19 +70,21 @@ RUN mix release
 FROM ${RUNNER_IMAGE}
 
 RUN apt-get update -y && \
-  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates ffmpeg postgresql-client awscli \
-  && apt-get clean && rm -f /var/lib/apt/lists/*_*
+    apt-get install -y libstdc++6 openssl libncurses5 locales curl ca-certificates ffmpeg postgresql-client awscli \
+    && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Install and make yt-dlp executable  
 
 RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:tomtomtom/yt-dlp && \
-    apt-get update && \
-    apt-get install -y yt-dlp
+    mkdir -p /root/.local/bin && \
+    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /root/.local/bin/yt-dlp && \
+    chmod a+rx /root/.local/bin/yt-dlp
 
-# RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp && \
-#   chmod a+rx ~/.local/bin/yt-dlp
+# Add yt-dlp to PATH
+ENV PATH="/root/.local/bin:${PATH}"
+
+# Test it (optional)
+RUN yt-dlp --version
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
