@@ -32,24 +32,24 @@ defmodule SkepticBotWeb.HomeLive.Index do
   #     />
   #   </div>
   # </section>
-  #     <section class="flex flex-col gap-8 w-[70%] mx-auto">
-  #       <section class="text-7xl mx-auto montserrat-semibold tracking-4 2xl:text-8xl">
-  #         Skeptic.<span class="text-[#CD4631] montserrat-alternates-semibold">bot</span>
-  #       </section>
-  #       <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
-  #         Questions everything
-  #       </section>
-  #       <section class="w-[60%] mx-auto">
-  #         <HomeLive.Components.form_component form={@form} />
-  #       </section>
-  #     </section>
+  # <section class="flex flex-col gap-8 w-[70%] mx-auto">
+  #   <section class="text-7xl mx-auto montserrat-semibold tracking-4 2xl:text-8xl">
+  #     Skeptic.<span class="text-[#CD4631] montserrat-alternates-semibold">bot</span>
+  #   </section>
+  #   <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
+  #     Questions everything
+  #   </section>
+  #   <section class="w-[60%] mx-auto">
+  #     <HomeLive.Components.form_component form={@form} />
+  #   </section>
+  # </section>
   #   </div>
   # </div>
 
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <div class="bg-[#FFF5F5] border border-red-400">
+    <div class="bg-[#FFF5F5]">
       <div class={[
         "h-screen flex items-center relative",
         @loading && "animate-pulse"
@@ -72,6 +72,17 @@ defmodule SkepticBotWeb.HomeLive.Index do
               alt="Stars Group"
             />
           </div>
+        </section>
+        <section class="flex flex-col gap-8 w-[93%] md:w-[70%] mx-auto border border-red-400">
+          <section class="text-6xl md:text-7xl mx-auto montserrat-bold tracking-4 2xl:text-8xl">
+            Skeptic.<span class="text-[#CD4631] montserrat-alternates-bold">bot</span>
+          </section>
+          <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
+            Questions everything
+          </section>
+          <section class="w-[60%] mx-auto">
+            <HomeLive.Components.form_component form={@form} />
+          </section>
         </section>
       </div>
     </div>
