@@ -74,8 +74,11 @@ RUN apt-get update -y && \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Install and make yt-dlp executable  
-RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp && \
-  chmod a+rx ~/.local/bin/yt-dlp
+
+RUN add-apt-repository ppa:tomtomtom/yt-dlp && apt-get update && apt-get install yt-dlp                         
+
+# RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp && \
+#   chmod a+rx ~/.local/bin/yt-dlp
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
