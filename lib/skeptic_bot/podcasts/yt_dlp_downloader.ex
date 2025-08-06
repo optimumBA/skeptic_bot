@@ -10,7 +10,7 @@ defmodule SkepticBot.Podcasts.YtDlpDownloader do
   @impl Downloader
   def download(video_url, audio_path) do
     case System.cmd(
-           "yt-dlp_macos",
+           "yt-dlp",
            [
              "-x",
              "--audio-format",

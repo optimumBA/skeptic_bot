@@ -13,7 +13,7 @@ defmodule SkepticBot.LookIntoIt.YtDlpChannelClient do
   @impl ChannelClient
   def get_channel_data do
     case System.cmd(
-           "yt-dlp_macos",
+           "yt-dlp",
            [
              "--print",
              "%(title)s$$%(duration)s$$%(thumbnail)s$$%(webpage_url)s$$%(url)s",
