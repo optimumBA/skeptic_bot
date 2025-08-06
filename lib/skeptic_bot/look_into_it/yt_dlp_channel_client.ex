@@ -23,8 +23,6 @@ defmodule SkepticBot.LookIntoIt.YtDlpChannelClient do
            stderr_to_stdout: true
          ) do
       {result, 0} ->
-        System.cmd("echo", ["#{result}"], env: [])
-
         {:ok, result}
 
       {error, 1} ->

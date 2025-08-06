@@ -1,7 +1,6 @@
 defmodule ThumbnailAndEpisodeLengthUpdater do
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.TinfoilScraper
-  alias SkepticBot.LookIntoIt.ChannelClient
 
   require Logger
 
@@ -12,8 +11,6 @@ defmodule ThumbnailAndEpisodeLengthUpdater do
   end
 
   defp update_thumbnails_and_episode_lengths(start) do
-    {:ok, result} = ChannelClient.get_channel_data()
-
     url = String.replace(TinfoilScraper.get_url(), "<start>", Integer.to_string(start))
 
     case Req.get(url) do
