@@ -74,12 +74,8 @@ RUN apt-get update -y && \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Install and make yt-dlp executable
-RUN apt-get update && \
-    curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/bin/yt-dlp && \
+RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/bin/yt-dlp && \
     chmod a+rx /usr/bin/yt-dlp
-
-# Add it to PATH
-# ENV PATH="/root/.local/bin:${PATH}"
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
