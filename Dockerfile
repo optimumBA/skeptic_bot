@@ -75,7 +75,11 @@ RUN apt-get update -y && \
 
 # Install and make yt-dlp executable  
 
-RUN add-apt-repository ppa:tomtomtom/yt-dlp && apt-get update && apt-get install yt-dlp                         
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:tomtomtom/yt-dlp && \
+    apt-get update && \
+    apt-get install -y yt-dlp
 
 # RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp && \
 #   chmod a+rx ~/.local/bin/yt-dlp
