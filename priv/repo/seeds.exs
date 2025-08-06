@@ -9,3 +9,7 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+alias SkepticBot.Podcasts
+
+attrs = [%{name: "Tin Foil Hat"}, %{name: "Look Into It"}]
+:ok = Enum.each(attrs, &Podcasts.create_podcast/1)

@@ -4,10 +4,11 @@ alias SkepticBot.Repo
 
 require Logger
 
-Logger.debug("Update is starting", ansi_color: :green)
+Logger.debug("Updating all episodes with the podcast_id of Tin Foil Hat",
+  ansi_color: :green
+)
 
-{:ok, podcast} = Podcasts.create_podcast(%{name: "Tin Foil Hat"})
-Podcasts.create_podcast(%{name: "Look Into It"})
+{:ok, podcast} = Podcasts.get_podcast_by_name("Tin Foil Hat")
 
 Episode
 |> Repo.all()
@@ -15,4 +16,6 @@ Episode
   Podcasts.update_episode_podcast_id(episode, %{podcast_id: podcast.id})
 end)
 
-Logger.debug("Update is completed", ansi_color: :green)
+Logger.debug("Completed updating all episodes with the podcast_id of Tin Foil Hat",
+  ansi_color: :green
+)
