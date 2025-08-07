@@ -23,9 +23,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
       </section>
 
       <section class="max-w-[36.6rem] mx-auto mt-8 mb-10">
-        <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium">
-          {@description}
-        </p>
+        <div
+          id="typed-response"
+          data-text={@description}
+          phx-hook="Typewriter"
+          phx-update="ignore"
+          class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium whitespace-pre-wrap"
+        >
+        </div>
       </section>
 
       <section
