@@ -8,16 +8,14 @@ defmodule SkepticBot.LookIntoIt.YtDlpChannelClient do
 
   @behaviour ChannelClient
 
-  @channel "https://rokfin.com/eddiebravo"
-
   @impl ChannelClient
-  def get_channel_data do
+  def get_channel_data(channel) do
     case System.cmd(
            "yt-dlp",
            [
              "--print",
              "%(title)s$$%(duration)s$$%(thumbnail)s$$%(webpage_url)s$$%(url)s",
-             @channel
+             channel
            ],
            env: [],
            stderr_to_stdout: true

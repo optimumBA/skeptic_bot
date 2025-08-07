@@ -1,19 +1,21 @@
-defmodule SkepticBot.LookIntoIt.Scraper do
+defmodule SkepticBot.LookIntoIt.RumbleScraper do
   @moduledoc """
-  Scrapes Eddie Bravo episodes from Rofkin and downloads them
+  Scrapes Eddie Bravo episodes from Rumble and downloads them
   """
 
   alias SkepticBot.LookIntoIt.ChannelClient
-  alias SkepticBot.LookIntoIt.DownloadingWorker
   alias SkepticBot.Podcasts
+  alias SkepticBot.Podcasts.DownloadingWorker
 
   require Logger
+  @channel "https://rumble.com/eddiebravo"
+  @podcast "Look Into It"
 
   @type reason :: String.t()
 
   @spec scrape :: :ok | {:error, reason()}
   def scrape do
-    case ChannelClient.get_channel_data() do
+    case ChannelClient.get_channel_data(@channel) do
       {:ok, result} ->
         result
         |> format_channel_data()
@@ -48,6 +50,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
 
       DownloadingWorker.enqueue(%{
         "id" => episode.id,
+        "podcast" => @podcast,
         "video_url" => video_url
       })
     end

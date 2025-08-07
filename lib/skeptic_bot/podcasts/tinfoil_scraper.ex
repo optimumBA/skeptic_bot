@@ -8,7 +8,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   @type episode_id :: String.t()
   @type start :: integer()
 
+  @podcast "Tin Foil Hat"
   @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
+  @video_url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/<external_id>-0-fragmented.mp4"
 
   @spec get_url() :: String.t()
   def get_url, do: @url
@@ -71,9 +73,12 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
           "title" => episode["name"]
         })
 
+      video_url = String.replace(@video_url, "<external_id>", episode.external_id)
+
       DownloadingWorker.enqueue(%{
         "id" => episode.id,
-        "external_id" => episode.external_id
+        "podcast" => @podcast,
+        "video_url" => video_url
       })
     end
   end
