@@ -13,6 +13,10 @@ module.exports = {
   ],
   theme: {
     screens: {
+      xs: '480px',
+
+      '2xs': '540px',
+
       sm: '640px',
 
       md: '768px',
