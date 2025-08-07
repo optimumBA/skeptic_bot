@@ -5,7 +5,7 @@
 @import 'tailwindcss/utilities';
 
 .montserrat-bold {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-optical-sizing: none;
   font-weight: 700;
   font-style: normal;
