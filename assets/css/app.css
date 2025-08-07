@@ -4,6 +4,18 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
+}
+
 .montserrat-bold {
   font-family: 'Montserrat', sans-serif;
   font-optical-sizing: none;
@@ -49,18 +61,6 @@
 
 .question-card-shadow {
   box-shadow: 10px 10px #81adc8;
-}
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.3;
-  }
-  50% {
-    transform: translateY(-6px);
-    opacity: 1;
-  }
 }
 
 .dot-animation {
