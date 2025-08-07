@@ -9,7 +9,7 @@ TypewriterHooks.Typewriter = {
       if (i < text.length) {
         this.el.innerHTML += text.charAt(i)
         i++
-        setTimeout(type, 25)
+        setTimeout(type, 10)
       }
     }
 

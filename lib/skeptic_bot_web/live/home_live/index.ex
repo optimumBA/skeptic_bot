@@ -62,14 +62,14 @@ defmodule SkepticBotWeb.HomeLive.Index do
           </div>
 
           <div class={[
-            "w-[50%] mx-auto",
+            "w-[80%] mx-auto",
             @display
           ]}>
+            <section class="text-center montserrat-alternates-semibold text-[#4D4D4D] mb-6">
+              is almost done second guessing
+            </section>
             <section>
               <HomeLive.Components.loading_component />
-            </section>
-            <section class="text-center montserrat-alternates-medium text-[#4D4D4D]">
-              is almost done second guessing
             </section>
           </div>
         </section>
