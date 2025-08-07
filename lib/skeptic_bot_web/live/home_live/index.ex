@@ -49,16 +49,29 @@ defmodule SkepticBotWeb.HomeLive.Index do
           <section class="text-6xl md:text-7xl mx-auto montserrat-bold tracking-4 2xl:text-8xl">
             Skeptic.<span class="text-[#CD4631] montserrat-alternates-bold">bot</span>
           </section>
-          <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
-            Questions everything
-          </section>
+          <div class={[
+            @loading && "hidden"
+          ]}>
+            <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
+              Questions everything
+            </section>
 
-          <section class="w-[50%] mx-auto">
-            <HomeLive.Components.loading_component display={@display} />
-          </section>
-          <section class="w-full xs:w-[95%] 2xs:w-[80%] sm:w-[80%] md:w-[96%] lg:w-[80%] xl:w-[60%] mx-auto">
-            <HomeLive.Components.form_component form={@form} />
-          </section>
+            <section class="w-full xs:w-[95%] 2xs:w-[80%] sm:w-[80%] md:w-[96%] lg:w-[80%] xl:w-[60%] mx-auto">
+              <HomeLive.Components.form_component form={@form} />
+            </section>
+          </div>
+
+          <div class={[
+            "w-[50%] mx-auto",
+            @display
+          ]}>
+            <section>
+              <HomeLive.Components.loading_component />
+            </section>
+            <section class="text-center montserrat-alternates-medium text-[#4D4D4D]">
+              is almost done second guessing
+            </section>
+          </div>
         </section>
       </div>
     </div>

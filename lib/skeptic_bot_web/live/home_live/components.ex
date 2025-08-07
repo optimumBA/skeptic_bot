@@ -44,14 +44,11 @@ defmodule SkepticBotWeb.HomeLive.Components do
     """
   end
 
-  attr :display, :string, required: true
-
   @spec loading_component(assigns()) :: rendered()
   def loading_component(assigns) do
     ~H"""
     <div class={[
-      "flex items-center justify-center space-x-1",
-      @display
+      "flex items-center justify-center space-x-1"
     ]}>
       <img
         src={~p"/images/home/typing_dot.svg"}
