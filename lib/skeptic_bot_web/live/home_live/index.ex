@@ -20,14 +20,14 @@ defmodule SkepticBotWeb.HomeLive.Index do
           <div class="absolute top-[2%] left-0 w-[38%] md:w-[20%] 2xl:top-[3%] 4xl:w-[17%]">
             <img src={~p"/images/home/top_swirl.svg"} class="w-full h-full object-cover" alt="Swirl" />
           </div>
-          <div class="absolute bottom-[20%] left-[4%] w-[34%] md:w-[20%] xl:w-[21%] 2xl:w-[20%] 4xl:w-[17%]">
+          <div class="absolute bottom-[16%] md:bottom-[20%] left-[4%] w-[34%] md:w-[20%] xl:w-[21%] 2xl:w-[20%] 4xl:w-[17%]">
             <img
               src={~p"/images/home/demonstration.svg"}
               class="w-full h-full object-cover"
               alt="Illustration 1"
             />
           </div>
-          <div class="absolute bottom-[10%] right-[1.3rem] w-[24%] md:w-[10%]">
+          <div class="absolute bottom-[8%] md:bottom-[10%] right-[1.3rem] w-[24%] md:w-[10%]">
             <img
               src={~p"/images/home/hero_stars.svg"}
               class="w-full h-full object-cover"
