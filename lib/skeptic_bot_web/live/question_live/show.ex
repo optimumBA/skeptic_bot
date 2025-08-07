@@ -4,7 +4,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   alias SkepticBot.Prompts
   alias SkepticBotWeb.PodcastComponents
 
-  @episode_batch_size 3
   @episode_limit 6
   @vector_numbers [1, 2, 3, 4, 5]
   @visible_episodes 3
@@ -13,16 +12,16 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   def render(assigns) do
     ~H"""
     <div>
-      <section class="relative max-w-[33.6rem] mx-auto mt-16 mb-8">
-        <p class="text-[#000000] text-[3.75rem] leading-[1.2] montserrat-alternates-bold">
+      <section class="relative max-w-[33.6rem] mx-auto mt-16 mb-8 pl-4 sm:pl-0 border border-red-400">
+        <p class="text-[#000000] text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold">
           {@title}
         </p>
-        <div class="absolute top-[-2.1rem] left-[-2.8rem]">
+        <div class="hidden sm:block absolute top-[-2.1rem] left-[-2.8rem]">
           <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
         </div>
       </section>
 
-      <section class="max-w-[36.6rem] mx-auto mt-8 mb-10">
+      <section class="hidden max-w-[36.6rem] mx-auto mt-8 mb-10">
         <div
           id="typed-response"
           data-text={@description}
@@ -41,7 +40,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           Related Podcasts
         </section>
         <section class="relative pb-16">
-          <section class="ml-5 overflow-hidden pt-12 relative mb-12">
+          <section class="ml-5 overflow-hidden pt-12 relative mb-10">
             <div
               class="flex gap-4 transition-transform duration-300 ease-in-out"
               id="related-episodes-carousel"
@@ -74,18 +73,36 @@ defmodule SkepticBotWeb.QuestionLive.Show do
                 <img src={~p"/images/podcasts/back_arrow.svg"} alt="Back Arrow" />
               </div>
             </button>
+
             <button
-              phx-click="next_related_episodes"
-              class="disabled:opacity-50"
+              phx-click={JS.push("next_related_episodes", value: %{batch_size: @mobile_batch_size})}
+              class="md:hidden disabled:opacity-50"
               disabled={@has_all_related_episodes?}
             >
               <div>
                 <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
               </div>
             </button>
-          </div>
-          <div class="absolute bottom-[-5rem] right-[5%]">
-            <img src={~p"/images/podcasts/podcast_scribble.svg"} alt="Podcast Scribble" />
+
+            <button
+              phx-click={JS.push("next_related_episodes", value: %{batch_size: @tablet_batch_size})}
+              class="hidden md:block lg:hidden disabled:opacity-50"
+              disabled={@has_all_related_episodes?}
+            >
+              <div>
+                <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
+              </div>
+            </button>
+
+            <button
+              phx-click={JS.push("next_related_episodes", value: %{batch_size: @desktop_batch_size})}
+              class="hidden lg:block disabled:opacity-50"
+              disabled={@has_all_related_episodes?}
+            >
+              <div>
+                <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
+              </div>
+            </button>
           </div>
         </section>
 
@@ -176,10 +193,13 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:ok,
      socket
+     |> assign(:desktop_batch_size, 3)
+     |> assign(:mobile_batch_size, 1)
      |> assign(:other_episodes_index, 0)
      |> assign(:other_episodes_vectors, other_episodes_vectors)
      |> assign(:related_episodes_index, 0)
      |> assign(:related_episodes_vectors, related_episodes_vectors)
+     |> assign(:tablet_batch_size, 2)
      |> assign(:visible_episodes, @visible_episodes)}
   end
 
@@ -207,8 +227,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:noreply,
      socket
      |> assign(:description, question.description)
-     |> assign(:has_all_other_episodes?, has_all_episodes?(0, other_episode_count))
-     |> assign(:has_all_related_episodes?, has_all_episodes?(0, related_episode_count))
+     |> assign(:has_all_other_episodes?, has_all_episodes?(0, other_episode_count, 3))
+     |> assign(:has_all_related_episodes?, has_all_episodes?(0, related_episode_count, 3))
      |> assign(:other_episodes, other_episodes)
      |> assign(:other_episode_count, other_episode_count)
      |> assign(:page_title, question.title)
@@ -220,52 +240,69 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   end
 
   @impl Phoenix.LiveView
-  def handle_event("next_related_episodes", _params, socket) do
+  def handle_event("next_related_episodes", %{"batch_size" => batch_size} = _params, socket) do
     current_index = socket.assigns.related_episodes_index + 1
     episode_count = socket.assigns.related_episode_count
 
     {:noreply,
      socket
-     |> assign(:has_all_related_episodes?, has_all_episodes?(current_index, episode_count))
+     |> assign(
+       :has_all_related_episodes?,
+       has_all_episodes?(current_index, episode_count, batch_size)
+     )
+     |> assign(
+       :batch_size,
+       batch_size
+     )
      |> assign(:related_episodes_index, current_index)}
   end
 
   def handle_event("prev_related_episodes", _params, socket) do
     current_index = socket.assigns.related_episodes_index - 1
     episode_count = socket.assigns.related_episode_count
+    batch_size = socket.assigns.batch_size
 
     {:noreply,
      socket
-     |> assign(:has_all_related_episodes?, has_all_episodes?(current_index, episode_count))
+     |> assign(
+       :has_all_related_episodes?,
+       has_all_episodes?(current_index, episode_count, batch_size)
+     )
      |> assign(:related_episodes_index, current_index)}
   end
 
-  def handle_event("next_other_episodes", _params, socket) do
+  def handle_event("next_other_episodes", %{"batch_size" => batch_size} = _params, socket) do
     current_index = socket.assigns.other_episodes_index + 1
     episode_count = socket.assigns.other_episode_count
 
     {:noreply,
      socket
-     |> assign(:has_all_other_episodes?, has_all_episodes?(current_index, episode_count))
+     |> assign(
+       :has_all_other_episodes?,
+       has_all_episodes?(current_index, episode_count, batch_size)
+     )
      |> assign(:other_episodes_index, current_index)}
   end
 
-  def handle_event("prev_other_episodes", _params, socket) do
+  def handle_event("prev_other_episodes", %{"batch_size" => batch_size} = _params, socket) do
     current_index = socket.assigns.other_episodes_index - 1
     episode_count = socket.assigns.other_episode_count
 
     {:noreply,
      socket
-     |> assign(:has_all_other_episodes?, has_all_episodes?(current_index, episode_count))
+     |> assign(
+       :has_all_other_episodes?,
+       has_all_episodes?(current_index, episode_count, batch_size)
+     )
      |> assign(:other_episodes_index, current_index)}
   end
 
-  defp has_all_episodes?(_current_index, episode_count)
-       when episode_count <= @episode_batch_size,
+  defp has_all_episodes?(_current_index, episode_count, batch_size)
+       when episode_count <= batch_size,
        do: true
 
-  defp has_all_episodes?(current_index, episode_count),
-    do: current_index == episode_count - @episode_batch_size
+  defp has_all_episodes?(current_index, episode_count, batch_size),
+    do: current_index == episode_count - batch_size
 
   defp assign_seo_attributes(socket, question, episode) do
     attributes = %{

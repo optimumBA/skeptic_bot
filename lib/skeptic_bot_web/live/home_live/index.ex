@@ -19,13 +19,13 @@ defmodule SkepticBotWeb.HomeLive.Index do
         <section class="pt-20 md:pt-0">
           <div class={[
             "absolute top-[2%] left-0 w-[38%] xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[20%] 2xl:top-[3%] 4xl:w-[17%]",
-            @loading && "opacity-0"
+            @loading && "hidden"
           ]}>
             <img src={~p"/images/home/top_swirl.svg"} class="w-full h-full object-cover" alt="Swirl" />
           </div>
           <div class={[
             "absolute bottom-[16%] 2xs:bottom-[13%] md:bottom-[11%] left-[4%] w-[34%] xs:w-[30%] 2xs:w-[27%] md:w-[20%] xl:w-[21%] 2xl:w-[20%] 4xl:w-[17%]",
-            @loading && "opacity-0"
+            @loading && "hidden"
           ]}>
             <img
               src={~p"/images/home/demonstration.svg"}
@@ -36,7 +36,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
           <div class={[
             "absolute bottom-[8%] 2xs:bottom-[6%] md:bottom-[9%] right-[1.3rem] w-[24%] xs:w-[18%] 2xs:w-[18%] md:w-[10%]",
-            @loading && "opacity-0"
+            @loading && "hidden"
           ]}>
             <img
               src={~p"/images/home/hero_stars.svg"}
