@@ -52,7 +52,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           <div class={[
             @loading && "hidden"
           ]}>
-            <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
+            <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D] mb-10">
               Questions everything
             </section>
 
