@@ -43,4 +43,32 @@ defmodule SkepticBotWeb.HomeLive.Components do
     </div>
     """
   end
+
+  attr :display, :string, required: true
+
+  @spec loading_component(assigns()) :: rendered()
+  def loading_component(assigns) do
+    ~H"""
+    <div class={[
+      "flex items-center justify-center space-x-1",
+      @display
+    ]}>
+      <img
+        src={~p"/images/home/typing_dot.svg"}
+        class="object-cover dot-animation delay-0"
+        alt="Typing Dot"
+      />
+      <img
+        src={~p"/images/home/typing_dot.svg"}
+        class="object-cover dot-animation delay-200"
+        alt="Typing Dot"
+      />
+      <img
+        src={~p"/images/home/typing_dot.svg"}
+        class="object-cover dot-animation delay-400"
+        alt="Typing Dot"
+      />
+    </div>
+    """
+  end
 end

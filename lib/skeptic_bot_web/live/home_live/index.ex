@@ -11,23 +11,33 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <div class="bg-[#FFF5F5]">
-      <div class={[
-        "h-screen flex items-center relative",
-        @loading && "animate-pulse"
-      ]}>
+    <div class={[
+      "bg-[#FFF5F5]",
+      @loading && "bg-[#FFFFFF]"
+    ]}>
+      <div class="h-screen flex items-center relative">
         <section class="pt-20 md:pt-0">
-          <div class="absolute top-[2%] left-0 w-[38%] xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[20%] 2xl:top-[3%] 4xl:w-[17%]">
+          <div class={[
+            "absolute top-[2%] left-0 w-[38%] xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[20%] 2xl:top-[3%] 4xl:w-[17%]",
+            @loading && "opacity-0"
+          ]}>
             <img src={~p"/images/home/top_swirl.svg"} class="w-full h-full object-cover" alt="Swirl" />
           </div>
-          <div class="absolute bottom-[16%] 2xs:bottom-[13%] md:bottom-[11%] left-[4%] w-[34%] xs:w-[30%] 2xs:w-[27%] md:w-[20%] xl:w-[21%] 2xl:w-[20%] 4xl:w-[17%]">
+          <div class={[
+            "absolute bottom-[16%] 2xs:bottom-[13%] md:bottom-[11%] left-[4%] w-[34%] xs:w-[30%] 2xs:w-[27%] md:w-[20%] xl:w-[21%] 2xl:w-[20%] 4xl:w-[17%]",
+            @loading && "opacity-0"
+          ]}>
             <img
               src={~p"/images/home/demonstration.svg"}
               class="w-full h-full object-cover"
               alt="Illustration 1"
             />
           </div>
-          <div class="absolute bottom-[8%] 2xs:bottom-[6%] md:bottom-[9%] right-[1.3rem] w-[24%] xs:w-[18%] 2xs:w-[18%] md:w-[10%]">
+
+          <div class={[
+            "absolute bottom-[8%] 2xs:bottom-[6%] md:bottom-[9%] right-[1.3rem] w-[24%] xs:w-[18%] 2xs:w-[18%] md:w-[10%]",
+            @loading && "opacity-0"
+          ]}>
             <img
               src={~p"/images/home/hero_stars.svg"}
               class="w-full h-full object-cover"
@@ -42,6 +52,10 @@ defmodule SkepticBotWeb.HomeLive.Index do
           <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
             Questions everything
           </section>
+
+          <section class="w-[50%] mx-auto">
+            <HomeLive.Components.loading_component display={@display} />
+          </section>
           <section class="w-full xs:w-[95%] 2xs:w-[80%] sm:w-[80%] md:w-[96%] lg:w-[80%] xl:w-[60%] mx-auto">
             <HomeLive.Components.form_component form={@form} />
           </section>
@@ -55,6 +69,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
+     |> assign(:display, "hidden")
      |> assign(:loading, false)
      |> assign(:question, %UserQuestion{})
      |> assign_form()}
@@ -158,7 +173,17 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:loading_state, value}, socket) do
-    {:noreply, assign(socket, :loading, value)}
+    display =
+      if value do
+        "block"
+      else
+        "hidden"
+      end
+
+    {:noreply,
+     socket
+     |> assign(:loading, value)
+     |> assign(:display, display)}
   end
 
   defp assign_form(%{assigns: %{question: question}} = socket) do
