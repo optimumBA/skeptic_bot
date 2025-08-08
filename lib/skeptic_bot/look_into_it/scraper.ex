@@ -17,7 +17,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   @type reason :: String.t()
 
   @spec scrape(channel()) :: :ok | {:error, reason()}
-  def scrape(channel) do
+  def scrape(channel \\ @rumble_channel) do
     case ChannelClient.get_channel_data(channel) do
       {:ok, result} ->
         result

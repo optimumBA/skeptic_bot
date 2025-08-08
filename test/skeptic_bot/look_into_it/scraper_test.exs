@@ -10,23 +10,22 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
 
-  @video_url "https://global.ssl.fastly.net/jGrM0w/v.mp4"
-  @rokfin_channel "https://rokfin.com/eddiebravo"
-  @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
   @external_id "177589"
   @podcast "Look Into It"
+  @rokfin_channel "https://rokfin.com/eddiebravo"
+  @video_url "https://global.ssl.fastly.net/jGrM0w/v.mp4"
 
   setup :verify_on_exit!
 
   defp get_channel_data(_attrs) do
-    channel_data = rokfin_channel_fixture()
+    channel_data = rumble_channel_fixture()
     %{channel_data: channel_data}
   end
 
   describe "scrape/1" do
     setup [:get_channel_data]
 
-    test "enqueues a downloading job if episode does not already exist for Rokfin", %{
+    test "enqueues a downloading job if episode does not already exists", %{
       channel_data: channel_data
     } do
       refute Podcasts.episode_exists?(@external_id)
@@ -35,7 +34,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
         {:ok, channel_data}
       end)
 
-      Scraper.scrape(@rokfin_channel)
+      Scraper.scrape()
 
       assert_enqueued(
         worker: DownloadingWorker,
@@ -46,16 +45,15 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
       )
     end
 
-    test "enqueues a downloading job if episode does not already exist for Rumble" do
-      channel_data = rumble_channel_fixture()
-
+    test "enqueues a downloading job (Rokfin) if episode does not already exist" do
+      channel_data = rokfin_channel_fixture()
       refute Podcasts.episode_exists?(@external_id)
 
       expect(MockChannelClient, :get_channel_data, fn _channel ->
         {:ok, channel_data}
       end)
 
-      Scraper.scrape(@rumble_channel)
+      Scraper.scrape(@rokfin_channel)
 
       assert_enqueued(
         worker: DownloadingWorker,
@@ -75,7 +73,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
         {:ok, channel_data}
       end)
 
-      Scraper.scrape(@rokfin_channel)
+      Scraper.scrape()
 
       refute_enqueued(
         worker: DownloadingWorker,
@@ -91,7 +89,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
         {:ok, ""}
       end)
 
-      Scraper.scrape(@rokfin_channel)
+      Scraper.scrape()
 
       refute_enqueued(worker: DownloadingWorker)
     end
@@ -102,7 +100,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
         {:error, "Too many retries"}
       end)
 
-      Scraper.scrape(@rokfin_channel)
+      Scraper.scrape()
 
       refute_enqueued(worker: DownloadingWorker)
     end
