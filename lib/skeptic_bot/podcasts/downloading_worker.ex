@@ -86,7 +86,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     result
   end
 
-  defp process(id, video_url, @podcast_lookintoit) do
+  defp process(id, url, @podcast_lookintoit) do
     tmp_dir = System.tmp_dir!()
     audio_path = Path.join(tmp_dir, "#{id}_.mp3")
 
@@ -97,7 +97,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     |> File.mkdir_p!()
 
     result =
-      with {:ok, _audio_path} <- Downloader.download(video_url, audio_path, :yt_dlp),
+      with {:ok, _audio_path} <- Downloader.download(url, audio_path, :yt_dlp),
            {:ok, url} <- StorageProvider.upload_file(audio_path) do
         {:ok, url}
       else

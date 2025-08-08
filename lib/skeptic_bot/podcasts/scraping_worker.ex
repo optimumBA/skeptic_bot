@@ -13,9 +13,9 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
 
   require Logger
 
-  @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
-
   @type job :: Oban.Job.t()
+
+  @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
 
   @impl Oban.Worker
   @spec perform(job()) :: :ok | {:error, any()}
