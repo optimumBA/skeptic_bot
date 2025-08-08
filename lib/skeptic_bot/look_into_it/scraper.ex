@@ -1,6 +1,6 @@
 defmodule SkepticBot.LookIntoIt.Scraper do
   @moduledoc """
-  Scrapes Eddie Bravo episodes from Rofkin and downloads them
+  Scrapes Eddie Bravo's episodes from Rofkin and Rumble then downloads them
   """
 
   alias SkepticBot.LookIntoIt.ChannelClient
@@ -9,9 +9,9 @@ defmodule SkepticBot.LookIntoIt.Scraper do
 
   require Logger
 
+  @podcast "Look Into It"
   @rokfin_channel "https://rokfin.com/eddiebravo"
   @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
-  @podcast "Look Into It"
 
   @type channel :: String.t()
   @type reason :: String.t()
@@ -42,7 +42,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   end
 
   defp maybe_download_episode({title, duration, thumbnail, webpage_url, video_url}, channel) do
-    external_id = get_external_id(webpage_url, video_url, channel)
+    external_id = get_external_id(webpage_url, channel)
 
     unless Podcasts.episode_exists?(external_id) do
       {:ok, %Podcasts.Episode{} = episode} =
@@ -71,18 +71,15 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     String.to_integer(duration)
   end
 
-  defp get_external_id(webpage_url, video_url, @rokfin_channel) do
+  defp get_external_id(webpage_url, @rokfin_channel) do
     <<"https://rokfin.com/post/", webpage_id::binary>> = webpage_url
 
-    <<"https://rkfn-media.global.ssl.fastly.net/", rest::binary>> =
-      video_url
-
-    video_id = String.replace_trailing(rest, "/v.mp4", "")
-
-    webpage_id <> "-" <> video_id
+    webpage_id
   end
 
-  defp get_external_id(webpage_url, _video_url, @rumble_channel) do
-    webpage_url
+  defp get_external_id(webpage_url, @rumble_channel) do
+    <<"https://rumble.com/", webpage_id::binary>> = webpage_url
+
+    webpage_id
   end
 end

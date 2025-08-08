@@ -10,10 +10,10 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
 
-  @video_url "https://rkfn-media.global.ssl.fastly.net/jGrM0w/v.mp4"
+  @video_url "https://global.ssl.fastly.net/jGrM0w/v.mp4"
   @rokfin_channel "https://rokfin.com/eddiebravo"
   @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
-  @external_id "177589-jGrM0w"
+  @external_id "177589"
   @podcast "Look Into It"
 
   setup :verify_on_exit!
