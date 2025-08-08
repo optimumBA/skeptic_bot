@@ -5,10 +5,10 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
   import SkepticBot.PodcastsFixtures
   import SkepticBot.ScrapingFixtures
 
-  alias SkepticBot.Podcasts.DownloadingWorker
   alias SkepticBot.LookIntoIt.MockChannelClient
   alias SkepticBot.LookIntoIt.Scraper
   alias SkepticBot.Podcasts
+  alias SkepticBot.Podcasts.DownloadingWorker
 
   @video_url "https://rkfn-media.global.ssl.fastly.net/jGrM0w/v.mp4"
   @rokfin_channel "https://rokfin.com/eddiebravo"
