@@ -42,11 +42,13 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   end
 
   defp maybe_download_episode({title, duration, thumbnail, webpage_url, video_url}, channel) do
-    unless Podcasts.episode_exists?(webpage_url) do
+    external_id = get_external_id(webpage_url, video_url, channel)
+
+    unless Podcasts.episode_exists?(external_id) do
       {:ok, %Podcasts.Episode{} = episode} =
         Podcasts.create_episode(%{
           "episode_length" => get_video_length(duration, channel),
-          "external_id" => get_external_id(webpage_url, video_url, channel),
+          "external_id" => external_id,
           "thumbnail" => thumbnail,
           "title" => title
         })
