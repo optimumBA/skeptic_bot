@@ -9,8 +9,10 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.MockStorageProvider
 
-  @external_id "a909da70-13b7-4717-b1c0-c2d001521dc3"
   @id "012eb1cb-5b41-405f-bcab-7a5236eee471"
+  @podcast_lookintoit "Look Into It"
+  @podcast_tinfoilhat "Tin Foil Hat"
+  @video_url "site/some_video.mp4"
 
   setup :set_mox_from_context
   setup :verify_on_exit!
@@ -32,8 +34,9 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
 
       assert :ok =
                perform_job(DownloadingWorker, %{
-                 external_id: @external_id,
-                 id: @id
+                 id: @id,
+                 podcast: @podcast_tinfoilhat,
+                 video_url: @video_url
                })
 
       assert_enqueued(

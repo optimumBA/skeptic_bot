@@ -8,7 +8,7 @@ defmodule SkepticBot.LookIntoIt.RumbleScraper do
   alias SkepticBot.Podcasts.DownloadingWorker
 
   require Logger
-  @channel "https://rumble.com/eddiebravo"
+  @channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
   @podcast "Look Into It"
 
   @type reason :: String.t()

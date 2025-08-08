@@ -180,13 +180,7 @@
           #
           {Credo.Check.Consistency.MultiAliasImportRequireUse, []},
           {Credo.Check.Consistency.UnusedVariableNames, []},
-          {Credo.Check.Design.DuplicatedCode,
-           files: %{
-             excluded: [
-               "lib/skeptic_bot/look_into_it/rumble_scraper.ex",
-               "lib/skeptic_bot/look_into_it/rokfin_scraper.ex"
-             ]
-           }},
+          {Credo.Check.Design.DuplicatedCode, []},
           {Credo.Check.Design.SkipTestWithoutComment, []},
           {Credo.Check.Readability.AliasAs, []},
           {Credo.Check.Readability.BlockPipe, []},
