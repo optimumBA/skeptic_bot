@@ -19,7 +19,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
   setup :verify_on_exit!
 
   defp get_channel_data(_attrs) do
-    channel_data = channel_fixture()
+    channel_data = rokfin_channel_fixture()
     %{channel_data: channel_data}
   end
 
@@ -46,9 +46,9 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
       )
     end
 
-    test "enqueues a downloading job if episode does not already exist for Rumble", %{
-      channel_data: channel_data
-    } do
+    test "enqueues a downloading job if episode does not already exist for Rumble" do
+      channel_data = rumble_channel_fixture()
+
       refute Podcasts.episode_exists?(@external_id)
 
       expect(MockChannelClient, :get_channel_data, fn _channel ->
