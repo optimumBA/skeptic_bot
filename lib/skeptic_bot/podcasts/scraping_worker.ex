@@ -8,10 +8,12 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
     max_attempts: 3,
     queue: :scraping
 
-  alias SkepticBot.LookIntoIt.RumbleScraper
+  alias SkepticBot.LookIntoIt.Scraper
   alias SkepticBot.Podcasts.TinfoilScraper
 
   require Logger
+
+  @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
 
   @type job :: Oban.Job.t()
 
@@ -20,6 +22,6 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
   def perform(_job) do
     Logger.info("Starting scheduled podcast scraping")
     TinfoilScraper.scrape()
-    RumbleScraper.scrape()
+    Scraper.scrape(@rumble_channel)
   end
 end
