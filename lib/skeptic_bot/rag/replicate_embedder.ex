@@ -31,6 +31,6 @@ defmodule SkepticBot.Rag.ReplicateEmbedder do
       texts: Jason.encode!(texts)
     }
 
-    SkepticBot.ReplicateClient.start_prediction(__MODULE__, @model, input)
+    SkepticBot.ReplicateClient.start_prediction(__MODULE__, :embedding, @model, input)
   end
 end

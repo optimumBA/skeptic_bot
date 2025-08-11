@@ -12,9 +12,9 @@ defmodule SkepticBot.ReplicateClient do
   @callback get_type() :: String.t()
   @callback handle_output(any()) :: any()
 
-  @spec start_prediction(module(), String.t(), map(), timeout()) ::
+  @spec start_prediction(module(), atom(), String.t(), map(), timeout()) ::
           {:ok, any()} | {:error, String.t()}
-  def start_prediction(module, model, input, timeout \\ :timer.minutes(5)) do
+  def start_prediction(module, process_type, model, input, timeout \\ :timer.minutes(5)) do
     replicate_config = Application.fetch_env!(:skeptic_bot, :replicate)
     api_token = Keyword.fetch!(replicate_config, :api_token)
     webhook_url = url(~p"/webhook/replicate")
@@ -30,12 +30,12 @@ defmodule SkepticBot.ReplicateClient do
              version: version,
              input: input,
              webhook: webhook_url,
-             webhook_events_filter: ["completed"]
+             webhook_events_filter: ["completed", "output"]
            },
            headers: [{"Authorization", "Token #{api_token}"}]
          ) do
       %Req.Response{status: 201, body: %{"id" => prediction_id}} ->
-        wait_for_webhook(module, prediction_id, timeout)
+        wait_for_webhook(module, prediction_id, timeout, process_type)
 
       %Req.Response{status: status, body: body} ->
         Logger.error(
@@ -46,11 +46,28 @@ defmodule SkepticBot.ReplicateClient do
     end
   end
 
-  defp wait_for_webhook(module, prediction_id, timeout) do
+  defp wait_for_webhook(module, prediction_id, timeout, :embedding) do
     WebhookHandler.register_for_prediction(prediction_id, self())
 
     receive do
       {:prediction_completed, ^prediction_id, output} ->
+        {:ok, module.handle_output(output)}
+
+      {:prediction_failed, ^prediction_id, error} ->
+        Logger.error("#{module.get_type()} failed: #{error}")
+        {:error, "#{module.get_type()} failed: #{error}"}
+    after
+      timeout ->
+        WebhookHandler.unregister_prediction(prediction_id)
+        {:error, "#{module.get_type()} timed out"}
+    end
+  end
+
+  defp wait_for_webhook(module, prediction_id, timeout, :prediction) do
+    WebhookHandler.register_for_prediction(prediction_id, self())
+
+    receive do
+      {:prediction_underway, ^prediction_id, output} ->
         {:ok, module.handle_output(output)}
 
       {:prediction_failed, ^prediction_id, error} ->

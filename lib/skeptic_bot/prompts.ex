@@ -34,6 +34,12 @@ defmodule SkepticBot.Prompts do
     |> Repo.insert()
   end
 
+  def update_question(question, attrs \\ %{}) do
+    question
+    |> UserQuestion.changeset(attrs)
+    |> Repo.update()
+  end
+
   @spec change_question_query(question(), attrs()) :: Ecto.Changeset.t()
   def change_question_query(%UserQuestion{} = question, attrs \\ %{}) do
     UserQuestion.query_changeset(question, attrs)
@@ -42,7 +48,11 @@ defmodule SkepticBot.Prompts do
   @spec get_episode_details([episode()]) :: [episode_details()]
   def get_episode_details(podcast_episodes) do
     Enum.map(podcast_episodes, fn podcast_episode ->
-      %{episode_id: podcast_episode.id, timestamp: podcast_episode.timestamp}
+      %{
+        episode_id: podcast_episode.id,
+        timestamp: podcast_episode.timestamp,
+        transcription: podcast_episode.transcription
+      }
     end)
   end
 
@@ -54,6 +64,11 @@ defmodule SkepticBot.Prompts do
       |> Enum.map(&{&1.episode_id, &1.timestamp})
       |> Enum.into(%{})
 
+    question_episodes_transcriptions =
+      question_episodes
+      |> Enum.map(&{&1.episode_id, &1.transcription})
+      |> Enum.into(%{})
+
     Episode
     |> where([e], fragment("? <-> ? <= ?", e.embedding, ^question_embedding, @episode_threshold))
     |> order_by([e], asc: l2_distance(e.embedding, ^question_embedding))
@@ -61,7 +76,9 @@ defmodule SkepticBot.Prompts do
     |> Repo.all()
     |> Enum.map(fn episode ->
       timestamp = question_episodes_timestamps[episode.id]
+      transcription = question_episodes_transcriptions[episode.id]
       Map.put(episode, :timestamp, timestamp)
+      Map.put(episode, :transcription, transcription)
     end)
   end
 

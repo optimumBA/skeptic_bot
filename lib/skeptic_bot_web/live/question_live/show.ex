@@ -2,7 +2,11 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   use SkepticBotWeb, :live_view
 
   alias SkepticBot.Prompts
+  alias SkepticBot.Rag
+  alias SkepticBot.Prompts.UserQuestion
   alias SkepticBotWeb.PodcastComponents
+
+  require Logger
 
   @episode_batch_size 3
   @episode_limit 6
@@ -202,6 +206,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:noreply,
      socket
      |> assign(:description, question.description)
+     |> assign(:question, question)
      |> assign(:has_all_other_episodes?, has_all_episodes?(0, other_episode_count))
      |> assign(:has_all_related_episodes?, has_all_episodes?(0, related_episode_count))
      |> assign(:other_episodes, other_episodes)
@@ -211,6 +216,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:related_episode_count, related_episode_count)
      |> assign(:related_questions, related_questions)
      |> assign(:title, question.title)
+     |> assign_description_and_title(related_episodes, question)
      |> assign_seo_attributes(question, most_related_episode)}
   end
 
@@ -271,6 +277,79 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     }
 
     assign(socket, :seo_attributes, attributes)
+  end
+
+  defp assign_description_and_title(
+         socket,
+         related_episodes,
+         %UserQuestion{title: nil} = question
+       ) do
+    # start_async(socket, :prediction_results, fn ->
+    #   Rag.predict_query(related_episodes, question.query)
+    # end)
+
+    socket
+  end
+
+  def handle_async(:prediction_results, {:ok, answer}, socket) do
+    dbg(answer)
+    {:noreply, socket}
+  end
+
+  defp assign_description_and_title(
+         socket,
+         _related_episodes,
+         question
+       ) do
+    socket
+    |> assign(:description, question.description)
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info({:prediction_underway, _prediction_id, output}, socket) do
+    question = socket.assigns.question
+
+    case get_title_and_description(output) do
+      [title, description] ->
+        attrs = %{
+          title: title,
+          description: description
+        }
+
+        Prompts.update_question(question, attrs)
+
+      [_title] ->
+        :ok
+    end
+
+    {:noreply, socket}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info({:prediction_completed, _prediction_id, output}, socket) do
+    Logger.warning("In the completion stage")
+    question = socket.assigns.question
+
+    case get_title_and_description(output) do
+      [title, description] ->
+        attrs = %{
+          title: title,
+          description: description
+        }
+
+        Prompts.update_question(question, attrs)
+
+      [_title] ->
+        :ok
+    end
+
+    {:noreply, socket}
+  end
+
+  defp get_title_and_description(output) do
+    output
+    |> Enum.join()
+    |> String.split("$&$", parts: 2)
   end
 
   defp get_image_url(episode) do

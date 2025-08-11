@@ -101,8 +101,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @impl Phoenix.LiveView
   def handle_async(:prompt_results, {:ok, prompt_results}, socket) do
     case prompt_results do
-      {:ok, {response, podcast_episodes, embedding}} ->
-        handle_prompt_results(response, podcast_episodes, embedding, socket)
+      {:ok, {podcast_episodes, embedding}} ->
+        handle_prompt_results(podcast_episodes, embedding, socket)
 
       {:error, :no_episodes_found} ->
         send(self(), {:loading_state, false})
@@ -132,19 +132,15 @@ defmodule SkepticBotWeb.HomeLive.Index do
   end
 
   defp handle_prompt_results(
-         response,
          podcast_episodes,
          embedding,
          %{assigns: %{query: query}} = socket
        ) do
     with episode_details <- Prompts.get_episode_details(podcast_episodes),
-         {title, description} <- get_title_and_description(response),
          question_attrs <- %{
-           description: description,
            embedding: embedding,
            episodes: episode_details,
-           query: query,
-           title: title
+           query: query
          },
          {:ok, question} <- Prompts.create_question(question_attrs) do
       {:noreply, push_navigate(socket, to: "/questions/#{question.id}")}
@@ -168,15 +164,5 @@ defmodule SkepticBotWeb.HomeLive.Index do
       |> to_form()
 
     assign(socket, :form, form)
-  end
-
-  defp get_title_and_description(response) do
-    dbg(response)
-
-    [title, description] =
-      response
-      |> String.split("$&$", parts: 2)
-
-    {title, description}
   end
 end
