@@ -55,10 +55,11 @@ defmodule SkepticBot.Rag do
       Kindly urge the reader to listen to the podcast episodes to get the full story.
       The title (MUST be one statement) MUST clearly explain what the entire response is about.
       Your response MUST be in the following format with the title coming first with its value
-      then the description coming second with its corresponding value. Here are some examples:
+      then the description coming second with its corresponding value. They should be separated by the "$&$" signs.
+      Here are some examples:
 
-      Example 1 : "{\"title\":\"Global Controls\",\"description\":\"The world is controlled by elite individuals\"}"
-      Example 2 : "{\"title\":\"American Ponzi schemes\",\"description\":\"Wake up now before it is too late\"}"
+      Example 1 : "Global Controls$&$The world is controlled by elite individuals"
+      Example 2 : "American Ponzi schemes$&$Wake up now before it is too late"
       """
 
     [

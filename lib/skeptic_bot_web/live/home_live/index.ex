@@ -171,12 +171,12 @@ defmodule SkepticBotWeb.HomeLive.Index do
   end
 
   defp get_title_and_description(response) do
-    case Jason.decode(response) do
-      {:ok, %{"description" => description, "title" => title}} ->
-        {title, description}
+    dbg(response)
 
-      {:error, error} ->
-        {:error, error}
-    end
+    [title, description] =
+      response
+      |> String.split("$&$", parts: 2)
+
+    {title, description}
   end
 end
