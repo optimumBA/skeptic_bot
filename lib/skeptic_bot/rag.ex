@@ -21,7 +21,7 @@ defmodule SkepticBot.Rag do
             {:error, :no_episodes_found}
 
           context ->
-            predict_query(context, query, embedding)
+            {:ok, {context, embedding}}
         end
 
       {:error, reason} ->
@@ -29,10 +29,10 @@ defmodule SkepticBot.Rag do
     end
   end
 
-  defp predict_query(context, query, embedding) do
+  def predict_query(context, query) do
     with prompt <- format_prompt(context, query),
          {:ok, response} <- Rag.Generator.predict(prompt) do
-      {:ok, {response, context, embedding}}
+      {:ok, response}
     else
       {:error, reason} ->
         {:error, reason}
