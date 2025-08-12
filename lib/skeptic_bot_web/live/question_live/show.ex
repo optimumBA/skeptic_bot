@@ -1,9 +1,9 @@
 defmodule SkepticBotWeb.QuestionLive.Show do
   use SkepticBotWeb, :live_view
 
+  alias SkepticBot.PredictionHandler
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
-  alias SkepticBot.Rag
   alias SkepticBotWeb.PodcastComponents
 
   require Logger
@@ -21,7 +21,10 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         <p class="text-[#000000] text-[3.75rem] leading-[1.2] montserrat-alternates-bold">
           {@title}
         </p>
-        <div class="absolute top-[-2.1rem] left-[-2.8rem]">
+        <div class={[
+          "absolute top-[-2.1rem] left-[-2.8rem]",
+          !@title && "hidden"
+        ]}>
           <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
         </div>
       </section>
@@ -185,6 +188,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _uri, socket) do
     question = Prompts.get_question(id)
+    dbg(question.title)
 
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
@@ -284,7 +288,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
          related_episodes,
          %UserQuestion{title: nil} = question
        ) do
-    Rag.predict_query(related_episodes, question.query)
+    PredictionHandler.make_llm_request(related_episodes, question, self())
 
     socket
   end
@@ -297,45 +301,11 @@ defmodule SkepticBotWeb.QuestionLive.Show do
        do: socket
 
   @impl Phoenix.LiveView
-  def handle_info({:prediction_underway, _prediction_id, output}, socket) do
-    question = socket.assigns.question
-
-    case get_title_and_description(output) do
-      [title, description] ->
-        {:noreply,
-         socket
-         |> assign(title: title)
-         |> assign(description: description)}
-
-      [title] ->
-        Prompts.update_question(question, %{title: title})
-        {:noreply, socket}
-    end
-  end
-
-  @impl Phoenix.LiveView
-  def handle_info({:prediction_completed, _prediction_id, output}, socket) do
-    question = socket.assigns.question
-
-    [title, description] = get_title_and_description(output)
-
-    attrs = %{
-      title: title,
-      description: description
-    }
-
-    Prompts.update_question(question, attrs)
-
+  def handle_info({:prediction_result, {title, description}}, socket) do
     {:noreply,
      socket
      |> assign(title: title)
      |> assign(description: description)}
-  end
-
-  defp get_title_and_description(output) do
-    output
-    |> Enum.join()
-    |> String.split("$&$", parts: 2)
   end
 
   defp get_image_url(episode) do

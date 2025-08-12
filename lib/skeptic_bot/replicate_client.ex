@@ -63,20 +63,9 @@ defmodule SkepticBot.ReplicateClient do
     end
   end
 
-  defp wait_for_webhook(module, prediction_id, timeout, :prediction) do
+  defp wait_for_webhook(_module, prediction_id, _timeout, :prediction) do
     WebhookHandler.register_for_prediction(prediction_id, self())
 
-    receive do
-      {:prediction_underway, ^prediction_id, output} ->
-        {:ok, module.handle_output(output)}
-
-      {:prediction_failed, ^prediction_id, error} ->
-        Logger.error("#{module.get_type()} failed: #{error}")
-        {:error, "#{module.get_type()} failed: #{error}"}
-    after
-      timeout ->
-        WebhookHandler.unregister_prediction(prediction_id)
-        {:error, "#{module.get_type()} timed out"}
-    end
+    {:ok, prediction_id}
   end
 end
