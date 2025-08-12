@@ -302,19 +302,13 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     case get_title_and_description(output) do
       [title, description] ->
-        attrs = %{
-          title: title,
-          description: description
-        }
-
-        Prompts.update_question(question, attrs)
-
         {:noreply,
          socket
          |> assign(title: title)
          |> assign(description: description)}
 
-      [_title] ->
+      [title] ->
+        Prompts.update_question(question, %{title: title})
         {:noreply, socket}
     end
   end

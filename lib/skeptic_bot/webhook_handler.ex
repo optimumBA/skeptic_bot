@@ -25,14 +25,11 @@ defmodule SkepticBot.WebhookHandler do
   @spec register_for_prediction(prediction_id(), pid()) ::
           {:ok, pid()} | {:error, {:already_registered, pid()}}
   def register_for_prediction(prediction_id, pid) do
-    Logger.warning("we have registered for prediction with id #{prediction_id}")
-
     Registry.register(@registry_name, prediction_id, pid)
   end
 
   @spec unregister_prediction(prediction_id()) :: :ok
   def unregister_prediction(prediction_id) do
-    Logger.warning("we have unregistered for prediction id #{prediction_id}")
     Registry.unregister(@registry_name, prediction_id)
   end
 
@@ -55,7 +52,7 @@ defmodule SkepticBot.WebhookHandler do
   defp handle_prediction_result(%{"status" => "succeeded", "output" => output}, prediction_id) do
     case Registry.lookup(@registry_name, prediction_id) do
       [{pid, _ref}] ->
-        # unregister_prediction(prediction_id)
+        unregister_prediction(prediction_id)
         send(pid, {:prediction_completed, prediction_id, output})
 
       [] ->
@@ -66,7 +63,6 @@ defmodule SkepticBot.WebhookHandler do
   defp handle_prediction_result(%{"status" => "processing", "output" => output}, prediction_id) do
     case Registry.lookup(@registry_name, prediction_id) do
       [{pid, _ref}] ->
-        # unregister_prediction(prediction_id)
         send(pid, {:prediction_underway, prediction_id, output})
 
       [] ->
