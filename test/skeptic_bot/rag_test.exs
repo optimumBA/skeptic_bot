@@ -13,7 +13,7 @@ defmodule SkepticBot.RagTest do
     %{embedding: embedding}
   end
 
-  describe "generate/1" do
+  describe "generate_embedding/1" do
     setup [:create_embedding]
 
     test "with valid query returns episodes and description", %{
@@ -21,19 +21,12 @@ defmodule SkepticBot.RagTest do
     } do
       episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-      llm_response = response_fixture()
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
 
-      expect(Rag.MockGenerator, :predict, fn _messages ->
-        {:ok, llm_response}
-      end)
-
-      {:ok, {response, context, _embedding}} = Rag.generate("Who Killed Two Pac Shakur")
-
-      assert llm_response == response
+      {:ok, {context, _embedding}} = Rag.generate_embedding("Who Killed Two Pac Shakur")
 
       assert Enum.any?(context, fn context_episode -> context_episode.id == episode.id end)
     end
@@ -45,34 +38,41 @@ defmodule SkepticBot.RagTest do
         {:ok, [embedding]}
       end)
 
-      assert {:error, :no_episodes_found} = Rag.generate("Who Killed Two Pac Shakur")
+      assert {:error, :no_episodes_found} = Rag.generate_embedding("Who Killed Two Pac Shakur")
     end
 
-    test "returns an error tuple if generation process was unsuccessful" do
+    test "returns error tuple if embedding generation fails" do
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        {:error, "Generation process was unsuccessful"}
+        {:error, "embedding has failed"}
       end)
 
-      assert {:error, "Generation process was unsuccessful"} =
-               Rag.generate("Who Killed Two Pac Shakur")
+      assert {:error, "embedding has failed"} =
+               Rag.generate_embedding("Who Killed Two Pac Shakur")
+    end
+  end
+
+  describe "predict_query/2" do
+    test "returns the response if successful" do
+      episode = episode_fixture()
+
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, "Prediction process was successful"}
+      end)
+
+      assert {:ok, "Prediction process was successful"} =
+               Rag.predict_query([episode], "Who Killed Two Pac Shakur")
     end
 
-    test "returns an error tuple if prediction process was unsuccessful", %{
-      embedding: embedding
-    } do
-      episode = episode_fixture(embedding: embedding)
-      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-
-      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        {:ok, [embedding]}
-      end)
+    test "returns an error tuple if prediction process was unsuccessful" do
+      episode = episode_fixture()
+      query = "American Ponzi with Lee Camp"
 
       expect(Rag.MockGenerator, :predict, fn _messages ->
         {:error, "Prediction process was unsuccessful"}
       end)
 
       assert {:error, "Prediction process was unsuccessful"} =
-               Rag.generate("Who Killed Two Pac Shakur")
+               Rag.predict_query([episode], query)
     end
   end
 end

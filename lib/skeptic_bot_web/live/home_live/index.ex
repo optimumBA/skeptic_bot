@@ -94,7 +94,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
     send(self(), {:loading_state, true})
 
     start_async(socket, :prompt_results, fn ->
-      Rag.generate(query)
+      Rag.generate_embedding(query)
     end)
   end
 

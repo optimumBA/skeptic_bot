@@ -10,10 +10,10 @@ defmodule SkepticBot.Rag do
 
   @type embedding :: [float()]
 
-  @spec generate(String.t()) ::
+  @spec generate_embedding(String.t()) ::
           {:ok, {list(), embedding()}}
           | {:error, any()}
-  def generate(query) do
+  def generate_embedding(query) do
     case Rag.Embedder.generate("query: " <> query) do
       {:ok, [embedding]} ->
         case Rag.Retrieval.retrieve(embedding) do

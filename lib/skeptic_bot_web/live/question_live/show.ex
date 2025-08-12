@@ -188,7 +188,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _uri, socket) do
     question = Prompts.get_question(id)
-    dbg(question.title)
 
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)

@@ -50,7 +50,9 @@ defmodule SkepticBot.PromptsFixtures do
           embedding: embedding
         })
 
-      Map.put(episode, :timestamp, %{secs: :rand.uniform(3000), months: 0, days: 0})
+      episode
+      |> Map.put(:timestamp, %{secs: :rand.uniform(3000), months: 0, days: 0})
+      |> Map.put(:transcription, "A Simple Transcription")
     end
   end
 end
