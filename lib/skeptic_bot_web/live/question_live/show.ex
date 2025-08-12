@@ -76,7 +76,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
             <button
               phx-click={JS.push("next_related_episodes", value: %{batch_size: @mobile_batch_size})}
-              class="md:hidden disabled:opacity-50"
+              class="smd:hidden disabled:opacity-50"
               disabled={@has_all_related_episodes?}
             >
               <div>
@@ -86,7 +86,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
             <button
               phx-click={JS.push("next_related_episodes", value: %{batch_size: @tablet_batch_size})}
-              class="hidden md:block lg:hidden disabled:opacity-50"
+              class="hidden smd:block lg:hidden disabled:opacity-50"
               disabled={@has_all_related_episodes?}
             >
               <div>
