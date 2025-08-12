@@ -284,16 +284,9 @@ defmodule SkepticBotWeb.QuestionLive.Show do
          related_episodes,
          %UserQuestion{title: nil} = question
        ) do
-    # start_async(socket, :prediction_results, fn ->
-    #   Rag.predict_query(related_episodes, question.query)
-    # end)
+    Rag.predict_query(related_episodes, question.query)
 
     socket
-  end
-
-  def handle_async(:prediction_results, {:ok, answer}, socket) do
-    dbg(answer)
-    {:noreply, socket}
   end
 
   defp assign_description_and_title(
@@ -318,32 +311,33 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
         Prompts.update_question(question, attrs)
 
-      [_title] ->
-        :ok
-    end
+        {:noreply,
+         socket
+         |> assign(title: title)
+         |> assign(description: description)}
 
-    {:noreply, socket}
+      [_title] ->
+        {:noreply, socket}
+    end
   end
 
   @impl Phoenix.LiveView
   def handle_info({:prediction_completed, _prediction_id, output}, socket) do
-    Logger.warning("In the completion stage")
     question = socket.assigns.question
 
-    case get_title_and_description(output) do
-      [title, description] ->
-        attrs = %{
-          title: title,
-          description: description
-        }
+    [title, description] = get_title_and_description(output)
 
-        Prompts.update_question(question, attrs)
+    attrs = %{
+      title: title,
+      description: description
+    }
 
-      [_title] ->
-        :ok
-    end
+    Prompts.update_question(question, attrs)
 
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> assign(title: title)
+     |> assign(description: description)}
   end
 
   defp get_title_and_description(output) do
