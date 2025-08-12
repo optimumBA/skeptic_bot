@@ -2,8 +2,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   use SkepticBotWeb, :live_view
 
   alias SkepticBot.Prompts
-  alias SkepticBot.Rag
   alias SkepticBot.Prompts.UserQuestion
+  alias SkepticBot.Rag
   alias SkepticBotWeb.PodcastComponents
 
   require Logger
@@ -292,11 +292,9 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   defp assign_description_and_title(
          socket,
          _related_episodes,
-         question
-       ) do
-    socket
-    |> assign(:description, question.description)
-  end
+         _question
+       ),
+       do: socket
 
   @impl Phoenix.LiveView
   def handle_info({:prediction_underway, _prediction_id, output}, socket) do
