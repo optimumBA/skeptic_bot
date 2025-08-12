@@ -144,9 +144,30 @@ defmodule SkepticBotWeb.QuestionLive.Show do
                 <img src={~p"/images/podcasts/back_arrow.svg"} alt="Back Arrow" />
               </div>
             </button>
+
             <button
-              phx-click="next_other_episodes"
-              class="disabled:opacity-50"
+              phx-click={JS.push("next_other_episodes", value: %{batch_size: @mobile_batch_size})}
+              class="smd:hidden disabled:opacity-50"
+              disabled={@has_all_other_episodes?}
+            >
+              <div>
+                <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
+              </div>
+            </button>
+
+            <button
+              phx-click={JS.push("next_other_episodes", value: %{batch_size: @tablet_batch_size})}
+              class="hidden smd:block lg:hidden disabled:opacity-50"
+              disabled={@has_all_other_episodes?}
+            >
+              <div>
+                <img src={~p"/images/podcasts/forward_arrow.svg"} alt="Forward Arrow" />
+              </div>
+            </button>
+
+            <button
+              phx-click={JS.push("next_other_episodes", value: %{batch_size: @desktop_batch_size})}
+              class="hidden lg:block disabled:opacity-50"
               disabled={@has_all_other_episodes?}
             >
               <div>
@@ -241,6 +262,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   @impl Phoenix.LiveView
   def handle_event("next_related_episodes", %{"batch_size" => batch_size} = _params, socket) do
+    dbg(batch_size)
     current_index = socket.assigns.related_episodes_index + 1
     episode_count = socket.assigns.related_episode_count
 
@@ -272,6 +294,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   end
 
   def handle_event("next_other_episodes", %{"batch_size" => batch_size} = _params, socket) do
+    dbg(batch_size)
     current_index = socket.assigns.other_episodes_index + 1
     episode_count = socket.assigns.other_episode_count
 
@@ -281,12 +304,17 @@ defmodule SkepticBotWeb.QuestionLive.Show do
        :has_all_other_episodes?,
        has_all_episodes?(current_index, episode_count, batch_size)
      )
+     |> assign(
+       :batch_size,
+       batch_size
+     )
      |> assign(:other_episodes_index, current_index)}
   end
 
-  def handle_event("prev_other_episodes", %{"batch_size" => batch_size} = _params, socket) do
+  def handle_event("prev_other_episodes", _params, socket) do
     current_index = socket.assigns.other_episodes_index - 1
     episode_count = socket.assigns.other_episode_count
+    batch_size = socket.assigns.batch_size
 
     {:noreply,
      socket
