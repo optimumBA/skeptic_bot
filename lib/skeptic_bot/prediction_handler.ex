@@ -36,14 +36,18 @@ defmodule SkepticBot.PredictionHandler do
 
   @impl GenServer
   def handle_info({:prediction_underway, prediction_id, output}, state) do
-    {pid, _question} = state[prediction_id]
-
     _result =
-      case get_title_and_description(output) do
-        [title, description] ->
-          send(pid, {:prediction_result, {title, description}})
+      case Map.get(state, prediction_id) do
+        {pid, _question} ->
+          case get_title_and_description(output) do
+            [title, description] ->
+              send(pid, {:prediction_result, {title, description}})
 
-        [_title] ->
+            [_title] ->
+              :ok
+          end
+
+        nil ->
           :ok
       end
 
