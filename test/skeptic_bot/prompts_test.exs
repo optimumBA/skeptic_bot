@@ -44,6 +44,21 @@ defmodule SkepticBot.PromptsTest do
     end
   end
 
+  describe "update_question/2" do
+    setup [:create_question]
+
+    test "with valid data updates a question", %{question: question} do
+      attrs = %{title: "The American Ponzi with Lee Camp"}
+      assert {:ok, question} = Prompts.update_question(question, attrs)
+      assert question.title == "The American Ponzi with Lee Camp"
+    end
+
+    test "with invalid data returns error changeset", %{question: question} do
+      attrs = %{embedding: nil}
+      assert {:error, %Ecto.Changeset{}} = Prompts.update_question(question, attrs)
+    end
+  end
+
   describe "get_question/1" do
     setup [:create_question]
 
