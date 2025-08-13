@@ -20,14 +20,15 @@ defmodule SkepticBot.PredictionHandlerTest do
     }
   end
 
-  describe "/" do
+  describe "PredictionHandler" do
     setup [:create_question]
 
-    test "prediction handler processes messages from Replicate and sends them if valid", %{
-      prediction_id: prediction_id,
-      question: question,
-      output: output
-    } do
+    test "processes messages from Replicate and sends them to the LiveView if valid",
+         %{
+           prediction_id: prediction_id,
+           question: question,
+           output: output
+         } do
       send(PredictionHandler, {:register_prediction, prediction_id, {self(), question}})
 
       gen_server_state = :sys.get_state(PredictionHandler)
@@ -37,7 +38,7 @@ defmodule SkepticBot.PredictionHandlerTest do
       assert_receive {:prediction_result, {"The title", "The description"}}
     end
 
-    test "prediction handler processes messages from Replicate and but does not send them if pid was unregistered",
+    test "processes messages from Replicate but does not send them if the pid was unregistered",
          %{
            prediction_id: prediction_id,
            question: question,
@@ -53,20 +54,20 @@ defmodule SkepticBot.PredictionHandlerTest do
       refute_receive {:prediction_result, {"The title", "The description"}}
     end
 
-    test "prediction handler processes messages from Replicate and but does not send them if invalid",
+    test "processes messages from Replicate and but does not send them if invalid",
          %{
            prediction_id: prediction_id,
            question: question
          } do
-      output = ["The", " tit", "le"]
+      invalid_output = ["The", " tit", "le"]
 
       send(PredictionHandler, {:register_prediction, prediction_id, {self(), question}})
-      send(PredictionHandler, {:prediction_underway, prediction_id, output})
+      send(PredictionHandler, {:prediction_underway, prediction_id, invalid_output})
 
       refute_receive {:prediction_result, {_title, _description}}
     end
 
-    test "prediction handler uses the last message from Replicate to update the question",
+    test "uses the last message from Replicate to update the question",
          %{
            prediction_id: prediction_id,
            question: question,

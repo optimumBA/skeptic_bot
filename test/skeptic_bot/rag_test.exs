@@ -43,16 +43,16 @@ defmodule SkepticBot.RagTest do
 
     test "returns error tuple if embedding generation fails" do
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        {:error, "embedding has failed"}
+        {:error, "Embedding Generation failed"}
       end)
 
-      assert {:error, "embedding has failed"} =
+      assert {:error, "Embedding Generation failed"} =
                Rag.generate_embedding("Who Killed Two Pac Shakur")
     end
   end
 
   describe "predict_query/2" do
-    test "returns the response if successful" do
+    test "returns the LLM response if successful" do
       episode = episode_fixture()
 
       expect(Rag.MockGenerator, :predict, fn _messages ->
