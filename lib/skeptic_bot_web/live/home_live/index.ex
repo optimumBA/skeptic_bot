@@ -136,20 +136,17 @@ defmodule SkepticBotWeb.HomeLive.Index do
          embedding,
          %{assigns: %{query: query}} = socket
        ) do
-    with episode_details <- Prompts.get_episode_details(podcast_episodes),
-         question_attrs <- %{
-           embedding: embedding,
-           episodes: episode_details,
-           query: query
-         },
-         {:ok, question} <- Prompts.create_question(question_attrs) do
-      {:noreply, push_navigate(socket, to: "/questions/#{question.id}")}
-    else
-      {:error, reason} ->
-        Logger.error("Question creation failed. Reason: #{inspect(reason)}")
-        send(self(), {:loading_state, false})
-        {:noreply, put_flash(socket, :error, "There was an error processing your prompt")}
-    end
+    episode_details = Prompts.get_episode_details(podcast_episodes)
+
+    question_attrs = %{
+      embedding: embedding,
+      episodes: episode_details,
+      query: query
+    }
+
+    {:ok, question} = Prompts.create_question(question_attrs)
+
+    {:noreply, push_navigate(socket, to: "/questions/#{question.id}")}
   end
 
   @impl Phoenix.LiveView

@@ -76,9 +76,11 @@ defmodule SkepticBot.PredictionHandlerTest do
       send(PredictionHandler, {:register_prediction, prediction_id, {self(), question}})
       send(PredictionHandler, {:prediction_completed, prediction_id, output})
 
+      Process.sleep(1000)
       question = Prompts.get_question(question.id)
       assert question.title == "The title"
       assert question.description == "The description"
+
       assert_receive {:prediction_result, {"The title", "The description"}}
     end
   end
