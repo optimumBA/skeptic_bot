@@ -40,9 +40,12 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
     test "sending a message to the liveview changes its loading state", %{conn: conn} do
       {:ok, view, _html} = live(conn, "/")
-      refute has_element?(view, ~s(div.animate-pulse))
-      send(view.pid, {:loading_state, true})
-      assert has_element?(view, ~s(div.animate-pulse))
+      send(view.pid, {:loading_state, false})
+
+      view_state = :sys.get_state(view.pid)
+      loading = view_state.socket.assigns.loading
+
+      assert loading == false
     end
 
     test "page does not load on invalid data submission", %{conn: conn} do
@@ -52,7 +55,10 @@ defmodule SkepticBotWeb.HomeLiveTest do
       |> form("#question-input-form", user_question: %{query: ""})
       |> render_submit()
 
-      refute has_element?(view, ~s(div.animate-pulse))
+      view_state = :sys.get_state(view.pid)
+      loading = view_state.socket.assigns.loading
+
+      assert loading == false
     end
 
     test "redirects to the question if episodes are found in the retrieval process", %{

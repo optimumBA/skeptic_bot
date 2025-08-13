@@ -6,28 +6,35 @@ defmodule SkepticBotWeb.HomeLive.Index do
   alias SkepticBot.Rag
   alias SkepticBotWeb.HomeLive
 
-  require Logger
-
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <div class="bg-[#FFF5F5]">
-      <div class={[
-        "h-screen flex items-center relative",
-        @loading && "animate-pulse"
-      ]}>
+    <div class={[
+      "bg-[#FFF5F5]",
+      @loading && "bg-[#FFFFFF]"
+    ]}>
+      <div class="h-screen flex items-center relative">
         <section>
-          <div class="absolute top-[2%] left-0 w-[20%] 2xl:top-[3%] 4xl:w-[17%]">
+          <div class={[
+            "absolute top-[2%] left-0 w-[20%] 2xl:top-[3%] 4xl:w-[17%]",
+            @loading && "hidden"
+          ]}>
             <img src={~p"/images/home/top_swirl.svg"} class="w-full h-full object-cover" alt="Swirl" />
           </div>
-          <div class="absolute bottom-[20%] left-[4%] w-[20%] xl:w-[21%] 2xl:w-[20%] 4xl:w-[17%]">
+          <div class={[
+            "absolute bottom-[20%] left-[4%] w-[20%] xl:w-[21%] 2xl:w-[20%] 4xl:w-[17%]",
+            @loading && "hidden"
+          ]}>
             <img
               src={~p"/images/home/demonstration.svg"}
               class="w-full h-full object-cover"
               alt="Illustration 1"
             />
           </div>
-          <div class="absolute bottom-[10%] right-[1.3rem] w-[10%]">
+          <div class={[
+            "absolute bottom-[10%] right-[1.3rem] w-[10%]",
+            @loading && "hidden"
+          ]}>
             <img
               src={~p"/images/home/hero_stars.svg"}
               class="w-full h-full object-cover"
@@ -35,16 +42,34 @@ defmodule SkepticBotWeb.HomeLive.Index do
             />
           </div>
         </section>
+
         <section class="flex flex-col gap-8 w-[70%] mx-auto">
           <section class="text-7xl mx-auto montserrat-semibold tracking-4 2xl:text-8xl">
             Skeptic.<span class="text-[#CD4631] montserrat-alternates-semibold">bot</span>
           </section>
-          <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
-            Questions everything
-          </section>
-          <section class="w-[60%] mx-auto">
-            <HomeLive.Components.form_component form={@form} />
-          </section>
+          <div class={[
+            @loading && "hidden"
+          ]}>
+            <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
+              Questions everything
+            </section>
+
+            <section class="w-[60%] mx-auto">
+              <HomeLive.Components.form_component form={@form} />
+            </section>
+          </div>
+
+          <div class={[
+            "w-[80%] mx-auto",
+            @display
+          ]}>
+            <section class="text-center montserrat-alternates-semibold text-[#4D4D4D] mb-6">
+              is almost done second guessing
+            </section>
+            <section>
+              <HomeLive.Components.loading_component />
+            </section>
+          </div>
         </section>
       </div>
     </div>
@@ -55,6 +80,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
+     |> assign(:display, "hidden")
      |> assign(:loading, false)
      |> assign(:question, %UserQuestion{})
      |> assign_form()}
@@ -151,7 +177,17 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:loading_state, value}, socket) do
-    {:noreply, assign(socket, :loading, value)}
+    display =
+      if value do
+        "block"
+      else
+        "hidden"
+      end
+
+    {:noreply,
+     socket
+     |> assign(:loading, value)
+     |> assign(:display, display)}
   end
 
   defp assign_form(%{assigns: %{question: question}} = socket) do
