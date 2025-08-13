@@ -30,11 +30,23 @@ defmodule SkepticBot.PredictionHandler do
   @impl GenServer
   def handle_cast({:params, context, question, pid}, state) do
     {:ok, prediction_id} = Rag.predict_query(context, question.query)
+
+    send(__MODULE__, {:register_prediction, prediction_id, {pid, question}})
+
+    {:noreply, state}
+  end
+
+  @impl GenServer
+  def handle_info({:register_prediction, prediction_id, {pid, question}}, state) do
     new_state = Map.put(state, prediction_id, {pid, question})
     {:noreply, new_state}
   end
 
-  @impl GenServer
+  def handle_info({:unregister_prediction, prediction_id}, state) do
+    new_state = Map.drop(state, [prediction_id])
+    {:noreply, new_state}
+  end
+
   def handle_info({:prediction_underway, prediction_id, output}, state) do
     _result =
       case Map.get(state, prediction_id) do
@@ -62,9 +74,9 @@ defmodule SkepticBot.PredictionHandler do
 
     Prompts.update_question(question, %{description: description, title: title})
 
-    new_state = Map.drop(state, [prediction_id])
+    send(__MODULE__, {:unregister_prediction, prediction_id})
 
-    {:noreply, new_state}
+    {:noreply, state}
   end
 
   defp get_title_and_description(output) do
