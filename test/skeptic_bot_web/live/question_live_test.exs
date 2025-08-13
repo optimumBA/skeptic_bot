@@ -9,6 +9,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   alias SkepticBot.Rag
 
   setup :set_mox_from_context
+  setup :verify_on_exit!
 
   defp create_question(%{conn: conn}) do
     embedding = embedding_fixture()
@@ -141,12 +142,12 @@ defmodule SkepticBotWeb.QuestionLiveTest do
     } do
       {:ok, view, _html} = live(conn, "/questions/#{question.id}")
 
-      send(view.pid, {:prediction_result, {"title", "description"}})
+      send(view.pid, {:prediction_result, {"New Title", "New Description"}})
 
       liveview_socket = :sys.get_state(view.pid).socket
 
-      assert liveview_socket.assigns.title == "title"
-      assert liveview_socket.assigns.description == "description"
+      assert liveview_socket.assigns.title == "New Title"
+      assert liveview_socket.assigns.description == "New Description"
     end
   end
 end
