@@ -3,8 +3,10 @@ defmodule SkepticBot.PredictionHandlerTest do
 
   import SkepticBot.PromptsFixtures
 
+  alias Ecto.Adapters.SQL.Sandbox
   alias SkepticBot.PredictionHandler
   alias SkepticBot.Prompts
+  alias SkepticBot.Repo
 
   defp create_question(_attrs) do
     question = question_fixture()
@@ -71,7 +73,7 @@ defmodule SkepticBot.PredictionHandlerTest do
            output: output
          } do
       allow = Process.whereis(PredictionHandler)
-      Ecto.Adapters.SQL.Sandbox.allow(SkepticBot.Repo, self(), allow)
+      Sandbox.allow(Repo, self(), allow)
 
       send(PredictionHandler, {:register_prediction, prediction_id, {self(), question}})
       send(PredictionHandler, {:prediction_completed, prediction_id, output})
