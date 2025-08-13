@@ -1,6 +1,7 @@
 defmodule SkepticBot.PredictionHandler do
   @moduledoc """
-  concerned with predictions with status processing
+  Processes predictions with status 'processing'
+  and routes results to the LiveView
   """
 
   use GenServer

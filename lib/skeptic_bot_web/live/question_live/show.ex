@@ -6,8 +6,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBotWeb.PodcastComponents
 
-  require Logger
-
   @episode_batch_size 3
   @episode_limit 6
   @vector_numbers [1, 2, 3, 4, 5]
