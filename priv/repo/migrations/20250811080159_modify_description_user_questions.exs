@@ -2,8 +2,9 @@ defmodule SkepticBot.Repo.Migrations.ModifyDescriptionUserQuestions do
   use Ecto.Migration
 
   def change do
-    alter table(:user_questions) do
-      modify :description, :text, from: :text, null: true
-    end
+    execute(
+      "ALTER TABLE user_questions ALTER COLUMN description DROP NOT NULL",
+      "ALTER TABLE user_questions ALTER COLUMN description SET NOT NULL"
+    )
   end
 end
