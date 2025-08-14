@@ -12,14 +12,22 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   def render(assigns) do
     ~H"""
     <div>
-      <section class="relative max-w-[33.6rem] mx-auto mt-16 mb-6 pl-5">
-        <p class="text-[#000000] text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold">
-          {@title}
-        </p>
-        <div class="hidden md:block absolute top-[-2.1rem] left-[-2.8rem]">
-          <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
-        </div>
-      </section>
+      <div class="mt-16 pl-5 mb-6 flex flex-col gap-10 md:gap-14 max-w-[33.6rem] mx-auto">
+        <section class="flex gap-4 items-center w-max cursor-pointer" phx-click={JS.navigate("/")}>
+          <div><img src={~p"/images/home/back_icon.svg"} alt="Superscript Image Question" /></div>
+          <div class="text-[#1F1F1F] montserrat-alternates-semibold">Back to homepage</div>
+        </section>
+
+        <section class="relative">
+          <p class="text-[#000000] text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold smd:text-center">
+            {@title}
+          </p>
+
+          <div class="hidden md:block absolute top-[-2.1rem] left-[-0.8rem]">
+            <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
+          </div>
+        </section>
+      </div>
 
       <section class="px-5 max-w-[36.6rem] mx-auto mt-8 mb-10">
         <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium">
