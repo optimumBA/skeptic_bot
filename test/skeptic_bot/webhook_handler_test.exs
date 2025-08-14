@@ -22,8 +22,8 @@ defmodule SkepticBot.WebhookHandlerTest do
   }
   @processing_prediction_payload %{
     "id" => "some-id",
-    "status" => "processing",
-    "output" => "good output"
+    "output" => "good output",
+    "status" => "processing"
   }
 
   describe "register_for_prediction/2" do

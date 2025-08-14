@@ -9,14 +9,14 @@ defmodule SkepticBot.PredictionHandlerTest do
   alias SkepticBot.Repo
 
   defp create_question(_attrs) do
-    question = question_fixture()
-    prediction_id = "zdfjhri745"
     output = ["The", " tit", "le", "$", "&$", "The", " des", "crip", "tion"]
+    prediction_id = "zdfjhri745"
+    question = question_fixture()
 
     %{
+      output: output,
       prediction_id: prediction_id,
-      question: question,
-      output: output
+      question: question
     }
   end
 
@@ -25,9 +25,9 @@ defmodule SkepticBot.PredictionHandlerTest do
 
     test "processes messages from Replicate and sends them to the LiveView if valid",
          %{
+           output: output,
            prediction_id: prediction_id,
-           question: question,
-           output: output
+           question: question
          } do
       send(PredictionHandler, {:register_prediction, prediction_id, {self(), question}})
 
@@ -40,9 +40,9 @@ defmodule SkepticBot.PredictionHandlerTest do
 
     test "processes messages from Replicate but does not send them if the pid was unregistered",
          %{
+           output: output,
            prediction_id: prediction_id,
-           question: question,
-           output: output
+           question: question
          } do
       send(PredictionHandler, {:register_prediction, prediction_id, {self(), question}})
       send(PredictionHandler, {:unregister_prediction, prediction_id})
@@ -69,9 +69,9 @@ defmodule SkepticBot.PredictionHandlerTest do
 
     test "uses the last message from Replicate to update the question",
          %{
+           output: output,
            prediction_id: prediction_id,
-           question: question,
-           output: output
+           question: question
          } do
       allow = Process.whereis(PredictionHandler)
       Sandbox.allow(Repo, self(), allow)

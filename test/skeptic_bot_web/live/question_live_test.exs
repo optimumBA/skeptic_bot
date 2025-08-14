@@ -123,10 +123,10 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       question =
         question_fixture(
+          description: nil,
           embedding: offset_embedding_fixture(embedding),
           episodes: [],
-          title: nil,
-          description: nil
+          title: nil
         )
 
       expect(Rag.MockGenerator, :predict, 2, fn _messages ->
