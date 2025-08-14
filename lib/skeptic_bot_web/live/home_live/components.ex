@@ -15,7 +15,7 @@ defmodule SkepticBotWeb.HomeLive.Components do
     ~H"""
     <div>
       <.form for={@form} phx-change="validate" phx-submit="save" id="question-input-form">
-        <div class="flex justify-between md:mt-8 items-center rounded-xl hover:cursor-pointer form-input-shadow border bg-[#FFFFFF] md:py-2 gap-2">
+        <div class="flex gap-2 justify-between items-center rounded-xl hover:cursor-pointer form-input-shadow border bg-[#FFFFFF] md:mt-8 md:py-2">
           <div class="w-2/3 grow pl-4">
             <.input
               class="montserrat-alternates-medium placeholder:text-sm w-full border-none bg-[#FFFFFF] outline-none rounded-lg py-[3px] px-[11px] remove-outline placeholder:text-[#4D4D4D] sm:text-lg sm:leading-6"
@@ -35,7 +35,7 @@ defmodule SkepticBotWeb.HomeLive.Components do
                 <img src={~p"/images/home/search_icon.svg"} alt="Search Icon" />
               </div>
 
-              <section class="hidden md:block montserrat-alternates-medium">Search...</section>
+              <section class="hidden montserrat-alternates-medium md:block">Search...</section>
             </div>
           </.button>
         </div>

@@ -215,12 +215,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:noreply,
      socket
      |> assign(:description, question.description)
-     |> assign(:question, question)
      |> assign(:has_all_other_episodes?, has_all_episodes?(0, other_episode_count))
      |> assign(:has_all_related_episodes?, has_all_episodes?(0, related_episode_count))
      |> assign(:other_episodes, other_episodes)
      |> assign(:other_episode_count, other_episode_count)
      |> assign(:page_title, question.title)
+     |> assign(:question, question)
      |> assign(:related_episodes, related_episodes)
      |> assign(:related_episode_count, related_episode_count)
      |> assign(:related_questions, related_questions)
@@ -308,8 +308,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   def handle_info({:prediction_result, {title, description}}, socket) do
     {:noreply,
      socket
-     |> assign(title: title)
-     |> assign(description: description)}
+     |> assign(description: description)
+     |> assign(title: title)}
   end
 
   @impl Phoenix.LiveView
