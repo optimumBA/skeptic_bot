@@ -4,6 +4,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   alias SkepticBot.PredictionHandler
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
+  alias SkepticBotWeb.HomeLive
   alias SkepticBotWeb.PodcastComponents
 
   @episode_batch_size 3
@@ -31,6 +32,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium">
           {@description}
         </p>
+        <section class={[
+          "my-20",
+          !@loading && "hidden"
+        ]}>
+          <HomeLive.Components.loading_component />
+        </section>
       </section>
 
       <section
@@ -176,6 +183,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:ok,
      socket
+     |> assign(:loading, false)
      |> assign(:other_episodes_index, 0)
      |> assign(:other_episodes_vectors, other_episodes_vectors)
      |> assign(:related_episodes_index, 0)
@@ -286,8 +294,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
          %UserQuestion{title: nil} = question
        ) do
     PredictionHandler.make_llm_request(related_episodes, question, self())
-
-    socket
+    assign(socket, :loading, true)
   end
 
   defp assign_description_and_title(
@@ -303,6 +310,15 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      socket
      |> assign(title: title)
      |> assign(description: description)}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info({:prediction_complete, {title, description}}, socket) do
+    {:noreply,
+     socket
+     |> assign(description: description)
+     |> assign(loading: false)
+     |> assign(title: title)}
   end
 
   defp get_image_url(episode) do

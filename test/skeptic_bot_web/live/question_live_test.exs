@@ -149,5 +149,19 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       assert liveview_socket.assigns.title == "New Title"
       assert liveview_socket.assigns.description == "New Description"
     end
+
+    test "changes the loading state after receiving the last message from the PredictionHandler",
+         %{
+           conn: conn,
+           question: question
+         } do
+      {:ok, view, _html} = live(conn, "/questions/#{question.id}")
+
+      send(view.pid, {:prediction_complete, {"New Title", "New Description"}})
+
+      liveview_socket = :sys.get_state(view.pid).socket
+
+      refute liveview_socket.assigns.loading
+    end
   end
 end

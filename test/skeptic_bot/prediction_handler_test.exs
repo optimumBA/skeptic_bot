@@ -84,7 +84,7 @@ defmodule SkepticBot.PredictionHandlerTest do
       assert question.title == "The title"
       assert question.description == "The description"
 
-      assert_receive {:prediction_result, {"The title", "The description"}}
+      assert_receive {:prediction_complete, {"The title", "The description"}}
     end
   end
 end

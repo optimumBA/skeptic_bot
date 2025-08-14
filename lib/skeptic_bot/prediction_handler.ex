@@ -71,7 +71,7 @@ defmodule SkepticBot.PredictionHandler do
     {pid, question} = state[prediction_id]
     [title, description] = get_title_and_description(output)
 
-    send(pid, {:prediction_result, {title, description}})
+    send(pid, {:prediction_complete, {title, description}})
 
     Prompts.update_question(question, %{description: description, title: title})
 
