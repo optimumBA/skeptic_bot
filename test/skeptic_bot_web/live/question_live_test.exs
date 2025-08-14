@@ -160,8 +160,9 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       send(view.pid, {:prediction_complete, {"New Title", "New Description"}})
 
       liveview_socket = :sys.get_state(view.pid).socket
+      loading = liveview_socket.assigns.loading
 
-      refute liveview_socket.assigns.loading
+      refute loading
     end
   end
 end
