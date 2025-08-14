@@ -12,24 +12,19 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   def render(assigns) do
     ~H"""
     <div>
-      <section class="relative max-w-[33.6rem] mx-auto mt-16 mb-8 pl-4 sm:pl-0 border border-red-400">
+      <section class="relative max-w-[33.6rem] mx-auto mt-16 mb-6 pl-5">
         <p class="text-[#000000] text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold">
           {@title}
         </p>
-        <div class="hidden sm:block absolute top-[-2.1rem] left-[-2.8rem]">
+        <div class="hidden md:block absolute top-[-2.1rem] left-[-2.8rem]">
           <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
         </div>
       </section>
 
-      <section class="hidden max-w-[36.6rem] mx-auto mt-8 mb-10">
-        <div
-          id="typed-response"
-          data-text={@description}
-          phx-hook="Typewriter"
-          phx-update="ignore"
-          class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium whitespace-pre-wrap"
-        >
-        </div>
+      <section class="px-5 max-w-[36.6rem] mx-auto mt-8 mb-10">
+        <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium">
+          {@description}
+        </p>
       </section>
 
       <section
@@ -39,8 +34,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         <section class="ml-5 montserrat-alternates-bold text-[#000000] text-2xl">
           Related Podcasts
         </section>
-        <section class="relative pb-16">
-          <section class="ml-5 overflow-hidden pt-12 relative mb-10">
+        <section class="relative pb-10">
+          <section class="ml-5 overflow-hidden pt-12 relative mb-12">
             <div
               class="flex gap-4 transition-transform duration-300 ease-in-out"
               id="related-episodes-carousel"
@@ -73,7 +68,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
                 <img src={~p"/images/podcasts/back_arrow.svg"} alt="Back Arrow" />
               </div>
             </button>
-
             <button
               phx-click={JS.push("next_related_episodes", value: %{batch_size: @mobile_batch_size})}
               class="smd:hidden disabled:opacity-50"
@@ -104,9 +98,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               </div>
             </button>
           </div>
+          <div class="hidden lg:block absolute bottom-[-5rem] right-[5%]">
+            <img src={~p"/images/podcasts/podcast_scribble.svg"} alt="Podcast Scribble" />
+          </div>
         </section>
 
-        <section class="ml-5 mt-4 montserrat-alternates-bold text-[#000000] text-2xl">
+        <section class="ml-5 mt-2 montserrat-alternates-bold text-[#000000] text-2xl">
           Other Podcasts
         </section>
 
@@ -186,7 +183,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           <section class="ml-5 mb-10 montserrat-alternates-bold text-[#000000] text-2xl">
             Related Questions
           </section>
-          <div class="ml-5 grid grid-cols-2 items-stretch gap-[2rem] lg:grid-cols-3 lg:gap-[1.2rem]">
+          <div class="mx-5 grid grid-cols-1 md:grid-cols-2 items-stretch gap-[2rem] lg:grid-cols-3 lg:gap-[1.2rem]">
             <%= for {question, question_index} <- @related_questions do %>
               <PodcastComponents.related_question_card
                 description={question.description}
@@ -262,7 +259,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   @impl Phoenix.LiveView
   def handle_event("next_related_episodes", %{"batch_size" => batch_size} = _params, socket) do
-    dbg(batch_size)
     current_index = socket.assigns.related_episodes_index + 1
     episode_count = socket.assigns.related_episode_count
 
@@ -294,7 +290,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   end
 
   def handle_event("next_other_episodes", %{"batch_size" => batch_size} = _params, socket) do
-    dbg(batch_size)
     current_index = socket.assigns.other_episodes_index + 1
     episode_count = socket.assigns.other_episode_count
 

@@ -63,7 +63,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       assert html =~ ~s'id="related-episodes-carousel" style="transform: translateX(-0.0rem);"'
 
-      assert render_click(view, :next_related_episodes) =~
+      assert render_click(view, :next_related_episodes, %{batch_size: 2}) =~
                ~s'id="related-episodes-carousel" style="transform: translateX(-20.6875rem);"'
 
       assert render_click(view, :prev_related_episodes) =~
@@ -79,7 +79,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       assert html =~ ~s'id="other-episodes-carousel" style="transform: translateX(-0.0rem);"'
 
-      assert render_click(view, :next_other_episodes) =~
+      assert render_click(view, :next_other_episodes, %{batch_size: 2}) =~
                ~s'id="other-episodes-carousel" style="transform: translateX(-20.6875rem);"'
 
       assert render_click(view, :prev_other_episodes) =~
