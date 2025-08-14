@@ -273,12 +273,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:noreply,
      socket
      |> assign(
-       :has_all_related_episodes?,
-       has_all_episodes?(current_index, episode_count, batch_size)
-     )
-     |> assign(
        :batch_size,
        batch_size
+     )
+     |> assign(
+       :has_all_related_episodes?,
+       has_all_episodes?(current_index, episode_count, batch_size)
      )
      |> assign(:related_episodes_index, current_index)}
   end
@@ -304,12 +304,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:noreply,
      socket
      |> assign(
-       :has_all_other_episodes?,
-       has_all_episodes?(current_index, episode_count, batch_size)
-     )
-     |> assign(
        :batch_size,
        batch_size
+     )
+     |> assign(
+       :has_all_other_episodes?,
+       has_all_episodes?(current_index, episode_count, batch_size)
      )
      |> assign(:other_episodes_index, current_index)}
   end

@@ -195,8 +195,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
     {:noreply,
      socket
-     |> assign(:loading, value)
-     |> assign(:display, display)}
+     |> assign(:display, display)
+     |> assign(:loading, value)}
   end
 
   defp assign_form(%{assigns: %{question: question}} = socket) do

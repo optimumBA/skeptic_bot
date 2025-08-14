@@ -46,7 +46,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       view_state = :sys.get_state(view.pid)
       loading = view_state.socket.assigns.loading
 
-      assert loading == false
+      refute loading
     end
 
     test "page does not load on invalid data submission", %{conn: conn} do
@@ -59,7 +59,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       view_state = :sys.get_state(view.pid)
       loading = view_state.socket.assigns.loading
 
-      assert loading == false
+      refute loading
     end
 
     test "redirects to the question if episodes are found in the retrieval process", %{
