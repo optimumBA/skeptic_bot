@@ -66,7 +66,6 @@ defmodule SkepticBot.WebhookHandlerTest do
     test "notifies a process if its prediction succeeded" do
       assert {:ok, _owner_pid} = WebhookHandler.register_for_prediction("some-id", self())
       WebhookHandler.handle_webhook(@successful_prediction_payload)
-      Process.sleep(1000)
       assert_receive {:prediction_completed, "some-id", "good output"}
     end
 
