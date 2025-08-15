@@ -6,12 +6,15 @@ defmodule SkepticBot.PredictionHandlerTest do
   alias Ecto.Adapters.SQL.Sandbox
   alias SkepticBot.PredictionHandler
   alias SkepticBot.Prompts
+  alias SkepticBot.Prompts.QuestionsBroadcast
   alias SkepticBot.Repo
 
   defp create_question(_attrs) do
     output = ["The", " tit", "le", "$", "&$", "The", " des", "crip", "tion"]
     prediction_id = "zdfjhri745"
     question = question_fixture()
+
+    QuestionsBroadcast.subscribe(question.id)
 
     %{
       output: output,
@@ -29,7 +32,7 @@ defmodule SkepticBot.PredictionHandlerTest do
            prediction_id: prediction_id,
            question: question
          } do
-      send(PredictionHandler, {:register_prediction, prediction_id, {self(), question}})
+      send(PredictionHandler, {:register_prediction, prediction_id, question})
 
       gen_server_state = :sys.get_state(PredictionHandler)
       assert gen_server_state[prediction_id]
@@ -44,7 +47,7 @@ defmodule SkepticBot.PredictionHandlerTest do
            prediction_id: prediction_id,
            question: question
          } do
-      send(PredictionHandler, {:register_prediction, prediction_id, {self(), question}})
+      send(PredictionHandler, {:register_prediction, prediction_id, question})
       send(PredictionHandler, {:unregister_prediction, prediction_id})
       send(PredictionHandler, {:prediction_underway, prediction_id, output})
 
@@ -61,7 +64,7 @@ defmodule SkepticBot.PredictionHandlerTest do
          } do
       invalid_output = ["The", " tit", "le"]
 
-      send(PredictionHandler, {:register_prediction, prediction_id, {self(), question}})
+      send(PredictionHandler, {:register_prediction, prediction_id, question})
       send(PredictionHandler, {:prediction_underway, prediction_id, invalid_output})
 
       refute_receive {:prediction_result, {_title, _description}}
@@ -76,7 +79,7 @@ defmodule SkepticBot.PredictionHandlerTest do
       allow = Process.whereis(PredictionHandler)
       Sandbox.allow(Repo, self(), allow)
 
-      send(PredictionHandler, {:register_prediction, prediction_id, {self(), question}})
+      send(PredictionHandler, {:register_prediction, prediction_id, question})
       send(PredictionHandler, {:prediction_completed, prediction_id, output})
 
       Process.sleep(1000)

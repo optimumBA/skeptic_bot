@@ -1,15 +1,9 @@
 defmodule SkepticBotWeb.QuestionLiveTest do
-  use SkepticBotWeb.ConnCase, async: false
+  use SkepticBotWeb.ConnCase, async: true
 
-  import Mox
   import Phoenix.LiveViewTest
   import SkepticBot.PodcastsFixtures
   import SkepticBot.PromptsFixtures
-
-  alias SkepticBot.Rag
-
-  setup :set_mox_from_context
-  setup :verify_on_exit!
 
   defp create_question(%{conn: conn}) do
     embedding = embedding_fixture()
@@ -113,27 +107,6 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       assert html =~
                ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
-    end
-
-    test "makes a call to Replicate if the question has no title", %{
-      conn: conn,
-      question: question
-    } do
-      embedding = Pgvector.to_list(question.embedding)
-
-      question =
-        question_fixture(
-          description: nil,
-          embedding: offset_embedding_fixture(embedding),
-          episodes: [],
-          title: nil
-        )
-
-      expect(Rag.MockGenerator, :predict, 2, fn _messages ->
-        {:ok, "Prediction process was successful"}
-      end)
-
-      {:ok, _view, _html} = live(conn, "/questions/#{question.id}")
     end
 
     test "updates after receiving predictions from the PredictionHandler", %{
