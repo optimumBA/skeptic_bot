@@ -5,6 +5,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
   import Phoenix.LiveViewTest
   import SkepticBot.PodcastsFixtures
 
+  alias SkepticBot.PredictionHandler
   alias SkepticBot.Rag
 
   setup :verify_on_exit!
@@ -67,6 +68,12 @@ defmodule SkepticBotWeb.HomeLiveTest do
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
+
+      expect(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, "Prediction process was successful"}
+      end)
+
+      allow(Rag.MockGenerator, self(), PredictionHandler)
 
       view
       |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
