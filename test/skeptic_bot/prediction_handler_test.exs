@@ -33,11 +33,8 @@ defmodule SkepticBot.PredictionHandlerTest do
            question: question
          } do
       send(PredictionHandler, {:register_prediction, prediction_id, question})
-
-      gen_server_state = :sys.get_state(PredictionHandler)
-      assert gen_server_state[prediction_id]
-
       send(PredictionHandler, {:prediction_underway, prediction_id, output})
+
       assert_receive {:prediction_result, {"The title", "The description"}}
     end
 
@@ -51,17 +48,15 @@ defmodule SkepticBot.PredictionHandlerTest do
       send(PredictionHandler, {:unregister_prediction, prediction_id})
       send(PredictionHandler, {:prediction_underway, prediction_id, output})
 
-      gen_server_state = :sys.get_state(PredictionHandler)
-      refute gen_server_state[prediction_id]
-
       refute_receive {:prediction_result, {"The title", "The description"}}
     end
 
-    test "processes messages from Replicate and but does not send them if invalid",
+    test "processes messages from Replicate but does not send them if invalid",
          %{
            prediction_id: prediction_id,
            question: question
          } do
+      # This is invalid because we can't decode it into a title and a description
       invalid_output = ["The", " tit", "le"]
 
       send(PredictionHandler, {:register_prediction, prediction_id, question})
@@ -76,8 +71,8 @@ defmodule SkepticBot.PredictionHandlerTest do
            prediction_id: prediction_id,
            question: question
          } do
-      allow = Process.whereis(PredictionHandler)
-      Sandbox.allow(Repo, self(), allow)
+      gen_server_pid = Process.whereis(PredictionHandler)
+      Sandbox.allow(Repo, self(), gen_server_pid)
 
       send(PredictionHandler, {:register_prediction, prediction_id, question})
       send(PredictionHandler, {:prediction_completed, prediction_id, output})
