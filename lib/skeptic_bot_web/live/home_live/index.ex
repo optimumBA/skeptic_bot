@@ -60,10 +60,13 @@ defmodule SkepticBotWeb.HomeLive.Index do
             </section>
           </div>
 
-          <div class={[
-            "w-[80%] mx-auto",
-            !@loading && "hidden"
-          ]}>
+          <div
+            id="loading-elements"
+            class={[
+              "w-[80%] mx-auto",
+              !@loading && "hidden"
+            ]}
+          >
             <section class="text-center montserrat-alternates-semibold text-[#4D4D4D] mb-6">
               is almost done second guessing
             </section>
