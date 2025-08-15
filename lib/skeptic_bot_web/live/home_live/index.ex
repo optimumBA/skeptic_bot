@@ -1,6 +1,7 @@
 defmodule SkepticBotWeb.HomeLive.Index do
   use SkepticBotWeb, :live_view
 
+  alias SkepticBot.PredictionHandler
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Rag
@@ -171,6 +172,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
     }
 
     {:ok, question} = Prompts.create_question(question_attrs)
+
+    PredictionHandler.make_llm_request(podcast_episodes, question)
 
     {:noreply, push_navigate(socket, to: "/questions/#{question.id}")}
   end

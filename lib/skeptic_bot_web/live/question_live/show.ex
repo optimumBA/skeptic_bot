@@ -1,9 +1,8 @@
 defmodule SkepticBotWeb.QuestionLive.Show do
   use SkepticBotWeb, :live_view
 
-  alias SkepticBot.PredictionHandler
   alias SkepticBot.Prompts
-  alias SkepticBot.Prompts.UserQuestion
+  alias SkepticBot.Prompts.QuestionsBroadcast
   alias SkepticBotWeb.HomeLive
   alias SkepticBotWeb.PodcastComponents
 
@@ -183,7 +182,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:ok,
      socket
-     |> assign(:loading, false)
+     |> assign(:loading, true)
      |> assign(:other_episodes_index, 0)
      |> assign(:other_episodes_vectors, other_episodes_vectors)
      |> assign(:related_episodes_index, 0)
@@ -194,6 +193,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _uri, socket) do
     question = Prompts.get_question(id)
+    QuestionsBroadcast.subscribe(question.id)
 
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
@@ -225,7 +225,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:related_episode_count, related_episode_count)
      |> assign(:related_questions, related_questions)
      |> assign(:title, question.title)
-     |> assign_description_and_title(related_episodes, question)
      |> assign_seo_attributes(question, most_related_episode)}
   end
 
@@ -288,37 +287,21 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     assign(socket, :seo_attributes, attributes)
   end
 
-  defp assign_description_and_title(
-         socket,
-         related_episodes,
-         %UserQuestion{title: nil} = question
-       ) do
-    PredictionHandler.make_llm_request(related_episodes, question, self())
-    assign(socket, :loading, true)
-  end
-
-  defp assign_description_and_title(
-         socket,
-         _related_episodes,
-         _question
-       ),
-       do: socket
-
   @impl Phoenix.LiveView
   def handle_info({:prediction_result, {title, description}}, socket) do
     {:noreply,
      socket
-     |> assign(description: description)
-     |> assign(title: title)}
+     |> assign(:description, description)
+     |> assign(:title, title)}
   end
 
   @impl Phoenix.LiveView
   def handle_info({:prediction_complete, {title, description}}, socket) do
     {:noreply,
      socket
-     |> assign(description: description)
-     |> assign(loading: false)
-     |> assign(title: title)}
+     |> assign(:description, description)
+     |> assign(:loading, false)
+     |> assign(:title, title)}
   end
 
   defp get_image_url(episode) do

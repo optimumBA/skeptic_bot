@@ -13,13 +13,12 @@ defmodule SkepticBot.Prompts.PodcastEpisode do
   embedded_schema do
     field :episode_id, :string
     field :timestamp, EctoInterval
-    field :transcription, :string
   end
 
   @spec changeset(t(), attrs()) :: Ecto.Changeset.t()
   def changeset(episode, attrs) do
     episode
-    |> cast(attrs, [:episode_id, :timestamp, :transcription])
-    |> validate_required([:episode_id, :timestamp, :transcription])
+    |> cast(attrs, [:episode_id, :timestamp])
+    |> validate_required([:episode_id, :timestamp])
   end
 end

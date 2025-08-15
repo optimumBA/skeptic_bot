@@ -7,6 +7,7 @@ defmodule SkepticBot.PredictionHandler do
   use GenServer
 
   alias SkepticBot.Prompts
+  alias SkepticBot.Prompts.QuestionsBroadcast
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Rag
 
@@ -23,23 +24,23 @@ defmodule SkepticBot.PredictionHandler do
     {:ok, %{}}
   end
 
-  @spec make_llm_request(context(), question(), pid()) :: :ok
-  def make_llm_request(context, question, pid) do
-    GenServer.cast(__MODULE__, {:params, context, question, pid})
+  @spec make_llm_request(context(), question()) :: :ok
+  def make_llm_request(context, question) do
+    GenServer.cast(__MODULE__, {:params, context, question})
   end
 
   @impl GenServer
-  def handle_cast({:params, context, question, pid}, state) do
+  def handle_cast({:params, context, question}, state) do
     {:ok, prediction_id} = Rag.predict_query(context, question.query)
 
-    send(__MODULE__, {:register_prediction, prediction_id, {pid, question}})
+    send(__MODULE__, {:register_prediction, prediction_id, question})
 
     {:noreply, state}
   end
 
   @impl GenServer
-  def handle_info({:register_prediction, prediction_id, {pid, question}}, state) do
-    new_state = Map.put(state, prediction_id, {pid, question})
+  def handle_info({:register_prediction, prediction_id, question}, state) do
+    new_state = Map.put(state, prediction_id, question)
     {:noreply, new_state}
   end
 
@@ -51,29 +52,35 @@ defmodule SkepticBot.PredictionHandler do
   def handle_info({:prediction_underway, prediction_id, output}, state) do
     _result =
       case Map.get(state, prediction_id) do
-        {pid, _question} ->
+        nil ->
+          :ok
+
+        question ->
           case get_title_and_description(output) do
             [title, description] ->
-              send(pid, {:prediction_result, {title, description}})
+              QuestionsBroadcast.broadcast_title_and_description(
+                question.id,
+                {:prediction_result, {title, description}}
+              )
 
             [_title] ->
               :ok
           end
-
-        nil ->
-          :ok
       end
 
     {:noreply, state}
   end
 
   def handle_info({:prediction_completed, prediction_id, output}, state) do
-    {pid, question} = state[prediction_id]
+    question = state[prediction_id]
     [title, description] = get_title_and_description(output)
 
-    send(pid, {:prediction_complete, {title, description}})
-
     Prompts.update_question(question, %{description: description, title: title})
+
+    QuestionsBroadcast.broadcast_title_and_description(
+      question.id,
+      {:prediction_complete, {title, description}}
+    )
 
     send(__MODULE__, {:unregister_prediction, prediction_id})
 
