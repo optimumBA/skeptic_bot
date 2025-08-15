@@ -32,12 +32,15 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium">
           {@description}
         </p>
-        <section class={[
-          "my-20",
-          !@loading && "hidden"
-        ]}>
+        <div
+          id="loading-elements"
+          class={[
+            "my-20",
+            !@loading && "hidden"
+          ]}
+        >
           <HomeLive.Components.loading_component />
-        </section>
+        </div>
       </section>
 
       <section

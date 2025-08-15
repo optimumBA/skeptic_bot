@@ -117,10 +117,8 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       send(view.pid, {:prediction_result, {"New Title", "New Description"}})
 
-      liveview_socket = :sys.get_state(view.pid).socket
-
-      assert liveview_socket.assigns.title == "New Title"
-      assert liveview_socket.assigns.description == "New Description"
+      assert render(view) =~ "New Title"
+      assert render(view) =~ "New Description"
     end
 
     test "changes the loading state after receiving the last message from the PredictionHandler",
@@ -132,10 +130,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       send(view.pid, {:prediction_complete, {"New Title", "New Description"}})
 
-      liveview_socket = :sys.get_state(view.pid).socket
-      loading = liveview_socket.assigns.loading
-
-      refute loading
+      assert has_element?(view, ~s{div#loading-elements.hidden})
     end
   end
 end
