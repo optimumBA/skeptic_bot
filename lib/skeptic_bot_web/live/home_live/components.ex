@@ -50,22 +50,26 @@ defmodule SkepticBotWeb.HomeLive.Components do
     <div class={[
       "flex items-center justify-center space-x-1"
     ]}>
-      <img
-        src={~p"/images/home/typing_dot.svg"}
-        class="object-cover dot-animation delay-0"
-        alt="Typing Dot"
-      />
-      <img
-        src={~p"/images/home/typing_dot.svg"}
-        class="object-cover dot-animation delay-200"
-        alt="Typing Dot"
-      />
-      <img
-        src={~p"/images/home/typing_dot.svg"}
-        class="object-cover dot-animation delay-400"
-        alt="Typing Dot"
-      />
+      <.dot_component animation_delay="delay-0" />
+      <.dot_component animation_delay="delay-200" />
+      <.dot_component animation_delay="delay-400" />
     </div>
+    """
+  end
+
+  attr :animation_delay, :string, required: true
+
+  @spec dot_component(assigns()) :: rendered()
+  def dot_component(assigns) do
+    ~H"""
+    <img
+      src={~p"/images/home/typing_dot.svg"}
+      class={[
+        "object-cover dot-animation",
+        @animation_delay
+      ]}
+      alt="Typing Dot"
+    />
     """
   end
 end

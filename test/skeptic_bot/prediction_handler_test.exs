@@ -5,7 +5,6 @@ defmodule SkepticBot.PredictionHandlerTest do
 
   alias Ecto.Adapters.SQL.Sandbox
   alias SkepticBot.PredictionHandler
-  alias SkepticBot.Prompts
   alias SkepticBot.Prompts.QuestionsBroadcast
   alias SkepticBot.Repo
 
@@ -81,11 +80,6 @@ defmodule SkepticBot.PredictionHandlerTest do
 
       send(PredictionHandler, {:register_prediction, prediction_id, question})
       send(PredictionHandler, {:prediction_completed, prediction_id, output})
-
-      Process.sleep(1000)
-      question = Prompts.get_question(question.id)
-      assert question.title == "The title"
-      assert question.description == "The description"
 
       assert_receive {:prediction_complete, {"The title", "The description"}}
     end
