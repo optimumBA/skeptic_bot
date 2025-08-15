@@ -198,14 +198,10 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
 
-    related_episode_count = Enum.count(related_episodes)
-
     [most_related_episode | _other_related_episodes] = related_episodes
 
     other_episodes =
       Prompts.get_other_episodes(most_related_episode.embedding, @episode_limit)
-
-    other_episode_count = Enum.count(other_episodes)
 
     related_questions =
       question.embedding
@@ -215,16 +211,13 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:noreply,
      socket
      |> assign(:description, question.description)
-     |> assign(:has_all_other_episodes?, has_all_episodes?(0, other_episode_count))
-     |> assign(:has_all_related_episodes?, has_all_episodes?(0, related_episode_count))
      |> assign(:other_episodes, other_episodes)
-     |> assign(:other_episode_count, other_episode_count)
      |> assign(:page_title, question.title)
      |> assign(:question, question)
      |> assign(:related_episodes, related_episodes)
-     |> assign(:related_episode_count, related_episode_count)
      |> assign(:related_questions, related_questions)
      |> assign(:title, question.title)
+     |> assign_episode_counts(related_episodes, other_episodes)
      |> assign_loading_state(question)
      |> assign_seo_attributes(question, most_related_episode)}
   end
@@ -292,6 +285,17 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     }
 
     assign(socket, :seo_attributes, attributes)
+  end
+
+  defp assign_episode_counts(socket, related_episodes, other_episodes) do
+    related_episode_count = Enum.count(related_episodes)
+    other_episode_count = Enum.count(other_episodes)
+
+    socket
+    |> assign(:has_all_other_episodes?, has_all_episodes?(0, other_episode_count))
+    |> assign(:has_all_related_episodes?, has_all_episodes?(0, related_episode_count))
+    |> assign(:other_episode_count, other_episode_count)
+    |> assign(:related_episode_count, related_episode_count)
   end
 
   @impl Phoenix.LiveView
