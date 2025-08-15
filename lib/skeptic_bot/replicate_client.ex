@@ -30,7 +30,7 @@ defmodule SkepticBot.ReplicateClient do
              version: version,
              input: input,
              webhook: webhook_url,
-             webhook_events_filter: ["completed", "output"]
+             webhook_events_filter: webhook_events_filter(output_mode)
            },
            headers: [{"Authorization", "Token #{api_token}"}]
          ) do
@@ -45,6 +45,9 @@ defmodule SkepticBot.ReplicateClient do
         {:error, "Failed to start #{module.get_type()}"}
     end
   end
+
+  defp webhook_events_filter(:completed), do: ["completed"]
+  defp webhook_events_filter(:processing_and_completed), do: ["completed", "output"]
 
   defp wait_for_webhook(module, prediction_id, timeout, :completed) do
     WebhookHandler.register_for_prediction(prediction_id, self())

@@ -3,6 +3,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.QuestionsBroadcast
+  alias SkepticBot.Prompts.UserQuestion
   alias SkepticBotWeb.HomeLive
   alias SkepticBotWeb.PodcastComponents
 
@@ -182,7 +183,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:ok,
      socket
-     |> assign(:loading, true)
      |> assign(:other_episodes_index, 0)
      |> assign(:other_episodes_vectors, other_episodes_vectors)
      |> assign(:related_episodes_index, 0)
@@ -225,6 +225,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:related_episode_count, related_episode_count)
      |> assign(:related_questions, related_questions)
      |> assign(:title, question.title)
+     |> assign_loading_state(question)
      |> assign_seo_attributes(question, most_related_episode)}
   end
 
@@ -275,6 +276,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   defp has_all_episodes?(current_index, episode_count),
     do: current_index == episode_count - @episode_batch_size
+
+  defp assign_loading_state(socket, %UserQuestion{title: nil} = _question),
+    do: assign(socket, :loading, true)
+
+  defp assign_loading_state(socket, _question),
+    do: assign(socket, :loading, false)
 
   defp assign_seo_attributes(socket, question, episode) do
     attributes = %{
