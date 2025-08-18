@@ -12,7 +12,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   def render(assigns) do
     ~H"""
     <div>
-      <div class="mt-16 pl-5 mb-6 flex flex-col gap-10 md:gap-14 max-w-[33.6rem] mx-auto">
+      <div class="mt-16 pl-5 mb-6 flex flex-col gap-10 max-w-[33.6rem] mx-auto md:gap-14">
         <section class="flex gap-4 items-center w-max cursor-pointer" phx-click={JS.navigate("/")}>
           <div><img src={~p"/images/home/back_icon.svg"} alt="Superscript Image Question" /></div>
           <div class="text-[#1F1F1F] montserrat-alternates-semibold">Back to homepage</div>
@@ -23,7 +23,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             {@title}
           </p>
 
-          <div class="hidden md:block absolute top-[-2.1rem] left-[-0.8rem]">
+          <div class="hidden absolute top-[-2.1rem] left-[-0.8rem] md:block">
             <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
           </div>
         </section>
@@ -106,7 +106,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               </div>
             </button>
           </div>
-          <div class="hidden lg:block absolute bottom-[-5rem] right-[5%]">
+          <div class="hidden absolute bottom-[-5rem] right-[5%] lg:block">
             <img src={~p"/images/podcasts/podcast_scribble.svg"} alt="Podcast Scribble" />
           </div>
         </section>

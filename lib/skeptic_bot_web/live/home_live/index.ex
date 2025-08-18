@@ -46,7 +46,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           </div>
         </section>
         <section class="flex flex-col gap-8 w-[93%] md:w-[70%] mx-auto">
-          <section class="text-6xl md:text-7xl mx-auto montserrat-bold tracking-4 2xl:text-8xl">
+          <section class="text-6xl mx-auto montserrat-bold tracking-4 md:text-7xl 2xl:text-8xl">
             Skeptic.<span class="text-[#CD4631] montserrat-alternates-bold">bot</span>
           </section>
           <div class={[
@@ -56,7 +56,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               Questions everything
             </section>
 
-            <section class="w-full xs:w-[95%] 2xs:w-[80%] sm:w-[80%] md:w-[96%] lg:w-[80%] xl:w-[60%] mx-auto">
+            <section class="w-full mx-auto xs:w-[95%] 2xs:w-[80%] sm:w-[80%] md:w-[96%] lg:w-[80%] xl:w-[60%]">
               <HomeLive.Components.form_component form={@form} />
             </section>
           </div>
