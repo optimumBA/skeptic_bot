@@ -8,7 +8,7 @@ Logger.debug("Updating all episodes with the podcast_id of Tin Foil Hat",
   ansi_color: :green
 )
 
-{:ok, podcast} = Podcasts.get_podcast_by_name("Tin Foil Hat")
+podcast = Podcasts.get_podcast_by_name("Tin Foil Hat")
 
 Episode
 |> Repo.all()
