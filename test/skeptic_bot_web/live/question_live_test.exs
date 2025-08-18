@@ -121,15 +121,15 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       render_click(view, :next_related_episodes)
       assert has_element?(view, ~s{button#next-related-btn[disabled]})
 
-      {:ok, view, _html} = live(conn, "/questions/#{question.id}")
+      {:ok, view_2, _html} = live(conn, "/questions/#{question.id}")
 
-      render_hook(view, "assign-batch-size", %{page_width: 800})
+      render_hook(view_2, "assign-batch-size", %{page_width: 800})
 
-      refute has_element?(view, ~s{button#next-related-btn[disabled]})
-      render_click(view, :next_related_episodes)
-      refute has_element?(view, ~s{button#next-related-btn[disabled]})
-      render_click(view, :next_related_episodes)
-      assert has_element?(view, ~s{button#next-related-btn[disabled]})
+      refute has_element?(view_2, ~s{button#next-related-btn[disabled]})
+      render_click(view_2, :next_related_episodes)
+      refute has_element?(view_2, ~s{button#next-related-btn[disabled]})
+      render_click(view_2, :next_related_episodes)
+      assert has_element?(view_2, ~s{button#next-related-btn[disabled]})
     end
   end
 end
