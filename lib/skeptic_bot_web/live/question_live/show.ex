@@ -135,6 +135,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             </button>
 
             <button
+              id="next-other-btn"
               phx-click="next_other_episodes"
               class="disabled:opacity-50"
               disabled={@has_all_other_episodes?}
@@ -155,7 +156,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           <section class="ml-5 mb-10 montserrat-alternates-bold text-[#000000] text-2xl">
             Related Questions
           </section>
-          <div class="mx-5 grid grid-cols-1 md:grid-cols-2 items-stretch gap-[2rem] lg:grid-cols-3 lg:gap-[1.2rem]">
+          <div class="mx-5 grid grid-cols-1 items-stretch gap-[2rem]  md:grid-cols-2 lg:grid-cols-3 lg:gap-[1.2rem]">
             <%= for {question, question_index} <- @related_questions do %>
               <PodcastComponents.related_question_card
                 description={question.description}
@@ -285,20 +286,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   end
 
   def handle_event("assign-batch-size", %{"page_width" => width} = _params, socket) do
-    batch_size =
-      case width < 700 do
-        true ->
-          @mobile_batch_size
-
-        false ->
-          case width < 1024 do
-            true ->
-              @tablet_batch_size
-
-            false ->
-              @desktop_batch_size
-          end
-      end
+    batch_size = get_batch_size(width)
 
     related_episode_count = socket.assigns.related_episode_count
     other_episode_count = socket.assigns.other_episode_count
@@ -312,6 +300,10 @@ defmodule SkepticBotWeb.QuestionLive.Show do
        has_all_episodes?(0, related_episode_count, batch_size)
      )}
   end
+
+  defp get_batch_size(width) when width < 700, do: @mobile_batch_size
+  defp get_batch_size(width) when width < 1024, do: @tablet_batch_size
+  defp get_batch_size(_width), do: @desktop_batch_size
 
   defp has_all_episodes?(_current_index, episode_count, batch_size)
        when episode_count <= batch_size,
