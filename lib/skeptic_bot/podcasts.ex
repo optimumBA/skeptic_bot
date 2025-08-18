@@ -16,8 +16,8 @@ defmodule SkepticBot.Podcasts do
   @type episode_transcription :: EpisodeTranscription.t()
   @type external_id :: String.t()
   @type id :: String.t()
-  @type name :: String.t()
   @type podcast :: Podcast.t()
+  @type podcast_name :: String.t()
 
   @doc """
   Creates a podcast_episode.
@@ -106,7 +106,7 @@ defmodule SkepticBot.Podcasts do
   @spec get_episode_by_external_id(external_id()) :: episode() | nil
   def get_episode_by_external_id(external_id), do: Repo.get_by(Episode, external_id: external_id)
 
-  @spec get_podcast_by_name(name()) :: podcast() | nil
+  @spec get_podcast_by_name(podcast_name()) :: podcast() | nil
   def get_podcast_by_name(name), do: Repo.get_by(Podcast, name: name)
 
   @doc """
