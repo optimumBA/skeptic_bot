@@ -108,5 +108,28 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       assert html =~
                ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
     end
+
+    test "disabling of the forward buttons depends on the browser width", %{
+      conn: conn,
+      question: question
+    } do
+      {:ok, view, _html} = live(conn, "/questions/#{question.id}")
+
+      render_hook(view, "assign-batch-size", %{page_width: 1100})
+
+      refute has_element?(view, ~s{button#next-related-btn[disabled]})
+      render_click(view, :next_related_episodes)
+      assert has_element?(view, ~s{button#next-related-btn[disabled]})
+
+      {:ok, view, _html} = live(conn, "/questions/#{question.id}")
+
+      render_hook(view, "assign-batch-size", %{page_width: 800})
+
+      refute has_element?(view, ~s{button#next-related-btn[disabled]})
+      render_click(view, :next_related_episodes)
+      refute has_element?(view, ~s{button#next-related-btn[disabled]})
+      render_click(view, :next_related_episodes)
+      assert has_element?(view, ~s{button#next-related-btn[disabled]})
+    end
   end
 end

@@ -80,6 +80,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               </div>
             </button>
             <button
+              id="next-related-btn"
               phx-click="next_related_episodes"
               class="disabled:opacity-50"
               disabled={@has_all_related_episodes?}
@@ -182,7 +183,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:ok,
      socket
-     |> assign(:batch_size, @desktop_batch_size)
+     |> assign(:batch_size, 1)
      |> assign(:other_episodes_index, 0)
      |> assign(:other_episodes_vectors, other_episodes_vectors)
      |> assign(:related_episodes_index, 0)
