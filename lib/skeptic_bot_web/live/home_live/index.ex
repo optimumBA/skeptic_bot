@@ -63,7 +63,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
           <div class={[
             "w-[80%] mx-auto",
-            @display
+            !@loading && "hidden"
           ]}>
             <section class="text-center montserrat-alternates-semibold text-[#4D4D4D] mb-6">
               is almost done second guessing
@@ -82,7 +82,6 @@ defmodule SkepticBotWeb.HomeLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:display, "hidden")
      |> assign(:loading, false)
      |> assign(:question, %UserQuestion{})
      |> assign_form()}
@@ -186,17 +185,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:loading_state, value}, socket) do
-    display =
-      if value do
-        "block"
-      else
-        "hidden"
-      end
-
-    {:noreply,
-     socket
-     |> assign(:display, display)
-     |> assign(:loading, value)}
+    {:noreply, assign(socket, :loading, value)}
   end
 
   defp assign_form(%{assigns: %{question: question}} = socket) do
