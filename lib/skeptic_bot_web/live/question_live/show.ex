@@ -29,7 +29,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         </section>
       </div>
 
-      <section class="px-5 max-w-[36.6rem] mx-auto mt-8 mb-10">
+      <section class="px-5 max-w-[42rem] mx-auto mt-6 mb-10">
         <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium">
           {@description}
         </p>
