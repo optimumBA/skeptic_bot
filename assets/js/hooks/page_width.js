@@ -7,10 +7,6 @@ PageWidthHooks.PageWidth = {
     this.pushEvent('assign-batch-size', { page_width: width })
   },
 
-  updated() {},
-
-  destroyed() {},
-
   getWidth() {
     return Math.max(
       document.body.scrollWidth,
