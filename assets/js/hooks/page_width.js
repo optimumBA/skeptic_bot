@@ -3,7 +3,6 @@ let PageWidthHooks = {}
 PageWidthHooks.PageWidth = {
   mounted() {
     width = this.getWidth()
-    console.log(`Width is ${width}`)
 
     this.pushEvent('assign-batch-size', { page_width: width })
   },
