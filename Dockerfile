@@ -71,10 +71,8 @@ FROM ${RUNNER_IMAGE}
 
 RUN apt-get update -y && \
     apt-get install -y libstdc++6 openssl libncurses5 locales curl ca-certificates ffmpeg postgresql-client awscli \
-    && apt-get clean && rm -f /var/lib/apt/lists/*_* 
-
-# install python3.10 
-RUN update-alternatives --install /usr/bin/python python /usr/local/bin/python3.12  
+    python3 python3-pip python3-venv \
+    && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Install and make yt-dlp executable
 RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/bin/yt-dlp && \
