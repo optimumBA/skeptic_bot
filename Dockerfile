@@ -18,6 +18,22 @@ ARG DEBIAN_VERSION=bullseye-20250317-slim
 ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
 
+# Build Python 3.10 in a separate stage based on the same Debian image
+FROM ${RUNNER_IMAGE} as python-builder
+RUN apt-get update -y && apt-get install -y \
+    build-essential zlib1g-dev libncurses5-dev libgdbm-dev \
+    libnss3-dev libssl-dev libreadline-dev libffi-dev \
+    libsqlite3-dev wget libbz2-dev \
+    && apt-get clean && rm -f /var/lib/apt/lists/*_*
+
+RUN wget https://www.python.org/ftp/python/3.10.15/Python-3.10.15.tgz && \
+    tar -xzf Python-3.10.15.tgz && \
+    cd Python-3.10.15 && \
+    ./configure --enable-optimizations --prefix=/usr/local && \
+    make -j$(nproc) && \
+    make altinstall && \
+    cd / && rm -rf Python-3.10.15*
+
 FROM ${BUILDER_IMAGE} as builder
 
 # install build dependencies
@@ -69,9 +85,15 @@ RUN mix release
 # the compiled release and other runtime necessities
 FROM ${RUNNER_IMAGE}
 
+# Copy Python 3.10 from python-builder stage
+COPY --from=python-builder /usr/local /usr/local
+
 RUN apt-get update -y && \
     apt-get install -y libstdc++6 openssl libncurses5 locales curl ca-certificates ffmpeg postgresql-client awscli \
-    && apt-get clean && rm -f /var/lib/apt/lists/*_* 
+    && apt-get clean && rm -f /var/lib/apt/lists/*_* \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 1 \
+    && python3.10 -m ensurepip --upgrade \
+    && python3.10 -m pip install --upgrade pip
 
 
 # Install and make yt-dlp executable
