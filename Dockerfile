@@ -74,7 +74,7 @@ RUN apt-get update -y && \
     && apt-get clean && rm -f /var/lib/apt/lists/*_* 
 
 # install python3.10 
-RUN apt-get install software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa \ 
+RUN add-apt-repository ppa:deadsnakes/ppa \ 
     && apt-get update && apt-get install -y python3.10 && python3 --version    
 
 # Install and make yt-dlp executable
