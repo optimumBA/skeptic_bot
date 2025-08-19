@@ -74,8 +74,7 @@ RUN apt-get update -y && \
     && apt-get clean && rm -f /var/lib/apt/lists/*_* 
 
 # install python3.10 
-RUN add-apt-repository ppa:deadsnakes/ppa \ 
-    && apt-get update && apt-get install -y python3.10 && python3 --version    
+RUN update-alternatives --install /usr/bin/python python /usr/local/bin/python3.12  
 
 # Install and make yt-dlp executable
 RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/bin/yt-dlp && \
