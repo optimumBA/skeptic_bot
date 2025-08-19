@@ -18,13 +18,13 @@ defmodule SkepticBotWeb.HomeLive.Index do
       <div class="h-screen flex items-center relative">
         <section class="pt-20 md:pt-0">
           <div class={[
-            "absolute top-[2%] left-0 w-[38%] xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[20%] 2xl:top-[3%] 4xl:w-[17%]",
+            "absolute top-[2%] left-0 w-[38%] xl:top-[1rem] xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[18%] xl:w-[14rem] z-30",
             @loading && "hidden"
           ]}>
             <img src={~p"/images/home/top_swirl.svg"} class="w-full h-full object-cover" alt="Swirl" />
           </div>
           <div class={[
-            "absolute bottom-[16%] 2xs:bottom-[13%] md:bottom-[11%] left-[4%] w-[34%] xs:w-[30%] 2xs:w-[27%] md:w-[20%] xl:w-[21%] 2xl:w-[20%] 4xl:w-[17%]",
+            "absolute bottom-[16%] 2xs:bottom-[13%] md:bottom-[11%] xl:bottom-auto xl:top-[12rem] left-[4%] xl:left-[2.8rem] w-[34%] xs:w-[30%] 2xs:w-[27%] md:w-[20%] xl:w-[15rem]",
             @loading && "hidden"
           ]}>
             <img
