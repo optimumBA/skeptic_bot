@@ -70,8 +70,12 @@ RUN mix release
 FROM ${RUNNER_IMAGE}
 
 RUN apt-get update -y && \
-    apt-get install -y libstdc++6 openssl libncurses5 locales curl ca-certificates ffmpeg python3.10 postgresql-client awscli \
-    && apt-get clean && rm -f /var/lib/apt/lists/*_*
+    apt-get install -y libstdc++6 openssl libncurses5 locales curl ca-certificates ffmpeg postgresql-client awscli \
+    && apt-get clean && rm -f /var/lib/apt/lists/*_* 
+
+# install python3.10 
+RUN apt-get install software-properties-common -y && add-apt-repository ppa:deadsnakes/ppa \ 
+    && apt-get update && apt-get install -y python3.10 && python3 --version    
 
 # Install and make yt-dlp executable
 RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/bin/yt-dlp && \
