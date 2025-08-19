@@ -9,7 +9,7 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
     queue: :scraping
 
   alias SkepticBot.LookIntoIt.Scraper
-  alias SkepticBot.Podcasts.TinfoilScraper
+  # alias SkepticBot.Podcasts.TinfoilScraper
 
   require Logger
 
@@ -19,7 +19,7 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
   @spec perform(job()) :: :ok | {:error, any()}
   def perform(_job) do
     Logger.info("Starting scheduled podcast scraping")
-    TinfoilScraper.scrape()
+    # TinfoilScraper.scrape()
     Scraper.scrape()
   end
 end
