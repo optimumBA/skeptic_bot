@@ -22,7 +22,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         </section>
 
         <section class="relative">
-          <p class="text-[#000000] text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold smd:text-center">
+          <p class="text-[#000000] text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold 2sm:text-center">
             {@title}
           </p>
 

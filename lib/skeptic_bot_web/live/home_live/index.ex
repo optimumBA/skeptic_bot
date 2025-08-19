@@ -24,7 +24,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             <img src={~p"/images/home/top_swirl.svg"} class="w-full h-full object-cover" alt="Swirl" />
           </div>
           <div class={[
-            "absolute bottom-[16%] 2xs:bottom-[13%] md:bottom-[11%] xl:bottom-auto xl:top-[12rem] left-[4%] xl:left-[2.8rem] w-[34%] xs:w-[30%] 2xs:w-[27%] md:w-[20%] xl:w-[15rem]",
+            "absolute bottom-[16%] 2xs:bottom-[13%] sm:bottom-[10%] md:bottom-[11%] 2md:bottom-[8%] xl:bottom-auto xl:top-[12rem] left-[4%] xl:left-[2.8rem] w-[34%] xs:w-[30%] 2xs:w-[27%] md:w-[20%] xl:w-[15rem]",
             @loading && "hidden"
           ]}>
             <img

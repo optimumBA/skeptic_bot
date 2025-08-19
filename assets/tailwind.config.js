@@ -19,19 +19,17 @@ module.exports = {
 
       sm: '640px',
 
-      smd: '700px',
+      '2sm': '700px',
 
       md: '768px',
+
+      '2md': '900px',
 
       lg: '1024px',
 
       xl: '1100px',
 
       '2xl': '1220px',
-
-      '3xl': '1330px',
-
-      '4xl': '1450px',
     },
 
     extend: {
