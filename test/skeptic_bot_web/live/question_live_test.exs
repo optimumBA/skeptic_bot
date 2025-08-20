@@ -42,7 +42,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
         embedding: nil
       })
 
-      {:ok, _view, html} = live(conn, "/questions/#{question.id}")
+      {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
 
       assert html =~ ~r|<title>\s+American Ponzi with Lee Camp and Sam Tripoli\s+</title>|
       assert html =~ ~r|American Ponzi with Lee Camp and Sam Tripoli\s+</p>|
@@ -59,7 +59,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
            conn: conn,
            question: question
          } do
-      {:ok, view, html} = live(conn, "/questions/#{question.id}")
+      {:ok, view, html} = live(conn, ~p"/questions/#{question.id}")
 
       assert html =~ ~s'id="related-episodes-carousel" style="transform: translateX(-0.0rem);"'
 
@@ -75,7 +75,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
            conn: conn,
            question: question
          } do
-      {:ok, view, html} = live(conn, "/questions/#{question.id}")
+      {:ok, view, html} = live(conn, ~p"/questions/#{question.id}")
 
       assert html =~ ~s'id="other-episodes-carousel" style="transform: translateX(-0.0rem);"'
 
@@ -100,7 +100,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
         title: "Who killed Two Pac Shakur?"
       )
 
-      {:ok, _view, html} = live(conn, "/questions/#{question.id}")
+      {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
 
       assert html =~ "Related Questions"
       assert html =~ "Who killed Two Pac Shakur?"
@@ -113,7 +113,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       conn: conn,
       question: question
     } do
-      {:ok, view, _html} = live(conn, "/questions/#{question.id}")
+      {:ok, view, _html} = live(conn, ~p"/questions/#{question.id}")
 
       send(view.pid, {:prediction_result, {"New Title", "New Description"}})
 
@@ -126,7 +126,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
            conn: conn,
            question: question
          } do
-      {:ok, view, _html} = live(conn, "/questions/#{question.id}")
+      {:ok, view, _html} = live(conn, ~p"/questions/#{question.id}")
 
       send(view.pid, {:prediction_complete, {"New Title", "New Description"}})
 
