@@ -93,7 +93,8 @@ RUN apt-get update -y && \
     && apt-get clean && rm -f /var/lib/apt/lists/*_* \
     && update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 1 \
     && python3.10 -m ensurepip --upgrade \
-    && python3.10 -m pip install --upgrade pip
+    && python3.10 -m pip install --upgrade pip \
+    && python3.10 -m pip install --no-cache-dir awscli
 
 
 # Install and make yt-dlp executable

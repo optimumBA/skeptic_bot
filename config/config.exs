@@ -81,7 +81,7 @@ config :skeptic_bot, :downloading_runner,
   idle_shutdown_after: :timer.seconds(30),
   min: 0,
   max: 1,
-  max_concurrency: 1,
+  max_concurrency: 2,
   name: SkepticBot.DownloadingRunner,
   timeout: :timer.minutes(10)
 
