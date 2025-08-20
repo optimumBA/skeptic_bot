@@ -12,8 +12,7 @@ defmodule SkepticBot.PromptsTest do
     episodes: [
       %{
         episode_id: "dc6d45bc-b3ab-43ba-b106-0969e8a51c4b",
-        timestamp: %{secs: 300, months: 0, days: 0},
-        transcription: "A simple transcription"
+        timestamp: %{secs: 300, months: 0, days: 0}
       }
     ],
     query: "American Ponzi with Lee Camp",
