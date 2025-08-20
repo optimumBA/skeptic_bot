@@ -13,7 +13,8 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
   @external_id "177589"
   @podcast "Look Into It"
   @rokfin_channel "https://rokfin.com/eddiebravo"
-  @video_url "https://global.ssl.fastly.net/jGrM0w/v.mp4"
+  @rokfin_video_url "https://rokfin.com/post/177589"
+  @rumble_video_url "https://rumble.com/177589"
 
   setup :verify_on_exit!
 
@@ -40,7 +41,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
         worker: DownloadingWorker,
         args: %{
           podcast: @podcast,
-          video_url: @video_url
+          video_url: @rumble_video_url
         }
       )
     end
@@ -59,7 +60,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
         worker: DownloadingWorker,
         args: %{
           podcast: @podcast,
-          video_url: @video_url
+          video_url: @rokfin_video_url
         }
       )
     end
@@ -79,7 +80,7 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
         worker: DownloadingWorker,
         args: %{
           podcast: @podcast,
-          video_url: @video_url
+          video_url: @rumble_video_url
         }
       )
     end

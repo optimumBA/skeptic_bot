@@ -14,7 +14,7 @@ defmodule SkepticBot.LookIntoIt.YtDlpChannelClient do
            "yt-dlp",
            [
              "--print",
-             "%(title)s$$%(duration)s$$%(thumbnail)s$$%(webpage_url)s$$%(url)s",
+             "%(title)s$$%(duration)s$$%(thumbnail)s$$%(webpage_url)s",
              channel
            ],
            env: [],

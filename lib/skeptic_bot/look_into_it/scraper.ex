@@ -41,7 +41,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     |> Enum.drop(-1)
   end
 
-  defp maybe_download_episode({title, duration, thumbnail, webpage_url, video_url}, channel) do
+  defp maybe_download_episode({title, duration, thumbnail, webpage_url}, channel) do
     external_id = get_external_id(webpage_url, channel)
 
     unless Podcasts.episode_exists?(external_id) do
@@ -56,7 +56,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
       DownloadingWorker.enqueue(%{
         "id" => episode.id,
         "podcast" => @podcast,
-        "video_url" => video_url
+        "video_url" => webpage_url
       })
     end
   end
