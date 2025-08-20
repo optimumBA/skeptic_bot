@@ -18,7 +18,7 @@ ARG DEBIAN_VERSION=bullseye-20250317-slim
 ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
 
-# Build Python 3.10 in a separate stage based on the same Debian image
+# Python 3.10 in a separate stage
 FROM ${RUNNER_IMAGE} as python-builder
 RUN apt-get update -y && apt-get install -y \
     build-essential zlib1g-dev libncurses5-dev libgdbm-dev \
@@ -95,7 +95,6 @@ RUN apt-get update -y && \
     && python3.10 -m ensurepip --upgrade \
     && python3.10 -m pip install --upgrade pip \
     && python3.10 -m pip install --no-cache-dir awscli
-
 
 # Install and make yt-dlp executable
 RUN curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o /usr/bin/yt-dlp && \
