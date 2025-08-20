@@ -89,7 +89,7 @@ FROM ${RUNNER_IMAGE}
 COPY --from=python-builder /usr/local /usr/local
 
 RUN apt-get update -y && \
-    apt-get install -y libstdc++6 openssl libncurses5 locales curl ca-certificates ffmpeg postgresql-client awscli \
+    apt-get install -y libstdc++6 openssl libncurses5 locales curl ca-certificates ffmpeg postgresql-client \
     && apt-get clean && rm -f /var/lib/apt/lists/*_* \
     && update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 1 \
     && python3.10 -m ensurepip --upgrade \
