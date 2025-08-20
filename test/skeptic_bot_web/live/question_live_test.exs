@@ -109,7 +109,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
                ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
     end
 
-    test "updates after receiving predictions from the PredictionHandler", %{
+    test "updates after completing response", %{
       conn: conn,
       question: question
     } do
@@ -121,7 +121,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       assert render(view) =~ "New Description"
     end
 
-    test "changes the loading state after receiving the last message from the PredictionHandler",
+    test "removes the loader after completing response",
          %{
            conn: conn,
            question: question

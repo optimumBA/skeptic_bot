@@ -196,7 +196,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _uri, socket) do
     question = Prompts.get_question(id)
-    QuestionsBroadcast.subscribe(question.id)
+    if connected?(socket), do: QuestionsBroadcast.subscribe(question.id)
 
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
@@ -309,7 +309,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:title, title)}
   end
 
-  @impl Phoenix.LiveView
   def handle_info({:prediction_complete, {title, description}}, socket) do
     {:noreply,
      socket
