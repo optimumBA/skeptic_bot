@@ -42,9 +42,7 @@ defmodule SkepticBot.Podcasts.Episode do
   @spec podcast_changeset(t(), map()) :: Ecto.Changeset.t()
   def podcast_changeset(episode, attrs) do
     episode
-    |> cast(attrs, [
-      :podcast_id
-    ])
+    |> cast(attrs, [:podcast_id])
     |> validate_required([:podcast_id])
   end
 end
