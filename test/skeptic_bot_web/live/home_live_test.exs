@@ -12,7 +12,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
   describe "/" do
     test "shows heading and subtitle", %{conn: conn} do
-      {:ok, view, html} = live(conn, "/")
+      {:ok, view, html} = live(conn, ~p"/")
       assert html =~ ~r|<title>\s+Skeptic.bot\s+</title>|
       assert html =~ "Skeptic."
       assert html =~ "bot"
@@ -24,7 +24,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
     test "shows errors if the question is missing or is not meeting the required length", %{
       conn: conn
     } do
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       assert view
              |> form("#question-input-form", user_question: %{query: ""})
@@ -40,14 +40,14 @@ defmodule SkepticBotWeb.HomeLiveTest do
     end
 
     test "sending a message to the liveview changes its loading state", %{conn: conn} do
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
       send(view.pid, {:loading_state, false})
 
       assert has_element?(view, ~s{div#loading-elements.hidden})
     end
 
     test "page does not load on invalid data submission", %{conn: conn} do
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       view
       |> form("#question-input-form", user_question: %{query: ""})
@@ -63,7 +63,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
@@ -90,7 +90,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       episode = episode_fixture(embedding: embedding_fixture())
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
@@ -112,7 +112,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
     test "renders an error message if the RAG process fails", %{
       conn: conn
     } do
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:error, "failed to generate embeddings"}
@@ -128,7 +128,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
     @tag :capture_log
     test "shows an error message if the RAG process crashes", %{conn: conn} do
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         raise("failed to generate embeddings")
