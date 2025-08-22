@@ -27,7 +27,7 @@ defmodule SkepticBot.Prompts.UserQuestion do
   def changeset(question, attrs) do
     question
     |> cast(attrs, [:description, :embedding, :query, :title])
-    |> validate_required([:description, :embedding, :query, :title])
+    |> validate_required([:embedding, :query])
     |> validate_length(:query,
       min: 4,
       message: "Your prompt must be at least 4 characters in length"

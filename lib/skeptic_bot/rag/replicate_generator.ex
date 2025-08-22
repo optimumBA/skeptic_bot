@@ -32,7 +32,12 @@ defmodule SkepticBot.Rag.ReplicateGenerator do
       top_p: 0.95
     }
 
-    SkepticBot.ReplicateClient.start_prediction(__MODULE__, @model, input)
+    SkepticBot.ReplicateClient.start_prediction(
+      __MODULE__,
+      :processing_and_completed,
+      @model,
+      input
+    )
   end
 
   defp format_messages(messages) do

@@ -12,7 +12,7 @@ defmodule SkepticBotWeb.Plugs.VerifyReplicateWebhook do
   @type conn :: Plug.Conn.t()
   @type opts :: Plug.opts()
 
-  @interesting_statuses ["succeeded", "failed", "canceled"]
+  @interesting_statuses ["succeeded", "failed", "canceled", "processing"]
 
   @spec init(opts()) :: opts()
   def init(opts), do: opts

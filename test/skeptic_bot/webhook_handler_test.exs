@@ -20,6 +20,11 @@ defmodule SkepticBot.WebhookHandlerTest do
     "status" => "succeeded",
     "output" => "good output"
   }
+  @processing_prediction_payload %{
+    "id" => "some-id",
+    "output" => "good output",
+    "status" => "processing"
+  }
 
   describe "register_for_prediction/2" do
     test "registers a pid for prediction" do
@@ -70,6 +75,20 @@ defmodule SkepticBot.WebhookHandlerTest do
       WebhookHandler.handle_webhook(@successful_prediction_payload)
       assert :ok = WebhookHandler.unregister_prediction("some-id")
       refute_receive {:prediction_completed, "some-id", "good output"}
+    end
+
+    test "notifies a process if its prediction is processing" do
+      assert {:ok, _owner_pid} = WebhookHandler.register_for_prediction("some-id", self())
+      WebhookHandler.handle_webhook(@processing_prediction_payload)
+      assert_receive {:prediction_underway, "some-id", "good output"}
+    end
+
+    @tag :capture_log
+    test "does not notify a process of its prediction is processing if it was unregistered" do
+      assert {:ok, _owner_pid} = WebhookHandler.register_for_prediction("some-id", self())
+      WebhookHandler.handle_webhook(@processing_prediction_payload)
+      assert :ok = WebhookHandler.unregister_prediction("some-id")
+      refute_receive {:prediction_underway, "some-id", "good output"}
     end
 
     test "notifies a process if its prediction was canceled" do

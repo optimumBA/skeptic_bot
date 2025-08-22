@@ -42,7 +42,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
         embedding: nil
       })
 
-      {:ok, _view, html} = live(conn, "/questions/#{question.id}")
+      {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
 
       assert html =~ ~r|<title>\s+American Ponzi with Lee Camp and Sam Tripoli\s+</title>|
       assert html =~ ~r|American Ponzi with Lee Camp and Sam Tripoli\s+</p>|
@@ -59,7 +59,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
            conn: conn,
            question: question
          } do
-      {:ok, view, html} = live(conn, "/questions/#{question.id}")
+      {:ok, view, html} = live(conn, ~p"/questions/#{question.id}")
 
       assert html =~ ~s'id="related-episodes-carousel" style="transform: translateX(-0.0rem);"'
 
@@ -75,7 +75,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
            conn: conn,
            question: question
          } do
-      {:ok, view, html} = live(conn, "/questions/#{question.id}")
+      {:ok, view, html} = live(conn, ~p"/questions/#{question.id}")
 
       assert html =~ ~s'id="other-episodes-carousel" style="transform: translateX(-0.0rem);"'
 
@@ -100,13 +100,38 @@ defmodule SkepticBotWeb.QuestionLiveTest do
         title: "Who killed Two Pac Shakur?"
       )
 
-      {:ok, _view, html} = live(conn, "/questions/#{question.id}")
+      {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
 
       assert html =~ "Related Questions"
       assert html =~ "Who killed Two Pac Shakur?"
 
       assert html =~
                ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
+    end
+
+    test "updates after completing response", %{
+      conn: conn,
+      question: question
+    } do
+      {:ok, view, _html} = live(conn, ~p"/questions/#{question.id}")
+
+      send(view.pid, {:prediction_result, {"New Title", "New Description"}})
+
+      html = render(view)
+      assert html =~ "New Title"
+      assert html =~ "New Description"
+    end
+
+    test "removes the loader after completing response",
+         %{
+           conn: conn,
+           question: question
+         } do
+      {:ok, view, _html} = live(conn, ~p"/questions/#{question.id}")
+
+      send(view.pid, {:prediction_complete, {"New Title", "New Description"}})
+
+      assert has_element?(view, ~s{div#loading-elements.hidden})
     end
   end
 end
