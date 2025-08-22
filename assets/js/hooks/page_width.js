@@ -4,7 +4,7 @@ PageWidthHooks.PageWidth = {
   mounted() {
     width = this.getWidth()
 
-    this.pushEvent('assign-batch-size', { page_width: width })
+    this.pushEvent('assign_batch_size', { page_width: width })
   },
 
   getWidth() {

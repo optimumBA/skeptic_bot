@@ -296,7 +296,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:other_episodes_index, current_index)}
   end
 
-  def handle_event("assign-batch-size", %{"page_width" => width} = _params, socket) do
+  def handle_event("assign_batch_size", %{"page_width" => width} = _params, socket) do
     batch_size = get_batch_size(width)
 
     related_episode_count = socket.assigns.related_episode_count
