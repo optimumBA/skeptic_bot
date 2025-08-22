@@ -51,21 +51,14 @@ defmodule SkepticBot.PredictionHandler do
 
   def handle_info({:prediction_underway, prediction_id, output}, state) do
     _result =
-      case Map.get(state, prediction_id) do
-        nil ->
-          :ok
-
-        question ->
-          case get_title_and_description(output) do
-            [title, description] ->
-              QuestionsBroadcast.broadcast_title_and_description(
-                question.id,
-                {:prediction_result, {title, description}}
-              )
-
-            [_title] ->
-              :ok
-          end
+      with %UserQuestion{id: question_id} <- Map.get(state, prediction_id),
+           [title, description] <- get_title_and_description(output) do
+        QuestionsBroadcast.broadcast_title_and_description(
+          question_id,
+          {:prediction_result, {title, description}}
+        )
+      else
+        _error -> :ok
       end
 
     {:noreply, state}

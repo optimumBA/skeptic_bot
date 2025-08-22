@@ -79,6 +79,8 @@ defmodule SkepticBotWeb.HomeLiveTest do
       |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
       |> render_submit()
 
+      assert has_element?(view, ~s{div#loading-elements})
+
       {path, _flash} = assert_redirect(view)
       assert path =~ ~r|/questions/|
     end

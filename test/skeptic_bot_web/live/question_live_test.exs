@@ -117,8 +117,9 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       send(view.pid, {:prediction_result, {"New Title", "New Description"}})
 
-      assert render(view) =~ "New Title"
-      assert render(view) =~ "New Description"
+      html = render(view)
+      assert html =~ "New Title"
+      assert html =~ "New Description"
     end
 
     test "removes the loader after completing response",
