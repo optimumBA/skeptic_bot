@@ -1,18 +1,18 @@
 defmodule SkepticBotWeb.HomeLiveTest do
   use SkepticBotWeb.ConnCase, async: true
 
-  import ExUnit.CaptureLog
   import Mox
   import Phoenix.LiveViewTest
   import SkepticBot.PodcastsFixtures
 
+  alias SkepticBot.PredictionHandler
   alias SkepticBot.Rag
 
   setup :verify_on_exit!
 
   describe "/" do
     test "shows heading and subtitle", %{conn: conn} do
-      {:ok, view, html} = live(conn, "/")
+      {:ok, view, html} = live(conn, ~p"/")
       assert html =~ ~r|<title>\s+Skeptic.bot\s+</title>|
       assert html =~ "Skeptic."
       assert html =~ "bot"
@@ -24,7 +24,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
     test "shows errors if the question is missing or is not meeting the required length", %{
       conn: conn
     } do
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       assert view
              |> form("#question-input-form", user_question: %{query: ""})
@@ -39,27 +39,14 @@ defmodule SkepticBotWeb.HomeLiveTest do
              |> render_change() =~ "Your prompt must be at least 4 characters in length"
     end
 
-    test "sending a message to the liveview changes its loading state", %{conn: conn} do
-      {:ok, view, _html} = live(conn, "/")
-      send(view.pid, {:loading_state, false})
-
-      view_state = :sys.get_state(view.pid)
-      loading = view_state.socket.assigns.loading
-
-      refute loading
-    end
-
     test "page does not load on invalid data submission", %{conn: conn} do
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       view
       |> form("#question-input-form", user_question: %{query: ""})
       |> render_submit()
 
-      view_state = :sys.get_state(view.pid)
-      loading = view_state.socket.assigns.loading
-
-      refute loading
+      assert has_element?(view, ~s{div#loading-elements.hidden})
     end
 
     test "redirects to the question if episodes are found in the retrieval process", %{
@@ -68,17 +55,18 @@ defmodule SkepticBotWeb.HomeLiveTest do
       embedding = embedding_fixture()
       episode = episode_fixture(embedding: embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-      response = response_fixture()
 
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
       end)
 
       expect(Rag.MockGenerator, :predict, fn _messages ->
-        {:ok, response}
+        {:ok, "Prediction process was successful"}
       end)
+
+      allow(Rag.MockGenerator, self(), PredictionHandler)
 
       view
       |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
@@ -95,7 +83,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       episode = episode_fixture(embedding: embedding_fixture())
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
 
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [embedding]}
@@ -105,6 +93,8 @@ defmodule SkepticBotWeb.HomeLiveTest do
       |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
       |> render_submit()
 
+      assert has_element?(view, ~s{div#loading-elements:not(.hidden)})
+
       with_retries(
         fn ->
           assert render(view) =~
@@ -112,12 +102,14 @@ defmodule SkepticBotWeb.HomeLiveTest do
         end,
         2
       )
+
+      assert has_element?(view, ~s{div#loading-elements.hidden})
     end
 
     test "renders an error message if the RAG process fails", %{
       conn: conn
     } do
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:error, "failed to generate embeddings"}
@@ -133,7 +125,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
     @tag :capture_log
     test "shows an error message if the RAG process crashes", %{conn: conn} do
-      {:ok, view, _html} = live(conn, "/")
+      {:ok, view, _html} = live(conn, ~p"/")
 
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         raise("failed to generate embeddings")
@@ -145,69 +137,6 @@ defmodule SkepticBotWeb.HomeLiveTest do
 
       assert render(view) =~
                "An error occurred while processing your prompt. Please try again."
-    end
-
-    @tag :capture_log
-    test "renders an error message if question creation fails", %{
-      conn: conn
-    } do
-      embedding = embedding_fixture()
-      episode = episode_fixture(embedding: embedding)
-      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-
-      {:ok, view, _html} = live(conn, "/")
-
-      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        {:ok, [embedding]}
-      end)
-
-      expect(Rag.MockGenerator, :predict, fn _messages ->
-        {:ok, "An invalid result from the LLM"}
-      end)
-
-      view
-      |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
-      |> render_submit()
-
-      with_retries(
-        fn ->
-          assert render(view) =~ "There was an error processing your prompt"
-        end,
-        2
-      )
-    end
-
-    test "logs an error message if question creation fails", %{
-      conn: conn
-    } do
-      embedding = embedding_fixture()
-      episode = episode_fixture(embedding: embedding)
-      _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
-
-      {:ok, view, _html} = live(conn, "/")
-
-      expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
-        {:ok, [embedding]}
-      end)
-
-      expect(Rag.MockGenerator, :predict, fn _messages ->
-        {:ok, "An invalid result from the LLM"}
-      end)
-
-      assert capture_log(fn ->
-               view
-               |> form("#question-input-form",
-                 user_question: %{query: "American Ponzi with Lee Camp"}
-               )
-               |> render_submit()
-
-               with_retries(
-                 fn ->
-                   assert render(view) =~ "There was an error processing your prompt"
-                 end,
-                 2
-               )
-             end) =~ "Question creation failed. Reason:"
     end
   end
 end

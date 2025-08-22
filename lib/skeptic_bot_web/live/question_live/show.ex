@@ -2,6 +2,9 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   use SkepticBotWeb, :live_view
 
   alias SkepticBot.Prompts
+  alias SkepticBot.Prompts.QuestionsBroadcast
+  alias SkepticBot.Prompts.UserQuestion
+  alias SkepticBotWeb.HomeLive
   alias SkepticBotWeb.PodcastComponents
 
   @desktop_batch_size 3
@@ -36,6 +39,15 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium">
           {@description}
         </p>
+        <div
+          id="loading-elements"
+          class={[
+            "my-20",
+            !@loading && "hidden"
+          ]}
+        >
+          <HomeLive.Components.loading_component />
+        </div>
       </section>
 
       <section
@@ -195,18 +207,15 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _uri, socket) do
     question = Prompts.get_question(id)
+    if connected?(socket), do: QuestionsBroadcast.subscribe(question.id)
 
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
-
-    related_episode_count = Enum.count(related_episodes)
 
     [most_related_episode | _other_related_episodes] = related_episodes
 
     other_episodes =
       Prompts.get_other_episodes(most_related_episode.embedding, @episode_limit)
-
-    other_episode_count = Enum.count(other_episodes)
 
     related_questions =
       question.embedding
@@ -216,15 +225,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:noreply,
      socket
      |> assign(:description, question.description)
-     |> assign(:has_all_other_episodes?, false)
-     |> assign(:has_all_related_episodes?, false)
      |> assign(:other_episodes, other_episodes)
-     |> assign(:other_episode_count, other_episode_count)
      |> assign(:page_title, question.title)
+     |> assign(:question, question)
      |> assign(:related_episodes, related_episodes)
-     |> assign(:related_episode_count, related_episode_count)
      |> assign(:related_questions, related_questions)
      |> assign(:title, question.title)
+     |> assign_episode_counts(related_episodes, other_episodes)
+     |> assign_loading_state(question)
      |> assign_seo_attributes(question, most_related_episode)}
   end
 
@@ -312,6 +320,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   defp has_all_episodes?(current_index, episode_count, batch_size),
     do: current_index == episode_count - batch_size
 
+  defp assign_loading_state(socket, %UserQuestion{title: nil} = _question),
+    do: assign(socket, :loading, true)
+
+  defp assign_loading_state(socket, _question),
+    do: assign(socket, :loading, false)
+
   defp assign_seo_attributes(socket, question, episode) do
     attributes = %{
       description: question.description,
@@ -321,6 +335,33 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     }
 
     assign(socket, :seo_attributes, attributes)
+  end
+
+  defp assign_episode_counts(socket, related_episodes, other_episodes) do
+    related_episode_count = Enum.count(related_episodes)
+    other_episode_count = Enum.count(other_episodes)
+
+    socket
+    |> assign(:has_all_other_episodes?, false)
+    |> assign(:has_all_related_episodes?, false)
+    |> assign(:other_episode_count, other_episode_count)
+    |> assign(:related_episode_count, related_episode_count)
+  end
+
+  @impl Phoenix.LiveView
+  def handle_info({:prediction_result, {title, description}}, socket) do
+    {:noreply,
+     socket
+     |> assign(:description, description)
+     |> assign(:title, title)}
+  end
+
+  def handle_info({:prediction_complete, {title, description}}, socket) do
+    {:noreply,
+     socket
+     |> assign(:description, description)
+     |> assign(:loading, false)
+     |> assign(:title, title)}
   end
 
   defp get_image_url(episode) do

@@ -1,12 +1,11 @@
 defmodule SkepticBotWeb.HomeLive.Index do
   use SkepticBotWeb, :live_view
 
+  alias SkepticBot.PredictionHandler
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Rag
   alias SkepticBotWeb.HomeLive
-
-  require Logger
 
   @impl Phoenix.LiveView
   def render(assigns) do
@@ -46,7 +45,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
           </div>
         </section>
         <section class="flex flex-col gap-8 w-[93%] md:w-[70%] mx-auto">
-          <section class="text-6xl mx-auto montserrat-bold tracking-4 md:text-7xl 2xl:text-8xl">
+          <section class="text-6xl mx-auto montserrat-alternates-bold tracking-4 md:text-7xl 2xl:text-8xl">
             Skeptic.<span class="text-[#CD4631] montserrat-alternates-bold">bot</span>
           </section>
           <div class={[
@@ -61,10 +60,13 @@ defmodule SkepticBotWeb.HomeLive.Index do
             </section>
           </div>
 
-          <div class={[
-            "w-[80%] mx-auto",
-            !@loading && "hidden"
-          ]}>
+          <div
+            id="loading-elements"
+            class={[
+              "w-[80%] mx-auto",
+              !@loading && "hidden"
+            ]}
+          >
             <section class="text-center montserrat-alternates-semibold text-[#4D4D4D] mb-6">
               is almost done second guessing
             </section>
@@ -121,15 +123,15 @@ defmodule SkepticBotWeb.HomeLive.Index do
     send(self(), {:loading_state, true})
 
     start_async(socket, :prompt_results, fn ->
-      Rag.generate(query)
+      Rag.generate_embedding(query)
     end)
   end
 
   @impl Phoenix.LiveView
   def handle_async(:prompt_results, {:ok, prompt_results}, socket) do
     case prompt_results do
-      {:ok, {response, podcast_episodes, embedding}} ->
-        handle_prompt_results(response, podcast_episodes, embedding, socket)
+      {:ok, {podcast_episodes, embedding}} ->
+        handle_prompt_results(podcast_episodes, embedding, socket)
 
       {:error, :no_episodes_found} ->
         send(self(), {:loading_state, false})
@@ -159,28 +161,23 @@ defmodule SkepticBotWeb.HomeLive.Index do
   end
 
   defp handle_prompt_results(
-         response,
          podcast_episodes,
          embedding,
          %{assigns: %{query: query}} = socket
        ) do
-    with episode_details <- Prompts.get_episode_details(podcast_episodes),
-         {title, description} <- get_title_and_description(response),
-         question_attrs <- %{
-           description: description,
-           embedding: embedding,
-           episodes: episode_details,
-           query: query,
-           title: title
-         },
-         {:ok, question} <- Prompts.create_question(question_attrs) do
-      {:noreply, push_navigate(socket, to: "/questions/#{question.id}")}
-    else
-      {:error, reason} ->
-        Logger.error("Question creation failed. Reason: #{inspect(reason)}")
-        send(self(), {:loading_state, false})
-        {:noreply, put_flash(socket, :error, "There was an error processing your prompt")}
-    end
+    episode_details = Prompts.get_episode_details(podcast_episodes)
+
+    question_attrs = %{
+      embedding: embedding,
+      episodes: episode_details,
+      query: query
+    }
+
+    {:ok, question} = Prompts.create_question(question_attrs)
+
+    PredictionHandler.make_llm_request(podcast_episodes, question)
+
+    {:noreply, push_navigate(socket, to: ~p"/questions/#{question.id}")}
   end
 
   @impl Phoenix.LiveView
@@ -195,15 +192,5 @@ defmodule SkepticBotWeb.HomeLive.Index do
       |> to_form()
 
     assign(socket, :form, form)
-  end
-
-  defp get_title_and_description(response) do
-    case Jason.decode(response) do
-      {:ok, %{"description" => description, "title" => title}} ->
-        {title, description}
-
-      {:error, error} ->
-        {:error, error}
-    end
   end
 end

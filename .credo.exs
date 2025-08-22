@@ -210,7 +210,13 @@
           {Credo.Check.Refactor.FilterReject, []},
           {Credo.Check.Refactor.IoPuts, []},
           {Credo.Check.Refactor.MapMap, []},
-          {Credo.Check.Refactor.ModuleDependencies, max_deps: 20},
+          {Credo.Check.Refactor.ModuleDependencies,
+           max_deps: 20,
+           files: %{
+             excluded: [
+               "lib/skeptic_bot/application.ex"
+             ]
+           }},
           {Credo.Check.Refactor.NegatedIsNil, []},
           {Credo.Check.Refactor.PassAsyncInTestCases, []},
           {Credo.Check.Refactor.PipeChainStart, excluded_functions: ["from"]},

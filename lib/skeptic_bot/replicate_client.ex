@@ -12,9 +12,9 @@ defmodule SkepticBot.ReplicateClient do
   @callback get_type() :: String.t()
   @callback handle_output(any()) :: any()
 
-  @spec start_prediction(module(), String.t(), map(), timeout()) ::
+  @spec start_prediction(module(), atom(), String.t(), map(), timeout()) ::
           {:ok, any()} | {:error, String.t()}
-  def start_prediction(module, model, input, timeout \\ :timer.minutes(5)) do
+  def start_prediction(module, output_mode, model, input, timeout \\ :timer.minutes(5)) do
     replicate_config = Application.fetch_env!(:skeptic_bot, :replicate)
     api_token = Keyword.fetch!(replicate_config, :api_token)
     webhook_url = url(~p"/webhook/replicate")
@@ -30,12 +30,12 @@ defmodule SkepticBot.ReplicateClient do
              version: version,
              input: input,
              webhook: webhook_url,
-             webhook_events_filter: ["completed"]
+             webhook_events_filter: webhook_events_filter(output_mode)
            },
            headers: [{"Authorization", "Token #{api_token}"}]
          ) do
       %Req.Response{status: 201, body: %{"id" => prediction_id}} ->
-        wait_for_webhook(module, prediction_id, timeout)
+        wait_for_webhook(module, prediction_id, timeout, output_mode)
 
       %Req.Response{status: status, body: body} ->
         Logger.error(
@@ -46,7 +46,10 @@ defmodule SkepticBot.ReplicateClient do
     end
   end
 
-  defp wait_for_webhook(module, prediction_id, timeout) do
+  defp webhook_events_filter(:completed), do: ["completed"]
+  defp webhook_events_filter(:processing_and_completed), do: ["completed", "output"]
+
+  defp wait_for_webhook(module, prediction_id, timeout, :completed) do
     WebhookHandler.register_for_prediction(prediction_id, self())
 
     receive do
@@ -61,5 +64,11 @@ defmodule SkepticBot.ReplicateClient do
         WebhookHandler.unregister_prediction(prediction_id)
         {:error, "#{module.get_type()} timed out"}
     end
+  end
+
+  defp wait_for_webhook(_module, prediction_id, _timeout, :processing_and_completed) do
+    WebhookHandler.register_for_prediction(prediction_id, self())
+
+    {:ok, prediction_id}
   end
 end

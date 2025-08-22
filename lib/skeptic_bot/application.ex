@@ -21,6 +21,7 @@ defmodule SkepticBot.Application do
         parent: {Registry, keys: :unique, name: SkepticBot.PredictionRegistry},
         # Start to serve requests, typically the last entry
         parent: SkepticBotWeb.Endpoint,
+        parent: SkepticBot.PredictionHandler,
         parent: SkepticBot.WebhookHandler,
         parent: {FLAME.Pool, Application.fetch_env!(:skeptic_bot, :downloading_runner)},
         parent: {Oban, Application.fetch_env!(:skeptic_bot, Oban)}
