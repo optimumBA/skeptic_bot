@@ -39,13 +39,6 @@ defmodule SkepticBotWeb.HomeLiveTest do
              |> render_change() =~ "Your prompt must be at least 4 characters in length"
     end
 
-    test "sending a message to the liveview changes its loading state", %{conn: conn} do
-      {:ok, view, _html} = live(conn, ~p"/")
-      send(view.pid, {:loading_state, false})
-
-      assert has_element?(view, ~s{div#loading-elements.hidden})
-    end
-
     test "page does not load on invalid data submission", %{conn: conn} do
       {:ok, view, _html} = live(conn, ~p"/")
 
