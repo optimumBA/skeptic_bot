@@ -31,7 +31,10 @@ defmodule SkepticBot.PodcastsTest do
 
   describe "create_episode/1" do
     test "with valid data creates an episode" do
-      assert {:ok, %Episode{} = episode} = Podcasts.create_episode(@valid_episode_attrs)
+      podcast = podcast_fixture()
+      attrs = Map.put(@valid_episode_attrs, :podcast_id, podcast.id)
+
+      assert {:ok, %Episode{} = episode} = Podcasts.create_episode(attrs)
       assert episode.description == "Sample description"
       assert episode.title == "Test Episode"
       assert episode.external_id == "test-123"

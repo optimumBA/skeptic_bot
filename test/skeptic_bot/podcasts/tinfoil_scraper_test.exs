@@ -30,6 +30,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
     setup [:create_body]
 
     test "enqueues a downloading job if episode does not already exist", %{body: body} do
+      _podcast = podcast_fixture()
+
       refute Podcasts.episode_exists?(@external_id)
 
       expect(MockHttpClient, :make_request, fn _url ->
@@ -110,6 +112,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
     setup [:create_body]
 
     test "enqueues the episode if it finds it in the returned body", %{body: body} do
+      _podcast = podcast_fixture()
+
       expect(MockHttpClient, :make_request, fn _url ->
         {:ok,
          %Req.Response{

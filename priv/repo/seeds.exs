@@ -9,3 +9,8 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+alias SkepticBot.Podcasts
+
+[%{name: "Tin Foil Hat"}]
+|> Stream.reject(&Podcasts.get_podcast_by_name(&1.name))
+|> Enum.each(&Podcasts.create_podcast/1)
