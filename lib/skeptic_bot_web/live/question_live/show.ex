@@ -24,7 +24,10 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           <div class="text-[#1F1F1F] montserrat-alternates-semibold">Back to homepage</div>
         </section>
 
-        <section class="relative">
+        <section class={[
+          "relative",
+          !@title && "hidden"
+        ]}>
           <p class="text-[#000000] text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold 2sm:text-center">
             {@title}
           </p>
@@ -36,7 +39,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
       </div>
 
       <section class="px-5 max-w-[42rem] mx-auto mt-6 mb-10">
-        <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium">
+        <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium text-center">
           {@description}
         </p>
         <div
