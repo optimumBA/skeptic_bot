@@ -23,11 +23,6 @@ defmodule SkepticBot.PodcastsFixtures do
     Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end)
   end
 
-  @spec response_fixture :: response()
-  def response_fixture do
-    "{\"title\":\"American Ponzi schemes\",\"description\":\"Wake up now before it is too late\"}"
-  end
-
   @spec offset_embedding_fixture(embedding(), offset()) :: embedding()
   def offset_embedding_fixture(embedding, offset \\ @valid_l2_distance_offset) do
     List.update_at(embedding, -1, &(&1 - offset))
