@@ -133,5 +133,28 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       assert has_element?(view, ~s{div#loading-elements.hidden})
     end
+
+    test "disabling of the forward buttons depends on the browser width", %{
+      conn: conn,
+      question: question
+    } do
+      {:ok, view, _html} = live(conn, ~p"/questions/#{question.id}")
+
+      render_hook(view, "assign_batch_size", %{page_width: 1100})
+
+      refute has_element?(view, ~s{button#next-related-btn[disabled]})
+      render_click(view, :next_related_episodes)
+      assert has_element?(view, ~s{button#next-related-btn[disabled]})
+
+      {:ok, view_2, _html} = live(conn, ~p"/questions/#{question.id}")
+
+      render_hook(view_2, "assign_batch_size", %{page_width: 800})
+
+      refute has_element?(view_2, ~s{button#next-related-btn[disabled]})
+      render_click(view_2, :next_related_episodes)
+      refute has_element?(view_2, ~s{button#next-related-btn[disabled]})
+      render_click(view_2, :next_related_episodes)
+      assert has_element?(view_2, ~s{button#next-related-btn[disabled]})
+    end
   end
 end

@@ -15,15 +15,15 @@ defmodule SkepticBotWeb.HomeLive.Index do
       @loading && "bg-[#FFFFFF]"
     ]}>
       <div class="h-screen flex items-center relative">
-        <section>
+        <section class="pt-20 md:pt-0">
           <div class={[
-            "absolute top-[2%] left-0 w-[20%] 2xl:top-[3%] 4xl:w-[17%]",
+            "absolute top-[2%] left-0 w-[38%] xl:top-[1rem] xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[18%] xl:w-[14rem] z-30",
             @loading && "hidden"
           ]}>
             <img src={~p"/images/home/top_swirl.svg"} class="w-full h-full object-cover" alt="Swirl" />
           </div>
           <div class={[
-            "absolute bottom-[20%] left-[4%] w-[20%] xl:w-[21%] 2xl:w-[20%] 4xl:w-[17%]",
+            "absolute bottom-[16%] 2xs:bottom-[13%] sm:bottom-[10%] md:bottom-[11%] 2md:bottom-[8%] xl:bottom-auto xl:top-[12rem] left-[4%] xl:left-[2.8rem] w-[34%] xs:w-[30%] 2xs:w-[27%] md:w-[20%] xl:w-[15rem]",
             @loading && "hidden"
           ]}>
             <img
@@ -32,8 +32,9 @@ defmodule SkepticBotWeb.HomeLive.Index do
               alt="Illustration 1"
             />
           </div>
+
           <div class={[
-            "absolute bottom-[10%] right-[1.3rem] w-[10%]",
+            "absolute bottom-[8%] 2xs:bottom-[6%] md:bottom-[9%] right-[1.3rem] w-[24%] xs:w-[18%] 2xs:w-[18%] md:w-[10%]",
             @loading && "hidden"
           ]}>
             <img
@@ -43,19 +44,18 @@ defmodule SkepticBotWeb.HomeLive.Index do
             />
           </div>
         </section>
-
-        <section class="flex flex-col gap-8 w-[70%] mx-auto">
-          <section class="text-7xl mx-auto montserrat-semibold tracking-4 2xl:text-8xl">
-            Skeptic.<span class="text-[#CD4631] montserrat-alternates-semibold">bot</span>
+        <section class="flex flex-col gap-8 w-[93%] md:w-[70%] mx-auto">
+          <section class="text-6xl mx-auto montserrat-alternates-bold tracking-4 md:text-7xl 2xl:text-8xl">
+            Skeptic.<span class="text-[#CD4631] montserrat-alternates-bold">bot</span>
           </section>
           <div class={[
             @loading && "hidden"
           ]}>
-            <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D]">
+            <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D] mb-10">
               Questions everything
             </section>
 
-            <section class="w-[60%] mx-auto">
+            <section class="w-full mx-auto xs:w-[95%] 2xs:w-[80%] sm:w-[80%] md:w-[96%] lg:w-[80%] xl:w-[60%]">
               <HomeLive.Components.form_component form={@form} />
             </section>
           </div>

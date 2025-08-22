@@ -64,6 +64,10 @@ defmodule SkepticBot.PredictionHandler do
     {:noreply, state}
   end
 
+  def handle_info({:prediction_failed, _prediction_id, _output}, state) do
+    {:noreply, state}
+  end
+
   def handle_info({:prediction_completed, prediction_id, output}, state) do
     question = state[prediction_id]
     [title, description] = get_title_and_description(output)
