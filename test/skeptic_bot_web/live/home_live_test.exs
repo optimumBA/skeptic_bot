@@ -72,8 +72,6 @@ defmodule SkepticBotWeb.HomeLiveTest do
       |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
       |> render_submit()
 
-      assert has_element?(view, ~s{div#loading-elements})
-
       {path, _flash} = assert_redirect(view)
       assert path =~ ~r|/questions/|
     end
@@ -95,6 +93,8 @@ defmodule SkepticBotWeb.HomeLiveTest do
       |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
       |> render_submit()
 
+      assert has_element?(view, ~s{div#loading-elements:not(.hidden)})
+
       with_retries(
         fn ->
           assert render(view) =~
@@ -102,6 +102,8 @@ defmodule SkepticBotWeb.HomeLiveTest do
         end,
         2
       )
+
+      assert has_element?(view, ~s{div#loading-elements.hidden})
     end
 
     test "renders an error message if the RAG process fails", %{
