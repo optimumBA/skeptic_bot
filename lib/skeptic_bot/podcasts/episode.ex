@@ -38,11 +38,4 @@ defmodule SkepticBot.Podcasts.Episode do
     |> validate_required([:episode_length, :external_id, :podcast_id, :thumbnail, :title])
     |> unique_constraint(:external_id)
   end
-
-  @spec podcast_changeset(t(), map()) :: Ecto.Changeset.t()
-  def podcast_changeset(episode, attrs) do
-    episode
-    |> cast(attrs, [:podcast_id])
-    |> validate_required([:podcast_id])
-  end
 end

@@ -155,13 +155,6 @@ defmodule SkepticBot.Podcasts do
     |> Repo.update()
   end
 
-  @spec update_episode_podcast_id(episode(), attrs()) :: {:ok, episode()} | {:error, changeset()}
-  def update_episode_podcast_id(%Episode{} = episode, attrs) do
-    episode
-    |> Episode.podcast_changeset(attrs)
-    |> Repo.update()
-  end
-
   @doc """
   Updates a podcast_episode_transcription.
 

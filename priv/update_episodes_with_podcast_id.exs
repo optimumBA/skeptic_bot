@@ -10,11 +10,7 @@ Logger.debug("Updating all episodes with the podcast_id of Tin Foil Hat",
 
 podcast = Podcasts.get_podcast_by_name("Tin Foil Hat")
 
-Episode
-|> Repo.all()
-|> Enum.each(fn episode ->
-  Podcasts.update_episode_podcast_id(episode, %{podcast_id: podcast.id})
-end)
+Repo.update_all(Episode, set: [podcast_id: podcast.id])
 
 Logger.debug("Completed updating all episodes with the podcast_id of Tin Foil Hat",
   ansi_color: :green
