@@ -29,6 +29,8 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
     test "enqueues a downloading job if episode does not already exists", %{
       channel_data: channel_data
     } do
+      _podcast = podcast_fixture(name: @podcast)
+
       refute Podcasts.episode_exists?(@external_id)
 
       expect(MockChannelClient, :get_channel_data, fn _channel ->
@@ -47,6 +49,8 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
     end
 
     test "enqueues a downloading job (Rokfin) if episode does not already exist" do
+      _podcast = podcast_fixture(name: @podcast)
+
       channel_data = rokfin_channel_fixture()
       refute Podcasts.episode_exists?(@external_id)
 
@@ -68,6 +72,8 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
     test "does not enqueue a downloading job if episode already exists", %{
       channel_data: channel_data
     } do
+      _podcast = podcast_fixture(name: @podcast)
+
       _episode = episode_fixture(external_id: @external_id)
 
       expect(MockChannelClient, :get_channel_data, fn _channel ->

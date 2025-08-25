@@ -20,10 +20,12 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   def scrape(channel \\ @rumble_channel) do
     case ChannelClient.get_channel_data(channel) do
       {:ok, result} ->
+        podcast = Podcasts.get_podcast_by_name(@podcast)
+
         result
         |> format_channel_data()
         |> Enum.take(-2)
-        |> Enum.each(&maybe_download_episode(&1, channel))
+        |> Enum.each(&maybe_download_episode(&1, channel, podcast.id))
 
       {:error, reason} ->
         Logger.error("Unable to get channel data. Reason : #{reason}")
@@ -42,7 +44,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     |> Enum.drop(-1)
   end
 
-  defp maybe_download_episode({title, duration, thumbnail, webpage_url}, channel) do
+  defp maybe_download_episode({title, duration, thumbnail, webpage_url}, channel, podcast_id) do
     external_id = get_external_id(webpage_url, channel)
 
     unless Podcasts.episode_exists?(external_id) do
@@ -50,6 +52,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
         Podcasts.create_episode(%{
           "episode_length" => get_video_length(duration, channel),
           "external_id" => external_id,
+          "podcast_id" => podcast_id,
           "thumbnail" => thumbnail,
           "title" => title
         })
