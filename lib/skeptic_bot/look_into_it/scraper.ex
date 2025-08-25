@@ -24,7 +24,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
 
         result
         |> format_channel_data()
-        |> Enum.take(-2)
+        |> Enum.take(-1)
         |> Enum.each(&maybe_download_episode(&1, channel, podcast.id))
 
       {:error, reason} ->

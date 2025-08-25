@@ -20,6 +20,6 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
   def perform(_job) do
     Logger.info("Starting scheduled podcast scraping")
     # TinfoilScraper.scrape()
-    Scraper.scrape()
+    Scraper.scrape("https://rokfin.com/eddiebravo")
   end
 end
