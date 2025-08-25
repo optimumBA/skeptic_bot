@@ -32,6 +32,6 @@ defmodule SkepticBot.Podcasts.ReplicateTranscriber do
       diarise_audio: false
     }
 
-    ReplicateClient.start_prediction(__MODULE__, @model, input, :timer.minutes(30))
+    ReplicateClient.start_prediction(__MODULE__, :completed, @model, input, :timer.minutes(30))
   end
 end

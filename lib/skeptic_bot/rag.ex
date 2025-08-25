@@ -10,10 +10,10 @@ defmodule SkepticBot.Rag do
 
   @type embedding :: [float()]
 
-  @spec generate(String.t()) ::
-          {:ok, {String.t(), list(), embedding()}}
+  @spec generate_embedding(String.t()) ::
+          {:ok, {list(), embedding()}}
           | {:error, any()}
-  def generate(query) do
+  def generate_embedding(query) do
     case Rag.Embedder.generate("query: " <> query) do
       {:ok, [embedding]} ->
         case Rag.Retrieval.retrieve(embedding) do
@@ -21,7 +21,7 @@ defmodule SkepticBot.Rag do
             {:error, :no_episodes_found}
 
           context ->
-            predict_query(context, query, embedding)
+            {:ok, {context, embedding}}
         end
 
       {:error, reason} ->
@@ -29,10 +29,13 @@ defmodule SkepticBot.Rag do
     end
   end
 
-  defp predict_query(context, query, embedding) do
+  @spec predict_query(list(), String.t()) ::
+          {:ok, String.t()}
+          | {:error, String.t()}
+  def predict_query(context, query) do
     with prompt <- format_prompt(context, query),
          {:ok, response} <- Rag.Generator.predict(prompt) do
-      {:ok, {response, context, embedding}}
+      {:ok, response}
     else
       {:error, reason} ->
         {:error, reason}
@@ -55,10 +58,11 @@ defmodule SkepticBot.Rag do
       Kindly urge the reader to listen to the podcast episodes to get the full story.
       The title (MUST be one statement) MUST clearly explain what the entire response is about.
       Your response MUST be in the following format with the title coming first with its value
-      then the description coming second with its corresponding value. Here are some examples:
+      then the description coming second with its corresponding value. They should be separated by the "$&$" signs.
+      Here are some examples:
 
-      Example 1 : "{\"title\":\"Global Controls\",\"description\":\"The world is controlled by elite individuals\"}"
-      Example 2 : "{\"title\":\"American Ponzi schemes\",\"description\":\"Wake up now before it is too late\"}"
+      Example 1 : "Global Controls$&$The world is controlled by elite individuals"
+      Example 2 : "American Ponzi schemes$&$Wake up now before it is too late"
       """
 
     [

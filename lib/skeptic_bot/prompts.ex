@@ -34,6 +34,14 @@ defmodule SkepticBot.Prompts do
     |> Repo.insert()
   end
 
+  @spec update_question(question(), attrs()) ::
+          {:ok, question()} | {:error, Ecto.Changeset.t()}
+  def update_question(question, attrs \\ %{}) do
+    question
+    |> UserQuestion.changeset(attrs)
+    |> Repo.update()
+  end
+
   @spec change_question_query(question(), attrs()) :: Ecto.Changeset.t()
   def change_question_query(%UserQuestion{} = question, attrs \\ %{}) do
     UserQuestion.query_changeset(question, attrs)
