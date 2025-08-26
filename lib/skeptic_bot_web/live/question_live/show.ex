@@ -61,7 +61,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           Related Podcasts
         </section>
         <section class="relative pb-10">
-          <section class="ml-5 pt-12 relative mb-12 sm:overflow-hidden">
+          <section class="ml-5 pt-12 relative mb-12 sm:overflow-hidden pr-2">
             <div
               class="flex gap-4 mobile-scroll-parent"
               id="related-episodes-carousel"
@@ -115,7 +115,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         </section>
 
         <section class="relative pb-16">
-          <section class="ml-5 pt-12 relative mb-12 sm:overflow-hidden">
+          <section class="ml-5 pt-12 relative mb-12 sm:overflow-hidden pr-2">
             <div
               class="flex gap-4 mobile-scroll-parent"
               id="other-episodes-carousel"
