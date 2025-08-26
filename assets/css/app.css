@@ -84,7 +84,7 @@
   }
 
   .mobile-scroll-parent::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari, Opera */
+    display: none; /* Chrome, Safari, Opera */
   }
 }
 
@@ -93,5 +93,3 @@
     transition: transform 300ms ease-in-out;
   }
 }
-
-
