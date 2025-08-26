@@ -10,6 +10,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   require Logger
 
   @podcast "Look Into It"
+  @candace_channel "https://www.youtube.com/channel/UCL0u5uz7KZ9q-pe-VC8TY-w"
   @rokfin_channel "https://rokfin.com/eddiebravo"
   @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
 
@@ -17,14 +18,16 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   @type reason :: String.t()
 
   @spec scrape(channel()) :: :ok | {:error, reason()}
-  def scrape(channel \\ @rumble_channel) do
+  def scrape(channel \\ @candace_channel) do
     case ChannelClient.get_channel_data(channel) do
       {:ok, result} ->
-        podcast = Podcasts.get_podcast_by_name(@podcast)
+        # podcast = Podcasts.get_podcast_by_name(@podcast)
 
-        result
-        |> format_channel_data()
-        |> Enum.each(&maybe_download_episode(&1, channel, podcast.id))
+        data = format_channel_data(result)
+
+        File.write!("/Users/deankinyua/work/elixirprof/skeptic_bot/episodes.txt", data)
+
+      # |> Enum.each(&maybe_download_episode(&1, channel, podcast.id))
 
       {:error, reason} ->
         Logger.error("Unable to get channel data. Reason : #{reason}")
