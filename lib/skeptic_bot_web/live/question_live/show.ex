@@ -115,9 +115,9 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         </section>
 
         <section class="relative pb-16">
-          <section class="ml-5 overflow-hidden pt-12 relative mb-12">
+          <section class="ml-5 pt-12 relative mb-12 sm:overflow-hidden">
             <div
-              class="flex gap-4 transition-transform duration-300 ease-in-out"
+              class="flex gap-4 mobile-scroll-parent"
               id="other-episodes-carousel"
               style={"transform: translateX(-#{@other_episodes_index * 20.6875}rem);"}
             >
@@ -138,7 +138,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               <% end %>
             </div>
           </section>
-          <div class="ml-5 flex gap-5">
+          <div class="hidden sm:flex ml-5 gap-5">
             <button
               phx-click="prev_other_episodes"
               class="disabled:opacity-50"
