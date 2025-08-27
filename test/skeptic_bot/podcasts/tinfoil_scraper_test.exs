@@ -11,6 +11,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
   alias SkepticBot.Podcasts.TinfoilScraper
 
   @external_id "a909da70-13b7-4717-b1c0-c2d001521dc3"
+  @podcast "Tin Foil Hat"
+  @video_url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/a909da70-13b7-4717-b1c0-c2d001521dc3-0-fragmented.mp4"
 
   setup :verify_on_exit!
 
@@ -52,7 +54,10 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
       assert_enqueued(
         worker: DownloadingWorker,
-        args: %{external_id: @external_id}
+        args: %{
+          podcast: @podcast,
+          video_url: @video_url
+        }
       )
     end
 
@@ -77,7 +82,10 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
       refute_enqueued(
         worker: DownloadingWorker,
-        args: %{external_id: @external_id}
+        args: %{
+          podcast: @podcast,
+          video_url: @video_url
+        }
       )
     end
 
@@ -128,7 +136,10 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
       assert_enqueued(
         worker: DownloadingWorker,
-        args: %{external_id: @external_id}
+        args: %{
+          podcast: @podcast,
+          video_url: @video_url
+        }
       )
     end
 
@@ -148,7 +159,10 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
       refute_enqueued(
         worker: DownloadingWorker,
-        args: %{external_id: @external_id}
+        args: %{
+          podcast: @podcast,
+          video_url: @video_url
+        }
       )
     end
 
@@ -161,7 +175,10 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
       refute_enqueued(
         worker: DownloadingWorker,
-        args: %{external_id: @external_id}
+        args: %{
+          podcast: @podcast,
+          video_url: @video_url
+        }
       )
     end
 
@@ -190,7 +207,10 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
       refute_enqueued(
         worker: DownloadingWorker,
-        args: %{external_id: @external_id}
+        args: %{
+          podcast: @podcast,
+          video_url: @video_url
+        }
       )
     end
   end
