@@ -10,6 +10,8 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   require Logger
 
   @podcast "Look Into It"
+  @candace_podcast "Candace Owens"
+  @candace_channel "https://www.youtube.com/@RealCandaceO"
   @rokfin_channel "https://rokfin.com/eddiebravo"
   @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
 
@@ -32,12 +34,19 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     end
   end
 
+  @spec scrape_candace_episodes :: :ok
+  def scrape_candace_episodes do
+    podcast = Podcasts.get_podcast_by_name(@candace_podcast)
+    episodes = get_candace_episodes()
+    Enum.each(episodes, &maybe_download_episode(&1, @candace_channel, podcast.id))
+  end
+
   defp format_channel_data(result) do
     result
     |> String.split("\n")
     |> Enum.map(fn x ->
       x
-      |> String.split("$$")
+      |> String.split("~~")
       |> List.to_tuple()
     end)
     |> Enum.drop(-1)
@@ -64,6 +73,10 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     end
   end
 
+  defp get_video_length(duration, @candace_channel) do
+    String.to_integer(duration)
+  end
+
   defp get_video_length(duration, @rokfin_channel) do
     duration
     |> String.to_float()
@@ -72,6 +85,12 @@ defmodule SkepticBot.LookIntoIt.Scraper do
 
   defp get_video_length(duration, @rumble_channel) do
     String.to_integer(duration)
+  end
+
+  defp get_external_id(webpage_url, @candace_channel) do
+    <<"https://www.youtube.com/watch?", webpage_id::binary>> = webpage_url
+
+    webpage_id
   end
 
   defp get_external_id(webpage_url, @rokfin_channel) do
@@ -86,11 +105,10 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     webpage_id
   end
 
-  defp check_data do
-    "/Users/deankinyua/candace.txt"
+  defp get_candace_episodes do
+    [:code.priv_dir(:skeptic_bot), "/dumps/candace_owens.txt"]
+    |> Path.join()
     |> File.read!()
     |> format_channel_data()
-    # |> Enum.count()
-    |> Enum.take(-40)
   end
 end
