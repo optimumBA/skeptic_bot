@@ -25,7 +25,9 @@ defmodule SkepticBot.LookIntoIt.Scraper do
 
         data = format_channel_data(result)
 
-        File.write!("/Users/deankinyua/work/elixirprof/skeptic_bot/episodes.txt", data)
+        dbg(data)
+
+        File.write!("/Users/deankinyua/work/elixirprof/skeptic_bot/episodes.txt", result)
 
       # |> Enum.each(&maybe_download_episode(&1, channel, podcast.id))
 
@@ -40,7 +42,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     |> String.split("\n")
     |> Enum.map(fn x ->
       x
-      |> String.split("$$")
+      |> String.split("~~")
       |> List.to_tuple()
     end)
     |> Enum.drop(-1)
@@ -87,5 +89,14 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     <<"https://rumble.com/", webpage_id::binary>> = webpage_url
 
     webpage_id
+  end
+
+  def check_data do
+    path = "/Users/deankinyua/candace.txt"
+
+    File.read!(path)
+    |> format_channel_data()
+    # |> Enum.count()
+    |> Enum.take(-40)
   end
 end

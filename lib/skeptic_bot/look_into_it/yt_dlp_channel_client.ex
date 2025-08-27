@@ -15,8 +15,8 @@ defmodule SkepticBot.LookIntoIt.YtDlpChannelClient do
            [
              "--dateafter",
              "20240609",
-             "--cookies",
-             "/Users/deankinyua/work/elixirprof/skeptic_bot/lifecookies.txt",
+             "--cookies-from-browser",
+             "firefox",
              "--print",
              "%(title)s$$%(duration)s$$%(thumbnail)s$$%(webpage_url)s",
              channel
