@@ -10,7 +10,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     queue: :downloading,
     unique: [period: :infinity, states: Oban.Job.states()]
 
-  # alias SkepticBot.DownloadingRunner
+  alias SkepticBot.DownloadingRunner
   alias SkepticBot.Podcasts.Downloader
   alias SkepticBot.Podcasts.Transcoder
   alias SkepticBot.Podcasts.TranscribingWorker

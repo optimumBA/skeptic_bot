@@ -86,10 +86,9 @@ defmodule SkepticBot.LookIntoIt.Scraper do
     webpage_id
   end
 
-  def check_data do
-    path = "/Users/deankinyua/candace.txt"
-
-    File.read!(path)
+  defp check_data do
+    "/Users/deankinyua/candace.txt"
+    |> File.read!()
     |> format_channel_data()
     # |> Enum.count()
     |> Enum.take(-40)

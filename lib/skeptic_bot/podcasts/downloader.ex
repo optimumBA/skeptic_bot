@@ -12,7 +12,6 @@ defmodule SkepticBot.Podcasts.Downloader do
   @callback download(url(), path()) :: {:ok, path()} | {:error, reason()}
 
   @spec download(url(), path(), downloader_type()) :: {:ok, path()} | {:error, reason()}
-
   def download(url, path, downloader_type), do: impl(downloader_type).download(url, path)
 
   defp impl(:req), do: Application.get_env(:skeptic_bot, :downloader, ReqDownloader)
