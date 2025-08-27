@@ -1,6 +1,6 @@
 defmodule SkepticBot.LookIntoIt.Scraper do
   @moduledoc """
-  Scrapes Eddie Bravo's episodes from Rofkin and Rumble then downloads them
+  Scrapes Eddie Bravo's episodes from Rokfin and Rumble then downloads them
   """
 
   alias SkepticBot.LookIntoIt.ChannelClient
