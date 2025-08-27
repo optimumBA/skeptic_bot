@@ -47,7 +47,6 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
         timeout: 4_400_000
       )
 
-    # process(id, video_url, podcast)s
     case result do
       {:ok, audio_url} -> {:ok, audio_url}
       {:error, reason} -> {:error, reason}
