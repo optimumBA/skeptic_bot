@@ -76,6 +76,8 @@
 .mobile-scroll-parent {
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .mobile-scroll-child {
