@@ -40,12 +40,12 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   end
 
   defp process_with_flame(id, video_url, podcast) do
-    result = process(id, video_url, podcast)
-    # FLAME.call(
-    #   DownloadingRunner,
-    #   fn -> process(id, video_url, podcast) end,
-    #   timeout: 4_400_000
-    # )
+    result =
+      FLAME.call(
+        DownloadingRunner,
+        fn -> process(id, video_url, podcast) end,
+        timeout: 4_400_000
+      )
 
     case result do
       {:ok, audio_url} -> {:ok, audio_url}
