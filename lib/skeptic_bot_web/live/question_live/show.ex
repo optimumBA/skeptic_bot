@@ -61,7 +61,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           Related Podcasts
         </section>
         <section class="relative pb-10">
-          <section class="ml-5 pt-12 relative mb-12 sm:overflow-hidden pr-2">
+          <section class="ml-5 pt-12 relative mb-12 pr-2">
             <div
               class="flex gap-4 mobile-scroll-parent"
               id="related-episodes-carousel"
@@ -84,7 +84,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               <% end %>
             </div>
           </section>
-          <div class="hidden sm:flex ml-5 gap-5">
+          <div class="hidden ml-5 gap-5">
             <button
               phx-click="prev_related_episodes"
               class="disabled:opacity-50"
@@ -115,7 +115,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         </section>
 
         <section class="relative pb-16">
-          <section class="ml-5 pt-12 relative mb-12 sm:overflow-hidden pr-2">
+          <section class="ml-5 pt-12 relative mb-12 pr-2">
             <div
               class="flex gap-4 mobile-scroll-parent"
               id="other-episodes-carousel"
@@ -138,7 +138,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               <% end %>
             </div>
           </section>
-          <div class="hidden sm:flex ml-5 gap-5">
+          <div class="hidden ml-5 gap-5">
             <button
               phx-click="prev_other_episodes"
               class="disabled:opacity-50"
