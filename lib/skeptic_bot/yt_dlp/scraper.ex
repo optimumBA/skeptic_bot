@@ -23,7 +23,7 @@ defmodule SkepticBot.YtDlp.Scraper do
 
   def scrape(channel) when channel in [@candace_channel] do
     podcast = Podcasts.get_podcast_by_name(@podcast_candace)
-    episodes = Enum.take(get_candace_episodes(), 2)
+    episodes = Enum.take(get_candace_episodes(), -2)
     Enum.each(episodes, &maybe_download_episode(&1, @candace_channel, podcast))
   end
 
