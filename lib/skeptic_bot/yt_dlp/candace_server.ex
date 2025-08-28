@@ -41,7 +41,7 @@ defmodule SkepticBot.YtDlp.CandaceServer do
   def handle_info({port, {:data, msg}}, state) do
     episode = process_message(msg)
     episodes = [episode | state.episodes]
-    new_state = Map.put(state, :candace_data, episodes)
+    new_state = Map.put(state, :episodes, episodes)
     process_episodes(port, episodes, episode)
     {:noreply, new_state}
   end
