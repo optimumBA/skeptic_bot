@@ -1,14 +1,14 @@
-defmodule SkepticBot.LookIntoIt.ScraperTest do
+defmodule SkepticBot.YtDlp.ScraperTest do
   use SkepticBot.DataCase, async: true
 
   import Mox
   import SkepticBot.PodcastsFixtures
   import SkepticBot.ScrapingFixtures
 
-  alias SkepticBot.LookIntoIt.MockChannelClient
-  alias SkepticBot.LookIntoIt.Scraper
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
+  alias SkepticBot.YtDlp.MockChannelClient
+  alias SkepticBot.YtDlp.Scraper
 
   @external_id "177589"
   @podcast "Look Into It"

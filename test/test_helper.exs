@@ -1,5 +1,5 @@
-Mox.defmock(SkepticBot.LookIntoIt.MockChannelClient, for: SkepticBot.LookIntoIt.ChannelClient)
-Application.put_env(:skeptic_bot, :channel_client, SkepticBot.LookIntoIt.MockChannelClient)
+Mox.defmock(SkepticBot.YtDlp.MockChannelClient, for: SkepticBot.YtDlp.ChannelClient)
+Application.put_env(:skeptic_bot, :channel_client, SkepticBot.YtDlp.MockChannelClient)
 
 Mox.defmock(SkepticBot.Podcasts.MockDownloader, for: SkepticBot.Podcasts.Downloader)
 Application.put_env(:skeptic_bot, :downloader, SkepticBot.Podcasts.MockDownloader)

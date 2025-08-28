@@ -8,8 +8,8 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
     max_attempts: 3,
     queue: :scraping
 
-  alias SkepticBot.LookIntoIt.Scraper
   alias SkepticBot.Podcasts.TinfoilScraper
+  alias SkepticBot.YtDlp.Scraper
 
   require Logger
 

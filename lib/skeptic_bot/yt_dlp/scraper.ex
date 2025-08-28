@@ -1,16 +1,16 @@
-defmodule SkepticBot.LookIntoIt.Scraper do
+defmodule SkepticBot.YtDlp.Scraper do
   @moduledoc """
   Scrapes Eddie Bravo's episodes from Rokfin and Rumble then downloads them
   """
 
-  alias SkepticBot.LookIntoIt.ChannelClient
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
+  alias SkepticBot.YtDlp.ChannelClient
 
   require Logger
 
-  @podcast "Look Into It"
-  @candace_podcast "Candace Owens"
+  @podcast_lookintoit "Look Into It"
+  @podcast_candace "Candace"
   @candace_channel "https://www.youtube.com/@RealCandaceO"
   @rokfin_channel "https://rokfin.com/eddiebravo"
   @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
@@ -19,10 +19,18 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   @type reason :: String.t()
 
   @spec scrape(channel()) :: :ok | {:error, reason()}
-  def scrape(channel \\ @rumble_channel) do
+  def scrape(channel \\ @rumble_channel)
+
+  def scrape(channel) when channel in [@candace_channel] do
+    podcast = Podcasts.get_podcast_by_name(@podcast_candace)
+    episodes = get_candace_episodes()
+    Enum.each(episodes, &maybe_download_episode(&1, @candace_channel, podcast.id))
+  end
+
+  def scrape(channel) do
     case ChannelClient.get_channel_data(channel) do
       {:ok, result} ->
-        podcast = Podcasts.get_podcast_by_name(@podcast)
+        podcast = Podcasts.get_podcast_by_name(@podcast_lookintoit)
 
         result
         |> format_channel_data()
@@ -32,13 +40,6 @@ defmodule SkepticBot.LookIntoIt.Scraper do
         Logger.error("Unable to get channel data. Reason : #{reason}")
         {:error, reason}
     end
-  end
-
-  @spec scrape_candace_episodes :: :ok
-  def scrape_candace_episodes do
-    podcast = Podcasts.get_podcast_by_name(@candace_podcast)
-    episodes = get_candace_episodes()
-    Enum.each(episodes, &maybe_download_episode(&1, @candace_channel, podcast.id))
   end
 
   defp format_channel_data(result) do
@@ -67,7 +68,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
 
       DownloadingWorker.enqueue(%{
         "id" => episode.id,
-        "podcast" => @podcast,
+        "podcast" => @podcast_lookintoit,
         "video_url" => webpage_url
       })
     end

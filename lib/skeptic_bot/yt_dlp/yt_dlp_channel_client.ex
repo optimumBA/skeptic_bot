@@ -1,8 +1,8 @@
-defmodule SkepticBot.LookIntoIt.YtDlpChannelClient do
+defmodule SkepticBot.YtDlp.YtDlpChannelClient do
   @moduledoc """
   Getting channel data using yt-dlp
   """
-  alias SkepticBot.LookIntoIt.ChannelClient
+  alias SkepticBot.YtDlp.ChannelClient
 
   require Logger
 

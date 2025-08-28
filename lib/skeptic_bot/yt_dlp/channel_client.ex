@@ -1,7 +1,7 @@
-defmodule SkepticBot.LookIntoIt.ChannelClient do
+defmodule SkepticBot.YtDlp.ChannelClient do
   @moduledoc false
 
-  alias SkepticBot.LookIntoIt.YtDlpChannelClient
+  alias SkepticBot.YtDlp.YtDlpChannelClient
 
   @type channel :: String.t()
   @type reason :: String.t()
