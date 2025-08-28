@@ -12,6 +12,7 @@ defmodule SkepticBot.YtDlp.Scraper do
   @podcast_lookintoit "Look Into It"
   @podcast_candace "Candace"
   @candace_channel "https://www.youtube.com/@RealCandaceO"
+  # @candace_channel "PLPW2eH9z9CUvT4M9RjOVBOFic8CBEZAY-"
   @rokfin_channel "https://rokfin.com/eddiebravo"
   @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
 
@@ -19,15 +20,7 @@ defmodule SkepticBot.YtDlp.Scraper do
   @type reason :: String.t()
 
   @spec scrape(channel()) :: :ok | {:error, reason()}
-  def scrape(channel \\ @rumble_channel)
-
-  def scrape(channel) when channel in [@candace_channel] do
-    podcast = Podcasts.get_podcast_by_name(@podcast_candace)
-    episodes = Enum.take(get_candace_episodes(), -2)
-    Enum.each(episodes, &maybe_download_episode(&1, @candace_channel, podcast))
-  end
-
-  def scrape(channel) do
+  def scrape(channel \\ @rumble_channel) do
     case ChannelClient.get_channel_data(channel) do
       {:ok, result} ->
         podcast = Podcasts.get_podcast_by_name(@podcast_lookintoit)
@@ -40,6 +33,11 @@ defmodule SkepticBot.YtDlp.Scraper do
         Logger.error("Unable to get channel data. Reason : #{reason}")
         {:error, reason}
     end
+  end
+
+  def process_candace_episodes(episodes) do
+    podcast = Podcasts.get_podcast_by_name(@podcast_candace)
+    Enum.each(episodes, &maybe_download_episode(&1, @candace_channel, podcast))
   end
 
   defp format_channel_data(result) do
@@ -104,12 +102,5 @@ defmodule SkepticBot.YtDlp.Scraper do
     <<"https://rumble.com/", webpage_id::binary>> = webpage_url
 
     webpage_id
-  end
-
-  defp get_candace_episodes do
-    [:code.priv_dir(:skeptic_bot), "/dumps/candace_owens.txt"]
-    |> Path.join()
-    |> File.read!()
-    |> format_channel_data()
   end
 end

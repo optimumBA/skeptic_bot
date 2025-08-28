@@ -13,10 +13,6 @@ defmodule SkepticBot.YtDlp.YtDlpChannelClient do
     case System.cmd(
            "yt-dlp",
            [
-             "--dateafter",
-             "20240609",
-             "--cookies",
-             "/Users/deankinyua/Downloads/youtube_good_cookies.txt",
              "--print",
              "%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s",
              channel
