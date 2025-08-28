@@ -23,8 +23,8 @@ defmodule SkepticBot.YtDlp.Scraper do
 
   def scrape(channel) when channel in [@candace_channel] do
     podcast = Podcasts.get_podcast_by_name(@podcast_candace)
-    episodes = get_candace_episodes()
-    Enum.each(episodes, &maybe_download_episode(&1, @candace_channel, podcast.id))
+    episodes = Enum.take(get_candace_episodes(), 2)
+    Enum.each(episodes, &maybe_download_episode(&1, @candace_channel, podcast))
   end
 
   def scrape(channel) do
@@ -34,7 +34,7 @@ defmodule SkepticBot.YtDlp.Scraper do
 
         result
         |> format_channel_data()
-        |> Enum.each(&maybe_download_episode(&1, channel, podcast.id))
+        |> Enum.each(&maybe_download_episode(&1, channel, podcast))
 
       {:error, reason} ->
         Logger.error("Unable to get channel data. Reason : #{reason}")
@@ -53,7 +53,7 @@ defmodule SkepticBot.YtDlp.Scraper do
     |> Enum.drop(-1)
   end
 
-  defp maybe_download_episode({title, duration, thumbnail, webpage_url}, channel, podcast_id) do
+  defp maybe_download_episode({title, duration, thumbnail, webpage_url}, channel, podcast) do
     external_id = get_external_id(webpage_url, channel)
 
     unless Podcasts.episode_exists?(external_id) do
@@ -61,14 +61,14 @@ defmodule SkepticBot.YtDlp.Scraper do
         Podcasts.create_episode(%{
           "episode_length" => get_video_length(duration, channel),
           "external_id" => external_id,
-          "podcast_id" => podcast_id,
+          "podcast_id" => podcast.id,
           "thumbnail" => thumbnail,
           "title" => title
         })
 
       DownloadingWorker.enqueue(%{
         "id" => episode.id,
-        "podcast" => @podcast_lookintoit,
+        "podcast" => podcast.name,
         "video_url" => webpage_url
       })
     end
