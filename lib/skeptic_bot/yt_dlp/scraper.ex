@@ -35,6 +35,7 @@ defmodule SkepticBot.YtDlp.Scraper do
     end
   end
 
+  @spec process_candace_episodes(list()) :: :ok
   def process_candace_episodes(episodes) do
     podcast = Podcasts.get_podcast_by_name(@podcast_candace)
     Enum.each(episodes, &maybe_download_episode(&1, @candace_channel, podcast))

@@ -1,4 +1,8 @@
 defmodule SkepticBot.YtDlp.CandaceServer do
+  @moduledoc """
+  Uses ports to make request to fetch candace episodes
+  """
+
   use GenServer
 
   alias SkepticBot.YtDlp.Scraper
@@ -13,6 +17,7 @@ defmodule SkepticBot.YtDlp.CandaceServer do
     {:ok, %{}}
   end
 
+  @spec request_episodes :: :ok
   def request_episodes do
     cmd =
       "yt-dlp --dateafter 20240609 --cookies #{get_cookie_file()} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" https://www.youtube.com/@RealCandaceO"
@@ -42,8 +47,7 @@ defmodule SkepticBot.YtDlp.CandaceServer do
   end
 
   @impl GenServer
-  def handle_info({port, {:exit_status, status}}, state) do
-    IO.puts("Port exited with status: #{status}")
+  def handle_info({port, {:exit_status, _status}}, state) do
     Port.close(port)
     {:noreply, Map.delete(state, :port)}
   end
@@ -55,7 +59,7 @@ defmodule SkepticBot.YtDlp.CandaceServer do
   defp process_episodes(port, episodes, {_title, _duration, _thumbnail, webpage_url})
        when webpage_url == "https://www.youtube.com/watch?v=qQBuDkrGglM" do
     Port.close(port)
-    Scraper.process_candace_episodes(Enum.take(episodes, 4))
+    Scraper.process_candace_episodes(episodes)
   end
 
   defp process_episodes(_port, _episodes, _episode_details), do: :ok
