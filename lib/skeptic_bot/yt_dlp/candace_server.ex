@@ -17,10 +17,14 @@ defmodule SkepticBot.YtDlp.CandaceServer do
     {:ok, %{}}
   end
 
+  def read_cookie do
+    File.read!(get_cookie_file())
+  end
+
   @spec request_episodes :: :ok
   def request_episodes do
     cmd =
-      "yt-dlp --dateafter 20240609 --cookies #{get_cookie_file()} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" https://www.youtube.com/@RealCandaceO"
+      "yt-dlp --no-cache-dir --dateafter 20240609 --cookies #{get_cookie_file()} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" https://www.youtube.com/@RealCandaceO"
 
     GenServer.cast(__MODULE__, {:message, cmd})
   end
@@ -59,7 +63,10 @@ defmodule SkepticBot.YtDlp.CandaceServer do
   defp process_episodes(port, episodes, {_title, _duration, _thumbnail, webpage_url})
        when webpage_url == "https://www.youtube.com/watch?v=qQBuDkrGglM" do
     Port.close(port)
-    Scraper.process_candace_episodes(episodes)
+
+    episodes
+    |> Enum.take(-4)
+    |> Scraper.process_candace_episodes()
   end
 
   defp process_episodes(_port, _episodes, _episode_details), do: :ok
