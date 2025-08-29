@@ -20,7 +20,7 @@ defmodule SkepticBot.YtDlp.CandaceServer do
   @spec request_episodes :: :ok
   def request_episodes do
     cmd =
-      "yt-dlp --no-cache-dir --dateafter 20240609 --cookies #{get_cookie_file()} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" https://www.youtube.com/@RealCandaceO"
+      "yt-dlp --cache-dir /tmp/yt-cache --dateafter 20240609 --cookies #{get_cookie_file()} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" https://www.youtube.com/@RealCandaceO"
 
     GenServer.cast(__MODULE__, {:message, cmd})
   end
