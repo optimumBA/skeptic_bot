@@ -17,10 +17,6 @@ defmodule SkepticBot.YtDlp.CandaceServer do
     {:ok, %{}}
   end
 
-  def read_cookie do
-    File.read!(get_cookie_file())
-  end
-
   @spec request_episodes :: :ok
   def request_episodes do
     cmd =
