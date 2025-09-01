@@ -22,8 +22,20 @@ defmodule SkepticBot.Candace.Scraper do
   @spec scrape_from_file :: :ok
   def scrape_from_file do
     get_candace_episodes()
-    |> Enum.take(-2)
-    |> Enum.each(&Scraper.process_candace_episode/1)
+    |> Enum.take(10)
+
+    # |> Enum.each(&Scraper.process_candace_episode/1)
+  end
+
+  def read_files do
+    content =
+      [:code.priv_dir(:skeptic_bot), "/dumps/owens3.txt"]
+      |> Path.join()
+      |> File.read!()
+
+    path = "/Users/deankinyua/work/elixirprof/skeptic_bot/priv/dumps/candace.txt"
+
+    File.write!(path, content, [:append])
   end
 
   defp wait_for_episodes do
@@ -43,7 +55,7 @@ defmodule SkepticBot.Candace.Scraper do
   end
 
   defp get_candace_episodes do
-    [:code.priv_dir(:skeptic_bot), "/dumps/candace_owens.txt"]
+    [:code.priv_dir(:skeptic_bot), "/dumps/candace.txt"]
     |> Path.join()
     |> File.read!()
     |> format_channel_data()
