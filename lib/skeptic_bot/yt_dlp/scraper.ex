@@ -12,7 +12,6 @@ defmodule SkepticBot.YtDlp.Scraper do
   @podcast_lookintoit "Look Into It"
   @podcast_candace "Candace"
   @candace_channel "https://www.youtube.com/@RealCandaceO"
-  # @candace_channel "PLPW2eH9z9CUvT4M9RjOVBOFic8CBEZAY-"
   @rokfin_channel "https://rokfin.com/eddiebravo"
   @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
 
@@ -35,10 +34,11 @@ defmodule SkepticBot.YtDlp.Scraper do
     end
   end
 
-  @spec process_candace_episodes(list()) :: :ok
-  def process_candace_episodes(episodes) do
+  @spec process_candace_episode(tuple()) :: :ok
+  def process_candace_episode(episode) do
     podcast = Podcasts.get_podcast_by_name(@podcast_candace)
-    Enum.each(episodes, &maybe_download_episode(&1, @candace_channel, podcast))
+    maybe_download_episode(episode, @candace_channel, podcast)
+    :ok
   end
 
   defp format_channel_data(result) do

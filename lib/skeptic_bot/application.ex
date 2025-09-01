@@ -23,7 +23,6 @@ defmodule SkepticBot.Application do
         parent: SkepticBotWeb.Endpoint,
         parent: SkepticBot.PredictionHandler,
         parent: SkepticBot.WebhookHandler,
-        parent: SkepticBot.YtDlp.CandaceServer,
         parent: {FLAME.Pool, Application.fetch_env!(:skeptic_bot, :downloading_runner)},
         parent: {Oban, Application.fetch_env!(:skeptic_bot, Oban)}
       )

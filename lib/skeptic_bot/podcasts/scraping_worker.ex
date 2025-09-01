@@ -9,7 +9,7 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
     queue: :scraping
 
   # alias SkepticBot.Podcasts.TinfoilScraper
-  alias SkepticBot.YtDlp.CandaceServer
+  # alias SkepticBot.YtDlp.CandaceServer
   # alias SkepticBot.YtDlp.Scraper
 
   require Logger
@@ -22,6 +22,6 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
     Logger.info("Starting scheduled podcast scraping")
     # TinfoilScraper.scrape()
     # Scraper.scrape()
-    CandaceServer.request_episodes()
+    # CandaceServer.request_episodes()
   end
 end
