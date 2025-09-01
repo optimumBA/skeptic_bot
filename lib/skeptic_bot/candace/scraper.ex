@@ -21,11 +21,9 @@ defmodule SkepticBot.Candace.Scraper do
 
   @spec scrape_from_file :: :ok
   def scrape_from_file do
-    episodes =
-      get_candace_episodes()
-      |> Enum.take(-2)
-
-    Enum.each(episodes, &Scraper.process_candace_episode/1)
+    get_candace_episodes()
+    |> Enum.take(-2)
+    |> Enum.each(&Scraper.process_candace_episode/1)
   end
 
   defp wait_for_episodes do
