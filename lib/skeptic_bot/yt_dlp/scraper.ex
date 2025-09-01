@@ -46,7 +46,7 @@ defmodule SkepticBot.YtDlp.Scraper do
     |> String.split("\n")
     |> Enum.map(fn x ->
       x
-      |> String.split("~~")
+      |> String.split("$$")
       |> List.to_tuple()
     end)
     |> Enum.drop(-1)
