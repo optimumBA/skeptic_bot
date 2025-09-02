@@ -1,18 +1,20 @@
 defmodule SkepticBot.Candace.Scraper do
   @moduledoc """
-  Gets Candace Owens Episodes
+  Scrapes Candace Owens episodes from YouTube downloads them
   """
 
-  alias SkepticBot.YtDlp.Scraper
+  alias SkepticBot.Podcasts
+  alias SkepticBot.YtDlp.EpisodeProcessor
 
   require Logger
 
-  @candace_channel "https://www.youtube.com/@RealCandaceO/streams"
+  @channel "https://www.youtube.com/@RealCandaceO/streams"
+  @podcast "Candace"
 
   @spec scrape :: :ok
   def scrape do
     cmd =
-      "yt-dlp --cache-dir /tmp/yt-cache --date #{get_yesterday_date()} --cookies #{get_cookie_file()} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" #{@candace_channel}"
+      "yt-dlp --cache-dir /tmp/yt-cache --date #{get_yesterday_date()} --cookies #{get_cookie_file()} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" #{@channel}"
 
     port = Port.open({:spawn, cmd}, [:binary, :stderr_to_stdout, :exit_status])
     Process.send_after(self(), {:close_port, port}, :timer.minutes(1))
@@ -22,7 +24,14 @@ defmodule SkepticBot.Candace.Scraper do
   @spec scrape_from_file :: :ok
   def scrape_from_file do
     episodes = get_candace_episodes()
-    Enum.each(episodes, &Scraper.process_candace_episode/1)
+    Enum.each(episodes, &process_candace_episode/1)
+  end
+
+  @spec process_candace_episode(tuple()) :: :ok
+  defp process_candace_episode(episode) do
+    podcast = Podcasts.get_podcast_by_name(@podcast)
+    EpisodeProcessor.maybe_download_episode(episode, @channel, podcast)
+    :ok
   end
 
   defp wait_for_episodes do
@@ -30,7 +39,7 @@ defmodule SkepticBot.Candace.Scraper do
       {_port, {:data, msg}} ->
         episode = process_message(msg)
 
-        Scraper.process_candace_episode(episode)
+        process_candace_episode(episode)
 
         wait_for_episodes()
 
