@@ -27,4 +27,12 @@ defmodule SkepticBot.YtDlp.YtDlpChannelClient do
         {:error, error}
     end
   end
+
+  @impl ChannelClient
+  def get_channel_data_from_port(date, cookie_file, channel) do
+    cmd =
+      "yt-dlp --cache-dir /tmp/yt-cache --date #{date} --cookies #{cookie_file} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" #{channel}"
+
+    Port.open({:spawn, cmd}, [:binary, :stderr_to_stdout, :exit_status])
+  end
 end

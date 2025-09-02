@@ -5,6 +5,7 @@ defmodule SkepticBot.Candace.Scraper do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.YtDlp.EpisodeProcessor
+  alias SkepticBot.YtDlp.ChannelClient
 
   require Logger
 
@@ -13,10 +14,9 @@ defmodule SkepticBot.Candace.Scraper do
 
   @spec scrape :: :ok
   def scrape do
-    cmd =
-      "yt-dlp --cache-dir /tmp/yt-cache --date #{get_yesterday_date()} --cookies #{get_cookie_file()} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" #{@channel}"
-
-    port = Port.open({:spawn, cmd}, [:binary, :stderr_to_stdout, :exit_status])
+    date = get_yesterday_date()
+    cookie_file = get_cookie_file()
+    port = ChannelClient.get_channel_data_from_port(date, cookie_file, @channel)
     Process.send_after(self(), {:close_port, port}, :timer.minutes(1))
     wait_for_episodes()
   end
