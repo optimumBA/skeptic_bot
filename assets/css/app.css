@@ -72,7 +72,6 @@
   animation-delay: 0.4s;
 }
 
-/* @media (max-width: 639px) { */
 .mobile-scroll-parent {
   overflow-x: scroll;
   scroll-snap-type: x mandatory;
@@ -88,10 +87,3 @@
 .mobile-scroll-parent::-webkit-scrollbar {
   display: none;
 }
-/* } */
-
-/* @media (min-width: 640px) {
-  .mobile-scroll-parent {
-    transition: transform 300ms ease-in-out;
-  }
-} */

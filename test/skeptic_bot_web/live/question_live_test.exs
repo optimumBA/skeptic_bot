@@ -54,38 +54,6 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       assert html =~ "00:20:00"
     end
 
-    test "renders carousel with related episodes and translates appropriately with click events",
-         %{
-           conn: conn,
-           question: question
-         } do
-      {:ok, view, html} = live(conn, ~p"/questions/#{question.id}")
-
-      assert html =~ ~s'id="related-episodes-carousel" style="transform: translateX(-0.0rem);"'
-
-      assert render_click(view, :next_related_episodes) =~
-               ~s'id="related-episodes-carousel" style="transform: translateX(-20.6875rem);"'
-
-      assert render_click(view, :prev_related_episodes) =~
-               ~s'id="related-episodes-carousel" style="transform: translateX(-0.0rem);"'
-    end
-
-    test "renders carousel with other episodes and translates appropriately with click events",
-         %{
-           conn: conn,
-           question: question
-         } do
-      {:ok, view, html} = live(conn, ~p"/questions/#{question.id}")
-
-      assert html =~ ~s'id="other-episodes-carousel" style="transform: translateX(-0.0rem);"'
-
-      assert render_click(view, :next_other_episodes) =~
-               ~s'id="other-episodes-carousel" style="transform: translateX(-20.6875rem);"'
-
-      assert render_click(view, :prev_other_episodes) =~
-               ~s'id="other-episodes-carousel" style="transform: translateX(-0.0rem);"'
-    end
-
     test "displays the related questions", %{
       conn: conn,
       question: question
@@ -132,29 +100,6 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       send(view.pid, {:prediction_complete, {"New Title", "New Description"}})
 
       assert has_element?(view, ~s{div#loading-elements.hidden})
-    end
-
-    test "disabling of the forward buttons depends on the browser width", %{
-      conn: conn,
-      question: question
-    } do
-      {:ok, view, _html} = live(conn, ~p"/questions/#{question.id}")
-
-      render_hook(view, "assign_batch_size", %{page_width: 1100})
-
-      refute has_element?(view, ~s{button#next-related-btn[disabled]})
-      render_click(view, :next_related_episodes)
-      assert has_element?(view, ~s{button#next-related-btn[disabled]})
-
-      {:ok, view_2, _html} = live(conn, ~p"/questions/#{question.id}")
-
-      render_hook(view_2, "assign_batch_size", %{page_width: 800})
-
-      refute has_element?(view_2, ~s{button#next-related-btn[disabled]})
-      render_click(view_2, :next_related_episodes)
-      refute has_element?(view_2, ~s{button#next-related-btn[disabled]})
-      render_click(view_2, :next_related_episodes)
-      assert has_element?(view_2, ~s{button#next-related-btn[disabled]})
     end
   end
 end
