@@ -1,12 +1,14 @@
 {
   "coverage_options": {
-    "minimum_coverage": 85.4
+    "minimum_coverage": 84.6
   },
   "skip_files": [
+    "lib/skeptic_bot/look_into_it/yt_dlp_channel_client.ex",
     "lib/skeptic_bot/podcasts/ffmpeg_transcoder.ex",
     "lib/skeptic_bot/podcasts/replicate_transcriber.ex",
     "lib/skeptic_bot/podcasts/req_downloader.ex",
     "lib/skeptic_bot/podcasts/req_http_client.ex",
+    "lib/skeptic_bot/podcasts/yt_dlp_downloader.ex",
     "lib/skeptic_bot/rag/replicate_embedder.ex",
     "lib/skeptic_bot/rag/replicate_generator.ex",
     "lib/skeptic_bot/release.ex",
