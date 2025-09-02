@@ -1,6 +1,6 @@
 defmodule SkepticBot.Candace.Scraper do
   @moduledoc """
-  Scrapes Candace Owens' episodes from YouTube downloads them
+  Scrapes Candace Owens' episodes from YouTube then downloads them
   """
 
   alias SkepticBot.Podcasts
@@ -11,6 +11,8 @@ defmodule SkepticBot.Candace.Scraper do
 
   @channel "https://www.youtube.com/@RealCandaceO/streams"
   @podcast "Candace"
+
+  @type episode :: {String.t(), String.t(), String.t(), String.t()}
 
   @spec scrape :: :ok
   def scrape do
@@ -23,11 +25,11 @@ defmodule SkepticBot.Candace.Scraper do
   @spec scrape_from_file :: :ok
   def scrape_from_file do
     episodes = get_candace_episodes()
-    Enum.each(episodes, &process_candace_episode/1)
+    Enum.each(episodes, &process_episode/1)
   end
 
-  @spec process_candace_episode(tuple()) :: :ok
-  defp process_candace_episode(episode) do
+  @spec process_episode(episode()) :: :ok
+  defp process_episode(episode) do
     podcast = Podcasts.get_podcast_by_name(@podcast)
     EpisodeProcessor.maybe_download_episode(episode, @channel, podcast)
     :ok
@@ -36,9 +38,9 @@ defmodule SkepticBot.Candace.Scraper do
   defp wait_for_episodes do
     receive do
       {_port, {:data, msg}} ->
-        episode = process_message(msg)
-
-        process_candace_episode(episode)
+        msg
+        |> format_message()
+        |> process_episode()
 
         wait_for_episodes()
 
@@ -63,7 +65,7 @@ defmodule SkepticBot.Candace.Scraper do
     |> format_channel_data()
   end
 
-  defp process_message(msg) do
+  defp format_message(msg) do
     msg
     |> String.trim("\n")
     |> String.split("~~")
