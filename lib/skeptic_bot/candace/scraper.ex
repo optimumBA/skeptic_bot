@@ -1,6 +1,6 @@
 defmodule SkepticBot.Candace.Scraper do
   @moduledoc """
-  Scrapes Candace Owens episodes from YouTube downloads them
+  Scrapes Candace Owens' episodes from YouTube downloads them
   """
 
   alias SkepticBot.Podcasts

@@ -5,6 +5,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
+  alias SkepticBot.Podcasts.Podcast
 
   require Logger
 
@@ -12,6 +13,13 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
   @eddie_rokfin_channel "https://rokfin.com/eddiebravo"
   @eddie_rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
 
+  @type channel :: String.t()
+  @type episode :: {String.t(), String.t(), String.t(), String.t()}
+  @type job :: Oban.Job.t()
+  @type podcast :: Podcast.t()
+
+  @spec maybe_download_episode(episode(), channel(), podcast()) ::
+          {:ok, job()} | {:error, Ecto.Changeset.t()} | nil
   def maybe_download_episode({title, duration, thumbnail, webpage_url}, channel, podcast) do
     external_id = get_external_id(webpage_url, channel)
 
