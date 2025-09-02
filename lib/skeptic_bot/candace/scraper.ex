@@ -4,8 +4,8 @@ defmodule SkepticBot.Candace.Scraper do
   """
 
   alias SkepticBot.Podcasts
-  alias SkepticBot.YtDlp.EpisodeProcessor
   alias SkepticBot.YtDlp.ChannelClient
+  alias SkepticBot.YtDlp.EpisodeProcessor
 
   require Logger
 
@@ -36,7 +36,6 @@ defmodule SkepticBot.Candace.Scraper do
   defp wait_for_episodes do
     receive do
       {_port, {:data, msg}} ->
-        Logger.warning("Received Message : #{msg}")
         episode = process_message(msg)
 
         process_candace_episode(episode)
@@ -50,7 +49,7 @@ defmodule SkepticBot.Candace.Scraper do
           nil ->
             :ok
 
-          _ ->
+          _port_info ->
             Port.close(port)
             :ok
         end

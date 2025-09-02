@@ -5,10 +5,10 @@ defmodule SkepticBot.LookIntoIt.ScraperTest do
   import SkepticBot.PodcastsFixtures
   import SkepticBot.ScrapingFixtures
 
+  alias SkepticBot.LookIntoIt.Scraper
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
   alias SkepticBot.YtDlp.MockChannelClient
-  alias SkepticBot.LookIntoIt.Scraper
 
   @external_id "177589"
   @podcast "Look Into It"
