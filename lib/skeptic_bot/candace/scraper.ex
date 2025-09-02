@@ -16,8 +16,7 @@ defmodule SkepticBot.Candace.Scraper do
   def scrape do
     date = get_yesterday_date()
     cookie_file = get_cookie_file()
-    port = ChannelClient.get_channel_data_from_port(date, cookie_file, @channel)
-    Process.send_after(self(), {:close_port, port}, :timer.minutes(1))
+    ChannelClient.get_channel_data_from_port(date, cookie_file, @channel)
     wait_for_episodes()
   end
 
@@ -37,6 +36,7 @@ defmodule SkepticBot.Candace.Scraper do
   defp wait_for_episodes do
     receive do
       {_port, {:data, msg}} ->
+        Logger.warning("Received Message : #{msg}")
         episode = process_message(msg)
 
         process_candace_episode(episode)
@@ -45,8 +45,15 @@ defmodule SkepticBot.Candace.Scraper do
 
       {:close_port, port} ->
         Logger.info("Closed the port")
-        Port.close(port)
-        :ok
+
+        case Port.info(port) do
+          nil ->
+            :ok
+
+          _ ->
+            Port.close(port)
+            :ok
+        end
     end
   end
 
