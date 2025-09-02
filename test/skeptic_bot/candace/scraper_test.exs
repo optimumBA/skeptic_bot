@@ -9,6 +9,7 @@ defmodule SkepticBot.Candace.ScraperTest do
   alias SkepticBot.YtDlp.MockChannelClient
 
   @podcast "Candace"
+  @video_url "https://www.youtube.com/watch?v=3CHHx4pkBIo"
 
   setup :verify_on_exit!
 
@@ -16,10 +17,10 @@ defmodule SkepticBot.Candace.ScraperTest do
     test "enqueues a downloading job if it receives an episode from yt-dlp" do
       _podcast = podcast_fixture(name: @podcast)
 
-      data =
+      msg =
         "Eminem Drops A Diss Track Ep 24~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBIo"
 
-      port = Port.open({:spawn, "echo #{data}"}, [:binary])
+      port = Port.open({:spawn, "echo #{msg}"}, [:binary])
 
       Process.send_after(self(), {:close_port, port}, 100)
 
@@ -33,14 +34,14 @@ defmodule SkepticBot.Candace.ScraperTest do
         worker: DownloadingWorker,
         args: %{
           podcast: @podcast,
-          video_url: "https://www.youtube.com/watch?v=3CHHx4pkBIo"
+          video_url: @video_url
         }
       )
     end
   end
 
   describe "scrape_from_file/0" do
-    test "enqueues episodes from the file" do
+    test "enqueues episodes from the dump file" do
       _podcast = podcast_fixture(name: @podcast)
 
       Scraper.scrape_from_file()
@@ -49,7 +50,7 @@ defmodule SkepticBot.Candace.ScraperTest do
         worker: DownloadingWorker,
         args: %{
           podcast: @podcast,
-          video_url: "https://www.youtube.com/watch?v=3CHHx4pkBIo"
+          video_url: @video_url
         }
       )
     end

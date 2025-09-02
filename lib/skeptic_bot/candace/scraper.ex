@@ -24,7 +24,7 @@ defmodule SkepticBot.Candace.Scraper do
 
   @spec scrape_from_file :: :ok
   def scrape_from_file do
-    episodes = get_candace_episodes()
+    episodes = get_episodes()
     Enum.each(episodes, &process_episode/1)
   end
 
@@ -58,7 +58,7 @@ defmodule SkepticBot.Candace.Scraper do
     end
   end
 
-  defp get_candace_episodes do
+  defp get_episodes do
     [:code.priv_dir(:skeptic_bot), "/dumps/candace.txt"]
     |> Path.join()
     |> File.read!()
