@@ -57,7 +57,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         <section class="ml-5 montserrat-alternates-bold text-[#000000] text-2xl">
           Related Podcasts
         </section>
-        <section class="relative pb-10">
+        <section class="relative pb-6">
           <section class="ml-5 pt-12 relative mb-12 pr-2">
             <div class="flex gap-4 mobile-scroll-parent" id="related-episodes-carousel">
               <%= for episode <- @related_episodes do %>
@@ -77,10 +77,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               <% end %>
             </div>
           </section>
-
-          <div class="hidden absolute bottom-[-5rem] right-[5%] lg:block">
-            <img src={~p"/images/podcasts/podcast_scribble.svg"} alt="Podcast Scribble" />
-          </div>
         </section>
 
         <section class="ml-5 mt-2 montserrat-alternates-bold text-[#000000] text-2xl">
