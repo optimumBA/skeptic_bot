@@ -5,13 +5,15 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   Uses FLAME to handle both processes in a separate memory space.
   """
 
+  alias SkepticBot.Podcasts
+
   use Oban.Worker,
     max_attempts: 5,
     queue: :downloading,
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.DownloadingRunner
-  alias SkepticBot.Podcasts.Downloader
+  alias SkepticBot.Podcasts.EpisodeDownloader
   alias SkepticBot.Podcasts.Transcoder
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.StorageProvider
@@ -20,19 +22,25 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   @podcast_lookintoit "Look Into It"
   @podcast_tinfoilhat "Tin Foil Hat"
+  @base_url "https://vid.samtripoli.com/"
 
   @type job :: Oban.Job.t()
 
   @impl Oban.Worker
   @spec perform(job()) :: :ok | {:error, String.t()}
   def perform(%Oban.Job{
-        args: %{"id" => id, "podcast" => podcast, "video_url" => video_url}
+        args: %{
+          "id" => id,
+          "podcast" => podcast,
+          "thumbnail" => thumbnail,
+          "video_url" => video_url
+        }
       }) do
-    case process_with_flame(id, video_url, podcast) do
-      {:ok, audio_url} ->
-        TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
-        :ok
-
+    with :ok <- store_thumbnail(id, thumbnail, podcast),
+         {:ok, audio_url} <- process_with_flame(id, video_url, podcast) do
+      TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
+      :ok
+    else
       {:error, reason} ->
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
         {:error, reason}
@@ -109,6 +117,42 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     File.rm(audio_path)
 
     result
+  end
+
+  defp store_thumbnail(id, thumbnail, @podcast_tinfoilhat) do
+    episode = Podcasts.get_episode(id)
+    thumbnail_url = url = @base_url <> episode.thumbnail
+    episode = Podcasts.get_episode(id)
+    tmp_dir = System.tmp_dir!()
+    new_thumbnail_path = Path.join(tmp_dir, "#{episode.id}_#{episode.external_id}.jpg")
+
+    with {:ok, path} <- ThumbnailDownloader.download(thumbnail, new_thumbnail_path),
+         {:ok, public_url} <- TigrisStorageProvider.upload_file(path, "image/jpeg"),
+         {:ok, _episode} <- Podcasts.update_episode(episode, %{thumbnail: public_url}) do
+      :ok
+    else
+      {:error, reason} ->
+        {:error, reason}
+    end
+
+    File.rm(new_thumbnail_path)
+  end
+
+  defp store_thumbnail(id, thumbnail, podcast) do
+    episode = Podcasts.get_episode(id)
+    tmp_dir = System.tmp_dir!()
+    new_thumbnail_path = Path.join(tmp_dir, "#{episode.id}_#{episode.external_id}.jpg")
+
+    with {:ok, path} <- ThumbnailDownloader.download(thumbnail, new_thumbnail_path),
+         {:ok, public_url} <- TigrisStorageProvider.upload_file(path, "image/jpeg"),
+         {:ok, _episode} <- Podcasts.update_episode(episode, %{thumbnail: public_url}) do
+      :ok
+    else
+      {:error, reason} ->
+        {:error, reason}
+    end
+
+    File.rm(new_thumbnail_path)
   end
 
   @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}

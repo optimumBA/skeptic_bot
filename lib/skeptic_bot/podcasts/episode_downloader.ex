@@ -1,4 +1,4 @@
-defmodule SkepticBot.Podcasts.Downloader do
+defmodule SkepticBot.Podcasts.EpisodeDownloader do
   @moduledoc false
 
   alias SkepticBot.Podcasts.ReqDownloader

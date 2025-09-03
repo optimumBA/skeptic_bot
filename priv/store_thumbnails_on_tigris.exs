@@ -1,6 +1,6 @@
 defmodule StoreThumbnailsOnTigris do
   alias SkepticBot.Podcasts
-  alias SkepticBot.Podcasts.Downloader
+  alias SkepticBot.Podcasts.EpisodeDownloader
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Repo
   alias SkepticBot.Storage.TigrisStorageProvider

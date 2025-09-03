@@ -23,11 +23,7 @@ defmodule SkepticBotWeb.PodcastComponents do
     <a href={"https://vid.samtripoli.com/w/" <> @external_id <> "?start=" <> @timestamp}>
       <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative">
         <div class="rounded-xl w-full h-full overflow-hidden">
-          <img
-            src={"https://vid.samtripoli.com/" <> @thumbnail}
-            alt="Cover 2"
-            class="w-full h-full object-cover"
-          />
+          <img src={@thumbnail} alt="Cover 2" class="w-full h-full object-cover" />
         </div>
         {get_episode_vector(@random)}
         <div class="absolute bottom-[3rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
