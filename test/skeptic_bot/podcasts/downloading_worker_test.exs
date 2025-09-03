@@ -2,6 +2,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
   use SkepticBot.DataCase, async: false
 
   import Mox
+  import SkepticBot.PodcastsFixtures
 
   alias SkepticBot.Podcasts.DownloadingWorker
   alias SkepticBot.Podcasts.MockDownloader

@@ -1,5 +1,7 @@
 defmodule SkepticBot.Podcasts.ThumbnailDownloader do
-  @moduledoc false
+  @moduledoc """
+  Takes care of downloading and uploading thumbnails to Tigris
+  """
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Storage.StorageProvider
