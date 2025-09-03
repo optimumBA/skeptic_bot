@@ -3,11 +3,9 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   Scrapes Eddie Bravo's episodes from Rokfin and Rumble then downloads them
   """
 
-  alias SkepticBot.Podcasts.ThumbnailDownloader
   alias SkepticBot.LookIntoIt.ChannelClient
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DownloadingWorker
-  alias SkepticBot.Storage.TigrisStorageProvider
 
   require Logger
 
@@ -61,7 +59,6 @@ defmodule SkepticBot.LookIntoIt.Scraper do
       DownloadingWorker.enqueue(%{
         "id" => episode.id,
         "podcast" => @podcast,
-        "thumbnail" => thumbnail,
         "video_url" => webpage_url
       })
     end

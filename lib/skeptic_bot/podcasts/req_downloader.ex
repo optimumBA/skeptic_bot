@@ -3,8 +3,6 @@ defmodule SkepticBot.Podcasts.ReqDownloader do
 
   alias SkepticBot.Podcasts.EpisodeDownloader
 
-  require Logger
-
   @behaviour EpisodeDownloader
 
   @impl EpisodeDownloader
