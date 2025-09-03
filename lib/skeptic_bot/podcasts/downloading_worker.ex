@@ -11,8 +11,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.DownloadingRunner
-  alias SkepticBot.Podcasts
-  alias SkepticBot.Podcasts.EpisodeDownloader
+  alias SkepticBot.Podcasts.Downloader
   alias SkepticBot.Podcasts.Transcoder
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.StorageProvider
@@ -22,7 +21,6 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   @podcast_lookintoit "Look Into It"
   @podcast_tinfoilhat "Tin Foil Hat"
-  @tinfoil_base_thumbnail_url "https://vid.samtripoli.com"
 
   @type job :: Oban.Job.t()
 
@@ -31,7 +29,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   def perform(%Oban.Job{
         args: %{"id" => id, "podcast" => podcast, "video_url" => video_url}
       }) do
-    with :ok <- store_thumbnail(id, podcast),
+    with :ok <- ThumbnailDownloader.store_thumbnail(id, podcast),
          {:ok, audio_url} <- process_with_flame(id, video_url, podcast) do
       TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
       :ok
@@ -73,7 +71,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     |> File.mkdir_p!()
 
     result =
-      with {:ok, _video_path} <- EpisodeDownloader.download(url, video_path, :req),
+      with {:ok, _video_path} <- Downloader.download(url, video_path, :req),
            :ok <- Transcoder.transcode_video(video_path, audio_path),
            {:ok, url} <- StorageProvider.upload_file(audio_path) do
         {:ok, url}
@@ -100,7 +98,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     |> File.mkdir_p!()
 
     result =
-      with {:ok, _audio_path} <- EpisodeDownloader.download(url, audio_path, :yt_dlp),
+      with {:ok, _audio_path} <- Downloader.download(url, audio_path, :yt_dlp),
            {:ok, url} <- StorageProvider.upload_file(audio_path) do
         {:ok, url}
       else
@@ -112,32 +110,6 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     File.rm(audio_path)
 
     result
-  end
-
-  defp store_thumbnail(id, @podcast_tinfoilhat) do
-    episode = Podcasts.get_episode(id)
-    thumbnail_url = @tinfoil_base_thumbnail_url <> episode.thumbnail
-    download_and_store_thumbnail(episode, thumbnail_url)
-  end
-
-  defp store_thumbnail(id, _podcast) do
-    episode = Podcasts.get_episode(id)
-    download_and_store_thumbnail(episode, episode.thumbnail)
-  end
-
-  defp download_and_store_thumbnail(episode, thumbnail_url) do
-    tmp_dir = System.tmp_dir!()
-    new_thumbnail_path = Path.join(tmp_dir, "#{episode.id}_#{episode.external_id}.jpg")
-
-    with {:ok, path} <- ThumbnailDownloader.download(thumbnail_url, new_thumbnail_path),
-         {:ok, public_url} <- StorageProvider.upload_file(path, "image/jpeg"),
-         {:ok, _episode} <- Podcasts.update_episode(episode, %{thumbnail: public_url}),
-         :ok <- File.rm(new_thumbnail_path) do
-      :ok
-    else
-      {:error, reason} ->
-        {:error, reason}
-    end
   end
 
   @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}

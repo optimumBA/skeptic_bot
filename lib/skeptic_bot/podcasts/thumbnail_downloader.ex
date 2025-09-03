@@ -1,16 +1,43 @@
 defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   @moduledoc false
 
-  alias SkepticBot.Podcasts.ReqDownloader
+  alias SkepticBot.Podcasts
+  alias SkepticBot.Storage.StorageProvider
+  alias SkepticBot.Podcasts.Downloader
 
+  @type id :: String.t()
   @type path :: String.t()
+  @type podcast_name :: String.t()
   @type reason :: String.t()
   @type url :: String.t()
 
-  @callback download(url(), path()) :: {:ok, path()} | {:error, reason()}
+  @podcast_tinfoilhat "Tin Foil Hat"
+  @tinfoil_base_thumbnail_url "https://vid.samtripoli.com"
 
-  @spec download(url(), path()) :: {:ok, path()} | {:error, reason()}
-  def download(url, path), do: impl().download(url, path)
+  @spec store_thumbnail(id(), podcast_name()) :: :ok | {:error, reason()}
+  def store_thumbnail(id, @podcast_tinfoilhat) do
+    episode = Podcasts.get_episode(id)
+    thumbnail_url = @tinfoil_base_thumbnail_url <> episode.thumbnail
+    download_and_store_thumbnail(episode, thumbnail_url)
+  end
 
-  defp impl(), do: Application.get_env(:skeptic_bot, :downloader, ReqDownloader)
+  def store_thumbnail(id, _podcast) do
+    episode = Podcasts.get_episode(id)
+    download_and_store_thumbnail(episode, episode.thumbnail)
+  end
+
+  defp download_and_store_thumbnail(episode, thumbnail_url) do
+    tmp_dir = System.tmp_dir!()
+    new_thumbnail_path = Path.join(tmp_dir, "#{episode.id}_#{episode.external_id}.jpg")
+
+    with {:ok, path} <- Downloader.download(thumbnail_url, new_thumbnail_path, :req),
+         {:ok, public_url} <- StorageProvider.upload_file(path, "image/jpeg"),
+         {:ok, _episode} <- Podcasts.update_episode(episode, %{thumbnail: public_url}),
+         :ok <- File.rm(new_thumbnail_path) do
+      :ok
+    else
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
 end

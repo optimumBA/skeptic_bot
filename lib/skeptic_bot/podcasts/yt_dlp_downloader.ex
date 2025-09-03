@@ -1,13 +1,13 @@
 defmodule SkepticBot.Podcasts.YtDlpDownloader do
   @moduledoc false
 
-  alias SkepticBot.Podcasts.EpisodeDownloader
+  alias SkepticBot.Podcasts.Downloader
 
   require Logger
 
-  @behaviour EpisodeDownloader
+  @behaviour Downloader
 
-  @impl EpisodeDownloader
+  @impl Downloader
   def download(video_url, audio_path) do
     case System.cmd(
            "yt-dlp",

@@ -1,11 +1,11 @@
 defmodule SkepticBot.Podcasts.ReqDownloader do
   @moduledoc false
 
-  alias SkepticBot.Podcasts.EpisodeDownloader
+  alias SkepticBot.Podcasts.Downloader
 
-  @behaviour EpisodeDownloader
+  @behaviour Downloader
 
-  @impl EpisodeDownloader
+  @impl Downloader
   def download(url, path) do
     case Req.get(
            url,
