@@ -5,9 +5,9 @@ defmodule SkepticBot.Podcasts.YtDlpDownloader do
 
   require Logger
 
-  @behaviour Downloader
+  @behaviour EpisodeDownloader
 
-  @impl Downloader
+  @impl EpisodeDownloader
   def download(video_url, audio_path) do
     case System.cmd(
            "yt-dlp",
