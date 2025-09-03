@@ -7,6 +7,7 @@ defmodule SkepticBot.PodcastsFixtures do
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Podcasts.EpisodeTranscription
+  alias SkepticBot.Podcasts.Podcast
 
   @valid_l2_distance_offset 0.58
 
@@ -22,11 +23,6 @@ defmodule SkepticBot.PodcastsFixtures do
     Enum.map(1..1024, fn _some_random_float -> :rand.uniform() end)
   end
 
-  @spec response_fixture :: response()
-  def response_fixture do
-    "{\"title\":\"American Ponzi schemes\",\"description\":\"Wake up now before it is too late\"}"
-  end
-
   @spec offset_embedding_fixture(embedding(), offset()) :: embedding()
   def offset_embedding_fixture(embedding, offset \\ @valid_l2_distance_offset) do
     List.update_at(embedding, -1, &(&1 - offset))
@@ -37,18 +33,33 @@ defmodule SkepticBot.PodcastsFixtures do
   """
   @spec episode_fixture(map()) :: Episode.t()
   def episode_fixture(attrs \\ %{}) do
+    podcast = podcast_fixture()
+
     {:ok, episode} =
       attrs
       |> Enum.into(%{
         description: "Sample description",
         episode_length: :rand.uniform(3000),
         external_id: Ecto.UUID.generate(),
+        podcast_id: podcast.id,
         thumbnail: "cover1.svg",
         title: "Test Episode"
       })
       |> Podcasts.create_episode()
 
     episode
+  end
+
+  @spec podcast_fixture(map()) :: Podcast.t()
+  def podcast_fixture(attrs \\ %{}) do
+    {:ok, podcast} =
+      attrs
+      |> Enum.into(%{
+        name: "Tin Foil Hat"
+      })
+      |> Podcasts.create_podcast()
+
+    podcast
   end
 
   @doc """

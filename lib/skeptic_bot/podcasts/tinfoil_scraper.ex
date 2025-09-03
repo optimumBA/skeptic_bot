@@ -8,7 +8,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   @type episode_id :: String.t()
   @type start :: integer()
 
+  @podcast_name "Tin Foil Hat"
   @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
+  @video_url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/<external_id>-0-fragmented.mp4"
 
   @spec get_url() :: String.t()
   def get_url, do: @url
@@ -22,7 +24,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
         Enum.each(body["data"], fn episode ->
-          maybe_download_episode(episode)
+          podcast = Podcasts.get_podcast_by_name(@podcast_name)
+          maybe_download_episode(episode, podcast.id)
         end)
 
         if Enum.empty?(body["data"]) do
@@ -52,7 +55,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
             scrape_episode(uuid, start + 100)
 
           episode ->
-            maybe_download_episode(episode)
+            podcast = Podcasts.get_podcast_by_name(@podcast_name)
+
+            maybe_download_episode(episode, podcast.id)
         end
 
       {:error, reason} ->
@@ -60,20 +65,24 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     end
   end
 
-  defp maybe_download_episode(episode) do
+  defp maybe_download_episode(episode, podcast_id) do
     unless Podcasts.episode_exists?(episode["uuid"]) do
       {:ok, %Podcasts.Episode{} = episode} =
         Podcasts.create_episode(%{
           "description" => episode["description"],
           "episode_length" => episode["duration"],
           "external_id" => episode["uuid"],
+          "podcast_id" => podcast_id,
           "thumbnail" => episode["thumbnailPath"],
           "title" => episode["name"]
         })
 
+      video_url = String.replace(@video_url, "<external_id>", episode.external_id)
+
       DownloadingWorker.enqueue(%{
         "id" => episode.id,
-        "external_id" => episode.external_id
+        "podcast" => @podcast_name,
+        "video_url" => video_url
       })
     end
   end
