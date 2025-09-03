@@ -19,6 +19,6 @@ defmodule SkepticBot.Prompts.PodcastEpisode do
   def changeset(episode, attrs) do
     episode
     |> cast(attrs, [:episode_id, :timestamp])
-    |> validate_required([:episode_id, :timestamp])
+    |> validate_required([:episode_id])
   end
 end
