@@ -71,3 +71,19 @@
 .delay-400 {
   animation-delay: 0.4s;
 }
+
+.mobile-scroll-parent {
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.mobile-scroll-child {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.mobile-scroll-parent::-webkit-scrollbar {
+  display: none;
+}
