@@ -241,7 +241,7 @@ defmodule SkepticBotWeb.PodcastComponents do
       {_integer, ""} ->
         @rokfin_base_webpage_url <> external_id <> "?start=" <> timestamp
 
-      _mixed_integer_tuple ->
+      _error ->
         @rumble_base_webpage_url <> external_id <> "?start=" <> timestamp
     end
   end
