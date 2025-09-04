@@ -1,6 +1,10 @@
 defmodule StoreThumbnailsOnTigris do
-  alias SkepticBot.Podcasts.ThumbnailDownloader
   alias SkepticBot.Podcasts
+  alias SkepticBot.Podcasts.Episode
+  alias SkepticBot.Podcasts.ThumbnailDownloader
+  alias SkepticBot.Repo
+
+  require Logger
 
   def start do
     Logger.debug("Downloading and uploading thumbnails is starting", ansi_color: :green)
