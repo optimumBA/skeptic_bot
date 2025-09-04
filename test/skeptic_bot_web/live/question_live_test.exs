@@ -54,6 +54,48 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       assert html =~ "00:20:00"
     end
 
+    test "uses different webpage_urls based on the podcast", %{
+      conn: conn,
+      embedding: embedding
+    } do
+      question =
+        question_fixture(
+          embedding: embedding,
+          episodes: [],
+          title: "American Ponzi with Lee Camp and Sam Tripoli"
+        )
+
+      episode =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding
+          },
+          "Tin Foil Hat"
+        )
+
+      episode_2 =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding
+          },
+          "Look Into It"
+        )
+
+      {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
+
+      webpage_url =
+        "https://vid.samtripoli.com/w/" <> episode.external_id <> "?start=0"
+
+      webpage_url_2 = "https://rumble.com/" <> episode_2.external_id <> "?start=0"
+
+      assert html =~ webpage_url
+      assert html =~ webpage_url_2
+    end
+
     test "displays the related questions", %{
       conn: conn,
       question: question

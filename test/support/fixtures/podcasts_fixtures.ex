@@ -13,6 +13,7 @@ defmodule SkepticBot.PodcastsFixtures do
 
   @type embedding :: [float()]
   @type offset :: float()
+  @type podcast_name() :: String.t()
   @type response :: String.t()
 
   @doc """
@@ -31,9 +32,9 @@ defmodule SkepticBot.PodcastsFixtures do
   @doc """
   creates an episode.
   """
-  @spec episode_fixture(map()) :: Episode.t()
-  def episode_fixture(attrs \\ %{}) do
-    podcast = podcast_fixture()
+  @spec episode_fixture(map(), podcast_name()) :: Episode.t()
+  def episode_fixture(attrs \\ %{}, podcast_name \\ "Tin Foil Hat") do
+    podcast = podcast_fixture(%{name: podcast_name})
 
     {:ok, episode} =
       attrs

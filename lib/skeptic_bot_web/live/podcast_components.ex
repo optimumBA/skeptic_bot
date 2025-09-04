@@ -11,6 +11,7 @@ defmodule SkepticBotWeb.PodcastComponents do
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
   @podcast_tinfoilhat "Tin Foil Hat"
+  @podcast_lookintoit "Look Into It"
   @tinfoil_base_webpage_url "https://vid.samtripoli.com/w/"
   @rokfin_base_webpage_url "https://rokfin.com/post/"
   @rumble_base_webpage_url "https://rumble.com/"
@@ -235,7 +236,7 @@ defmodule SkepticBotWeb.PodcastComponents do
     @tinfoil_base_webpage_url <> external_id <> "?start=" <> timestamp
   end
 
-  defp get_webpage_url(external_id, timestamp, _podcast) do
+  defp get_webpage_url(external_id, timestamp, @podcast_lookintoit) do
     case Integer.parse(external_id) do
       {_integer, ""} ->
         @rokfin_base_webpage_url <> external_id <> "?start=" <> timestamp
