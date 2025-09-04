@@ -140,6 +140,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
          put_flash(socket, :error, "Sorry, we currently have no podcasts discussing this topic.")}
 
       {:error, _reason} ->
+        send(self(), {:loading_state, false})
+
         {:noreply,
          put_flash(
            socket,
