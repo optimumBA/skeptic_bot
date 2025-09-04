@@ -2,12 +2,12 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   @moduledoc """
   Takes care of downloading and uploading thumbnails to Tigris
   """
-
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Downloader
+  alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Storage.StorageProvider
 
-  @type id :: String.t()
+  @type episode :: Episode.t()
   @type path :: String.t()
   @type podcast_name :: String.t()
   @type reason :: String.t()
@@ -16,15 +16,13 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   @podcast_tinfoilhat "Tin Foil Hat"
   @tinfoil_base_thumbnail_url "https://vid.samtripoli.com"
 
-  @spec store_thumbnail(id(), podcast_name()) :: :ok | {:error, reason()}
-  def store_thumbnail(id, @podcast_tinfoilhat) do
-    episode = Podcasts.get_episode(id)
+  @spec store_thumbnail(episode(), podcast_name()) :: :ok | {:error, reason()}
+  def store_thumbnail(episode, @podcast_tinfoilhat) do
     thumbnail_url = @tinfoil_base_thumbnail_url <> episode.thumbnail
     download_and_store_thumbnail(episode, thumbnail_url)
   end
 
-  def store_thumbnail(id, _podcast) do
-    episode = Podcasts.get_episode(id)
+  def store_thumbnail(episode, _podcast) do
     download_and_store_thumbnail(episode, episode.thumbnail)
   end
 

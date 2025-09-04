@@ -18,7 +18,7 @@ defmodule StoreThumbnailsOnTigris do
 
   defp download_and_store(episode) do
     podcast = Podcasts.get_podcast(episode.podcast_id)
-    ThumbnailDownloader.store_thumbnail(episode.id, podcast.name)
+    ThumbnailDownloader.store_thumbnail(episode, podcast.name)
   end
 end
 

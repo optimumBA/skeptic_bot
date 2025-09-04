@@ -11,6 +11,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.DownloadingRunner
+  alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Downloader
   alias SkepticBot.Podcasts.ThumbnailDownloader
   alias SkepticBot.Podcasts.Transcoder
@@ -30,7 +31,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
         args: %{"id" => id, "podcast" => podcast, "video_url" => video_url}
       }) do
     with {:ok, audio_url} <- process_with_flame(id, video_url, podcast),
-         :ok <- ThumbnailDownloader.store_thumbnail(id, podcast) do
+         episode <- Podcasts.get_episode(id),
+         :ok <- ThumbnailDownloader.store_thumbnail(episode, podcast) do
       TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
       :ok
     else
