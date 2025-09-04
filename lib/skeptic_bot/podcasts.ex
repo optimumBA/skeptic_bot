@@ -106,6 +106,9 @@ defmodule SkepticBot.Podcasts do
   @spec get_episode_by_external_id(external_id()) :: episode() | nil
   def get_episode_by_external_id(external_id), do: Repo.get_by(Episode, external_id: external_id)
 
+  @spec get_podcast(id()) :: podcast() | nil
+  def get_podcast(id), do: Repo.get(Podcast, id)
+
   @spec get_podcast_by_name(podcast_name()) :: podcast() | nil
   def get_podcast_by_name(name), do: Repo.get_by(Podcast, name: name)
 
