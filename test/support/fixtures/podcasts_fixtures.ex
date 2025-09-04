@@ -70,9 +70,10 @@ defmodule SkepticBot.PodcastsFixtures do
     {:ok, episode_transcription} =
       attrs
       |> Enum.into(%{
-        embedding: embedding_fixture(),
-        timestamp: %{secs: :rand.uniform(3000), months: 0, days: 0},
-        transcription: "Sample episode transcription"
+        embedding: attrs[:embedding],
+        podcast_episode_id: attrs[:episode_id],
+        timestamp: %{secs: attrs[:secs] || :rand.uniform(3000), months: 0, days: 0, microsecs: 0},
+        transcription: attrs[:transcription] || "Sample episode transcription"
       })
       |> Podcasts.create_episode_transcription()
 

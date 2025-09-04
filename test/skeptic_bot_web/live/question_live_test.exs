@@ -101,5 +101,45 @@ defmodule SkepticBotWeb.QuestionLiveTest do
 
       assert has_element?(view, ~s{div#loading-elements.hidden})
     end
+
+    test "handles questions with episodes but no transcription embeddings", %{
+      conn: conn,
+      embedding: embedding
+    } do
+      # Create episodes with embeddings
+      _episode1 =
+        episode_fixture(%{
+          title: "Episode with no transcriptions",
+          embedding: embedding
+        })
+
+      episode2 =
+        episode_fixture(%{
+          title: "Episode with non-embedded transcriptions",
+          embedding: offset_embedding_fixture(embedding, 0.01)
+        })
+
+      # Add transcription without embedding to episode2
+      transcription_fixture(%{
+        podcast_episode_id: episode2.id,
+        embedding: nil,
+        transcription: "This transcription has no embedding"
+      })
+
+      question =
+        question_fixture(
+          embedding: embedding,
+          episodes: [],
+          title: "Question with problematic episodes"
+        )
+
+      {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
+
+      # Should still render without errors
+      assert html =~ "Question with problematic episodes"
+      # Episodes should still show up
+      assert html =~ "Episode with no transcriptions"
+      assert html =~ "Episode with non-embedded transcriptions"
+    end
   end
 end
