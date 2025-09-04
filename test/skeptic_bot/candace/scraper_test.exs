@@ -22,6 +22,11 @@ defmodule SkepticBot.Candace.ScraperTest do
 
       port = Port.open({:spawn, "echo #{msg}"}, [:binary])
 
+      msg_2 =
+        "Eminem Drops A Diss Track Ep 25~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBI4"
+
+      send(self(), {port, {:data, msg_2}})
+
       Process.send_after(self(), {:close_port, port}, 100)
 
       expect(MockChannelClient, :get_channel_data_from_port, fn _date, _cookie_file, _channel ->
@@ -35,6 +40,14 @@ defmodule SkepticBot.Candace.ScraperTest do
         args: %{
           podcast: @podcast,
           video_url: @video_url
+        }
+      )
+
+      assert_enqueued(
+        worker: DownloadingWorker,
+        args: %{
+          podcast: @podcast,
+          video_url: "https://www.youtube.com/watch?v=3CHHx4pkBI4"
         }
       )
     end
