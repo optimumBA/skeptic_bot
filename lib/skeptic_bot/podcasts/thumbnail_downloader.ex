@@ -4,8 +4,8 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   """
 
   alias SkepticBot.Podcasts
-  alias SkepticBot.Storage.StorageProvider
   alias SkepticBot.Podcasts.Downloader
+  alias SkepticBot.Storage.StorageProvider
 
   @type id :: String.t()
   @type path :: String.t()
@@ -32,14 +32,17 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
     tmp_dir = System.tmp_dir!()
     new_thumbnail_path = Path.join(tmp_dir, "#{episode.id}_#{episode.external_id}.jpg")
 
-    with {:ok, path} <- Downloader.download(thumbnail_url, new_thumbnail_path, :req),
-         {:ok, public_url} <- StorageProvider.upload_file(path, "image/jpeg"),
-         {:ok, _episode} <- Podcasts.update_episode(episode, %{thumbnail: public_url}),
-         :ok <- File.rm(new_thumbnail_path) do
-      :ok
-    else
-      {:error, reason} ->
-        {:error, reason}
-    end
+    result =
+      with {:ok, path} <- Downloader.download(thumbnail_url, new_thumbnail_path, :req),
+           {:ok, public_url} <- StorageProvider.upload_file(path, "image/jpeg"),
+           {:ok, _episode} <- Podcasts.update_episode(episode, %{thumbnail: public_url}) do
+        :ok
+      else
+        {:error, reason} ->
+          {:error, reason}
+      end
+
+    File.rm(new_thumbnail_path)
+    result
   end
 end

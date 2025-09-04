@@ -12,10 +12,10 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   alias SkepticBot.DownloadingRunner
   alias SkepticBot.Podcasts.Downloader
+  alias SkepticBot.Podcasts.ThumbnailDownloader
   alias SkepticBot.Podcasts.Transcoder
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.StorageProvider
-  alias SkepticBot.Podcasts.ThumbnailDownloader
 
   require Logger
 
@@ -29,8 +29,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   def perform(%Oban.Job{
         args: %{"id" => id, "podcast" => podcast, "video_url" => video_url}
       }) do
-    with :ok <- ThumbnailDownloader.store_thumbnail(id, podcast),
-         {:ok, audio_url} <- process_with_flame(id, video_url, podcast) do
+    with {:ok, audio_url} <- process_with_flame(id, video_url, podcast),
+         :ok <- ThumbnailDownloader.store_thumbnail(id, podcast) do
       TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
       :ok
     else
