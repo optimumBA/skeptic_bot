@@ -11,7 +11,10 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.DownloadingRunner
+  alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Downloader
+  alias SkepticBot.Podcasts.Episode
+  alias SkepticBot.Podcasts.ThumbnailDownloader
   alias SkepticBot.Podcasts.Transcoder
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.StorageProvider
@@ -29,10 +32,15 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   def perform(%Oban.Job{
         args: %{"id" => id, "podcast" => podcast, "video_url" => video_url}
       }) do
-    case process_with_flame(id, video_url, podcast) do
-      {:ok, audio_url} ->
-        TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
-        :ok
+    with {:ok, audio_url} <- process_with_flame(id, video_url, podcast),
+         %Episode{} = episode <- Podcasts.get_episode(id),
+         :ok <- ThumbnailDownloader.store_thumbnail(episode, podcast) do
+      TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
+      :ok
+    else
+      nil ->
+        Logger.error("Failed to download thumbnail for episode: #{id}")
+        {:error, "Episode not found"}
 
       {:error, reason} ->
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
@@ -73,7 +81,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     result =
       with {:ok, _video_path} <- Downloader.download(url, video_path, :req),
            :ok <- Transcoder.transcode_video(video_path, audio_path),
-           {:ok, url} <- StorageProvider.upload_file(audio_path) do
+           {:ok, url} <- StorageProvider.upload_file(audio_path, "audio/mpeg") do
         {:ok, url}
       else
         {:error, reason} ->
@@ -100,7 +108,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
     result =
       with {:ok, _audio_path} <- Downloader.download(url, audio_path, :yt_dlp),
-           {:ok, url} <- StorageProvider.upload_file(audio_path) do
+           {:ok, url} <- StorageProvider.upload_file(audio_path, "audio/mpeg") do
         {:ok, url}
       else
         {:error, reason} ->

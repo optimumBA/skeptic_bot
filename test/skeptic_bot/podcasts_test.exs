@@ -57,6 +57,17 @@ defmodule SkepticBot.PodcastsTest do
     end
   end
 
+  describe "get_podcast/1" do
+    test "returns the podcast with given id" do
+      podcast = podcast_fixture()
+      assert Podcasts.get_podcast(podcast.id) == podcast
+    end
+
+    test "returns nil for non-existent id" do
+      refute Podcasts.get_podcast("14444444-edaa-444a-a333-7a77758ad305")
+    end
+  end
+
   describe "get_episode_by_external_id/1" do
     test "returns the episode with given external_id" do
       episode = episode_fixture(external_id: "c8aa9b82-03e1-417e-b4ad-7ce380c25414")
