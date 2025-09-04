@@ -13,6 +13,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   alias SkepticBot.DownloadingRunner
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Downloader
+  alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Podcasts.ThumbnailDownloader
   alias SkepticBot.Podcasts.Transcoder
   alias SkepticBot.Podcasts.TranscribingWorker
@@ -31,11 +32,15 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
         args: %{"id" => id, "podcast" => podcast, "video_url" => video_url}
       }) do
     with {:ok, audio_url} <- process_with_flame(id, video_url, podcast),
-         episode <- Podcasts.get_episode(id),
+         %Episode{} = episode <- Podcasts.get_episode(id),
          :ok <- ThumbnailDownloader.store_thumbnail(episode, podcast) do
       TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
       :ok
     else
+      nil ->
+        Logger.error("Failed to process episode: #{id}, reason: episode_not_found")
+        {:error, :episode_not_found}
+
       {:error, reason} ->
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
         {:error, reason}
