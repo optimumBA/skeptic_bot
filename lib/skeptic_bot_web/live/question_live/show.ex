@@ -214,6 +214,6 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   end
 
   defp get_image_url(episode) do
-    "https://vid.samtripoli.com/" <> episode.thumbnail
+    episode.thumbnail
   end
 end
