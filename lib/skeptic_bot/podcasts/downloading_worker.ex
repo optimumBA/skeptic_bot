@@ -80,7 +80,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     result =
       with {:ok, _video_path} <- Downloader.download(url, video_path, :req),
            :ok <- Transcoder.transcode_video(video_path, audio_path),
-           {:ok, url} <- StorageProvider.upload_file(audio_path) do
+           {:ok, url} <- StorageProvider.upload_file(audio_path, "audio/mpeg") do
         {:ok, url}
       else
         {:error, reason} ->
@@ -106,7 +106,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
     result =
       with {:ok, _audio_path} <- Downloader.download(url, audio_path, :yt_dlp),
-           {:ok, url} <- StorageProvider.upload_file(audio_path) do
+           {:ok, url} <- StorageProvider.upload_file(audio_path, "audio/mpeg") do
         {:ok, url}
       else
         {:error, reason} ->

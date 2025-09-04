@@ -16,7 +16,7 @@ defmodule SkepticBot.Storage.StorageProvider do
   def delete_file(filename), do: impl().delete_file(filename)
 
   @spec upload_file(filepath(), content_type()) :: {:ok, url()} | {:error, reason()}
-  def upload_file(filepath, content_type \\ "audio/mpeg"),
+  def upload_file(filepath, content_type),
     do: impl().upload_file(filepath, content_type)
 
   defp impl, do: Application.get_env(:skeptic_bot, :storage_provider, TigrisStorageProvider)
