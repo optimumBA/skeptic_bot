@@ -10,7 +10,13 @@ defmodule SkepticBotWeb.PodcastComponents do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
+  @podcast_tinfoilhat "Tin Foil Hat"
+  @tinfoil_base_webpage_url "https://vid.samtripoli.com/w/"
+  @rokfin_base_webpage_url "https://rokfin.com/post/"
+  @rumble_base_webpage_url "https://rumble.com/"
+
   attr :external_id, :string, required: true
+  attr :podcast, :string, required: true
   attr :podcast_title, :string, required: true
   attr :random, :integer, required: true
   attr :thumbnail, :string, required: true
@@ -20,7 +26,7 @@ defmodule SkepticBotWeb.PodcastComponents do
   @spec episode_card(assigns()) :: rendered()
   def episode_card(assigns) do
     ~H"""
-    <a href={"https://vid.samtripoli.com/w/" <> @external_id <> "?start=" <> @timestamp}>
+    <a href={get_webpage_url(@external_id, @timestamp, @podcast)}>
       <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative mobile-scroll-child">
         <div class="rounded-xl w-full h-full overflow-hidden">
           <img src={@thumbnail} alt="Cover 2" class="w-full h-full object-cover" />
@@ -223,6 +229,20 @@ defmodule SkepticBotWeb.PodcastComponents do
   defp get_episode_vector(random) do
     assigns = %{random: random}
     absolute_vectors(assigns)
+  end
+
+  defp get_webpage_url(external_id, timestamp, @podcast_tinfoilhat) do
+    @tinfoil_base_webpage_url <> external_id <> "?start=" <> timestamp
+  end
+
+  defp get_webpage_url(external_id, timestamp, _podcast) do
+    case Integer.parse(external_id) do
+      {_integer, ""} ->
+        @rokfin_base_webpage_url <> external_id <> "?start=" <> timestamp
+
+      _mixed_integer_tuple ->
+        @rumble_base_webpage_url <> external_id <> "?start=" <> timestamp
+    end
   end
 
   @spec trim_title(String.t()) :: String.t()

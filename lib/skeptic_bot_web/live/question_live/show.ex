@@ -63,6 +63,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               <%= for episode <- @related_episodes do %>
                 <PodcastComponents.episode_card
                   external_id={episode.external_id}
+                  podcast={episode.podcast.name}
                   podcast_title={episode.title}
                   random={
                     Enum.at(
@@ -89,6 +90,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               <%= for episode <- @other_episodes do %>
                 <PodcastComponents.episode_card
                   external_id={episode.external_id}
+                  podcast={episode.podcast.name}
                   podcast_title={episode.title}
                   random={
                     Enum.at(
