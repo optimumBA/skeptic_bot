@@ -31,7 +31,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
          "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3.mp4"}
       end)
 
-      expect(MockDownloader, :download, fn _url, _video_path ->
+      expect(MockDownloader, :download, fn _thumbnail_url, _thumbnail_path ->
         {:ok,
          "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3.jpg"}
       end)
@@ -44,7 +44,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
         {:ok, "https://skeptic-bot-dev.fly.storage.tigris.dev/song.mp3"}
       end)
 
-      expect(MockStorageProvider, :upload_file, fn _audio_path, _content_type ->
+      expect(MockStorageProvider, :upload_file, fn _thumbnail_path, _content_type ->
         {:ok, "https://skeptic-bot-dev.fly.storage.tigris.dev/picture.jpg"}
       end)
 
@@ -70,7 +70,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
          "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3.mp4"}
       end)
 
-      expect(MockDownloader, :download, fn _url, _video_path ->
+      expect(MockDownloader, :download, fn _thumbnail_url, _thumbnail_path ->
         {:ok,
          "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3.jpg"}
       end)
@@ -79,7 +79,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
         {:ok, "https://skeptic-bot-dev.fly.storage.tigris.dev/song.mp3"}
       end)
 
-      expect(MockStorageProvider, :upload_file, fn _audio_path, _content_type ->
+      expect(MockStorageProvider, :upload_file, fn _thumbnail_path, _content_type ->
         {:ok, "https://skeptic-bot-dev.fly.storage.tigris.dev/picture.jpg"}
       end)
 

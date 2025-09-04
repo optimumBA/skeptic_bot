@@ -32,8 +32,8 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
 
     result =
       with {:ok, path} <- Downloader.download(thumbnail_url, new_thumbnail_path, :req),
-           {:ok, public_url} <- StorageProvider.upload_file(path, "image/jpeg"),
-           {:ok, _episode} <- Podcasts.update_episode(episode, %{thumbnail: public_url}) do
+           {:ok, public_thumbnail_url} <- StorageProvider.upload_file(path, "image/jpeg"),
+           {:ok, _episode} <- Podcasts.update_episode(episode, %{thumbnail: public_thumbnail_url}) do
         :ok
       else
         {:error, reason} ->
