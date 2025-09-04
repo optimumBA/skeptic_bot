@@ -38,8 +38,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
       :ok
     else
       nil ->
-        Logger.error("Failed to process episode: #{id}, reason: episode_not_found")
-        {:error, :episode_not_found}
+        Logger.error("Failed to download thumbnail for episode: #{id}")
+        {:error, "Episode not found"}
 
       {:error, reason} ->
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
