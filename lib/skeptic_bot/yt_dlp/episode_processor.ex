@@ -60,7 +60,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
   end
 
   defp get_external_id(webpage_url, @candace_channel) do
-    <<"https://www.youtube.com/watch?", webpage_id::binary>> = webpage_url
+    <<"https://www.youtube.com/watch?v=", webpage_id::binary>> = webpage_url
 
     webpage_id
   end

@@ -88,9 +88,10 @@ config :skeptic_bot, :tigris_storage,
   bucket: tigris_bucket,
   secret_access_key: tigris_secret_access_key
 
-config :skeptic_bot,
-  youtube_cookie_file_path:
-    Path.join([:code.priv_dir(:skeptic_bot), "/cookies/youtube_cookies.txt"])
+youtube_cookie_file_path =
+  Path.join([:code.priv_dir(:skeptic_bot), "/cookies/youtube_cookies.txt"])
+
+config :skeptic_bot, youtube_cookie_file_path: youtube_cookie_file_path
 
 if config_env() == :prod do
   encoded_cookie_file =
@@ -101,11 +102,7 @@ if config_env() == :prod do
 
   decoded_cookie_content = Base.decode64!(encoded_cookie_file)
 
-  :ok =
-    File.write(
-      Application.get_env(:skeptic_bot, :youtube_cookie_file_path),
-      decoded_cookie_content
-    )
+  :ok = File.write(youtube_cookie_file_path, decoded_cookie_content)
 
   database_url =
     System.get_env("DATABASE_URL") ||
