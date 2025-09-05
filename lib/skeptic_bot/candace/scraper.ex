@@ -63,18 +63,12 @@ defmodule SkepticBot.Candace.Scraper do
   end
 
   defp get_cookie_file do
-    Path.join([:code.priv_dir(:skeptic_bot), "/cookies/youtube_cookies.txt"])
+    Application.get_env(:skeptic_bot, :youtube_cookie_file_path)
   end
 
   defp get_yesterday_date do
-    {year, month, day} =
-      Date.utc_today()
-      |> Date.add(-1)
-      |> Date.to_erl()
-
-    "#{pad(year)}#{pad(month)}#{pad(day)}"
+    NaiveDateTime.utc_now()
+    |> NaiveDateTime.add(-1, :day)
+    |> Calendar.strftime("%Y%m%d")
   end
-
-  defp pad(value) when value < 10, do: "0#{value}"
-  defp pad(value), do: "#{value}"
 end
