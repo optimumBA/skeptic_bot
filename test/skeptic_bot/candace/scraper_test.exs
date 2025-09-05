@@ -52,20 +52,4 @@ defmodule SkepticBot.Candace.ScraperTest do
       )
     end
   end
-
-  describe "scrape_from_file/0" do
-    test "enqueues episodes from the dump file" do
-      _podcast = podcast_fixture(name: @podcast)
-
-      Scraper.scrape_from_file()
-
-      assert_enqueued(
-        worker: DownloadingWorker,
-        args: %{
-          podcast: @podcast,
-          video_url: @video_url
-        }
-      )
-    end
-  end
 end

@@ -12,8 +12,8 @@ defmodule SkepticBot.Candace.Scraper do
   @channel "https://www.youtube.com/@RealCandaceO/streams"
   @podcast "Candace"
 
-  @type episode :: {title(), duration(), thumbnail(), webpage_url()}
   @type duration :: String.t()
+  @type episode :: {title(), duration(), thumbnail(), webpage_url()}
   @type thumbnail :: String.t()
   @type title :: String.t()
   @type webpage_url :: String.t()
@@ -23,30 +23,23 @@ defmodule SkepticBot.Candace.Scraper do
     date = get_yesterday_date()
     cookie_file = get_cookie_file()
     ChannelClient.get_channel_data_from_port(date, cookie_file, @channel)
-    wait_for_episodes()
-  end
-
-  @spec scrape_from_file :: :ok
-  def scrape_from_file do
-    episodes = get_episodes()
-    Enum.each(episodes, &process_episode/1)
-  end
-
-  @spec process_episode(episode()) :: :ok
-  defp process_episode(episode) do
     podcast = Podcasts.get_podcast_by_name(@podcast)
+    wait_for_episodes(podcast)
+  end
+
+  defp process_episode(episode, podcast) do
     EpisodeProcessor.maybe_download_episode(episode, @channel, podcast)
     :ok
   end
 
-  defp wait_for_episodes do
+  defp wait_for_episodes(podcast) do
     receive do
       {_port, {:data, msg}} ->
         msg
         |> format_message()
-        |> process_episode()
+        |> process_episode(podcast)
 
-        wait_for_episodes()
+        wait_for_episodes(podcast)
 
       {:close_port, port} ->
         Logger.info("Closed the port")
@@ -62,29 +55,11 @@ defmodule SkepticBot.Candace.Scraper do
     end
   end
 
-  defp get_episodes do
-    [:code.priv_dir(:skeptic_bot), "/dumps/candace.txt"]
-    |> Path.join()
-    |> File.read!()
-    |> format_channel_data()
-  end
-
   defp format_message(msg) do
     msg
     |> String.trim("\n")
     |> String.split("~~")
     |> List.to_tuple()
-  end
-
-  defp format_channel_data(result) do
-    result
-    |> String.split("\n")
-    |> Enum.map(fn x ->
-      x
-      |> String.split("~~")
-      |> List.to_tuple()
-    end)
-    |> Enum.drop(-1)
   end
 
   defp get_cookie_file do

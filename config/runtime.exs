@@ -90,15 +90,18 @@ config :skeptic_bot, :tigris_storage,
 
 if config_env() == :prod do
   encoded_cookie_file =
-    System.get_env("BASE_64_ENCODED_COOKIE_FILE") ||
+    System.get_env("YOUTUBE_COOKIE_FILE") ||
       raise """
-      environment variable BASE_64_ENCODED_COOKIE_FILE is missing.
+      environment variable YOUTUBE_COOKIE_FILE is missing.
       """
 
   decoded_cookie_content = Base.decode64!(encoded_cookie_file)
 
   :ok =
-    File.write(Path.join([File.cwd!(), "/cookies/youtube_cookies.txt"]), decoded_cookie_content)
+    File.write(
+      Path.join([:code.priv_dir(:skeptic_bot), "/cookies/youtube_cookies.txt"]),
+      decoded_cookie_content
+    )
 
   database_url =
     System.get_env("DATABASE_URL") ||
