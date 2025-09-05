@@ -13,7 +13,7 @@ defmodule SkepticBot.PodcastsFixtures do
 
   @type embedding :: [float()]
   @type offset :: float()
-  @type podcast_name() :: String.t()
+  @type podcast_name :: String.t()
   @type response :: String.t()
 
   @doc """

@@ -62,18 +62,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             <div class="flex gap-4 mobile-scroll-parent" id="related-episodes-carousel">
               <%= for episode <- @related_episodes do %>
                 <PodcastComponents.episode_card
-                  external_id={episode.external_id}
-                  podcast={episode.podcast.name}
-                  podcast_title={episode.title}
+                  episode={episode}
                   random={
                     Enum.at(
                       @related_episodes_vectors,
                       Enum.find_index(@related_episodes, fn x -> x == episode end)
                     )
                   }
-                  thumbnail={episode.thumbnail}
                   timestamp={if episode.timestamp, do: to_string(episode.timestamp.secs), else: "0"}
-                  video_length={episode.episode_length}
                 />
               <% end %>
             </div>
@@ -89,18 +85,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             <div class="flex gap-4 mobile-scroll-parent" id="other-episodes-carousel">
               <%= for episode <- @other_episodes do %>
                 <PodcastComponents.episode_card
-                  external_id={episode.external_id}
-                  podcast={episode.podcast.name}
-                  podcast_title={episode.title}
+                  episode={episode}
                   random={
                     Enum.at(
                       @other_episodes_vectors,
                       Enum.find_index(@other_episodes, fn x -> x == episode end)
                     )
                   }
-                  thumbnail={episode.thumbnail}
                   timestamp="0"
-                  video_length={episode.episode_length}
                 />
               <% end %>
             </div>
