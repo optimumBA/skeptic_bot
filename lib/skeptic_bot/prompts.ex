@@ -67,6 +67,7 @@ defmodule SkepticBot.Prompts do
     |> order_by([e], asc: l2_distance(e.embedding, ^question_embedding))
     |> limit(^limit)
     |> Repo.all()
+    |> Repo.preload(:podcast)
     |> Enum.map(fn episode ->
       timestamp = question_episodes_timestamps[episode.id]
       Map.put(episode, :timestamp, timestamp)
@@ -79,6 +80,7 @@ defmodule SkepticBot.Prompts do
     |> order_by([e], desc: l2_distance(e.embedding, ^question_embedding))
     |> limit(^limit)
     |> Repo.all()
+    |> Repo.preload(:podcast)
   end
 
   @spec get_related_questions(embedding(), id()) :: [question()]

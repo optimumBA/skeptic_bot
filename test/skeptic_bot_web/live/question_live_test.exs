@@ -8,7 +8,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   defp create_question(%{conn: conn}) do
     embedding = embedding_fixture()
 
-    create_multiple_episodes(4, embedding)
+    create_multiple_episodes(2, embedding)
 
     question = question_fixture(embedding: embedding)
 
@@ -52,6 +52,59 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       assert html =~ "00:50:00"
       assert html =~ ~r|For binaries, the default is the size of the binary. Only th...\s+</div>|
       assert html =~ "00:20:00"
+    end
+
+    test "uses different webpage_urls based on the podcast", %{
+      conn: conn,
+      embedding: embedding
+    } do
+      question =
+        question_fixture(
+          embedding: embedding,
+          episodes: [],
+          title: "American Ponzi with Lee Camp and Sam Tripoli"
+        )
+
+      episode =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding
+          },
+          "Tin Foil Hat"
+        )
+
+      episode_2 =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding
+          },
+          "Look Into It"
+        )
+
+      episode_3 =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding,
+            external_id: "145321"
+          },
+          "Look Into It"
+        )
+
+      {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
+
+      webpage_url = "https://vid.samtripoli.com/w/" <> episode.external_id <> "?start=0"
+      webpage_url_2 = "https://rumble.com/" <> episode_2.external_id <> "?start=0"
+      webpage_url_3 = "https://rokfin.com/post/" <> episode_3.external_id <> "?start=0"
+
+      assert html =~ webpage_url
+      assert html =~ webpage_url_2
+      assert html =~ webpage_url_3
     end
 
     test "displays the related questions", %{
