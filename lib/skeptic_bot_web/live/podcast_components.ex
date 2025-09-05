@@ -10,31 +10,34 @@ defmodule SkepticBotWeb.PodcastComponents do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
-  attr :external_id, :string, required: true
-  attr :podcast_title, :string, required: true
+  @episode_url_rokfin "https://rokfin.com/post/"
+  @episode_url_rumble "https://rumble.com/"
+  @episode_url_tinfoilhat "https://vid.samtripoli.com/w/"
+  @podcast_lookintoit "Look Into It"
+  @podcast_tinfoilhat "Tin Foil Hat"
+
+  attr :episode, :map, required: true
   attr :random, :integer, required: true
-  attr :thumbnail, :string, required: true
   attr :timestamp, :string, required: true
-  attr :video_length, :string, required: true
 
   @spec episode_card(assigns()) :: rendered()
   def episode_card(assigns) do
     ~H"""
-    <a href={"https://vid.samtripoli.com/w/" <> @external_id <> "?start=" <> @timestamp}>
+    <a href={episode_url(@episode.external_id, @timestamp, @episode.podcast.name)}>
       <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative mobile-scroll-child">
         <div class="rounded-xl w-full h-full overflow-hidden">
-          <img src={@thumbnail} alt="Cover 2" class="w-full h-full object-cover" />
+          <img src={@episode.thumbnail} alt="Cover 2" class="w-full h-full object-cover" />
         </div>
         {get_episode_vector(@random)}
         <div class="absolute bottom-[3rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
-          {trim_title(@podcast_title)}
+          {trim_title(@episode.title)}
         </div>
 
         <div class="absolute bottom-[1rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
           <div>
             <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
           </div>
-          <div class="text-sm">{get_time_from_seconds(@video_length)}</div>
+          <div class="text-sm">{get_time_from_seconds(@episode.episode_length)}</div>
         </div>
       </section>
     </a>
@@ -223,6 +226,20 @@ defmodule SkepticBotWeb.PodcastComponents do
   defp get_episode_vector(random) do
     assigns = %{random: random}
     absolute_vectors(assigns)
+  end
+
+  defp episode_url(external_id, timestamp, @podcast_tinfoilhat) do
+    @episode_url_tinfoilhat <> external_id <> "?start=" <> timestamp
+  end
+
+  defp episode_url(external_id, timestamp, @podcast_lookintoit) do
+    case Integer.parse(external_id) do
+      {_integer, ""} ->
+        @episode_url_rokfin <> external_id <> "?start=" <> timestamp
+
+      _error ->
+        @episode_url_rumble <> external_id <> "?start=" <> timestamp
+    end
   end
 
   @spec trim_title(String.t()) :: String.t()
