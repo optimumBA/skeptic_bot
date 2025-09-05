@@ -10,11 +10,11 @@ defmodule SkepticBotWeb.PodcastComponents do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
+  @episode_url_rokfin "https://rokfin.com/post/"
+  @episode_url_rumble "https://rumble.com/"
+  @episode_url_tinfoilhat "https://vid.samtripoli.com/w/"
   @podcast_lookintoit "Look Into It"
   @podcast_tinfoilhat "Tin Foil Hat"
-  @webpage_url_rokfin "https://rokfin.com/post/"
-  @webpage_url_rumble "https://rumble.com/"
-  @webpage_url_tinfoilhat "https://vid.samtripoli.com/w/"
 
   attr :episode, :map, required: true
   attr :random, :integer, required: true
@@ -229,16 +229,16 @@ defmodule SkepticBotWeb.PodcastComponents do
   end
 
   defp episode_url(external_id, timestamp, @podcast_tinfoilhat) do
-    @webpage_url_tinfoilhat <> external_id <> "?start=" <> timestamp
+    @episode_url_tinfoilhat <> external_id <> "?start=" <> timestamp
   end
 
   defp episode_url(external_id, timestamp, @podcast_lookintoit) do
     case Integer.parse(external_id) do
       {_integer, ""} ->
-        @webpage_url_rokfin <> external_id <> "?start=" <> timestamp
+        @episode_url_rokfin <> external_id <> "?start=" <> timestamp
 
       _error ->
-        @webpage_url_rumble <> external_id <> "?start=" <> timestamp
+        @episode_url_rumble <> external_id <> "?start=" <> timestamp
     end
   end
 
