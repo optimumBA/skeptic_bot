@@ -25,7 +25,7 @@ file_url =
     environment variable CANDACE_TXT_FILE_URL is missing.
     """
 
-path = Path.join([System.tmp_dir(), "candace.txt"])
+path = Path.join([System.tmp_dir!(), "candace.txt"])
 
 {:ok, path} = ReqDownloader.download(file_url, path)
 
