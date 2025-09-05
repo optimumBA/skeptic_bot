@@ -12,7 +12,11 @@ defmodule SkepticBot.Candace.Scraper do
   @channel "https://www.youtube.com/@RealCandaceO/streams"
   @podcast "Candace"
 
-  @type episode :: {String.t(), String.t(), String.t(), String.t()}
+  @type episode :: {title(), duration(), thumbnail(), webpage_url()}
+  @type duration :: String.t()
+  @type thumbnail :: String.t()
+  @type title :: String.t()
+  @type webpage_url :: String.t()
 
   @spec scrape :: :ok
   def scrape do

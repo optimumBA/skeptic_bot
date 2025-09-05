@@ -14,9 +14,13 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
   @eddie_rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
 
   @type channel :: String.t()
-  @type episode :: {String.t(), String.t(), String.t(), String.t()}
+  @type duration :: String.t()
+  @type episode :: {title(), duration(), thumbnail(), webpage_url()}
   @type job :: Oban.Job.t()
   @type podcast :: Podcast.t()
+  @type thumbnail :: String.t()
+  @type title :: String.t()
+  @type webpage_url :: String.t()
 
   @spec maybe_download_episode(episode(), channel(), podcast()) ::
           {:ok, job()} | {:error, Ecto.Changeset.t()} | nil
