@@ -84,7 +84,7 @@ defmodule SkepticBot.Candace.Scraper do
   end
 
   defp get_cookie_file do
-    Path.join([:code.priv_dir(:skeptic_bot), "/cookies/normal_cookies.txt"])
+    Path.join([:code.priv_dir(:skeptic_bot), "/cookies/youtube_cookies.txt"])
   end
 
   defp get_yesterday_date do
