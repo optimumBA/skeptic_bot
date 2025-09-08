@@ -1,8 +1,8 @@
-defmodule SkepticBot.LookIntoIt.YtDlpChannelClient do
+defmodule SkepticBot.YtDlp.YtDlpChannelClient do
   @moduledoc """
   Getting channel data using yt-dlp
   """
-  alias SkepticBot.LookIntoIt.ChannelClient
+  alias SkepticBot.YtDlp.ChannelClient
 
   require Logger
 
@@ -26,5 +26,15 @@ defmodule SkepticBot.LookIntoIt.YtDlpChannelClient do
       {error, 1} ->
         {:error, error}
     end
+  end
+
+  @impl ChannelClient
+  def get_channel_data_from_port(date, cookie_file, channel) do
+    cmd =
+      "yt-dlp --cache-dir #{System.tmp_dir!()} --date #{date} --cookies #{cookie_file} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" #{channel}"
+
+    port = Port.open({:spawn, cmd}, [:binary, :stderr_to_stdout, :exit_status])
+    Process.send_after(self(), {:close_port, port}, :timer.minutes(1))
+    port
   end
 end
