@@ -101,6 +101,7 @@ if config_env() == :prod do
       """
 
   require Logger
+  Logger.info("encoded_cookie_file")
   Logger.info(encoded_cookie_file)
 
   decoded_cookie_content = Base.decode64!(encoded_cookie_file)
