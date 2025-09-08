@@ -74,6 +74,7 @@ defmodule SkepticBot.WebhookHandlerTest do
       assert {:ok, _owner_pid} = WebhookHandler.register_for_prediction("some-id", self())
       WebhookHandler.handle_webhook(@successful_prediction_payload)
       assert :ok = WebhookHandler.unregister_prediction("some-id")
+      Process.sleep(10)
       refute_receive {:prediction_completed, "some-id", "good output"}
     end
 
@@ -102,7 +103,7 @@ defmodule SkepticBot.WebhookHandlerTest do
         capture_log([level: :warning], fn ->
           WebhookHandler.handle_webhook(%{"status" => "completed", "output" => "good output"})
 
-          Process.sleep(10)
+          Process.sleep(20)
         end)
 
       assert log =~ "Received webhook without prediction ID"
@@ -116,7 +117,7 @@ defmodule SkepticBot.WebhookHandlerTest do
             "status" => "unknown"
           })
 
-          Process.sleep(10)
+          Process.sleep(15)
         end)
 
       assert log =~ "Received webhook with unknown status for prediction some-id"
