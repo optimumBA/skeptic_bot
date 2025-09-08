@@ -3,14 +3,13 @@ defmodule SkepticBot.LookIntoIt.Scraper do
   Scrapes Eddie Bravo's episodes from Rokfin and Rumble then downloads them
   """
 
-  alias SkepticBot.LookIntoIt.ChannelClient
   alias SkepticBot.Podcasts
-  alias SkepticBot.Podcasts.DownloadingWorker
+  alias SkepticBot.YtDlp.ChannelClient
+  alias SkepticBot.YtDlp.EpisodeProcessor
 
   require Logger
 
   @podcast "Look Into It"
-  @rokfin_channel "https://rokfin.com/eddiebravo"
   @rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
 
   @type channel :: String.t()
@@ -24,7 +23,7 @@ defmodule SkepticBot.LookIntoIt.Scraper do
 
         result
         |> format_channel_data()
-        |> Enum.each(&maybe_download_episode(&1, channel, podcast.id))
+        |> Enum.each(&EpisodeProcessor.maybe_download_episode(&1, channel, podcast))
 
       {:error, reason} ->
         Logger.error("Unable to get channel data. Reason : #{reason}")
@@ -41,48 +40,5 @@ defmodule SkepticBot.LookIntoIt.Scraper do
       |> List.to_tuple()
     end)
     |> Enum.drop(-1)
-  end
-
-  defp maybe_download_episode({title, duration, thumbnail, webpage_url}, channel, podcast_id) do
-    external_id = get_external_id(webpage_url, channel)
-
-    unless Podcasts.episode_exists?(external_id) do
-      {:ok, %Podcasts.Episode{} = episode} =
-        Podcasts.create_episode(%{
-          "episode_length" => get_video_length(duration, channel),
-          "external_id" => external_id,
-          "podcast_id" => podcast_id,
-          "thumbnail" => thumbnail,
-          "title" => title
-        })
-
-      DownloadingWorker.enqueue(%{
-        "id" => episode.id,
-        "podcast" => @podcast,
-        "video_url" => webpage_url
-      })
-    end
-  end
-
-  defp get_video_length(duration, @rokfin_channel) do
-    duration
-    |> String.to_float()
-    |> round()
-  end
-
-  defp get_video_length(duration, @rumble_channel) do
-    String.to_integer(duration)
-  end
-
-  defp get_external_id(webpage_url, @rokfin_channel) do
-    <<"https://rokfin.com/post/", webpage_id::binary>> = webpage_url
-
-    webpage_id
-  end
-
-  defp get_external_id(webpage_url, @rumble_channel) do
-    <<"https://rumble.com/", webpage_id::binary>> = webpage_url
-
-    webpage_id
   end
 end

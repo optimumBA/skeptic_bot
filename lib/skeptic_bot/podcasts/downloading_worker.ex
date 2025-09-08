@@ -21,6 +21,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   require Logger
 
+  @podcast_candace "Candace"
   @podcast_lookintoit "Look Into It"
   @podcast_tinfoilhat "Tin Foil Hat"
 
@@ -52,7 +53,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
       FLAME.call(
         DownloadingRunner,
         fn -> process(id, video_url, podcast) end,
-        timeout: 4_400_000
+        timeout: 1_800_000
       )
 
     case result do
@@ -94,7 +95,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
     result
   end
 
-  defp process(id, url, @podcast_lookintoit) do
+  defp process(id, url, podcast)
+       when podcast in [@podcast_candace, @podcast_lookintoit] do
     tmp_dir = System.tmp_dir!()
     audio_path = Path.join(tmp_dir, "#{id}_.mp3")
 
