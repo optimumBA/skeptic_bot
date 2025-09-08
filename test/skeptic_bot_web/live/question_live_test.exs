@@ -58,19 +58,13 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       conn: conn,
       embedding: embedding
     } do
-      question =
-        question_fixture(
-          embedding: embedding,
-          episodes: [],
-          title: "American Ponzi with Lee Camp and Sam Tripoli"
-        )
-
       episode =
         episode_fixture(
           %{
             episode_length: 3000,
             title: "Consistency truly is key to mastering any skill over time and effort",
-            embedding: embedding
+            embedding: embedding,
+            external_id: "na3z9PEPSKzHedBSoVGPvn"
           },
           "Tin Foil Hat"
         )
@@ -80,7 +74,9 @@ defmodule SkepticBotWeb.QuestionLiveTest do
           %{
             episode_length: 3000,
             title: "Consistency truly is key to mastering any skill over time and effort",
-            embedding: embedding
+            embedding: embedding,
+            external_id:
+              "v51g8i8-alex-jones-on-look-into-it-with-eddie-bravo-episode-101.html?e9s=src_v1_ucp_a"
           },
           "Look Into It"
         )
@@ -96,15 +92,43 @@ defmodule SkepticBotWeb.QuestionLiveTest do
           "Look Into It"
         )
 
+      episode_4 =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding,
+            external_id: "DoRzUmsF800"
+          },
+          "Candace"
+        )
+
+      question =
+        question_fixture(
+          embedding: embedding,
+          episodes: [
+            %{episode_id: episode.id, timestamp: %{secs: 45, months: 0, days: 0}},
+            %{episode_id: episode_2.id, timestamp: %{secs: 30, months: 0, days: 0}},
+            %{episode_id: episode_3.id, timestamp: %{secs: 20, months: 0, days: 0}},
+            %{episode_id: episode_4.id, timestamp: %{secs: 76, months: 0, days: 0}}
+          ],
+          title: "American Ponzi with Lee Camp and Sam Tripoli"
+        )
+
       {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
 
-      webpage_url = "https://vid.samtripoli.com/w/" <> episode.external_id <> "?start=0"
-      webpage_url_2 = "https://rumble.com/" <> episode_2.external_id <> "?start=0"
-      webpage_url_3 = "https://rokfin.com/post/" <> episode_3.external_id <> "?start=0"
+      webpage_url = "https://vid.samtripoli.com/w/na3z9PEPSKzHedBSoVGPvn?start=45"
+
+      webpage_url_2 =
+        "https://rumble.com/v51g8i8-alex-jones-on-look-into-it-with-eddie-bravo-episode-101.html?e9s=src_v1_ucp_a&amp;start=30"
+
+      webpage_url_3 = "https://rokfin.com/post/145321?start=20"
+      webpage_url_4 = "https://www.youtube.com/watch?v=DoRzUmsF800?start=76"
 
       assert html =~ webpage_url
       assert html =~ webpage_url_2
       assert html =~ webpage_url_3
+      assert html =~ webpage_url_4
     end
 
     test "displays the related questions", %{

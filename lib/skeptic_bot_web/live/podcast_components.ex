@@ -10,9 +10,11 @@ defmodule SkepticBotWeb.PodcastComponents do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
+  @episode_url_candace "https://www.youtube.com/watch?v="
   @episode_url_rokfin "https://rokfin.com/post/"
   @episode_url_rumble "https://rumble.com/"
   @episode_url_tinfoilhat "https://vid.samtripoli.com/w/"
+  @podcast_candace "Candace"
   @podcast_lookintoit "Look Into It"
   @podcast_tinfoilhat "Tin Foil Hat"
 
@@ -238,8 +240,12 @@ defmodule SkepticBotWeb.PodcastComponents do
         @episode_url_rokfin <> external_id <> "?start=" <> timestamp
 
       _error ->
-        @episode_url_rumble <> external_id <> "?start=" <> timestamp
+        @episode_url_rumble <> external_id <> "&start=" <> timestamp
     end
+  end
+
+  defp episode_url(external_id, timestamp, @podcast_candace) do
+    @episode_url_candace <> external_id <> "?start=" <> timestamp
   end
 
   @spec trim_title(String.t()) :: String.t()
