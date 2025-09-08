@@ -91,6 +91,8 @@ config :skeptic_bot, :tigris_storage,
 youtube_cookie_file_path =
   Path.join([File.cwd!(), "priv/cookies/youtube_cookies.txt"])
 
+File.mkdir!(Path.dirname(youtube_cookie_file_path))
+
 # Path.join([:code.priv_dir(:skeptic_bot), "/cookies/youtube_cookies.txt"])
 
 config :skeptic_bot, youtube_cookie_file_path: youtube_cookie_file_path
