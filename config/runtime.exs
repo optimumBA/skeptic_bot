@@ -100,6 +100,9 @@ if config_env() == :prod do
       environment variable YOUTUBE_COOKIE_FILE is missing.
       """
 
+  require Logger
+  Logger.info(encoded_cookie_file)
+
   decoded_cookie_content = Base.decode64!(encoded_cookie_file)
 
   :ok = File.write(youtube_cookie_file_path, decoded_cookie_content)
