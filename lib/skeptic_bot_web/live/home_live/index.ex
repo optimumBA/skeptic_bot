@@ -177,7 +177,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
     {:ok, question} = Prompts.create_question(question_attrs)
 
-    :ok = PredictionHandler.make_llm_request(podcast_episodes, question)
+    PredictionHandler.make_llm_request(podcast_episodes, question)
 
     {:noreply, push_navigate(socket, to: ~p"/questions/#{question.id}")}
   end

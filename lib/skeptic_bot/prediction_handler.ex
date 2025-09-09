@@ -26,16 +26,16 @@ defmodule SkepticBot.PredictionHandler do
 
   @spec make_llm_request(context(), question()) :: :ok
   def make_llm_request(context, question) do
-    GenServer.call(__MODULE__, {:params, context, question})
+    GenServer.cast(__MODULE__, {:params, context, question})
   end
 
   @impl GenServer
-  def handle_call({:params, context, question}, _from, state) do
+  def handle_cast({:params, context, question}, state) do
     {:ok, prediction_id} = Rag.predict_query(context, question.query)
 
     send(__MODULE__, {:register_prediction, prediction_id, question})
 
-    {:reply, :ok, state}
+    {:noreply, state}
   end
 
   @impl GenServer
