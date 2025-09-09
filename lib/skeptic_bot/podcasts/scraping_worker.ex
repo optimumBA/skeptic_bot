@@ -18,7 +18,7 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
   @impl Oban.Worker
   @spec perform(job()) :: :ok | {:error, any()}
   def perform(_job) do
-    # Logger.info("Starting scheduled podcast scraping")
+    Logger.info("Starting scheduled podcast scraping")
     # TinfoilScraper.scrape()
     # Scraper.scrape()
     # SkepticBot.Candace.Scraper.scrape()
