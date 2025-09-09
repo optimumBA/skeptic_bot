@@ -72,9 +72,8 @@ defmodule SkepticBot.WebhookHandlerTest do
     @tag :capture_log
     test "does not notify a process of its prediction success if it was unregistered" do
       assert {:ok, _owner_pid} = WebhookHandler.register_for_prediction("some-id", self())
-      WebhookHandler.handle_webhook(@successful_prediction_payload)
       assert :ok = WebhookHandler.unregister_prediction("some-id")
-      Process.sleep(10)
+      WebhookHandler.handle_webhook(@successful_prediction_payload)
       refute_receive {:prediction_completed, "some-id", "good output"}
     end
 
@@ -87,8 +86,8 @@ defmodule SkepticBot.WebhookHandlerTest do
     @tag :capture_log
     test "does not notify a process of its prediction is processing if it was unregistered" do
       assert {:ok, _owner_pid} = WebhookHandler.register_for_prediction("some-id", self())
-      WebhookHandler.handle_webhook(@processing_prediction_payload)
       assert :ok = WebhookHandler.unregister_prediction("some-id")
+      WebhookHandler.handle_webhook(@processing_prediction_payload)
       refute_receive {:prediction_underway, "some-id", "good output"}
     end
 
@@ -103,7 +102,7 @@ defmodule SkepticBot.WebhookHandlerTest do
         capture_log([level: :warning], fn ->
           WebhookHandler.handle_webhook(%{"status" => "completed", "output" => "good output"})
 
-          Process.sleep(20)
+          Process.sleep(50)
         end)
 
       assert log =~ "Received webhook without prediction ID"
@@ -117,7 +116,7 @@ defmodule SkepticBot.WebhookHandlerTest do
             "status" => "unknown"
           })
 
-          Process.sleep(15)
+          Process.sleep(50)
         end)
 
       assert log =~ "Received webhook with unknown status for prediction some-id"

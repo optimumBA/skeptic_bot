@@ -81,8 +81,6 @@ defmodule SkepticBotWeb.HomeLiveTest do
       |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
       |> render_submit()
 
-      Process.sleep(30)
-
       {path, _flash} = assert_redirect(view)
       assert path =~ ~r|/questions/|
     end
