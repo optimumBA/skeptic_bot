@@ -33,7 +33,6 @@ podcast = Podcasts.get_podcast_by_name("Candace")
 
 path
 |> get_episodes.()
-|> Enum.take(3)
 |> Enum.each(
   &EpisodeProcessor.maybe_download_episode(
     &1,
