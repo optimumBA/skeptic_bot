@@ -2,6 +2,7 @@ defmodule SkepticBot.YtDlp.YtDlpChannelClient do
   @moduledoc """
   Getting channel data using yt-dlp
   """
+
   alias SkepticBot.YtDlp.ChannelClient
 
   require Logger
@@ -29,7 +30,9 @@ defmodule SkepticBot.YtDlp.YtDlpChannelClient do
   end
 
   @impl ChannelClient
-  def get_channel_data_from_port(date, cookie_file, channel) do
+  def get_channel_data_from_port(date, channel) do
+    cookie_file = Application.get_env(:skeptic_bot, :youtube_cookie_file_path)
+
     cmd =
       "yt-dlp --cache-dir #{System.tmp_dir!()} --date #{date} --cookies #{cookie_file} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" #{channel}"
 

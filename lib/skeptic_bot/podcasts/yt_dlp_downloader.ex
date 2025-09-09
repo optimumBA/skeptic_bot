@@ -9,9 +9,15 @@ defmodule SkepticBot.Podcasts.YtDlpDownloader do
 
   @impl Downloader
   def download(video_url, audio_path) do
+    cookie_file = Application.get_env(:skeptic_bot, :youtube_cookie_file_path)
+
     case System.cmd(
            "yt-dlp",
            [
+             "--cache-dir",
+             System.tmp_dir!(),
+             "--cookies",
+             cookie_file,
              "-x",
              "--audio-format",
              "mp3",

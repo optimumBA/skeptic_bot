@@ -29,7 +29,7 @@ defmodule SkepticBot.Candace.ScraperTest do
 
       Process.send_after(self(), {:close_port, port}, 100)
 
-      expect(MockChannelClient, :get_channel_data_from_port, fn _date, _cookie_file, _channel ->
+      expect(MockChannelClient, :get_channel_data_from_port, fn _date, _channel ->
         port
       end)
 
