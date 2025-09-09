@@ -21,8 +21,7 @@ defmodule SkepticBot.Candace.Scraper do
   @spec scrape :: :ok
   def scrape do
     date = get_yesterday_date()
-    cookie_file = get_cookie_file()
-    ChannelClient.get_channel_data_from_port(date, cookie_file, @channel)
+    ChannelClient.get_channel_data_from_port(date, @channel)
     podcast = Podcasts.get_podcast_by_name(@podcast)
     wait_for_episodes(podcast)
   end
@@ -60,10 +59,6 @@ defmodule SkepticBot.Candace.Scraper do
     |> String.trim("\n")
     |> String.split("~~")
     |> List.to_tuple()
-  end
-
-  defp get_cookie_file do
-    Application.get_env(:skeptic_bot, :youtube_cookie_file_path)
   end
 
   defp get_yesterday_date do
