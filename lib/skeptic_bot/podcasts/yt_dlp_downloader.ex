@@ -12,8 +12,6 @@ defmodule SkepticBot.Podcasts.YtDlpDownloader do
     case System.cmd(
            "yt-dlp",
            [
-             "--cache-dir",
-             System.tmp_dir!(),
              "-x",
              "--audio-format",
              "mp3",
