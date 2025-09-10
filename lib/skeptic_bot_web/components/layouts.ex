@@ -1,18 +1,17 @@
 defmodule SkepticBotWeb.Layouts do
   @moduledoc """
-  This module holds different layouts used by your application.
-
-  See the `layouts` directory for all templates available.
-  The "root" layout is a skeleton rendered as part of the
-  application router. The "app" layout is set as the default
-  layout on both `use SkepticBotWeb, :controller` and
-  `use SkepticBotWeb, :live_view`.
+  This module holds layouts and related functionality
+  used by your application.
   """
   use SkepticBotWeb, :html
 
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
+  # Embed all files in layouts/* within this module.
+  # The default root.html.heex file contains the HTML
+  # skeleton of your application, namely HTML headers
+  # and other static content.
   embed_templates "layouts/*"
 
   @doc """
@@ -30,6 +29,10 @@ defmodule SkepticBotWeb.Layouts do
 
   """
   attr :flash, :map, required: true, doc: "the map of flash messages"
+
+  attr :current_scope, :map,
+    default: nil,
+    doc: "the current [scope](https://hexdocs.pm/phoenix/scopes.html)"
 
   @spec app(assigns()) :: rendered()
   def app(assigns) do
