@@ -10,6 +10,9 @@ defmodule SkepticBotWeb.Layouts do
   """
   use SkepticBotWeb, :html
 
+  @type assigns :: map()
+  @type rendered :: Phoenix.LiveView.Rendered.t()
+
   embed_templates "layouts/*"
 
   @doc """
@@ -28,6 +31,7 @@ defmodule SkepticBotWeb.Layouts do
   """
   attr :flash, :map, required: true, doc: "the map of flash messages"
 
+  @spec app(assigns()) :: rendered()
   def app(assigns) do
     ~H"""
     <main>
