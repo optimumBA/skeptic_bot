@@ -38,9 +38,7 @@ defmodule SkepticBotWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller,
-        formats: [:html, :json],
-        layouts: []
+      use Phoenix.Controller, formats: [:html, :json]
 
       import Plug.Conn
       import SkepticBotWeb.Gettext
@@ -88,8 +86,9 @@ defmodule SkepticBotWeb do
       import SkepticBotWeb.Gettext
       import SkepticBotWeb.SeoMetaTagsComponents
 
-      # Shortcut for generating JS commands
+      # Common modules used in templates
       alias Phoenix.LiveView.JS
+      alias SkepticBotWeb.Layouts
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())

@@ -28,6 +28,7 @@ defmodule SkepticBotWeb.Layouts do
       </Layouts.app>
 
   """
+
   attr :flash, :map, required: true, doc: "the map of flash messages"
 
   attr :current_scope, :map,
