@@ -1,57 +1,47 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@500;600;700&display=swap');
 
 @import 'tailwindcss';
-@plugin '@tailwindcss/forms';
 
 /* Content sources for Tailwind v4 */
 @source "../css";
 @source "../js";
 @source "../../lib/skeptic_bot_web";
 
+/* A Tailwind plugin that makes "hero-#{ICON}" classes available.
+   The heroicons installation itself is managed by your mix.exs */
+@plugin "../vendor/heroicons";
+
 /* Custom theme configuration */
 @theme {
-  /* Custom screens - converted from your original px values */
-  --breakpoint-xs: 30rem;      /* 480px ÷ 16 = 30rem */
-  --breakpoint-2xs: 33.75rem;  /* 540px ÷ 16 = 33.75rem */
-  --breakpoint-sm: 40rem;      /* 640px (default) */
-  --breakpoint-2sm: 43.75rem;  /* 700px ÷ 16 = 43.75rem */
-  --breakpoint-md: 48rem;      /* 768px (default) */
-  --breakpoint-2md: 56.25rem;  /* 900px ÷ 16 = 56.25rem */
-  --breakpoint-lg: 64rem;      /* 1024px (default) */
-  --breakpoint-xl: 68.75rem;   /* 1100px ÷ 16 = 68.75rem */
-  --breakpoint-2xl: 76.25rem;  /* 1220px ÷ 16 = 76.25rem */
+  --breakpoint-xs: 30rem;
+  --breakpoint-2xs: 33.75rem;
+  --breakpoint-sm: 40rem;
+  --breakpoint-2sm: 43.75rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-2md: 56.25rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 68.75rem;
+  --breakpoint-2xl: 76.25rem;
 
   /* Custom colors */
-  --color-brand: #FD4F00;
+  --color-brand: #fd4f00;
 }
 
-/* Phoenix LiveView variants */
-@variant phx-no-feedback (&:where(.phx-no-feedback, .phx-no-feedback *));
-@variant phx-click-loading (&:where(.phx-click-loading, .phx-click-loading *));
-@variant phx-submit-loading (&:where(.phx-submit-loading, .phx-submit-loading *));
-@variant phx-change-loading (&:where(.phx-change-loading, .phx-change-loading *));
+/* Add variants based on LiveView classes */
+@custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
+@custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
+@custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
 
-/* Heroicons plugin equivalent
-@plugin {
-  addComponents({
-    '.hero': {
-      'mask-repeat': 'no-repeat',
-      'background-color': 'currentColor',
-      'vertical-align': 'middle',
-      display: 'inline-block',
-      width: theme('spacing.6'),
-      height: theme('spacing.6'),
-    },
-    '.hero-mini': {
-      width: theme('spacing.5'),
-      height: theme('spacing.5'),
-    },
-    '.hero-micro': {
-      width: theme('spacing.4'),
-      height: theme('spacing.4'),
-    }
-  });
-} */
+/* Use the data attribute for dark mode  */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Make LiveView wrapper divs transparent for layout */
+[data-phx-session],
+[data-phx-teleported-src] {
+  display: contents;
+}
+
+/* This file is for your main application CSS */
 
 @keyframes bounce {
   0%,
