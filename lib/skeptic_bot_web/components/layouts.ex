@@ -11,4 +11,31 @@ defmodule SkepticBotWeb.Layouts do
   use SkepticBotWeb, :html
 
   embed_templates "layouts/*"
+
+  @doc """
+  Renders your app layout.
+
+  This function is typically invoked from every template,
+  and it often contains your application menu, sidebar,
+  or similar.
+
+  ## Examples
+
+      <Layouts.app flash={@flash}>
+        <h1>Content</h1>
+      </Layouts.app>
+
+  """
+  attr :flash, :map, required: true, doc: "the map of flash messages"
+
+  def app(assigns) do
+    ~H"""
+    <main>
+      <div class="mx-auto">
+        <.flash_group flash={@flash} />
+        {@inner_content}
+      </div>
+    </main>
+    """
+  end
 end

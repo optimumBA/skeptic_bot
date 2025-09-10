@@ -40,7 +40,7 @@ defmodule SkepticBotWeb do
     quote do
       use Phoenix.Controller,
         formats: [:html, :json],
-        layouts: [html: SkepticBotWeb.Layouts]
+        layouts: []
 
       import Plug.Conn
       import SkepticBotWeb.Gettext
