@@ -49,8 +49,8 @@ defmodule SkepticBotWeb do
 
   def live_view do
     quote do
-      use Phoenix.LiveView,
-        layout: {SkepticBotWeb.Layouts, :app}
+      use Phoenix.LiveView
+      # layout: {SkepticBotWeb.Layouts, :app}
 
       unquote(html_helpers())
     end

@@ -35,15 +35,96 @@ defmodule SkepticBotWeb.Layouts do
     default: nil,
     doc: "the current [scope](https://hexdocs.pm/phoenix/scopes.html)"
 
+  slot :inner_block, required: true
+
   @spec app(assigns()) :: rendered()
   def app(assigns) do
     ~H"""
     <main>
       <div class="mx-auto">
         <.flash_group flash={@flash} />
-        {@inner_content}
+        {render_slot(@inner_block)}
       </div>
     </main>
     """
   end
+
+  @doc """
+  Shows the flash group with standard titles and content.
+
+  ## Examples
+
+      <.flash_group flash={@flash} />
+  """
+  attr :flash, :map, required: true, doc: "the map of flash messages"
+  attr :id, :string, default: "flash-group", doc: "the optional id of flash container"
+
+  @spec flash_group(assigns()) :: rendered()
+  def flash_group(assigns) do
+    ~H"""
+    <div id={@id}>
+      <.flash kind={:info} title={gettext("Success!")} flash={@flash} />
+      <.flash kind={:error} title={gettext("Error!")} flash={@flash} />
+      <.flash
+        id="client-error"
+        kind={:error}
+        title={gettext("We can't find the internet")}
+        phx-disconnected={show(".phx-client-error #client-error")}
+        phx-connected={hide("#client-error")}
+        hidden
+      >
+        {gettext("Attempting to reconnect")}
+        <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
+      </.flash>
+
+      <.flash
+        id="server-error"
+        kind={:error}
+        title={gettext("Something went wrong!")}
+        phx-disconnected={show(".phx-server-error #server-error")}
+        phx-connected={hide("#server-error")}
+        hidden
+      >
+        {gettext("Hang in there while we get back on track")}
+        <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
+      </.flash>
+    </div>
+    """
+  end
+
+  # attr :flash, :map, required: true, doc: "the map of flash messages"
+  # attr :id, :string, default: "flash-group", doc: "the optional id of flash container"
+
+  # def flash_group(assigns) do
+  #   ~H"""
+  #   <div id={@id} aria-live="polite">
+  #     <.flash kind={:info} flash={@flash} />
+  #     <.flash kind={:error} flash={@flash} />
+
+  #     <.flash
+  #       id="client-error"
+  #       kind={:error}
+  #       title={gettext("We can't find the internet")}
+  #       phx-disconnected={show(".phx-client-error #client-error") |> JS.remove_attribute("hidden")}
+  #       phx-connected={hide("#client-error") |> JS.set_attribute({"hidden", ""})}
+  #       hidden
+  #     >
+  #       {gettext("Attempting to reconnect")}
+  #       <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
+  #     </.flash>
+
+  #     <.flash
+  #       id="server-error"
+  #       kind={:error}
+  #       title={gettext("Something went wrong!")}
+  #       phx-disconnected={show(".phx-server-error #server-error") |> JS.remove_attribute("hidden")}
+  #       phx-connected={hide("#server-error") |> JS.set_attribute({"hidden", ""})}
+  #       hidden
+  #     >
+  #       {gettext("Attempting to reconnect")}
+  #       <.icon name="hero-arrow-path" class="ml-1 size-3 motion-safe:animate-spin" />
+  #     </.flash>
+  #   </div>
+  #   """
+  # end
 end
