@@ -87,3 +87,13 @@
 .mobile-scroll-parent::-webkit-scrollbar {
   display: none;
 }
+
+.blur-episode {
+  background-image: linear-gradient(
+    in hsl,
+    transparent,
+    rgba(0, 0, 0, 0.5),
+    transparent
+  );
+  backdrop-filter: blur(2px);
+}

@@ -30,11 +30,13 @@ defmodule SkepticBotWeb.PodcastComponents do
         <div class="rounded-xl w-full h-full overflow-hidden">
           <img src={@episode.thumbnail} alt="Cover 2" class="w-full h-full object-cover" />
         </div>
+
+        <div class="absolute bottom-0 left-0 rounded-xl w-[19.6875rem] h-[8.2rem] blur-episode"></div>
         {get_episode_vector(@random)}
-        <div class="absolute bottom-[3rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
+
+        <div class="absolute bottom-[2.5rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
           {trim_title(@episode.title)}
         </div>
-
         <div class="absolute bottom-[1rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
           <div>
             <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
