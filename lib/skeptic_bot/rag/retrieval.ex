@@ -13,7 +13,7 @@ defmodule SkepticBot.Rag.Retrieval do
   @type embedding :: [float()]
   @type episode :: map()
 
-  @episode_threshold 0.82
+  @episode_threshold Application.compile_env!(:skeptic_bot, :related_episode_threshold)
   @num_transcriptions_surrounding_the_target 600
 
   @spec retrieve(embedding()) :: [episode()]

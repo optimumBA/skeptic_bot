@@ -9,7 +9,8 @@ import Config
 
 config :skeptic_bot,
   ecto_repos: [SkepticBot.Repo],
-  generators: [binary_id: true, timestamp_type: :utc_datetime]
+  generators: [binary_id: true, timestamp_type: :utc_datetime],
+  related_episode_threshold: 0.688
 
 # Configures the endpoint
 config :skeptic_bot, SkepticBotWeb.Endpoint,

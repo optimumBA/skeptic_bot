@@ -91,7 +91,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
       # Create search embedding and episode with very different embedding to ensure no match
       search_embedding = List.duplicate(0.1, 1024)
       # Very different from search_embedding
-      episode_embedding = List.duplicate(0.9, 1024)
+      episode_embedding = List.duplicate(0.122, 1024)
 
       episode = episode_fixture(embedding: episode_embedding)
       _transcription = transcription_fixture(%{podcast_episode_id: episode.id})
@@ -101,6 +101,12 @@ defmodule SkepticBotWeb.HomeLiveTest do
       expect(Rag.MockEmbedder, :generate, fn _question_episodes ->
         {:ok, [search_embedding]}
       end)
+
+      stub(Rag.MockGenerator, :predict, fn _messages ->
+        {:ok, "Prediction process was successful"}
+      end)
+
+      allow(Rag.MockGenerator, self(), PredictionHandler)
 
       view
       |> form("#question-input-form", user_question: %{query: "American Ponzi with Lee Camp"})
