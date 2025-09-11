@@ -21,7 +21,8 @@ defmodule SkepticBot.Rag do
             {:error, :no_episodes_found}
 
           context ->
-            {:ok, {context, embedding}}
+            {:error, :no_episodes_found}
+            # {:ok, {context, embedding}}
         end
 
       {:error, reason} ->
