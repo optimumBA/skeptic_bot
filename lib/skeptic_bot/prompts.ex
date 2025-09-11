@@ -11,7 +11,7 @@ defmodule SkepticBot.Prompts do
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Repo
 
-  @episode_threshold 0.688
+  @episode_threshold Application.compile_env!(:skeptic_bot, :related_episode_threshold)
   @max_question_distance_threshold 0.60
   @min_question_distance_threshold 0.55
 
