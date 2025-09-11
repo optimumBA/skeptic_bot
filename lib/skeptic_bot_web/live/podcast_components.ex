@@ -31,7 +31,8 @@ defmodule SkepticBotWeb.PodcastComponents do
           <img src={@episode.thumbnail} alt="Cover 2" class="w-full h-full object-cover" />
         </div>
 
-        <div class="absolute bottom-0 left-0 rounded-xl w-[19.6875rem] h-[8.2rem] blur-episode"></div>
+        <div class="absolute bottom-0 left-0 rounded-b-xl w-[19.6875rem] h-[8.2rem] blur-episode">
+        </div>
         {get_episode_vector(@random)}
 
         <div class="absolute bottom-[2.5rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
