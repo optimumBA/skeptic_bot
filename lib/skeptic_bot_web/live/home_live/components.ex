@@ -28,7 +28,7 @@ defmodule SkepticBotWeb.HomeLive.Components do
 
           <.button
             type="submit"
-            class="hover:cursor-pointer text-[#FFFFFF] bg-[#CD4631] transition ease-in-out duration-300 my-3 mr-4"
+            class="btn btn-primary hover:cursor-pointer text-[#FFFFFF] transition ease-in-out duration-300 py-2 px-2 my-3 mr-4 rounded-lg"
           >
             <div class="flex flex-row gap-2 items-center">
               <div class="pl-0 md:pl-2">
