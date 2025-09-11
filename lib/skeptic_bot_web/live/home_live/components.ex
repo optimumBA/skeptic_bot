@@ -15,7 +15,7 @@ defmodule SkepticBotWeb.HomeLive.Components do
     ~H"""
     <div>
       <.form for={@form} phx-change="validate" phx-submit="save" id="question-input-form">
-        <div class="flex justify-between md:mt-8 items-center rounded-xl hover:cursor-pointer form-input-shadow border bg-[#FFFFFF] md:py-2 gap-2">
+        <div class="flex justify-between md:mt-8 items-center rounded-xl hover:cursor-pointer form-input-shadow border bg-[#FFFFFF] md:py-2 gap-2 border-[#C7C7C7]">
           <div class="w-2/3 grow pl-4">
             <.input
               class="montserrat-alternates-medium placeholder:text-sm w-full border-none bg-[#FFFFFF] outline-none rounded-lg py-[3px] px-[11px] remove-outline placeholder:text-[#4D4D4D] sm:text-lg sm:leading-6"
@@ -28,7 +28,7 @@ defmodule SkepticBotWeb.HomeLive.Components do
 
           <.button
             type="submit"
-            class="btn btn-primary hover:cursor-pointer text-[#FFFFFF] transition ease-in-out duration-300 py-2 px-2 my-3 mr-4 rounded-lg"
+            class="bg-[#cd4631] hover:cursor-pointer text-[#FFFFFF] transition ease-in-out duration-300 py-2 px-2 my-3 mr-4 rounded-lg"
           >
             <div class="flex flex-row gap-2 items-center">
               <div class="pl-0 md:pl-2">

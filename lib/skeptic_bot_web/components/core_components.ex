@@ -94,7 +94,7 @@ defmodule SkepticBotWeb.CoreComponents do
   slot :inner_block, required: true
 
   def button(%{rest: rest} = assigns) do
-    variants = %{"primary" => "btn-primary", nil => "btn-primary btn-soft"}
+    variants = %{"primary" => "btn-primary", nil => "btn btn-primary"}
 
     assigns =
       assign_new(assigns, :class, fn ->
