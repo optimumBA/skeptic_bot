@@ -18,7 +18,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
         <div class="h-screen flex items-center relative">
           <section class="pt-20 md:pt-0">
             <div class={[
-              "absolute top-[2%] left-0 w-[38%] xl:top-[1rem] xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[18%] xl:w-[14rem] z-30",
+              "w-[38%] absolute top-[2%] left-0 z-30 xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[18%] xl:w-[14rem] xl:top-[1rem]",
               @loading && "hidden"
             ]}>
               <img
@@ -28,7 +28,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               />
             </div>
             <div class={[
-              "absolute bottom-[16%] 2xs:bottom-[13%] sm:bottom-[10%] md:bottom-[11%] 2md:bottom-[8%] xl:bottom-auto xl:top-[12rem] left-[4%] xl:left-[2.8rem] w-[34%] xs:w-[30%] 2xs:w-[27%] md:w-[20%] xl:w-[15rem]",
+              "w-[34%] absolute bottom-[16%] left-[4%] xs:w-[30%] 2xs:w-[27%] 2xs:bottom-[13%] sm:bottom-[10%] md:w-[20%] md:bottom-[11%] 2md:bottom-[8%] xl:w-[15rem] xl:bottom-auto xl:top-[12rem] xl:left-[2.8rem]",
               @loading && "hidden"
             ]}>
               <img
@@ -39,7 +39,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             </div>
 
             <div class={[
-              "absolute bottom-[8%] 2xs:bottom-[6%] md:bottom-[9%] right-[1.3rem] w-[24%] xs:w-[18%] 2xs:w-[18%] md:w-[10%]",
+              "w-[24%] absolute bottom-[8%] right-[1.3rem] xs:w-[18%] 2xs:w-[18%] 2xs:bottom-[6%] md:w-[10%] md:bottom-[9%]",
               @loading && "hidden"
             ]}>
               <img
@@ -49,14 +49,14 @@ defmodule SkepticBotWeb.HomeLive.Index do
               />
             </div>
           </section>
-          <section class="flex flex-col gap-8 w-[93%] md:w-[70%] mx-auto">
+          <section class="w-[93%] mx-auto flex flex-col gap-8 md:w-[70%]">
             <section class="text-6xl mx-auto montserrat-alternates-bold tracking-4 md:text-7xl 2xl:text-8xl">
               Skeptic.<span class="text-primary montserrat-alternates-bold">bot</span>
             </section>
             <div class={[
               @loading && "hidden"
             ]}>
-              <section class="text-secondary w-[50%] mx-auto text-center montserrat-alternates-medium mb-10">
+              <section class="w-[50%] mb-10 mx-auto text-secondary text-center montserrat-alternates-medium">
                 Questions everything
               </section>
 

@@ -185,8 +185,3 @@
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
 }
-
-.btn-primary:active {
-  --btn-bg: #000000; /* background */
-  --btn-color: #ffffff; /* text */
-}
