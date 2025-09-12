@@ -25,6 +25,7 @@
 
   /* Custom colors */
   --color-custom-black: #1f1f1f;
+  --color-custom-white: #ffffff;
 }
 
 /* daisyUI Tailwind Plugin. You can update this file by fetching the latest version with:

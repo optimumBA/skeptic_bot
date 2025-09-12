@@ -27,18 +27,18 @@ defmodule SkepticBotWeb.PodcastComponents do
     ~H"""
     <a href={episode_url(@episode.external_id, @timestamp, @episode.podcast.name)}>
       <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative mobile-scroll-child">
-        <div class="rounded-xl w-full h-full overflow-hidden">
+        <div class="w-full h-full rounded-xl overflow-hidden">
           <img src={@episode.thumbnail} alt="Cover 2" class="w-full h-full object-cover" />
         </div>
 
-        <div class="absolute bottom-0 left-0 rounded-b-xl w-[19.6875rem] h-[8.2rem] blur-episode">
+        <div class="w-[19.6875rem] h-[8.2rem] absolute bottom-0 left-0 rounded-b-xl blur-episode">
         </div>
         {get_episode_vector(@random)}
 
-        <div class="absolute bottom-[2.5rem] left-[1rem] text-xl montserrat-alternates-bold text-[#FFFFFF]">
+        <div class="absolute bottom-[2.5rem] left-[1rem] text-xl montserrat-alternates-bold text-custom-white">
           {trim_title(@episode.title)}
         </div>
-        <div class="absolute bottom-[1rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-[#FFFFFF]">
+        <div class="absolute bottom-[1rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-custom-white">
           <div>
             <img src={~p"/images/podcasts/podcast_play.svg"} alt="Podcast Play Icon" />
           </div>
@@ -58,10 +58,10 @@ defmodule SkepticBotWeb.PodcastComponents do
   def related_question_card(assigns) do
     ~H"""
     <div
-      class="border-2 border-[#000000] bg-[#FFFFFF] rounded-2xl cursor-pointer question-card-shadow"
+      class="bg-custom-white border-2 rounded-2xl cursor-pointer question-card-shadow"
       phx-click={JS.navigate(~p"/questions/#{@question_id}")}
     >
-      <div class="flex flex-col px-3 pt-4 pb-2 text-[#4D4D4D]">
+      <div class="flex flex-col px-3 pt-4 pb-2 text-secondary">
         <section class="flex justify-between items-center">
           <div class={[
             "text-2xl montserrat-alternates-bold",
@@ -74,7 +74,7 @@ defmodule SkepticBotWeb.PodcastComponents do
           </div>
         </section>
         <div class="divider"></div>
-        <div class="text-sm w-[88%] montserrat-alternates-medium">
+        <div class="w-[88%] text-sm montserrat-alternates-medium">
           {trim_description(@description)}
         </div>
       </div>
@@ -260,9 +260,9 @@ defmodule SkepticBotWeb.PodcastComponents do
   def trim_description(description), do: description
 
   defp related_question_title_class(question_index) when Integer.is_odd(question_index),
-    do: "text-[#000000]"
+    do: "text-base-content"
 
-  defp related_question_title_class(_question_index), do: "text-[#CD4631]"
+  defp related_question_title_class(_question_index), do: "text-primary"
 
   @spec get_time_from_seconds(integer()) :: String.t()
   def get_time_from_seconds(seconds) when is_integer(seconds) and seconds >= 0 do
