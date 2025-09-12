@@ -92,8 +92,11 @@
   background-image: linear-gradient(
     in hsl,
     transparent,
-    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0.8),
     transparent
   );
-  backdrop-filter: blur(20px);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
 }
