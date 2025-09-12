@@ -16,17 +16,17 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     ~H"""
     <Layouts.app flash={@flash}>
       <div id="question-live">
-        <div class="mt-16 pl-5 mb-6 flex flex-col gap-10 max-w-[33.6rem] mx-auto md:gap-14">
-          <section class="flex gap-4 items-center w-max cursor-pointer" phx-click={JS.navigate("/")}>
+        <div class="max-w-[33.6rem] mx-auto mt-16 pl-5 mb-6 flex flex-col gap-10 md:gap-14">
+          <section class="w-max flex gap-4 items-center cursor-pointer" phx-click={JS.navigate("/")}>
             <div><img src={~p"/images/home/back_icon.svg"} alt="Superscript Image Question" /></div>
-            <div class="text-[#1F1F1F] montserrat-alternates-semibold">Back to homepage</div>
+            <div class="text-custom-black montserrat-alternates-semibold">Back to homepage</div>
           </section>
 
           <section class={[
             "relative",
             !@title && "hidden"
           ]}>
-            <p class="text-[#000000] text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold 2sm:text-center">
+            <p class="text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold 2sm:text-center">
               {@title}
             </p>
 
@@ -36,8 +36,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           </section>
         </div>
 
-        <section class="px-5 max-w-[42rem] mx-auto mt-6 mb-10">
-          <p class="text-[#4D4D4D] leading-[1.6] montserrat-alternates-medium md:text-center">
+        <section class="max-w-[42rem] px-5 mx-auto mt-6 mb-10">
+          <p class="text-secondary leading-[1.6] montserrat-alternates-medium md:text-center">
             {@description}
           </p>
           <div
@@ -55,11 +55,11 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           class="mx-auto"
           style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 20.8rem)"}
         >
-          <section class="ml-5 montserrat-alternates-bold text-[#000000] text-2xl">
+          <section class="ml-5 montserrat-alternates-bold text-2xl">
             Related Podcasts
           </section>
-          <section class="relative pb-6">
-            <section class="ml-5 pt-12 relative mb-12 pr-2">
+          <section class="pb-6 relative">
+            <section class="ml-5 mb-12 pt-12 pr-2 relative">
               <div class="flex gap-4 mobile-scroll-parent" id="related-episodes-carousel">
                 <%= for episode <- @related_episodes do %>
                   <PodcastComponents.episode_card
@@ -77,12 +77,12 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             </section>
           </section>
 
-          <section class="ml-5 mt-2 montserrat-alternates-bold text-[#000000] text-2xl">
+          <section class="ml-5 mt-2 montserrat-alternates-bold text-2xl">
             Other Podcasts
           </section>
 
-          <section class="relative pb-16">
-            <section class="ml-5 pt-12 relative mb-12 pr-2">
+          <section class="pb-16 relative">
+            <section class="ml-5 mb-12 pr-2 pt-12 relative">
               <div class="flex gap-4 mobile-scroll-parent" id="other-episodes-carousel">
                 <%= for episode <- @other_episodes do %>
                   <PodcastComponents.episode_card
@@ -106,10 +106,10 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             class="mx-auto"
             style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 20.8rem)"}
           >
-            <section class="ml-5 mb-10 montserrat-alternates-bold text-[#000000] text-2xl">
+            <section class="ml-5 mb-10 montserrat-alternates-bold text-2xl">
               Related Questions
             </section>
-            <div class="mx-5 grid grid-cols-1 items-stretch gap-[2rem]  md:grid-cols-2 lg:grid-cols-3 lg:gap-[1.2rem]">
+            <div class="mx-5 grid grid-cols-1 items-stretch gap-[2rem] md:grid-cols-2 lg:grid-cols-3 lg:gap-[1.2rem]">
               <%= for {question, question_index} <- @related_questions do %>
                 <PodcastComponents.related_question_card
                   description={question.description}

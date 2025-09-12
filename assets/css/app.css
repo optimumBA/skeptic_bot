@@ -24,6 +24,7 @@
   --breakpoint-2xl: 76.25rem;
 
   /* Custom colors */
+  --color-custom-black: #1f1f1f;
 }
 
 /* daisyUI Tailwind Plugin. You can update this file by fetching the latest version with:
