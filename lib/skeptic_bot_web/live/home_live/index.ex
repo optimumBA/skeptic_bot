@@ -51,12 +51,12 @@ defmodule SkepticBotWeb.HomeLive.Index do
           </section>
           <section class="flex flex-col gap-8 w-[93%] md:w-[70%] mx-auto">
             <section class="text-6xl mx-auto montserrat-alternates-bold tracking-4 md:text-7xl 2xl:text-8xl">
-              Skeptic.<span class="text-[#CD4631] montserrat-alternates-bold">bot</span>
+              Skeptic.<span class="text-primary montserrat-alternates-bold">bot</span>
             </section>
             <div class={[
               @loading && "hidden"
             ]}>
-              <section class="w-[50%] mx-auto text-center montserrat-alternates-medium text-[#4D4D4D] mb-10">
+              <section class="text-secondary w-[50%] mx-auto text-center montserrat-alternates-medium mb-10">
                 Questions everything
               </section>
 
@@ -72,7 +72,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
                 !@loading && "hidden"
               ]}
             >
-              <section class="text-center montserrat-alternates-semibold text-[#4D4D4D] mb-6">
+              <section class="text-secondary text-center montserrat-alternates-semibold mb-6">
                 is almost done second guessing
               </section>
               <section>

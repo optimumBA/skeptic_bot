@@ -24,8 +24,6 @@
   --breakpoint-2xl: 76.25rem;
 
   /* Custom colors */
-  /* --color-brand: #fd4f00; */
-  --primary-focus: '#4D12A1';
 }
 
 /* daisyUI Tailwind Plugin. You can update this file by fetching the latest version with:
@@ -52,7 +50,7 @@
   --color-base-content: #000000;
   --color-primary: #cd4631;
   --color-primary-content: #000000;
-  --color-secondary: oklch(55% 0.027 264.364);
+  --color-secondary: #4d4d4d;
   --color-secondary-content: oklch(98% 0.002 247.839);
   --color-accent: oklch(0% 0 0);
   --color-accent-content: oklch(100% 0 0);
@@ -91,7 +89,7 @@
 
 /* This file is for your main application CSS */
 
-@keyframes bounce {
+@keyframes bounce-loader {
   0%,
   100% {
     transform: translateY(0);
@@ -144,7 +142,7 @@
 }
 
 .dot-animation {
-  animation: bounce 1s infinite ease-in-out;
+  animation: bounce-loader 1s infinite ease-in-out;
 }
 
 .delay-0 {
