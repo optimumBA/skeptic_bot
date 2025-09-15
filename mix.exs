@@ -96,9 +96,9 @@ defmodule SkepticBot.MixProject do
   defp phoenix_deps do
     [
       {:phoenix, "~> 1.8.1"},
-      {:lazy_html, ">= 0.1.0", only: :test},
       {:phoenix_ecto, "~> 4.4"},
-      {:ecto_sql, "~> 3.10"},
+      {:lazy_html, ">= 0.1.0", only: :test},
+      {:ecto_sql, "~> 3.13"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 4.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
@@ -113,8 +113,7 @@ defmodule SkepticBot.MixProject do
        app: false,
        compile: false,
        depth: 1},
-      {:swoosh, "~> 1.5"},
-      {:finch, "~> 0.13"},
+      {:swoosh, "~> 1.16"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
       {:gettext, "~> 0.20"},
