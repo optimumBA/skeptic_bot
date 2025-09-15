@@ -14,8 +14,6 @@ defmodule SkepticBot.Application do
         parent:
           {DNSCluster, query: Application.get_env(:skeptic_bot, :dns_cluster_query) || :ignore},
         parent: {Phoenix.PubSub, name: SkepticBot.PubSub},
-        # Start the Finch HTTP client for sending emails
-        parent: {Finch, name: SkepticBot.Finch},
         # Start a worker by calling: SkepticBot.Worker.start_link(arg)
         # {SkepticBot.Worker, arg},
         parent: {Registry, keys: :unique, name: SkepticBot.PredictionRegistry},

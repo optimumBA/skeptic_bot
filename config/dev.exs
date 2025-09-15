@@ -55,6 +55,7 @@ config :skeptic_bot, SkepticBotWeb.Endpoint,
 # Watch static and templates for browser reloading.
 config :skeptic_bot, SkepticBotWeb.Endpoint,
   live_reload: [
+    web_console_logger: true,
     patterns: [
       ~r"priv/static/(?!uploads/).*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
