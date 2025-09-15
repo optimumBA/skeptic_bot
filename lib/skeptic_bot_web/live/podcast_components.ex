@@ -58,18 +58,18 @@ defmodule SkepticBotWeb.PodcastComponents do
   def related_question_card(assigns) do
     ~H"""
     <div
-      class="bg-custom-white border-2 rounded-2xl cursor-pointer question-card-shadow"
+      class="card bg-custom-white border-2 rounded-2xl cursor-pointer question-card-shadow"
       phx-click={JS.navigate(~p"/questions/#{@question_id}")}
     >
-      <div class="flex flex-col px-3 pt-4 pb-2 text-secondary">
+      <div class="card-body px-3 text-secondary">
         <section class="flex justify-between items-center">
           <div class={[
-            "text-2xl montserrat-alternates-bold",
+            "card-title text-2xl montserrat-alternates-bold",
             related_question_title_class(@question_index)
           ]}>
             {@title}
           </div>
-          <div class="shrink-0 pr-4">
+          <div class="shrink-0">
             <img src={~p"/images/podcasts/xmark.svg"} alt="X Mark" />
           </div>
         </section>
