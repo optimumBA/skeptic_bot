@@ -20,9 +20,9 @@ get_episodes = fn path ->
 end
 
 file_url =
-  System.get_env("NEPHILIM_TXT_FILE_URL") ||
+  System.get_env("NEPHILIM_DEATH_SQUAD_TXT_FILE_URL") ||
     raise """
-    environment variable NEPHILIM_TXT_FILE_URL is missing.
+    environment variable NEPHILIM_DEATH_SQUAD_TXT_FILE_URL is missing.
     """
 
 path = Path.join([System.tmp_dir!(), "nephilim_death_squad.txt"])
