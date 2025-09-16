@@ -27,54 +27,10 @@
   --color-custom-black: #1f1f1f;
   --color-custom-white: #ffffff;
   --color-custom-gray: #c7c7c7;
-}
-
-/* daisyUI Tailwind Plugin. You can update this file by fetching the latest version with:
-   curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js
-   Make sure to look at the daisyUI changelog: https://daisyui.com/docs/changelog/ */
-@plugin "../vendor/daisyui" {
-  themes: false;
-  base: false;
-}
-
-/* daisyUI theme plugin. You can update this file by fetching the latest version with:
-    curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js
-    We ship with two themes, a light one inspired on Phoenix colors and a dark one inspired
-    on Elixir colors. Build your own at: https://daisyui.com/theme-generator/ */
-
-@plugin "../vendor/daisyui-theme" {
-  name: 'light';
-  default: true;
-  prefersdark: false;
-  color-scheme: 'light';
-  --color-base-100: oklch(98% 0 0);
-  --color-base-200: oklch(96% 0.001 286.375);
-  --color-base-300: oklch(92% 0.004 286.32);
   --color-base-content: #000000;
   --color-primary: #cd4631;
   --color-primary-content: #000000;
   --color-secondary: #4d4d4d;
-  --color-secondary-content: oklch(98% 0.002 247.839);
-  --color-accent: oklch(0% 0 0);
-  --color-accent-content: oklch(100% 0 0);
-  --color-neutral: oklch(44% 0.017 285.786);
-  --color-neutral-content: oklch(98% 0 0);
-  --color-info: oklch(62% 0.214 259.815);
-  --color-info-content: oklch(97% 0.014 254.604);
-  --color-success: oklch(70% 0.14 182.503);
-  --color-success-content: oklch(98% 0.014 180.72);
-  --color-warning: oklch(66% 0.179 58.318);
-  --color-warning-content: oklch(98% 0.022 95.277);
-  --color-error: #ffffff;
-  --color-error-content: oklch(96% 0.015 12.422);
-  --radius-selector: 0.25rem;
-  --radius-field: 0.25rem;
-  --radius-box: 0.5rem;
-  --size-selector: 0.21875rem;
-  --size-field: 0.21875rem;
-  --border: 1.5px;
-  --depth: 1;
-  --noise: 0;
 }
 
 /* Add variants based on LiveView classes */
@@ -92,7 +48,7 @@
 
 /* This file is for your main application CSS */
 
-@keyframes bounce-loader {
+@keyframes bounce {
   0%,
   100% {
     transform: translateY(0);
@@ -145,7 +101,7 @@
 }
 
 .dot-animation {
-  animation: bounce-loader 1s infinite ease-in-out;
+  animation: bounce 1s infinite ease-in-out;
 }
 
 .delay-0 {
