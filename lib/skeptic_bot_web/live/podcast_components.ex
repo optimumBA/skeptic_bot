@@ -61,7 +61,7 @@ defmodule SkepticBotWeb.PodcastComponents do
       class="bg-custom-white border-2 rounded-2xl cursor-pointer question-card-shadow"
       phx-click={JS.navigate(~p"/questions/#{@question_id}")}
     >
-      <div class="px-3 text-secondary">
+      <div class="flex flex-col px-3 pt-4 pb-2 text-secondary">
         <section class="flex justify-between items-center">
           <div class={[
             "text-2xl montserrat-alternates-bold",
@@ -69,12 +69,12 @@ defmodule SkepticBotWeb.PodcastComponents do
           ]}>
             {@title}
           </div>
-          <div class="shrink-0">
+          <div class="shrink-0 pr-4">
             <img src={~p"/images/podcasts/xmark.svg"} alt="X Mark" />
           </div>
         </section>
         <div class="divider"></div>
-        <div class="w-[88%] text-sm montserrat-alternates-medium">
+        <div class="text-sm w-[88%] montserrat-alternates-medium">
           {trim_description(@description)}
         </div>
       </div>
