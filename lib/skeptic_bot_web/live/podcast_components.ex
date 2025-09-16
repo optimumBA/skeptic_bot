@@ -64,7 +64,7 @@ defmodule SkepticBotWeb.PodcastComponents do
       <div class="px-3 text-secondary">
         <section class="flex justify-between items-center">
           <div class={[
-            "card-title text-2xl montserrat-alternates-bold",
+            "text-2xl montserrat-alternates-bold",
             related_question_title_class(@question_index)
           ]}>
             {@title}

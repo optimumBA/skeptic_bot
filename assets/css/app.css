@@ -48,7 +48,7 @@
 
 /* This file is for your main application CSS */
 
-@keyframes bounce {
+@keyframes bounce-loader {
   0%,
   100% {
     transform: translateY(0);
@@ -101,7 +101,7 @@
 }
 
 .dot-animation {
-  animation: bounce 1s infinite ease-in-out;
+  animation: bounce-loader 1s infinite ease-in-out;
 }
 
 .delay-0 {
