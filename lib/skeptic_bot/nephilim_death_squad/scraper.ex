@@ -1,6 +1,6 @@
-defmodule SkepticBot.Candace.Scraper do
+defmodule SkepticBot.NephilimDeathSquad.Scraper do
   @moduledoc """
-  Scrapes Candace Owens' episodes from YouTube then downloads them
+  Scrapes Nephilim Death Squad episodes from YouTube then downloads them
   """
 
   import SkepticBot.YtDlp.Helpers
@@ -8,8 +8,8 @@ defmodule SkepticBot.Candace.Scraper do
   alias SkepticBot.Podcasts
   alias SkepticBot.YtDlp.ChannelClient
 
-  @channel "https://www.youtube.com/@RealCandaceO/streams"
-  @podcast "Candace"
+  @channel "https://www.youtube.com/@NephilimDeathSquad/streams"
+  @podcast "Nephilim Death Squad"
 
   @spec scrape :: :ok
   def scrape do
