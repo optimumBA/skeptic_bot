@@ -1,7 +1,8 @@
 defmodule SkepticBot.YtDlp.Helpers do
   @moduledoc """
-  Helpers for scraping episodes from ytdlp
+  Helper functions for scraping episodes from ytdlp
   """
+
   alias SkepticBot.Podcasts.Podcast
   alias SkepticBot.YtDlp.EpisodeProcessor
 
@@ -13,7 +14,7 @@ defmodule SkepticBot.YtDlp.Helpers do
   @spec get_yesterday_date :: String.t()
   def get_yesterday_date do
     NaiveDateTime.utc_now()
-    |> NaiveDateTime.add(-10, :day)
+    |> NaiveDateTime.add(-1, :day)
     |> Calendar.strftime("%Y%m%d")
   end
 
