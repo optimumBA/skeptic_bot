@@ -22,6 +22,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   require Logger
 
   @podcast_candace "Candace"
+  @podcast_deepwaters "Deep Waters"
   @podcast_lookintoit "Look Into It"
   @podcast_tinfoilhat "Tin Foil Hat"
 
@@ -96,7 +97,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   end
 
   defp process(id, url, podcast)
-       when podcast in [@podcast_candace, @podcast_lookintoit] do
+       when podcast in [@podcast_candace, @podcast_lookintoit, @podcast_deepwaters] do
     tmp_dir = System.tmp_dir!()
     audio_path = Path.join(tmp_dir, "#{id}_.mp3")
 
