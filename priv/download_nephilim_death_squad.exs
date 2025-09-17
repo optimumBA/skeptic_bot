@@ -33,7 +33,6 @@ podcast = Podcasts.get_podcast_by_name("Nephilim Death Squad")
 
 path
 |> get_episodes.()
-|> Enum.take(-4)
 |> Enum.each(
   &EpisodeProcessor.maybe_download_episode(
     &1,
