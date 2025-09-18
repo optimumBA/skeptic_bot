@@ -14,7 +14,7 @@ defmodule SkepticBot.YtDlp.Helpers do
   @spec get_yesterday_date :: String.t()
   def get_yesterday_date do
     NaiveDateTime.utc_now()
-    |> NaiveDateTime.add(-1, :day)
+    |> NaiveDateTime.add(-5, :day)
     |> Calendar.strftime("%Y%m%d")
   end
 
@@ -22,6 +22,8 @@ defmodule SkepticBot.YtDlp.Helpers do
   def wait_for_episodes(channel, podcast) do
     receive do
       {_port, {:data, msg}} ->
+        Logger.info(msg)
+
         msg
         |> format_message()
         |> process_episode(channel, podcast)
