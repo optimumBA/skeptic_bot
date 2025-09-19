@@ -17,12 +17,12 @@ defmodule SkepticBot.DeepWaters.ScraperTest do
       _podcast = podcast_fixture(name: @podcast)
 
       msg =
-        "Eminem Drops A Diss Track Ep 24~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBIi"
+        "How I met my husband Ep 24~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBIi"
 
       port = Port.open({:spawn, "echo #{msg}"}, [:binary])
 
       msg_2 =
-        "Eminem Drops A Diss Track Ep 25~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBI4"
+        "The Epstein Files Ep 25~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBI4"
 
       send(self(), {port, {:data, msg_2}})
 

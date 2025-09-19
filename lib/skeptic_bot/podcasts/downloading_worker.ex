@@ -100,8 +100,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   defp process(id, url, podcast)
        when podcast in [
               @podcast_candace,
-              @podcast_lookintoit,
               @podcast_deepwaters,
+              @podcast_lookintoit,
               @podcast_nephilimdeathsquad
             ] do
     tmp_dir = System.tmp_dir!()

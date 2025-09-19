@@ -12,14 +12,10 @@
 alias SkepticBot.Podcasts
 
 [
-
   %{name: "Tin Foil Hat"},
-
   %{name: "Look Into It"},
-
   %{name: "Candace"},
-  %{name: "Deep Waters"}
-,
+  %{name: "Deep Waters"},
   %{name: "Nephilim Death Squad"}
 ]
 |> Stream.reject(&Podcasts.get_podcast_by_name(&1.name))
