@@ -9,12 +9,18 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
 
   require Logger
 
+  @broken_simulation_channel "https://www.youtube.com/@SamTripoli/videos"
   @candace_channel "https://www.youtube.com/@RealCandaceO/streams"
   @deepwaters_channel "https://www.youtube.com/@deepwaterscsc/videos"
   @eddie_rokfin_channel "https://rokfin.com/eddiebravo"
   @eddie_rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
   @nephilim_death_squad_channel "https://www.youtube.com/@NephilimDeathSquad/streams"
-  @yt_channels [@candace_channel, @deepwaters_channel, @nephilim_death_squad_channel]
+  @yt_channels [
+    @broken_simulation_channel,
+    @candace_channel,
+    @deepwaters_channel,
+    @nephilim_death_squad_channel
+  ]
 
   @type channel :: String.t()
   @type duration :: String.t()

@@ -21,6 +21,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   require Logger
 
+  @podcast_brokensimulation "Broken Simulation"
   @podcast_candace "Candace"
   @podcast_deepwaters "Deep Waters"
   @podcast_lookintoit "Look Into It"
@@ -99,6 +100,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   defp process(id, url, podcast)
        when podcast in [
+              @podcast_brokensimulation,
               @podcast_candace,
               @podcast_deepwaters,
               @podcast_lookintoit,
