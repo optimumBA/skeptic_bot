@@ -10,6 +10,7 @@ defmodule SkepticBot.NephilimDeathSquad.ScraperTest do
 
   @podcast "Nephilim Death Squad"
   @video_url "https://www.youtube.com/watch?v=3CHHx4pkBIi"
+
   setup :verify_on_exit!
 
   describe "scrape/0" do
