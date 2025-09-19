@@ -23,5 +23,6 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
     # Scraper.scrape()
     # SkepticBot.Candace.Scraper.scrape()
     # SkepticBot.DeepWaters.Scraper.scrape()
+    SkepticBot.NephilimDeathSquad.Scraper.scrape()
   end
 end

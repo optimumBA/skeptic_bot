@@ -24,6 +24,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   @podcast_candace "Candace"
   @podcast_deepwaters "Deep Waters"
   @podcast_lookintoit "Look Into It"
+  @podcast_nephilimdeathsquad "Nephilim Death Squad"
   @podcast_tinfoilhat "Tin Foil Hat"
 
   @type job :: Oban.Job.t()
@@ -97,7 +98,12 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   end
 
   defp process(id, url, podcast)
-       when podcast in [@podcast_candace, @podcast_lookintoit, @podcast_deepwaters] do
+       when podcast in [
+              @podcast_candace,
+              @podcast_lookintoit,
+              @podcast_deepwaters,
+              @podcast_nephilimdeathsquad
+            ] do
     tmp_dir = System.tmp_dir!()
     audio_path = Path.join(tmp_dir, "#{id}_.mp3")
 
