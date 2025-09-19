@@ -14,6 +14,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
   @eddie_rokfin_channel "https://rokfin.com/eddiebravo"
   @eddie_rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
   @nephilim_death_squad_channel "https://www.youtube.com/@NephilimDeathSquad/streams"
+  @yt_channels [@candace_channel, @deepwaters_channel, @nephilim_death_squad_channel]
 
   @type channel :: String.t()
   @type duration :: String.t()
@@ -48,7 +49,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
   end
 
   defp get_video_length(duration, channel)
-       when channel in [@candace_channel, @deepwaters_channel, @nephilim_death_squad_channel] do
+       when channel in @yt_channels do
     String.to_integer(duration)
   end
 
@@ -63,7 +64,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
   end
 
   defp get_external_id(webpage_url, channel)
-       when channel in [@candace_channel, @deepwaters_channel, @nephilim_death_squad_channel] do
+       when channel in @yt_channels do
     <<"https://www.youtube.com/watch?v=", webpage_id::binary>> = webpage_url
 
     webpage_id
