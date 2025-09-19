@@ -16,6 +16,7 @@ alias SkepticBot.Podcasts
   %{name: "Look Into It"},
   %{name: "Candace"},
   %{name: "Nephilim Death Squad"},
+  %{name: "Deep Waters"},
   %{name: "Cash Daddies"},
   %{name: "Doom Scrollin"},
   %{name: "Union of the Unwanted"},
