@@ -8,7 +8,7 @@ defmodule SeparateSamPodcasts do
   require Logger
 
   def start do
-    Logger.debug("Starting to separate Sam's podcasts", ansi_color: :green)
+    Logger.info("Starting to separate Sam's podcasts", ansi_color: :green)
 
     podcast = Podcasts.get_podcast_by_name("Tin Foil Hat")
     podcast_2 = Podcasts.get_podcast_by_name("Doom Scrollin")
@@ -24,7 +24,7 @@ defmodule SeparateSamPodcasts do
     |> Repo.all()
     |> Enum.each(&update_episode(&1.title, &1, podcast_ids))
 
-    Logger.debug("Finished separating Sam's podcasts", ansi_color: :green)
+    Logger.info("Finished separating Sam's podcasts", ansi_color: :green)
   end
 
   defp update_episode(

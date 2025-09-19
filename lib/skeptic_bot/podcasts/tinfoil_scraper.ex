@@ -8,7 +8,12 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   @type episode_id :: String.t()
   @type start :: integer()
 
-  @podcast_name "Tin Foil Hat"
+  @podcast_tinfoilhat "Tin Foil Hat"
+  @podcast_doomscrollin "Doom Scrollin"
+  @podcast_cashdaddies "Cash Daddies"
+  @podcast_opiateoftheasses "Opiate of the Asses"
+  @podcast_zerowithsamtripoli "Zero with Sam Tripoli"
+  @podcast_unionoftheunwanted "Union of the Unwanted"
   @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
   @video_url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/<external_id>-0-fragmented.mp4"
 
@@ -24,8 +29,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
         Enum.each(body["data"], fn episode ->
-          podcast = Podcasts.get_podcast_by_name(@podcast_name)
-          maybe_download_episode(episode, podcast.id)
+          podcast_ids = get_podcast_ids()
+          podcast_id = return_podcast_id(episode["name"], podcast_ids)
+          maybe_download_episode(episode, podcast_id)
         end)
 
         if Enum.empty?(body["data"]) do
@@ -55,9 +61,9 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
             scrape_episode(uuid, start + 100)
 
           episode ->
-            podcast = Podcasts.get_podcast_by_name(@podcast_name)
-
-            maybe_download_episode(episode, podcast.id)
+            podcast_ids = get_podcast_ids()
+            podcast_id = return_podcast_id(episode["name"], podcast_ids)
+            maybe_download_episode(episode, podcast_id)
         end
 
       {:error, reason} ->
@@ -81,9 +87,100 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
 
       DownloadingWorker.enqueue(%{
         "id" => episode.id,
-        "podcast" => @podcast_name,
+        "podcast" => @podcast_tinfoilhat,
         "video_url" => video_url
       })
     end
+  end
+
+  defp return_podcast_id(
+         <<"Doom ", _remainder_title::binary>>,
+         [_podcast_id, podcast_2_id, _podcast_3_id, _podcast_4_id, _podcast_5_id, _podcast_6_id]
+       ) do
+    podcast_2_id
+  end
+
+  defp return_podcast_id(
+         <<"Doomscrollin", _remainder_title::binary>>,
+         [_podcast_id, podcast_2_id, _podcast_3_id, _podcast_4_id, _podcast_5_id, _podcast_6_id]
+       ) do
+    podcast_2_id
+  end
+
+  defp return_podcast_id(
+         <<"Cash Daddies", _remainder_title::binary>>,
+         [_podcast_id, _podcast_2_id, podcast_3_id, _podcast_4_id, _podcast_5_id, _podcast_6_id]
+       ) do
+    podcast_3_id
+  end
+
+  defp return_podcast_id(
+         <<"CashDaddies", _remainder_title::binary>>,
+         [_podcast_id, _podcast_2_id, podcast_3_id, _podcast_4_id, _podcast_5_id, _podcast_6_id]
+       ) do
+    podcast_3_id
+  end
+
+  defp return_podcast_id(
+         <<"Opiate ", _remainder_title::binary>>,
+         [_podcast_id, _podcast_2_id, _podcast_3_id, podcast_4_id, _podcast_5_id, _podcast_6_id]
+       ) do
+    podcast_4_id
+  end
+
+  defp return_podcast_id(
+         <<"OPIATE FOR", _remainder_title::binary>>,
+         [_podcast_id, _podcast_2_id, _podcast_3_id, podcast_4_id, _podcast_5_id, _podcast_6_id]
+       ) do
+    podcast_4_id
+  end
+
+  defp return_podcast_id(
+         <<"Opiates Of", _remainder_title::binary>>,
+         [_podcast_id, _podcast_2_id, _podcast_3_id, podcast_4_id, _podcast_5_id, _podcast_6_id]
+       ) do
+    podcast_4_id
+  end
+
+  defp return_podcast_id(
+         <<"Zero #", _remainder_title::binary>>,
+         [_podcast_id, _podcast_2_id, _podcast_3_id, _podcast_4_id, podcast_5_id, _podcast_6_id]
+       ) do
+    podcast_5_id
+  end
+
+  defp return_podcast_id(
+         <<"Union of the Unwanted", _remainder_title::binary>>,
+         [_podcast_id, _podcast_2_id, _podcast_3_id, _podcast_4_id, _podcast_5_id, podcast_6_id]
+       ) do
+    podcast_6_id
+  end
+
+  defp return_podcast_id(
+         <<"The Union of The Unwanted", _remainder_title::binary>>,
+         [_podcast_id, _podcast_2_id, _podcast_3_id, _podcast_4_id, _podcast_5_id, podcast_6_id]
+       ) do
+    podcast_6_id
+  end
+
+  defp return_podcast_id(_episode_title, [
+         podcast_id,
+         _podcast_2_id,
+         _podcast_3_id,
+         _podcast_4_id,
+         _podcast_5_id,
+         _podcast_6_id
+       ]),
+       do: podcast_id
+
+  defp get_podcast_ids do
+    podcast = Podcasts.get_podcast_by_name(@podcast_tinfoilhat)
+    podcast_2 = Podcasts.get_podcast_by_name(@podcast_doomscrollin)
+    podcast_3 = Podcasts.get_podcast_by_name(@podcast_cashdaddies)
+    podcast_4 = Podcasts.get_podcast_by_name(@podcast_opiateoftheasses)
+    podcast_5 = Podcasts.get_podcast_by_name(@podcast_zerowithsamtripoli)
+    podcast_6 = Podcasts.get_podcast_by_name(@podcast_unionoftheunwanted)
+
+    [podcast.id, podcast_2.id, podcast_3.id, podcast_4.id, podcast_5.id, podcast_6.id]
   end
 end

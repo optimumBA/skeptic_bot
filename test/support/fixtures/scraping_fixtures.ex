@@ -11,9 +11,51 @@ defmodule SkepticBot.ScrapingFixtures do
         %{
           "description" => "Is this a suitable description?",
           "duration" => 3000,
+          "name" => "Tin Foil Hat",
+          "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
+          "uuid" => "a909da70-43b7-5717-b1c0-c2d101521dc3"
+        },
+        %{
+          "description" => "Is this a suitable description?",
+          "duration" => 3000,
           "name" => "Cash Daddies 2",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a909da70-13b7-4717-b1c0-c2d001521dc3"
+        },
+        %{
+          "description" => "Is this a suitable description?",
+          "duration" => 3000,
+          "name" => "Doom Scrollin",
+          "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
+          "uuid" => "a909da80-14b7-4717-b1c0-c2d001521dc3"
+        },
+        %{
+          "description" => "Is this a suitable description?",
+          "duration" => 3000,
+          "name" => "Doomscrollin",
+          "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
+          "uuid" => "a909da80-14b7-4718-b1c0-c2s001521dc3"
+        },
+        %{
+          "description" => "Is this a suitable description?",
+          "duration" => 3000,
+          "name" => "Opiate Of the Asses",
+          "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
+          "uuid" => "a909da80-14b7-4717-b1h0-c2d011521dc4"
+        },
+        %{
+          "description" => "Is this a suitable description?",
+          "duration" => 3000,
+          "name" => "Union of the Unwanted",
+          "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
+          "uuid" => "a908da81-12b7-4717-b1h0-c2d011521dc4"
+        },
+        %{
+          "description" => "Is this a suitable description?",
+          "duration" => 3000,
+          "name" => "Zero #178: Deadly",
+          "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
+          "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
         }
       ]
     }
