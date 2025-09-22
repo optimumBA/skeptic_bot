@@ -6,13 +6,12 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
 
   use Oban.Worker,
     max_attempts: 5,
-    queue: :downloading,
+    queue: :generating_descriptions,
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.DownloadingRunner
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Episode
-
   alias SkepticBot.Rag.DescriptionGenerator
 
   require Logger
@@ -29,6 +28,10 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
       Podcasts.update_episode(episode, %{description: description})
       :ok
     else
+      nil ->
+        Logger.error("Failed to process episode: #{id}, reason: Episode not found")
+        {:error, "Episode not found"}
+
       {:error, reason} ->
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
         {:error, reason}
