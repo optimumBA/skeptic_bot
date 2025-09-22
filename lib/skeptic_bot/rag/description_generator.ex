@@ -48,7 +48,7 @@ defmodule SkepticBot.Rag.DescriptionGenerator do
 
   defp format_episode(%Podcasts.Episode{} = episode) do
     ~s"""
-    Description: #{episode.id}
+    Description: #{episode.description || ""}
     Title: #{episode.title}
     Transcription: #{episode.transcription}
     """
