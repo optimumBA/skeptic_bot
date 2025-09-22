@@ -25,7 +25,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
       }) do
     with %Episode{} = episode <- Podcasts.get_episode(id),
          {:ok, description} <- process_with_flame(episode) do
-      Podcasts.update_episode(episode, %{description: description})
+      {:ok, _episode} = Podcasts.update_episode(episode, %{description: description})
       :ok
     else
       nil ->
@@ -43,7 +43,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
       FLAME.call(
         DownloadingRunner,
         fn -> DescriptionGenerator.generate_description(episode) end,
-        timeout: 1_800_000
+        timeout: 1_000_000
       )
 
     case result do
