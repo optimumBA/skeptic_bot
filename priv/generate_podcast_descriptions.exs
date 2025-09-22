@@ -10,10 +10,13 @@ defmodule GeneratePodcastDescriptions do
 
     Episode
     |> Repo.all()
+    |> Enum.take(-2)
     |> Enum.each(&DescriptionGeneratingWorker.enqueue(%{"id" => &1.id}))
 
     Logger.info("Description generation is completed", ansi_color: :green)
   end
 end
+
+{:ok, _apps} = Application.ensure_all_started(:skeptic_bot)
 
 GeneratePodcastDescriptions.start()

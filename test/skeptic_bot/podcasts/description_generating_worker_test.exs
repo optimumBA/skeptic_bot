@@ -1,5 +1,5 @@
 defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
-  use SkepticBot.DataCase, async: false
+  use SkepticBot.DataCase, async: true
 
   import ExUnit.CaptureLog
   import Mox
@@ -12,7 +12,6 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
   @id "a909da70-13b7-4717-b1c0-c2d001521dc3"
 
   setup :verify_on_exit!
-  setup :set_mox_from_context
 
   defp create_episode(_attrs) do
     description = "A Sam Tripoli special"

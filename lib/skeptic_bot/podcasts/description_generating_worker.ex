@@ -9,7 +9,6 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
     queue: :generating_descriptions,
     unique: [period: :infinity, states: Oban.Job.states()]
 
-  alias SkepticBot.DownloadingRunner
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Rag.DescriptionGenerator
@@ -26,6 +25,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
     with %Episode{} = episode <- Podcasts.get_episode(id),
          {:ok, description} <- process_with_flame(episode) do
       {:ok, _episode} = Podcasts.update_episode(episode, %{description: description})
+      Logger.info(description)
       :ok
     else
       nil ->
@@ -39,21 +39,10 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
   end
 
   defp process_with_flame(episode) do
-    result =
-      FLAME.call(
-        DownloadingRunner,
-        fn -> DescriptionGenerator.generate_description(episode) end,
-        timeout: 1_000_000
-      )
-
-    case result do
+    case DescriptionGenerator.generate_description(episode) do
       {:ok, description} -> {:ok, description}
       {:error, reason} -> {:error, reason}
     end
-  rescue
-    e ->
-      Logger.error("FLAME process failed: #{Exception.message(e)}")
-      {:error, "FLAME processing failed: #{Exception.message(e)}"}
   end
 
   @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}
