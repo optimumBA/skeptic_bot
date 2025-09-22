@@ -34,7 +34,7 @@ defmodule SkepticBot.Rag do
           | {:error, String.t()}
   def predict_query(context, query) do
     with prompt <- format_prompt(context, query),
-         {:ok, response} <- Rag.Generator.predict(prompt) do
+         {:ok, response} <- Rag.Generator.predict(prompt, :processing_and_completed) do
       {:ok, response}
     else
       {:error, reason} ->

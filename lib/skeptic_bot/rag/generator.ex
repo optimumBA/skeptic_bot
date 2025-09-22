@@ -11,7 +11,7 @@ defmodule SkepticBot.Rag.Generator do
   @callback predict(messages(), output_mode()) :: {:ok, response()} | {:error, reason()}
 
   @spec predict(messages(), output_mode()) :: {:ok, response()} | {:error, reason()}
-  def predict(messages, output_mode \\ :processing_and_completed),
+  def predict(messages, output_mode),
     do: impl().predict(messages, output_mode)
 
   defp impl, do: Application.get_env(:skeptic_bot, :generator, ReplicateGenerator)

@@ -1,7 +1,7 @@
 defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
   @moduledoc """
   Handles generating descriptions for podcast episodes.
-  Updates an episode with the new generated description.
+  Updates an episode with the newly generated description.
   """
 
   use Oban.Worker,
