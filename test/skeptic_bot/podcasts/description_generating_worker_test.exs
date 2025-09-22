@@ -7,6 +7,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DescriptionGeneratingWorker
+  alias SkepticBot.Rag.MockEmbedder
   alias SkepticBot.Rag.MockGenerator
 
   @id "a909da70-13b7-4717-b1c0-c2d001521dc3"
@@ -23,8 +24,14 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
     setup [:create_episode]
 
     test "generates a description for an episode", %{description: description, episode: episode} do
+      embedding = embedding_fixture()
+
       expect(MockGenerator, :predict, fn _messages, _output_mode ->
         {:ok, description}
+      end)
+
+      expect(MockEmbedder, :generate, fn _text ->
+        {:ok, [embedding]}
       end)
 
       assert :ok =
