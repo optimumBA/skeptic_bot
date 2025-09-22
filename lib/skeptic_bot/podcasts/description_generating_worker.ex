@@ -11,6 +11,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Episode
+  alias SkepticBot.Rag
   alias SkepticBot.Rag.DescriptionGenerator
 
   require Logger
@@ -23,9 +24,12 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
         args: %{"id" => id}
       }) do
     with %Episode{} = episode <- Podcasts.get_episode(id),
-         {:ok, description} <- DescriptionGenerator.generate_description(episode) do
-      {:ok, _episode} = Podcasts.update_episode(episode, %{description: description})
-      Logger.info(description)
+         {:ok, description} <- DescriptionGenerator.generate_description(episode),
+         text <- "passage: " <> episode.title <> " " <> description,
+         {:ok, [embedding]} <- Rag.Embedder.generate(text) do
+      {:ok, _episode} =
+        Podcasts.update_episode(episode, %{description: description, embedding: embedding})
+
       :ok
     else
       nil ->

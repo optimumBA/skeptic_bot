@@ -17,7 +17,6 @@ defmodule SkepticBot.Rag.DescriptionGenerator do
          episode <- Map.put(episode, :trancription, transcription),
          prompt <- format_prompt(episode),
          {:ok, description} <- Rag.Generator.predict(prompt, :completed) do
-      # text = "passage: " <> episode.title <> " " <> episode.description
       {:ok, description}
     else
       {:error, reason} ->
