@@ -10,6 +10,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.Podcasts
+  alias SkepticBot.Podcasts.DescriptionGeneratingWorker
   alias SkepticBot.Rag.Embedder
 
   require Logger
@@ -32,6 +33,8 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     with {:ok, episode} <- fetch_episode(episode_id),
          {:ok, _result} <- generate_episode_embedding(episode),
          {:ok, _count} <- generate_transcription_embeddings(episode_id) do
+      DescriptionGeneratingWorker.enqueue(%{"id" => episode_id})
+
       :ok
     else
       {:error, reason} ->

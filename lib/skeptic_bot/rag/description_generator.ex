@@ -9,13 +9,15 @@ defmodule SkepticBot.Rag.DescriptionGenerator do
 
   @type episode :: Podcasts.Episode.t()
 
-  @spec generate_description(episode) ::
+  @spec generate_description(episode()) ::
           {:ok, String.t()}
           | {:error, String.t()}
   def generate_description(episode) do
-    with prompt <- format_prompt(episode),
+    with {:ok, transcription} <- Podcasts.get_episode_transcriptions(episode.id),
+         episode <- Map.put(episode, :trancription, transcription),
+         prompt <- format_prompt(episode),
          {:ok, description} <- Rag.Generator.predict(prompt, :completed) do
-      Podcasts.update_episode(episode, %{description: description})
+      {:ok, description}
     else
       {:error, reason} ->
         {:error, reason}

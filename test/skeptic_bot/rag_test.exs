@@ -55,7 +55,7 @@ defmodule SkepticBot.RagTest do
     test "returns the LLM response if successful" do
       episode = episode_fixture()
 
-      expect(Rag.MockGenerator, :predict, fn _messages ->
+      expect(Rag.MockGenerator, :predict, fn _messages, _output_mode ->
         {:ok, "Prediction process was successful"}
       end)
 
@@ -67,7 +67,7 @@ defmodule SkepticBot.RagTest do
       episode = episode_fixture()
       query = "American Ponzi with Lee Camp"
 
-      expect(Rag.MockGenerator, :predict, fn _messages ->
+      expect(Rag.MockGenerator, :predict, fn _messages, _output_mode ->
         {:error, "Prediction process was unsuccessful"}
       end)
 
