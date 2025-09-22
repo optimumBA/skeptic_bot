@@ -23,7 +23,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
         args: %{"id" => id}
       }) do
     with %Episode{} = episode <- Podcasts.get_episode(id),
-         {:ok, description} <- process_with_flame(episode) do
+         {:ok, description} <- DescriptionGenerator.generate_description(episode) do
       {:ok, _episode} = Podcasts.update_episode(episode, %{description: description})
       Logger.info(description)
       :ok
@@ -35,13 +35,6 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
       {:error, reason} ->
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
         {:error, reason}
-    end
-  end
-
-  defp process_with_flame(episode) do
-    case DescriptionGenerator.generate_description(episode) do
-      {:ok, description} -> {:ok, description}
-      {:error, reason} -> {:error, reason}
     end
   end
 
