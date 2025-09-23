@@ -22,9 +22,14 @@ defmodule SkepticBot.YtDlp.Helpers do
   def wait_for_episodes(channel, podcast) do
     receive do
       {_port, {:data, msg}} ->
-        msg
-        |> format_message()
-        |> process_episode(channel, podcast)
+        case format_message(msg) do
+          {_title, _duration, _thumbnail, _webpage_url} = episode ->
+            process_episode(episode, channel, podcast)
+
+          _error ->
+            Logger.error("The episode failed to download. Reason: #{msg}")
+            :ok
+        end
 
         wait_for_episodes(channel, podcast)
 

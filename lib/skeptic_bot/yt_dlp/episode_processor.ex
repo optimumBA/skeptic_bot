@@ -48,11 +48,6 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
     end
   end
 
-  def maybe_download_episode(_episode, _channel, _podcast) do
-    Logger.error("The episode failed to download, reason : Yt-dlp error")
-    {:error, "Yt-dlp error"}
-  end
-
   defp get_video_length(duration, channel)
        when channel in @yt_channels do
     String.to_integer(duration)

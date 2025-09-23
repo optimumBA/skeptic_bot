@@ -1,6 +1,7 @@
 defmodule SkepticBot.Candace.ScraperTest do
   use SkepticBot.DataCase, async: true
 
+  import ExUnit.CaptureLog
   import Mox
   import SkepticBot.PodcastsFixtures
 
@@ -50,6 +51,29 @@ defmodule SkepticBot.Candace.ScraperTest do
           video_url: "https://www.youtube.com/watch?v=3CHHx4pkBI4"
         }
       )
+    end
+
+    test "logs an error message if yt-dlp scraping from the port returns an error or warning" do
+      _podcast = podcast_fixture(name: @podcast)
+
+      msg =
+        "Warning! Please sign in to confirm your age."
+
+      port = Port.open({:spawn, "echo #{msg}"}, [:binary])
+
+      Process.send_after(self(), {:close_port, port}, 100)
+
+      expect(MockChannelClient, :get_channel_data_from_port, fn _date, _channel ->
+        port
+      end)
+
+      log =
+        capture_log(fn ->
+          Scraper.scrape()
+        end)
+
+      assert log =~
+               "The episode failed to download. Reason: Warning! Please sign in to confirm your age."
     end
   end
 end
