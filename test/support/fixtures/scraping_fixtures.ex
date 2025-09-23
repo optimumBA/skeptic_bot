@@ -83,7 +83,7 @@ defmodule SkepticBot.ScrapingFixtures do
           "duration" => 3000,
           "name" => "Broken Sim",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
-          "uuid" => "a908da82-12c7-4717-b1h0-c2d063981dc4"
+          "uuid" => "a908da82-12c7-4717-b1h0-c2d063991dc4"
         },
         %{
           "description" => "Is this a suitable description?",
@@ -104,7 +104,7 @@ defmodule SkepticBot.ScrapingFixtures do
           "duration" => 3000,
           "name" => "Black Crack Robots:  Sam Tripoli's First Crowd Work Special",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
-          "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
+          "uuid" => "a908da82-12b7-4717-boh0-c2d013581dc4"
         },
         %{
           "description" => "Is this a suitable description?",

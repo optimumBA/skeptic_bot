@@ -278,11 +278,12 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   @spec get_podcast_ids :: map()
   def get_podcast_ids do
     podcast_list = [
-      @podcast_tinfoilhat,
-      @podcast_doomscrollin,
+      @podcast_brokensimulation,
       @podcast_cashdaddies,
-      @podcast_zerowithsamtripoli,
-      @podcast_unionoftheunwanted
+      @podcast_doomscrollin,
+      @podcast_tinfoilhat,
+      @podcast_unionoftheunwanted,
+      @podcast_zerowithsamtripoli
     ]
 
     podcast_list
