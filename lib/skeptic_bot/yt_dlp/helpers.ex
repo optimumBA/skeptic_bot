@@ -27,7 +27,10 @@ defmodule SkepticBot.YtDlp.Helpers do
             process_episode(episode, channel, podcast)
 
           _error ->
-            Logger.error("The episode failed to download. Reason: #{msg}")
+            Logger.error(
+              "The episode for the channel: #{channel} in podcast: #{podcast.name} failed to download. Reason: #{msg}"
+            )
+
             :ok
         end
 
