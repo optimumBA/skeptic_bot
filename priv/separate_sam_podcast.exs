@@ -19,10 +19,14 @@ defmodule SeparateSamPodcasts do
 
     podcast_ids = [podcast_2.id, podcast_3.id, podcast_4.id, podcast_5.id, podcast_6.id]
 
-    Episode
-    |> where([e], e.podcast_id == ^podcast.id)
-    |> Repo.all()
-    |> Enum.each(&update_episode(&1.title, &1, podcast_ids))
+    transformation = fn ->
+      Episode
+      |> where([e], e.podcast_id == ^podcast.id)
+      |> Repo.stream()
+      |> Enum.each(&update_episode(&1.title, &1, podcast_ids))
+    end
+
+    Repo.transaction(transformation, timeout: :infinity)
 
     Logger.info("Finished separating Sam's podcasts", ansi_color: :green)
   end
