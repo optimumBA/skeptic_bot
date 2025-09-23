@@ -18,7 +18,7 @@ defmodule SeparateSamPodcasts do
   def start do
     Logger.info("Starting to separate Sam's podcasts", ansi_color: :green)
 
-    podcasts = TinfoilScraper.get_podcasts()
+    podcast_ids = TinfoilScraper.get_podcast_ids()
 
     podcast = Podcasts.get_podcast_by_name(@podcast_tinfoilhat)
 
@@ -26,7 +26,7 @@ defmodule SeparateSamPodcasts do
       Episode
       |> where([e], e.podcast_id == ^podcast.id)
       |> Repo.stream(max_rows: 100)
-      |> Stream.each(&process_episode(&1.title, &1, podcasts))
+      |> Stream.each(&process_episode(&1.title, &1, podcast_ids))
       |> Stream.run()
     end
 
@@ -38,179 +38,179 @@ defmodule SeparateSamPodcasts do
   defp process_episode(
          "Comic Crushes Cougar Heckler!",
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          "Why is Everybody Gettin Quiet?",
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          "Gay Heckler Gets Annihilated By Comic!",
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          "POTTY MOUTH (Crowd Work Special #2) From Sam Tripoli",
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          "Black Crack Robots:  Sam Tripoli's First Crowd Work Special",
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          <<"Deep Conspiracy Rewinds", _remainder_title::binary>>,
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          <<"Punch Drunk Sports", _remainder_title::binary>>,
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          <<"Bad Advice", _remainder_title::binary>>,
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          <<"OnlyConspiracies", _remainder_title::binary>>,
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          <<"Saturday Night Deep Dives", _remainder_title::binary>>,
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          <<"OOTA", _remainder_title::binary>>,
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          <<"Opiate ", _remainder_title::binary>>,
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          <<"OPIATE FOR", _remainder_title::binary>>,
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          <<"Opiates Of", _remainder_title::binary>>,
          episode,
-         podcasts
+         _podcast_ids
        ),
        do: Repo.delete(episode)
 
   defp process_episode(
          <<"Broken Sim", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_brokensimulation]
+    podcast_id = podcast_ids[@podcast_brokensimulation]
     Podcasts.update_episode(episode, %{podcast_id: podcast_id})
   end
 
   defp process_episode(
          <<"BS Clips", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_brokensimulation]
+    podcast_id = podcast_ids[@podcast_brokensimulation]
     Podcasts.update_episode(episode, %{podcast_id: podcast_id})
   end
 
   defp process_episode(
          <<"Doom ", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_doomscrollin]
+    podcast_id = podcast_ids[@podcast_doomscrollin]
     Podcasts.update_episode(episode, %{podcast_id: podcast_id})
   end
 
   defp process_episode(
          <<"Doomscrollin", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_doomscrollin]
+    podcast_id = podcast_ids[@podcast_doomscrollin]
     Podcasts.update_episode(episode, %{podcast_id: podcast_id})
   end
 
   defp process_episode(
          <<"Cash Daddies", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_cashdaddies]
+    podcast_id = podcast_ids[@podcast_cashdaddies]
     Podcasts.update_episode(episode, %{podcast_id: podcast_id})
   end
 
   defp process_episode(
          <<"CashDaddies", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_cashdaddies]
+    podcast_id = podcast_ids[@podcast_cashdaddies]
     Podcasts.update_episode(episode, %{podcast_id: podcast_id})
   end
 
   defp process_episode(
          <<"Zero #", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_zerowithsamtripoli]
+    podcast_id = podcast_ids[@podcast_zerowithsamtripoli]
     Podcasts.update_episode(episode, %{podcast_id: podcast_id})
   end
 
   defp process_episode(
          <<"Union of the Unwanted", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_unionoftheunwanted]
+    podcast_id = podcast_ids[@podcast_unionoftheunwanted]
     Podcasts.update_episode(episode, %{podcast_id: podcast_id})
   end
 
   defp process_episode(
          <<"The Union of The Unwanted", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_unionoftheunwanted]
+    podcast_id = podcast_ids[@podcast_unionoftheunwanted]
     Podcasts.update_episode(episode, %{podcast_id: podcast_id})
   end
 

@@ -29,8 +29,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
         Enum.each(body["data"], fn episode ->
-          podcasts = get_podcasts()
-          process_episode(episode["name"], episode, podcasts)
+          podcast_ids = get_podcast_ids()
+          process_episode(episode["name"], episode, podcast_ids)
         end)
 
         if Enum.empty?(body["data"]) do
@@ -60,7 +60,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
             scrape_episode(uuid, start + 100)
 
           episode ->
-            podcasts = get_podcasts()
+            podcasts = get_podcast_ids()
             process_episode(episode["name"], episode, podcasts)
         end
 
@@ -94,189 +94,189 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   defp process_episode(
          "Comic Crushes Cougar Heckler!",
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          "Why is Everybody Gettin Quiet?",
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          "Gay Heckler Gets Annihilated By Comic!",
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          "POTTY MOUTH (Crowd Work Special #2) From Sam Tripoli",
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          "Black Crack Robots:  Sam Tripoli's First Crowd Work Special",
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          <<"Deep Conspiracy Rewinds", _remainder_title::binary>>,
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          <<"Punch Drunk Sports", _remainder_title::binary>>,
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          <<"Bad Advice", _remainder_title::binary>>,
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          <<"OnlyConspiracies", _remainder_title::binary>>,
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          <<"Saturday Night Deep Dives", _remainder_title::binary>>,
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          <<"OOTA", _remainder_title::binary>>,
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          <<"Opiate ", _remainder_title::binary>>,
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          <<"OPIATE FOR", _remainder_title::binary>>,
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          <<"Opiates Of", _remainder_title::binary>>,
          _episode,
-         _podcasts
+         _podcast_ids
        ),
        do: :ok
 
   defp process_episode(
          <<"Broken Sim", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_brokensimulation]
+    podcast_id = podcast_ids[@podcast_brokensimulation]
     maybe_download_episode(episode, podcast_id)
   end
 
   defp process_episode(
          <<"BS Clips", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_brokensimulation]
+    podcast_id = podcast_ids[@podcast_brokensimulation]
     maybe_download_episode(episode, podcast_id)
   end
 
   defp process_episode(
          <<"Doom ", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_doomscrollin]
+    podcast_id = podcast_ids[@podcast_doomscrollin]
     maybe_download_episode(episode, podcast_id)
   end
 
   defp process_episode(
          <<"Doomscrollin", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_doomscrollin]
+    podcast_id = podcast_ids[@podcast_doomscrollin]
     maybe_download_episode(episode, podcast_id)
   end
 
   defp process_episode(
          <<"Cash Daddies", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_cashdaddies]
+    podcast_id = podcast_ids[@podcast_cashdaddies]
     maybe_download_episode(episode, podcast_id)
   end
 
   defp process_episode(
          <<"CashDaddies", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_cashdaddies]
+    podcast_id = podcast_ids[@podcast_cashdaddies]
     maybe_download_episode(episode, podcast_id)
   end
 
   defp process_episode(
          <<"Zero #", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_zerowithsamtripoli]
+    podcast_id = podcast_ids[@podcast_zerowithsamtripoli]
     maybe_download_episode(episode, podcast_id)
   end
 
   defp process_episode(
          <<"Union of the Unwanted", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_unionoftheunwanted]
+    podcast_id = podcast_ids[@podcast_unionoftheunwanted]
     maybe_download_episode(episode, podcast_id)
   end
 
   defp process_episode(
          <<"The Union of The Unwanted", _remainder_title::binary>>,
          episode,
-         podcasts
+         podcast_ids
        ) do
-    podcast_id = podcasts[@podcast_unionoftheunwanted]
+    podcast_id = podcast_ids[@podcast_unionoftheunwanted]
     maybe_download_episode(episode, podcast_id)
   end
 
-  defp process_episode(_episode_title, episode, podcasts) do
-    podcast_id = podcasts[@podcast_tinfoilhat]
+  defp process_episode(_episode_title, episode, podcast_ids) do
+    podcast_id = podcast_ids[@podcast_tinfoilhat]
     maybe_download_episode(episode, podcast_id)
   end
 
-  @spec get_podcasts :: map()
-  def get_podcasts do
+  @spec get_podcast_ids :: map()
+  def get_podcast_ids do
     podcast_list = [
       @podcast_tinfoilhat,
       @podcast_doomscrollin,

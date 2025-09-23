@@ -123,6 +123,13 @@ defmodule SkepticBot.ScrapingFixtures do
         %{
           "description" => "Is this a suitable description?",
           "duration" => 3000,
+          "name" => "Saturday Night Deep Dives",
+          "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
+          "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
+        },
+        %{
+          "description" => "Is this a suitable description?",
+          "duration" => 3000,
           "name" => "Gay Heckler Gets Annihilated By Comic!",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
