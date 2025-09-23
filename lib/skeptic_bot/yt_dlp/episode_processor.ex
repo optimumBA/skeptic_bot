@@ -26,7 +26,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
   @type webpage_url :: String.t()
 
   @spec maybe_download_episode(episode(), channel(), podcast()) ::
-          {:ok, job()} | {:error, Ecto.Changeset.t()} | {:error, String.t()} | nil
+          {:ok, job()} | {:error, Ecto.Changeset.t()} | nil
   def maybe_download_episode({title, duration, thumbnail, webpage_url}, channel, podcast) do
     external_id = get_external_id(webpage_url, channel)
 
