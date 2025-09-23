@@ -17,10 +17,10 @@ alias SkepticBot.Podcasts
   %{name: "Candace"},
   %{name: "Nephilim Death Squad"},
   %{name: "Deep Waters"},
+  %{name: "Broken Simulation"},
   %{name: "Cash Daddies"},
   %{name: "Doom Scrollin"},
   %{name: "Union of the Unwanted"},
-  %{name: "Opiate of the Asses"},
   %{name: "Zero with Sam Tripoli"}
 ]
 |> Stream.reject(&Podcasts.get_podcast_by_name(&1.name))
