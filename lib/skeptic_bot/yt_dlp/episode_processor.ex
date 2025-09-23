@@ -26,7 +26,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
   @type webpage_url :: String.t()
 
   @spec maybe_download_episode(episode(), channel(), podcast()) ::
-          {:ok, job()} | {:error, Ecto.Changeset.t()} | nil
+          {:ok, job()} | {:error, Ecto.Changeset.t()} | {:error, String.t()} | nil
   def maybe_download_episode({title, duration, thumbnail, webpage_url}, channel, podcast) do
     external_id = get_external_id(webpage_url, channel)
 
@@ -46,6 +46,11 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
         "video_url" => webpage_url
       })
     end
+  end
+
+  def maybe_download_episode(_episode, _channel, _podcast) do
+    Logger.error("The episode failed to download, reason : Yt-dlp error")
+    {:error, "Yt-dlp error"}
   end
 
   defp get_video_length(duration, channel)
