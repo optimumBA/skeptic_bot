@@ -9,7 +9,6 @@ defmodule SkepticBot.Candace.ScraperTest do
   alias SkepticBot.Podcasts.DownloadingWorker
   alias SkepticBot.YtDlp.MockChannelClient
 
-  @channel "https://www.youtube.com/@RealCandaceO/streams"
   @podcast "Candace"
   @video_url "https://www.youtube.com/watch?v=3CHHx4pkBIo"
 
@@ -74,7 +73,7 @@ defmodule SkepticBot.Candace.ScraperTest do
         end)
 
       assert log =~
-               "The episode for the channel: #{@channel} in podcast: #{@podcast} failed to download. Reason: Warning! Please sign in to confirm your age."
+               "The episode for the channel: https://www.youtube.com/@RealCandaceO/streams in podcast: Candace failed to download. Reason: Warning! Please sign in to confirm your age."
     end
   end
 end
