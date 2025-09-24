@@ -31,13 +31,12 @@ path = Path.join([System.tmp_dir!(), "broken_simulation.txt"])
 
 podcast = Podcasts.get_podcast_by_name("Broken Simulation")
 
-# the videos page is where relevant episodes are for Broken Simulation in Sam Tripoli
 path
 |> get_episodes.()
 |> Enum.each(
   &EpisodeProcessor.maybe_download_episode(
     &1,
-    "https://www.youtube.com/@SamTripoli/videos",
+    "https://www.youtube.com/@SamTripoli/streams",
     podcast
   )
 )

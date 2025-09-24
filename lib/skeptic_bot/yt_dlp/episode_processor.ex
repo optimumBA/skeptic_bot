@@ -9,7 +9,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
 
   require Logger
 
-  @broken_simulation_channel "https://www.youtube.com/@SamTripoli/videos"
+  @broken_simulation_channel "https://www.youtube.com/@SamTripoli/streams"
   @candace_channel "https://www.youtube.com/@RealCandaceO/streams"
   @deepwaters_channel "https://www.youtube.com/@deepwaterscsc/videos"
   @eddie_rokfin_channel "https://rokfin.com/eddiebravo"

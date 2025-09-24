@@ -18,12 +18,12 @@ defmodule SkepticBot.BrokenSimulation.ScraperTest do
       _podcast = podcast_fixture(name: @podcast)
 
       msg =
-        "Machine Gun Kelly Beef 24~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBIi"
+        "Broken Simulation Kelly Beef 24~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBIi"
 
       port = Port.open({:spawn, "echo #{msg}"}, [:binary])
 
       msg_2 =
-        "Murder of Charlie Kirk Ep 25~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBI4"
+        "Broken Simulation Kirk Ep 25~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBI4"
 
       send(self(), {port, {:data, msg_2}})
 
