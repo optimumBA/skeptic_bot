@@ -118,19 +118,15 @@ defmodule SeparateSamPodcasts do
          <<"Broken Sim", _remainder_title::binary>>,
          episode,
          podcast_ids
-       ) do
-    podcast_id = podcast_ids[@podcast_brokensimulation]
-    Podcasts.update_episode(episode, %{podcast_id: podcast_id})
-  end
+       ),
+       do: Repo.delete(episode)
 
   defp process_episode(
          <<"BS Clips", _remainder_title::binary>>,
          episode,
          podcast_ids
-       ) do
-    podcast_id = podcast_ids[@podcast_brokensimulation]
-    Podcasts.update_episode(episode, %{podcast_id: podcast_id})
-  end
+       ),
+       do: Repo.delete(episode)
 
   defp process_episode(
          <<"Doom ", _remainder_title::binary>>,
