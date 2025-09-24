@@ -16,7 +16,8 @@ alias SkepticBot.Podcasts
   %{name: "Look Into It"},
   %{name: "Candace"},
   %{name: "Nephilim Death Squad"},
-  %{name: "Deep Waters"}
+  %{name: "Deep Waters"},
+  %{name: "Broken Simulation"}
 ]
 |> Stream.reject(&Podcasts.get_podcast_by_name(&1.name))
 |> Enum.each(&Podcasts.create_podcast/1)
