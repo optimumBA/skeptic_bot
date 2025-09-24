@@ -23,10 +23,22 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   @podcast_brokensimulation "Broken Simulation"
   @podcast_candace "Candace"
+  @podcast_cashdaddies "Cash Daddies"
   @podcast_deepwaters "Deep Waters"
+  @podcast_doomscrollin "Doom Scrollin"
   @podcast_lookintoit "Look Into It"
   @podcast_nephilimdeathsquad "Nephilim Death Squad"
   @podcast_tinfoilhat "Tin Foil Hat"
+  @podcast_unionoftheunwanted "Union of the Unwanted"
+  @podcast_zerowithsamtripoli "Zero with Sam Tripoli"
+  @podcast_samtripoliwebsite [
+    @podcast_brokensimulation,
+    @podcast_cashdaddies,
+    @podcast_doomscrollin,
+    @podcast_tinfoilhat,
+    @podcast_unionoftheunwanted,
+    @podcast_zerowithsamtripoli
+  ]
 
   @type job :: Oban.Job.t()
 
@@ -69,7 +81,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
       {:error, "FLAME processing failed: #{Exception.message(e)}"}
   end
 
-  defp process(id, url, @podcast_tinfoilhat) do
+  defp process(id, url, name) when name in @podcast_samtripoliwebsite do
     tmp_dir = System.tmp_dir!()
     video_path = Path.join(tmp_dir, "#{id}.mp4")
     audio_path = Path.join(tmp_dir, "#{id}.mp3")
