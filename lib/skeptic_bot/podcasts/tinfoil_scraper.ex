@@ -171,21 +171,17 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
 
   defp process_episode(
          <<"Broken Sim", _remainder_title::binary>>,
-         episode,
-         podcasts
-       ) do
-    podcast = podcasts[@podcast_brokensimulation]
-    maybe_download_episode(episode, podcast)
-  end
+         _episode,
+         _podcasts
+       ),
+       do: :ok
 
   defp process_episode(
          <<"BS Clips", _remainder_title::binary>>,
-         episode,
-         podcasts
-       ) do
-    podcast = podcasts[@podcast_brokensimulation]
-    maybe_download_episode(episode, podcast)
-  end
+         _episode,
+         _podcasts
+       ),
+       do: :ok
 
   defp process_episode(
          <<"Doom ", _remainder_title::binary>>,
