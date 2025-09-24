@@ -7,11 +7,11 @@ defmodule SeparateSamPodcasts do
   alias SkepticBot.Repo
 
   @ignored_episodes [
+    "Black Crack Robots:  Sam Tripoli's First Crowd Work Special",
     "Comic Crushes Cougar Heckler!",
-    "Why is Everybody Gettin Quiet?",
     "Gay Heckler Gets Annihilated By Comic!",
     "POTTY MOUTH (Crowd Work Special #2) From Sam Tripoli",
-    "Black Crack Robots:  Sam Tripoli's First Crowd Work Special"
+    "Why is Everybody Gettin Quiet?"
   ]
   @podcast_brokensimulation "Broken Simulation"
   @podcast_cashdaddies "Cash Daddies"
