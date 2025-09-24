@@ -26,7 +26,11 @@ defmodule SeparateSamPodcasts do
     Logger.info("Starting to separate Sam's podcasts", ansi_color: :green)
 
     podcasts = TinfoilScraper.get_podcasts()
-    podcast_ids = Enum.map(podcasts, fn {name, podcast} -> {name, podcast.id} end)
+
+    podcast_ids =
+      podcasts
+      |> Enum.map(fn {name, podcast} -> {name, podcast.id} end)
+      |> Enum.into(%{})
 
     podcast = Podcasts.get_podcast_by_name(@podcast_tinfoilhat)
 
