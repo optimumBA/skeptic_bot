@@ -36,7 +36,8 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
 
       assert :ok =
                perform_job(DescriptionGeneratingWorker, %{
-                 "id" => episode.id
+                 "id" => episode.id,
+                 "episode_status" => "existing"
                })
 
       updated_episode = Podcasts.get_episode(episode.id)
@@ -47,7 +48,8 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
       log =
         capture_log(fn ->
           perform_job(DescriptionGeneratingWorker, %{
-            "id" => @id
+            "id" => @id,
+            "episode_status" => "existing"
           })
         end)
 
@@ -64,7 +66,8 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
 
       assert {:error, "failed to generate a description"} =
                perform_job(DescriptionGeneratingWorker, %{
-                 "id" => episode.id
+                 "id" => episode.id,
+                 "episode_status" => "existing"
                })
     end
   end

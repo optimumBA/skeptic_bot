@@ -6,9 +6,9 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
   import SkepticBot.PodcastsFixtures
   import SkepticBot.ScrapingFixtures
 
+  alias SkepticBot.Podcasts.DescriptionGeneratingWorker
   alias SkepticBot.Podcasts.MockTranscriber
   alias SkepticBot.Podcasts.TranscribingWorker
-  alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Storage.MockStorageProvider
 
   setup :verify_on_exit!
@@ -41,7 +41,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
                })
 
       assert_enqueued(
-        worker: EmbeddingsGeneratingWorker,
+        worker: DescriptionGeneratingWorker,
         args: %{
           "id" => episode.id
         }
@@ -63,7 +63,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
                })
 
       refute_enqueued(
-        worker: EmbeddingsGeneratingWorker,
+        worker: DescriptionGeneratingWorker,
         args: %{
           "id" => episode.id
         }

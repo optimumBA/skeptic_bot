@@ -14,6 +14,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Rag
   alias SkepticBot.Rag.DescriptionGenerator
+  alias SkepticBot.Rag.EmbeddingsGeneratingWorker
 
   require Logger
 
@@ -22,15 +23,12 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
   @impl Oban.Worker
   @spec perform(job()) :: :ok | {:error, String.t()}
   def perform(%Oban.Job{
-        args: %{"id" => id}
+        args: %{"id" => id, "episode_status" => status}
       }) do
     with %Episode{} = episode <- Podcasts.get_episode(id),
          {:ok, description} <- DescriptionGenerator.generate_description(episode),
-         text <- "passage: " <> episode.title <> " " <> description,
-         {:ok, [embedding]} <- Rag.Embedder.generate(text) do
-      {:ok, _episode} =
-        Podcasts.update_episode(episode, %{description: description, embedding: embedding})
-
+         {:ok, updated_episode} <- Podcasts.update_episode(episode, %{description: description}) do
+      maybe_enqueue_embedding_worker_job(status, updated_episode)
       :ok
     else
       nil ->
@@ -41,6 +39,19 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
         {:error, reason}
     end
+  end
+
+  defp maybe_enqueue_embedding_worker_job("existing", episode) do
+    text = "passage: " <> episode.title <> " " <> episode.description
+    {:ok, [embedding]} = Rag.Embedder.generate(text)
+    {:ok, _episode} = Podcasts.update_episode(episode, %{embedding: embedding})
+    Podcasts.update_episode(episode, %{embedding: embedding})
+    :ok
+  end
+
+  defp maybe_enqueue_embedding_worker_job("new", episode) do
+    EmbeddingsGeneratingWorker.enqueue(%{"id" => episode.id})
+    :ok
   end
 
   @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}

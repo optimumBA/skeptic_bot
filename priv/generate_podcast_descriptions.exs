@@ -10,7 +10,9 @@ defmodule GeneratePodcastDescriptions do
 
     Episode
     |> Repo.all()
-    |> Enum.each(&DescriptionGeneratingWorker.enqueue(%{"id" => &1.id}))
+    |> Enum.each(
+      &DescriptionGeneratingWorker.enqueue(%{"id" => &1.id, "episode_status" => "existing"})
+    )
 
     Logger.info("Description generation is completed", ansi_color: :green)
   end
