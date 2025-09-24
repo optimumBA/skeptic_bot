@@ -31,6 +31,7 @@ path = Path.join([System.tmp_dir!(), "candace.txt"])
 
 podcast = Podcasts.get_podcast_by_name("Candace")
 
+# the streams page is where latest episodes are for Candace
 path
 |> get_episodes.()
 |> Enum.each(
