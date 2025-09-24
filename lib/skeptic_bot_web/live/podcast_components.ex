@@ -14,12 +14,18 @@ defmodule SkepticBotWeb.PodcastComponents do
   @episode_url_rumble "https://rumble.com/"
   @episode_url_tinfoilhat "https://vid.samtripoli.com/w/"
   @episode_url_youtube "https://www.youtube.com/watch?v="
+  @podcast_brokensimulation "Broken Simulation"
   @podcast_candace "Candace"
   @podcast_deepwaters "Deep Waters"
   @podcast_lookintoit "Look Into It"
   @podcast_nephilimdeathsquad "Nephilim Death Squad"
   @podcast_tinfoilhat "Tin Foil Hat"
-  @yt_podcasts [@podcast_candace, @podcast_deepwaters, @podcast_nephilimdeathsquad]
+  @yt_podcasts [
+    @podcast_brokensimulation,
+    @podcast_candace,
+    @podcast_deepwaters,
+    @podcast_nephilimdeathsquad
+  ]
 
   attr :episode, :map, required: true
   attr :random, :integer, required: true

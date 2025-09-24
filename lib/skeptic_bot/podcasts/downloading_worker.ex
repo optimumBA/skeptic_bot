@@ -112,6 +112,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   defp process(id, url, podcast)
        when podcast in [
+              @podcast_brokensimulation,
               @podcast_candace,
               @podcast_deepwaters,
               @podcast_lookintoit,
