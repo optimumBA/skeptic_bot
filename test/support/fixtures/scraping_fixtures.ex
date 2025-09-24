@@ -13,21 +13,21 @@ defmodule SkepticBot.ScrapingFixtures do
           "duration" => 3000,
           "name" => "Tin Foil Hat",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
-          "uuid" => "a909da70-43b7-5717-b1c0-c2d101521dc3"
+          "uuid" => "a909da70-13b7-4717-b1c0-c2d001521dc3"
         },
         %{
           "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Cash Daddies 2",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
-          "uuid" => "a909da70-13b7-4717-b1c0-c2d001521dc3"
+          "uuid" => "a909da70-13b7-4727-b1c0-c2d001521dc3"
         },
         %{
           "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "CashDaddies",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
-          "uuid" => "a909da70-13b7-4717-b1c0-c2d001521dc3"
+          "uuid" => "a908da70-13b7-4717-b1c0-c2d001521dc4"
         },
         %{
           "description" => "Is this a suitable description?",

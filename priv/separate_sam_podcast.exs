@@ -6,6 +6,13 @@ defmodule SeparateSamPodcasts do
   alias SkepticBot.Podcasts.TinfoilScraper
   alias SkepticBot.Repo
 
+  @ignored_episodes [
+    "Comic Crushes Cougar Heckler!",
+    "Why is Everybody Gettin Quiet?",
+    "Gay Heckler Gets Annihilated By Comic!",
+    "POTTY MOUTH (Crowd Work Special #2) From Sam Tripoli",
+    "Black Crack Robots:  Sam Tripoli's First Crowd Work Special"
+  ]
   @podcast_brokensimulation "Broken Simulation"
   @podcast_cashdaddies "Cash Daddies"
   @podcast_doomscrollin "Doom Scrollin"
@@ -18,7 +25,8 @@ defmodule SeparateSamPodcasts do
   def start do
     Logger.info("Starting to separate Sam's podcasts", ansi_color: :green)
 
-    podcast_ids = TinfoilScraper.get_podcast_ids()
+    podcasts = TinfoilScraper.get_podcasts()
+    podcast_ids = Enum.map(podcasts, fn {name, podcast} -> {name, podcast.id} end)
 
     podcast = Podcasts.get_podcast_by_name(@podcast_tinfoilhat)
 
@@ -36,38 +44,11 @@ defmodule SeparateSamPodcasts do
   end
 
   defp process_episode(
-         "Comic Crushes Cougar Heckler!",
+         name,
          episode,
          _podcast_ids
-       ),
-       do: Repo.delete(episode)
-
-  defp process_episode(
-         "Why is Everybody Gettin Quiet?",
-         episode,
-         _podcast_ids
-       ),
-       do: Repo.delete(episode)
-
-  defp process_episode(
-         "Gay Heckler Gets Annihilated By Comic!",
-         episode,
-         _podcast_ids
-       ),
-       do: Repo.delete(episode)
-
-  defp process_episode(
-         "POTTY MOUTH (Crowd Work Special #2) From Sam Tripoli",
-         episode,
-         _podcast_ids
-       ),
-       do: Repo.delete(episode)
-
-  defp process_episode(
-         "Black Crack Robots:  Sam Tripoli's First Crowd Work Special",
-         episode,
-         _podcast_ids
-       ),
+       )
+       when name in @ignored_episodes,
        do: Repo.delete(episode)
 
   defp process_episode(
