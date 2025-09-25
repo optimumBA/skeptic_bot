@@ -7,6 +7,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.DescriptionGeneratingWorker
+  alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Rag.MockEmbedder
   alias SkepticBot.Rag.MockGenerator
 
@@ -25,10 +26,13 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
   describe "perform/1" do
     setup [:create_episode]
 
-    test "generates a description and a summary for an episode", %{
-      response: response,
-      episode: episode
-    } do
+    test "generates a description and a summary for an episode and updates the embedding for existing episodes",
+         %{
+           response: response,
+           episode: episode
+         } do
+      refute episode.embedding
+
       embedding = embedding_fixture()
 
       expect(MockGenerator, :predict, fn _messages, _output_mode ->
@@ -48,6 +52,34 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
       updated_episode = Podcasts.get_episode(episode.id)
       assert updated_episode.description == "A Sam Tripoli episode description"
       assert updated_episode.summary == "A Sam Tripoli episode summary"
+      assert updated_episode.embedding
+    end
+
+    test "generates a description and a summary for an episode and enqueues an embedding_worker job for new episodes",
+         %{
+           response: response,
+           episode: episode
+         } do
+      expect(MockGenerator, :predict, fn _messages, _output_mode ->
+        {:ok, response}
+      end)
+
+      assert :ok =
+               perform_job(DescriptionGeneratingWorker, %{
+                 "id" => episode.id,
+                 "episode_status" => "new"
+               })
+
+      updated_episode = Podcasts.get_episode(episode.id)
+      assert updated_episode.description == "A Sam Tripoli episode description"
+      assert updated_episode.summary == "A Sam Tripoli episode summary"
+
+      assert_enqueued(
+        worker: EmbeddingsGeneratingWorker,
+        args: %{
+          "id" => episode.id
+        }
+      )
     end
 
     test "logs an error when description generation fails" do

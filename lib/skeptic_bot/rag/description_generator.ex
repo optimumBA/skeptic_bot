@@ -1,6 +1,6 @@
 defmodule SkepticBot.Rag.DescriptionGenerator do
   @moduledoc """
-  Generates descriptions for podcast episodes
+  Generates descriptions and summaries for podcast episodes
   """
 
   alias LangChain.Message
