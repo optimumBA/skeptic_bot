@@ -18,6 +18,12 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
   defp create_body(_attrs) do
     body = body_fixture()
+    _podcast_2 = podcast_fixture(name: "Doom Scrollin")
+    _podcast_3 = podcast_fixture(name: "Cash Daddies")
+    _podcast_3 = podcast_fixture(name: "Broken Simulation")
+    _podcast_5 = podcast_fixture(name: "Zero with Sam Tripoli")
+    _podcast_6 = podcast_fixture(name: "Union of the Unwanted")
+
     %{body: body}
   end
 
