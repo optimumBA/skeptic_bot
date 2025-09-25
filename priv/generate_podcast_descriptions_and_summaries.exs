@@ -1,4 +1,4 @@
-defmodule GeneratePodcastDescriptions do
+defmodule GeneratePodcastDescriptionsAndSummaries do
   alias SkepticBot.Podcasts.DescriptionGeneratingWorker
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Repo
@@ -20,4 +20,4 @@ end
 
 {:ok, _apps} = Application.ensure_all_started(:skeptic_bot)
 
-GeneratePodcastDescriptions.start()
+GeneratePodcastDescriptionsAndSummaries.start()

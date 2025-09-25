@@ -2,7 +2,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
   @moduledoc """
   Handles generating descriptions for podcast episodes.
   Uses the new description and the episode title to generate a new embedding
-  Updates an episode with the newly generated description and embedding.
+  Updates an episode with the newly generated description, summary and embedding.
   """
 
   use Oban.Worker,
@@ -26,8 +26,10 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
         args: %{"id" => id, "episode_status" => status}
       }) do
     with %Episode{} = episode <- Podcasts.get_episode(id),
-         {:ok, description} <- DescriptionGenerator.generate_description(episode),
-         {:ok, updated_episode} <- Podcasts.update_episode(episode, %{description: description}) do
+         {:ok, {description, summary}} <-
+           DescriptionGenerator.generate_description_and_summary(episode),
+         {:ok, updated_episode} <-
+           Podcasts.update_episode(episode, %{description: description, summary: summary}) do
       maybe_enqueue_embedding_worker_job(status, updated_episode)
       :ok
     else

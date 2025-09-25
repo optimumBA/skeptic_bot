@@ -15,6 +15,7 @@ defmodule SkepticBot.Podcasts.Episode do
     field :episode_length, :integer
     field :external_id, :string
     belongs_to :podcast, SkepticBot.Podcasts.Podcast
+    field :summary, :string
     field :thumbnail, :string
     field :timestamp, EctoInterval, virtual: true
     field :title, :string
@@ -32,6 +33,7 @@ defmodule SkepticBot.Podcasts.Episode do
       :episode_length,
       :external_id,
       :podcast_id,
+      :summary,
       :thumbnail,
       :title
     ])

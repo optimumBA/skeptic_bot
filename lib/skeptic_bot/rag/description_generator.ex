@@ -7,12 +7,14 @@ defmodule SkepticBot.Rag.DescriptionGenerator do
   alias SkepticBot.Podcasts
   alias SkepticBot.Rag
 
+  @type description :: String.t()
   @type episode :: Podcasts.Episode.t()
+  @type summary :: String.t()
 
-  @spec generate_description(episode()) ::
-          {:ok, String.t()}
+  @spec generate_description_and_summary(episode()) ::
+          {:ok, {description(), summary()}}
           | {:error, String.t()}
-  def generate_description(episode) do
+  def generate_description_and_summary(episode) do
     with {:ok, transcription} <- Podcasts.get_episode_transcriptions(episode.id),
          episode <- Map.put(episode, :trancription, transcription),
          prompt <- format_prompt(episode),
