@@ -15,19 +15,24 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
   setup :verify_on_exit!
 
   defp create_episode(_attrs) do
-    description = "A Sam Tripoli special"
+    response =
+      "Description:A Sam Tripoli episode description $&$ Summary:A Sam Tripoli episode summary"
+
     episode = episode_fixture()
-    %{description: description, episode: episode}
+    %{episode: episode, response: response}
   end
 
   describe "perform/1" do
     setup [:create_episode]
 
-    test "generates a description for an episode", %{description: description, episode: episode} do
+    test "generates a description and a summary for an episode", %{
+      response: response,
+      episode: episode
+    } do
       embedding = embedding_fixture()
 
       expect(MockGenerator, :predict, fn _messages, _output_mode ->
-        {:ok, description}
+        {:ok, response}
       end)
 
       expect(MockEmbedder, :generate, fn _text ->
@@ -41,7 +46,8 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
                })
 
       updated_episode = Podcasts.get_episode(episode.id)
-      assert updated_episode.description == description
+      assert updated_episode.description == "A Sam Tripoli episode description"
+      assert updated_episode.summary == "A Sam Tripoli episode summary"
     end
 
     test "logs an error when description generation fails" do
