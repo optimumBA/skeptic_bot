@@ -26,7 +26,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
   describe "perform/1" do
     setup [:create_episode]
 
-    test "generates a description and a summary for an episode and updates the embedding for existing episodes",
+    test "generates a description and a summary and updates the embedding for existing episodes",
          %{
            response: response,
            episode: episode
@@ -55,7 +55,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
       assert updated_episode.embedding
     end
 
-    test "generates a description and a summary for an episode and enqueues an embedding_worker job for new episodes",
+    test "generates a description and a summary and enqueues an embedding_worker job for new episodes",
          %{
            response: response,
            episode: episode
