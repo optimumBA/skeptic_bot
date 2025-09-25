@@ -52,23 +52,12 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       assert html =~ "00:20:00"
     end
 
-    test "uses different webpage_urls based on the podcast (\"Tin Foil Hat\", \"Look Into It\", \"Candace\", \"Cash Daddies\", \"Doom Scrollin\")",
+    test "uses Rokfin and Rumble urls for podcasts hosted on Rokfin and Rumble",
          %{
            conn: conn,
            embedding: embedding
          } do
       episode =
-        episode_fixture(
-          %{
-            episode_length: 3000,
-            title: "Consistency truly is key to mastering any skill over time and effort",
-            embedding: embedding,
-            external_id: "na3z9PEPSKzHedBSoVGPvn"
-          },
-          "Tin Foil Hat"
-        )
-
-      episode_2 =
         episode_fixture(
           %{
             episode_length: 3000,
@@ -80,7 +69,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
           "Look Into It"
         )
 
-      episode_3 =
+      episode_2 =
         episode_fixture(
           %{
             episode_length: 3000,
@@ -89,72 +78,30 @@ defmodule SkepticBotWeb.QuestionLiveTest do
             external_id: "145321"
           },
           "Look Into It"
-        )
-
-      episode_4 =
-        episode_fixture(
-          %{
-            episode_length: 3000,
-            title: "Consistency truly is key to mastering any skill over time and effort",
-            embedding: embedding,
-            external_id: "DoRzUmsF800"
-          },
-          "Candace"
-        )
-
-      episode_5 =
-        episode_fixture(
-          %{
-            episode_length: 3000,
-            title: "Consistency truly is key to mastering any skill over time and effort",
-            embedding: embedding,
-            external_id: "fa3z9PEPSKzHejBSoVGPvn"
-          },
-          "Cash Daddies"
-        )
-
-      episode_6 =
-        episode_fixture(
-          %{
-            episode_length: 3000,
-            title: "Consistency truly is key to mastering any skill over time and effort",
-            embedding: embedding,
-            external_id: "na4z9EERSKzHedBSoVGPvn"
-          },
-          "Doom Scrollin"
         )
 
       question =
         question_fixture(
           embedding: embedding,
           episodes: [
-            %{episode_id: episode.id, timestamp: %{secs: 45, months: 0, days: 0}},
-            %{episode_id: episode_2.id, timestamp: %{secs: 30, months: 0, days: 0}},
-            %{episode_id: episode_3.id, timestamp: %{secs: 20, months: 0, days: 0}},
-            %{episode_id: episode_4.id, timestamp: %{secs: 76, months: 0, days: 0}},
-            %{episode_id: episode_5.id, timestamp: %{secs: 76, months: 0, days: 0}},
-            %{episode_id: episode_6.id, timestamp: %{secs: 76, months: 0, days: 0}}
+            %{episode_id: episode.id, timestamp: %{secs: 30, months: 0, days: 0}},
+            %{episode_id: episode_2.id, timestamp: %{secs: 20, months: 0, days: 0}}
           ],
           title: "American Ponzi with Lee Camp and Sam Tripoli"
         )
 
       {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
 
-      webpage_url = "https://vid.samtripoli.com/w/na3z9PEPSKzHedBSoVGPvn?start=45"
-
-      webpage_url_2 =
+      webpage_url =
         "https://rumble.com/v51g8i8-alex-jones-on-look-into-it-with-eddie-bravo-episode-101.html?e9s=src_v1_ucp_a&amp;start=30"
 
-      webpage_url_3 = "https://rokfin.com/post/145321?start=20"
-      webpage_url_4 = "https://www.youtube.com/watch?v=DoRzUmsF800?start=76"
+      webpage_url_2 = "https://rokfin.com/post/145321?start=20"
 
       assert html =~ webpage_url
       assert html =~ webpage_url_2
-      assert html =~ webpage_url_3
-      assert html =~ webpage_url_4
     end
 
-    test "uses different webpage_urls based on the podcast (\"Cash Daddies\", \"DoomScrollin\", \"Broken Simulation\")",
+    test "uses YouTube urls for podcasts hosted on YouTube",
          %{
            conn: conn,
            embedding: embedding
@@ -165,9 +112,9 @@ defmodule SkepticBotWeb.QuestionLiveTest do
             episode_length: 3000,
             title: "Consistency truly is key to mastering any skill over time and effort",
             embedding: embedding,
-            external_id: "na3z9PEPSKzHedBSoVGPvn"
+            external_id: "PrRzUqsG930"
           },
-          "Tin Foil Hat"
+          "Broken Simulation"
         )
 
       episode_2 =
@@ -176,10 +123,9 @@ defmodule SkepticBotWeb.QuestionLiveTest do
             episode_length: 3000,
             title: "Consistency truly is key to mastering any skill over time and effort",
             embedding: embedding,
-            external_id:
-              "v51g8i8-alex-jones-on-look-into-it-with-eddie-bravo-episode-101.html?e9s=src_v1_ucp_a"
+            external_id: "PrRzUesG840"
           },
-          "Look Into It"
+          "Candace"
         )
 
       episode_3 =
@@ -188,9 +134,9 @@ defmodule SkepticBotWeb.QuestionLiveTest do
             episode_length: 3000,
             title: "Consistency truly is key to mastering any skill over time and effort",
             embedding: embedding,
-            external_id: "145321"
+            external_id: "ErRzUmsG800"
           },
-          "Look Into It"
+          "Deep Waters"
         )
 
       episode_4 =
@@ -201,30 +147,8 @@ defmodule SkepticBotWeb.QuestionLiveTest do
             embedding: embedding,
             external_id: "DoRzUmsF800"
           },
-          "Candace"
+          "Nephilim Death Squad"
         )
-
-      # episode_5 =
-      #   episode_fixture(
-      #     %{
-      #       episode_length: 3000,
-      #       title: "Consistency truly is key to mastering any skill over time and effort",
-      #       embedding: embedding,
-      #       external_id: "DoRzUmsF800"
-      #     },
-      #     "Candace"
-      #   )
-
-      # episode_6 =
-      #   episode_fixture(
-      #     %{
-      #       episode_length: 3000,
-      #       title: "Consistency truly is key to mastering any skill over time and effort",
-      #       embedding: embedding,
-      #       external_id: "DoRzUmsF800"
-      #     },
-      #     "Candace"
-      #   )
 
       question =
         question_fixture(
@@ -234,26 +158,109 @@ defmodule SkepticBotWeb.QuestionLiveTest do
             %{episode_id: episode_2.id, timestamp: %{secs: 30, months: 0, days: 0}},
             %{episode_id: episode_3.id, timestamp: %{secs: 20, months: 0, days: 0}},
             %{episode_id: episode_4.id, timestamp: %{secs: 76, months: 0, days: 0}}
-            # %{episode_id: episode_5.id, timestamp: %{secs: 76, months: 0, days: 0}},
-            # %{episode_id: episode_6.id, timestamp: %{secs: 76, months: 0, days: 0}}
           ],
           title: "American Ponzi with Lee Camp and Sam Tripoli"
         )
 
       {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
 
-      webpage_url = "https://vid.samtripoli.com/w/na3z9PEPSKzHedBSoVGPvn?start=45"
-
-      webpage_url_2 =
-        "https://rumble.com/v51g8i8-alex-jones-on-look-into-it-with-eddie-bravo-episode-101.html?e9s=src_v1_ucp_a&amp;start=30"
-
-      webpage_url_3 = "https://rokfin.com/post/145321?start=20"
+      webpage_url = "https://www.youtube.com/watch?v=PrRzUqsG930?start=45"
+      webpage_url_2 = "https://www.youtube.com/watch?v=PrRzUesG840?start=30"
+      webpage_url_3 = "https://www.youtube.com/watch?v=ErRzUmsG800?start=20"
       webpage_url_4 = "https://www.youtube.com/watch?v=DoRzUmsF800?start=76"
 
       assert html =~ webpage_url
       assert html =~ webpage_url_2
       assert html =~ webpage_url_3
       assert html =~ webpage_url_4
+    end
+
+    test "uses Sam Tripoli urls for podcasts hosted on Sam Tripoli's website",
+         %{
+           conn: conn,
+           embedding: embedding
+         } do
+      episode =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding,
+            external_id: "ohLn3qfgHh49f7JomvEpoB"
+          },
+          "Cash Daddies"
+        )
+
+      episode_2 =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding,
+            external_id: "edLn3qfgHh49f7JomvEpoI"
+          },
+          "Doom Scrollin"
+        )
+
+      episode_3 =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding,
+            external_id: "ohUn8qfgHh49f7JomvYpoH"
+          },
+          "Tin Foil Hat"
+        )
+
+      episode_4 =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding,
+            external_id: "rhUn9qfgHh39f7JomvYpoH"
+          },
+          "Union of the Unwanted"
+        )
+
+      episode_5 =
+        episode_fixture(
+          %{
+            episode_length: 3000,
+            title: "Consistency truly is key to mastering any skill over time and effort",
+            embedding: embedding,
+            external_id: "ioUn9qwsHh39f7KomvYpoE"
+          },
+          "Zero with Sam Tripoli"
+        )
+
+      question =
+        question_fixture(
+          embedding: embedding,
+          episodes: [
+            %{episode_id: episode.id, timestamp: %{secs: 45, months: 0, days: 0}},
+            %{episode_id: episode_2.id, timestamp: %{secs: 30, months: 0, days: 0}},
+            %{episode_id: episode_3.id, timestamp: %{secs: 20, months: 0, days: 0}},
+            %{episode_id: episode_4.id, timestamp: %{secs: 46, months: 0, days: 0}},
+            %{episode_id: episode_5.id, timestamp: %{secs: 76, months: 0, days: 0}}
+          ],
+          title: "American Ponzi with Lee Camp and Sam Tripoli"
+        )
+
+      {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
+
+      webpage_url = "https://vid.samtripoli.com/w/ohLn3qfgHh49f7JomvEpoB?start=45"
+      webpage_url_2 = "https://vid.samtripoli.com/w/edLn3qfgHh49f7JomvEpoI?start=30"
+      webpage_url_3 = "https://vid.samtripoli.com/w/ohUn8qfgHh49f7JomvYpoH?start=20"
+      webpage_url_4 = "https://vid.samtripoli.com/w/rhUn9qfgHh39f7JomvYpoH?start=46"
+      webpage_url_5 = "https://vid.samtripoli.com/w/ioUn9qwsHh39f7KomvYpoE?start=76"
+
+      assert html =~ webpage_url
+      assert html =~ webpage_url_2
+      assert html =~ webpage_url_3
+      assert html =~ webpage_url_4
+      assert html =~ webpage_url_5
     end
 
     test "displays the related questions", %{
