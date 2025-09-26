@@ -43,11 +43,16 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
   end
 
   defp maybe_enqueue_embedding_worker_job("existing", episode) do
-    text = "passage: " <> episode.title <> " " <> episode.description
-    {:ok, [embedding]} = Rag.Embedder.generate(text)
-    {:ok, _episode} = Podcasts.update_episode(episode, %{embedding: embedding})
-    Podcasts.update_episode(episode, %{embedding: embedding})
-    :ok
+    with text <- "passage: " <> episode.title <> " " <> episode.description,
+         {:ok, [embedding]} <-
+           Rag.Embedder.generate(text),
+         {:ok, _episode} <- Podcasts.update_episode(episode, %{embedding: embedding}) do
+      :ok
+    else
+      {:error, reason} ->
+        Logger.error("Failed to update episode embedding, reason: #{reason}")
+        {:error, reason}
+    end
   end
 
   defp maybe_enqueue_embedding_worker_job("new", episode) do
