@@ -77,7 +77,7 @@ defmodule SkepticBot.Rag.Retrieval do
 
     case Repo.all(transcriptions_query) do
       [] ->
-        episode.description || ""
+        episode.summary || ""
 
       transcriptions ->
         Enum.map_join(transcriptions, "\n", & &1.transcription)

@@ -17,7 +17,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
 
   defp create_episode(_attrs) do
     response =
-      "Description:A Sam Tripoli episode description $&$ Summary:A Sam Tripoli episode summary"
+      "Teaser:A Sam Tripoli episode teaser $&$ Summary:A Sam Tripoli episode summary"
 
     episode = episode_fixture()
     %{episode: episode, response: response}
@@ -26,7 +26,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
   describe "perform/1" do
     setup [:create_episode]
 
-    test "generates a description and a summary and updates the embedding for existing episodes",
+    test "generates a teaser and a summary and updates the embedding for existing episodes",
          %{
            response: response,
            episode: episode
@@ -50,12 +50,12 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
                })
 
       updated_episode = Podcasts.get_episode(episode.id)
-      assert updated_episode.description == "A Sam Tripoli episode description"
+      assert updated_episode.teaser == "A Sam Tripoli episode teaser"
       assert updated_episode.summary == "A Sam Tripoli episode summary"
       assert updated_episode.embedding
     end
 
-    test "generates a description and a summary and enqueues an embedding_worker job for new episodes",
+    test "generates a teaser and a summary and enqueues an embedding_worker job for new episodes",
          %{
            response: response,
            episode: episode
@@ -71,7 +71,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
                })
 
       updated_episode = Podcasts.get_episode(episode.id)
-      assert updated_episode.description == "A Sam Tripoli episode description"
+      assert updated_episode.teaser == "A Sam Tripoli episode teaser"
       assert updated_episode.summary == "A Sam Tripoli episode summary"
 
       assert_enqueued(
@@ -82,6 +82,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
       )
     end
 
+    @tag :capture_log
     test "returns an error message when embedding generation fails for existing episodes",
          %{
            response: response,
@@ -102,7 +103,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
                })
     end
 
-    test "logs an error when description generation fails" do
+    test "logs an error when teaser generation fails" do
       log =
         capture_log(fn ->
           perform_job(SummaryGeneratingWorker, %{
@@ -115,15 +116,15 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
     end
 
     @tag :capture_log
-    test "returns an error when it fails to generate the description and summary",
+    test "returns an error when it fails to generate the teaser and summary",
          %{
            episode: episode
          } do
       expect(MockGenerator, :predict, fn _text, _output_mode ->
-        {:error, "failed to generate a description and summary"}
+        {:error, "failed to generate a teaser and summary"}
       end)
 
-      assert {:error, "failed to generate a description and summary"} =
+      assert {:error, "failed to generate a teaser and summary"} =
                perform_job(SummaryGeneratingWorker, %{
                  "id" => episode.id,
                  "episode_status" => "existing"

@@ -83,7 +83,7 @@ defmodule SkepticBot.Rag do
     ~s"""
     Episode ID: #{episode.id}
     Title: #{episode.title}
-    Description: #{episode.description}
+    Summary: #{episode.summary}
     """
   end
 end

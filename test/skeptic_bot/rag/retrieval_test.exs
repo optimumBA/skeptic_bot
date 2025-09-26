@@ -65,7 +65,7 @@ defmodule SkepticBot.Rag.RetrievalTest do
       episode =
         episode_fixture(%{
           embedding: episode_embedding,
-          description: "No transcriptions at all"
+          summary: "No transcriptions at all"
         })
 
       # Retrieve with query embedding
@@ -75,9 +75,9 @@ defmodule SkepticBot.Rag.RetrievalTest do
       # Should still return the episode with basic info
       assert length(results) == 1
       assert hd(results).title == episode.title
-      assert hd(results).description == "No transcriptions at all"
-      # Should use description as fallback
-      assert hd(results).transcription == hd(results).description
+      assert hd(results).summary == "No transcriptions at all"
+      # Should use summary as fallback
+      assert hd(results).transcription == hd(results).summary
       refute hd(results).timestamp
     end
 

@@ -39,12 +39,12 @@ defmodule SkepticBot.PodcastsFixtures do
     {:ok, episode} =
       attrs
       |> Enum.into(%{
-        description: "Sample description",
         episode_length: :rand.uniform(3000),
         external_id: Ecto.UUID.generate(),
         podcast_id: podcast.id,
         thumbnail: "cover1.svg",
-        title: "Test Episode"
+        title: "Test Episode",
+        summary: "Sample summary"
       })
       |> Podcasts.create_episode()
 

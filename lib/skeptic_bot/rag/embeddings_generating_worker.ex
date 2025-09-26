@@ -53,7 +53,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
 
   @spec generate_episode_embedding(episode()) :: {:ok, episode()} | {:error, any()}
   defp generate_episode_embedding(episode) do
-    text = "passage: " <> episode.title <> " " <> (episode.description || "")
+    text = "passage: " <> episode.title <> " " <> (episode.summary || "")
 
     with {:ok, [embedding]} <- Embedder.generate(text) do
       Podcasts.update_episode(episode, %{embedding: embedding})

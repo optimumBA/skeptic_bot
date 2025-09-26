@@ -26,10 +26,10 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
         args: %{"id" => id, "episode_status" => status}
       }) do
     with %Episode{} = episode <- Podcasts.get_episode(id),
-         {:ok, {description, summary}} <-
-           DescriptionGenerator.generate_description_and_summary(episode),
+         {:ok, {teaser, summary}} <-
+           DescriptionGenerator.generate_teaser_and_summary(episode),
          {:ok, updated_episode} <-
-           Podcasts.update_episode(episode, %{description: description, summary: summary}) do
+           Podcasts.update_episode(episode, %{summary: summary, teaser: teaser}) do
       maybe_enqueue_embedding_worker_job(status, updated_episode)
     else
       nil ->
@@ -43,7 +43,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
   end
 
   defp maybe_enqueue_embedding_worker_job("existing", episode) do
-    with text <- "passage: " <> episode.title <> " " <> episode.description,
+    with text <- "passage: " <> episode.title <> " " <> episode.summary,
          {:ok, [embedding]} <-
            Rag.Embedder.generate(text),
          {:ok, _episode} <- Podcasts.update_episode(episode, %{embedding: embedding}) do

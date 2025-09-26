@@ -41,7 +41,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
                })
 
       assert_enqueued(
-        worker: DescriptionGeneratingWorker,
+        worker: SummaryGeneratingWorker,
         args: %{
           "id" => episode.id
         }
@@ -63,7 +63,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
                })
 
       refute_enqueued(
-        worker: DescriptionGeneratingWorker,
+        worker: SummaryGeneratingWorker,
         args: %{
           "id" => episode.id
         }
