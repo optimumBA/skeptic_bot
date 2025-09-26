@@ -39,7 +39,7 @@ if System.get_env("SCRAPE") do
     ],
     queues: [
       downloading: 2,
-      generating_descriptions: 3,
+      generating_summaries: 3,
       generating_embeddings: 5,
       scraping: 1,
       transcoding: 2,

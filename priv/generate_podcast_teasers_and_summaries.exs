@@ -1,4 +1,4 @@
-defmodule GeneratePodcastDescriptionsAndSummaries do
+defmodule GeneratePodcastTeasersAndSummaries do
   alias SkepticBot.Podcasts.SummaryGeneratingWorker
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Repo
@@ -12,7 +12,7 @@ defmodule GeneratePodcastDescriptionsAndSummaries do
       Episode
       |> Repo.stream(max_rows: 100)
       |> Stream.each(
-        &DescriptionGeneratingWorker.enqueue(%{"id" => &1.id, "episode_status" => "existing"})
+        &SummaryGeneratingWorker.enqueue(%{"id" => &1.id, "episode_status" => "existing"})
       )
       |> Stream.run()
     end
@@ -25,4 +25,4 @@ end
 
 {:ok, _apps} = Application.ensure_all_started(:skeptic_bot)
 
-GeneratePodcastDescriptionsAndSummaries.start()
+GeneratePodcastTeasersAndSummaries.start()

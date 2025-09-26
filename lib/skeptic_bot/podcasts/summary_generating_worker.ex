@@ -1,20 +1,20 @@
 defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
   @moduledoc """
-  Handles generating descriptions for podcast episodes.
-  Uses the new description and the episode title to generate a new embedding
-  Updates an episode with the newly generated description, summary and embedding.
+  Handles generating teasers for podcast episodes.
+  Uses the new teaser and the episode title to generate a new embedding
+  Updates an episode with the newly generated teaser, summary and embedding.
   """
 
   use Oban.Worker,
     max_attempts: 5,
-    queue: :generating_descriptions,
+    queue: :generating_summaries,
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Rag
-  alias SkepticBot.Rag.DescriptionGenerator
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
+  alias SkepticBot.Rag.SummaryGenerator
 
   require Logger
 
@@ -27,7 +27,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
       }) do
     with %Episode{} = episode <- Podcasts.get_episode(id),
          {:ok, {teaser, summary}} <-
-           DescriptionGenerator.generate_teaser_and_summary(episode),
+           SummaryGenerator.generate_teaser_and_summary(episode),
          {:ok, updated_episode} <-
            Podcasts.update_episode(episode, %{summary: summary, teaser: teaser}) do
       maybe_enqueue_embedding_worker_job(status, updated_episode)
