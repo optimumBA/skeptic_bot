@@ -1,8 +1,8 @@
 defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
   @moduledoc """
-  Handles generating teasers for podcast episodes.
-  Uses the new teaser and the episode title to generate a new embedding
-  Updates an episode with the newly generated teaser, summary and embedding.
+  Handles generating summary for podcast episodes.
+  Uses the new summary and the episode title to generate a new embedding
+  Updates an episode with the newly generated summary, teaser and embedding.
   """
 
   use Oban.Worker,
