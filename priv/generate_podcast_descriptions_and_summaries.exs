@@ -1,5 +1,5 @@
 defmodule GeneratePodcastDescriptionsAndSummaries do
-  alias SkepticBot.Podcasts.DescriptionGeneratingWorker
+  alias SkepticBot.Podcasts.SummaryGeneratingWorker
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Repo
 

@@ -1,4 +1,4 @@
-defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
+defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
   use SkepticBot.DataCase, async: true
 
   import ExUnit.CaptureLog
@@ -6,7 +6,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
   import SkepticBot.PodcastsFixtures
 
   alias SkepticBot.Podcasts
-  alias SkepticBot.Podcasts.DescriptionGeneratingWorker
+  alias SkepticBot.Podcasts.SummaryGeneratingWorker
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Rag.MockEmbedder
   alias SkepticBot.Rag.MockGenerator
@@ -44,7 +44,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
       end)
 
       assert :ok =
-               perform_job(DescriptionGeneratingWorker, %{
+               perform_job(SummaryGeneratingWorker, %{
                  "id" => episode.id,
                  "episode_status" => "existing"
                })
@@ -65,7 +65,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
       end)
 
       assert :ok =
-               perform_job(DescriptionGeneratingWorker, %{
+               perform_job(SummaryGeneratingWorker, %{
                  "id" => episode.id,
                  "episode_status" => "new"
                })
@@ -96,7 +96,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
       end)
 
       assert {:error, "Could not produce episode embeddings"} =
-               perform_job(DescriptionGeneratingWorker, %{
+               perform_job(SummaryGeneratingWorker, %{
                  "id" => episode.id,
                  "episode_status" => "existing"
                })
@@ -105,7 +105,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
     test "logs an error when description generation fails" do
       log =
         capture_log(fn ->
-          perform_job(DescriptionGeneratingWorker, %{
+          perform_job(SummaryGeneratingWorker, %{
             "id" => @id,
             "episode_status" => "existing"
           })
@@ -124,7 +124,7 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
       end)
 
       assert {:error, "failed to generate a description and summary"} =
-               perform_job(DescriptionGeneratingWorker, %{
+               perform_job(SummaryGeneratingWorker, %{
                  "id" => episode.id,
                  "episode_status" => "existing"
                })

@@ -10,7 +10,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.Podcasts
-  alias SkepticBot.Podcasts.DescriptionGeneratingWorker
+  alias SkepticBot.Podcasts.SummaryGeneratingWorker
   alias SkepticBot.Podcasts.Transcriber
   alias SkepticBot.Storage.StorageProvider
 
@@ -35,7 +35,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
             Logger.error("Failed to delete audio file from Tigris: #{reason}")
         end
 
-        DescriptionGeneratingWorker.enqueue(%{"id" => id, "episode_status" => "new"})
+        SummaryGeneratingWorker.enqueue(%{"id" => id, "episode_status" => "new"})
         :ok
 
       {:error, reason} ->

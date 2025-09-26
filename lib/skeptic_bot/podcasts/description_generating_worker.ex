@@ -1,4 +1,4 @@
-defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
+defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
   @moduledoc """
   Handles generating descriptions for podcast episodes.
   Uses the new description and the episode title to generate a new embedding
