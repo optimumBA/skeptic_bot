@@ -31,7 +31,6 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorker do
          {:ok, updated_episode} <-
            Podcasts.update_episode(episode, %{description: description, summary: summary}) do
       maybe_enqueue_embedding_worker_job(status, updated_episode)
-      :ok
     else
       nil ->
         Logger.error("Failed to process episode: #{id}, reason: Episode not found")

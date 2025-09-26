@@ -95,14 +95,15 @@ defmodule SkepticBot.Podcasts.DescriptionGeneratingWorkerTest do
     end
 
     @tag :capture_log
-    test "returns an error when embedding generation fails", %{
-      episode: episode
-    } do
+    test "returns an error when it fails to generate the description and summary",
+         %{
+           episode: episode
+         } do
       expect(MockGenerator, :predict, fn _text, _output_mode ->
-        {:error, "failed to generate a description"}
+        {:error, "failed to generate a description and summary"}
       end)
 
-      assert {:error, "failed to generate a description"} =
+      assert {:error, "failed to generate a description and summary"} =
                perform_job(DescriptionGeneratingWorker, %{
                  "id" => episode.id,
                  "episode_status" => "existing"
