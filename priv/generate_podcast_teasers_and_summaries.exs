@@ -1,6 +1,6 @@
 defmodule GeneratePodcastTeasersAndSummaries do
-  alias SkepticBot.Podcasts.SummaryGeneratingWorker
   alias SkepticBot.Podcasts.Episode
+  alias SkepticBot.Podcasts.SummaryGeneratingWorker
   alias SkepticBot.Repo
 
   require Logger
