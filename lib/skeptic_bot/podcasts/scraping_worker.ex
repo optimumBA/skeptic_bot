@@ -21,6 +21,9 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
     Logger.info("Starting scheduled podcast scraping")
     TinfoilScraper.scrape()
     Scraper.scrape()
+    SkepticBot.BrokenSimulation.Scraper.scrape()
     SkepticBot.Candace.Scraper.scrape()
+    SkepticBot.DeepWaters.Scraper.scrape()
+    SkepticBot.NephilimDeathSquad.Scraper.scrape()
   end
 end

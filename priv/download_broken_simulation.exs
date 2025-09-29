@@ -20,24 +20,24 @@ get_episodes = fn path ->
 end
 
 file_url =
-  System.get_env("CANDACE_TXT_FILE_URL") ||
+  System.get_env("BROKEN_SIMULATION_TXT_FILE_URL") ||
     raise """
-    environment variable CANDACE_TXT_FILE_URL is missing.
+    environment variable BROKEN_SIMULATION_TXT_FILE_URL is missing.
     """
 
-path = Path.join([System.tmp_dir!(), "candace.txt"])
+path = Path.join([System.tmp_dir!(), "broken_simulation.txt"])
 
 {:ok, path} = ReqDownloader.download(file_url, path)
 
-podcast = Podcasts.get_podcast_by_name("Candace")
+podcast = Podcasts.get_podcast_by_name("Broken Simulation")
 
-# the streams page is where latest episodes are for Candace
+# Relevant episodes are contained in the streams page of Sam tripoli YouTube channel
 path
 |> get_episodes.()
 |> Enum.each(
   &EpisodeProcessor.maybe_download_episode(
     &1,
-    "https://www.youtube.com/@RealCandaceO/streams",
+    "https://www.youtube.com/@SamTripoli/videos",
     podcast
   )
 )

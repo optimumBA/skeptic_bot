@@ -10,13 +10,33 @@ defmodule SkepticBotWeb.PodcastComponents do
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
-  @episode_url_candace "https://www.youtube.com/watch?v="
   @episode_url_rokfin "https://rokfin.com/post/"
   @episode_url_rumble "https://rumble.com/"
   @episode_url_tinfoilhat "https://vid.samtripoli.com/w/"
+  @episode_url_youtube "https://www.youtube.com/watch?v="
+  @podcast_brokensimulation "Broken Simulation"
   @podcast_candace "Candace"
+  @podcast_cashdaddies "Cash Daddies"
+  @podcast_deepwaters "Deep Waters"
+  @podcast_doomscrollin "Doom Scrollin"
   @podcast_lookintoit "Look Into It"
+  @podcast_nephilimdeathsquad "Nephilim Death Squad"
   @podcast_tinfoilhat "Tin Foil Hat"
+  @podcast_unionoftheunwanted "Union of the Unwanted"
+  @podcast_zerowithsamtripoli "Zero with Sam Tripoli"
+  @samtripoliwebsite_podcasts [
+    @podcast_cashdaddies,
+    @podcast_doomscrollin,
+    @podcast_tinfoilhat,
+    @podcast_unionoftheunwanted,
+    @podcast_zerowithsamtripoli
+  ]
+  @yt_podcasts [
+    @podcast_brokensimulation,
+    @podcast_candace,
+    @podcast_deepwaters,
+    @podcast_nephilimdeathsquad
+  ]
 
   attr :episode, :map, required: true
   attr :random, :integer, required: true
@@ -233,7 +253,7 @@ defmodule SkepticBotWeb.PodcastComponents do
     absolute_vectors(assigns)
   end
 
-  defp episode_url(external_id, timestamp, @podcast_tinfoilhat) do
+  defp episode_url(external_id, timestamp, podcast) when podcast in @samtripoliwebsite_podcasts do
     @episode_url_tinfoilhat <> external_id <> "?start=" <> timestamp
   end
 
@@ -247,8 +267,8 @@ defmodule SkepticBotWeb.PodcastComponents do
     end
   end
 
-  defp episode_url(external_id, timestamp, @podcast_candace) do
-    @episode_url_candace <> external_id <> "?start=" <> timestamp
+  defp episode_url(external_id, timestamp, podcast) when podcast in @yt_podcasts do
+    @episode_url_youtube <> external_id <> "?start=" <> timestamp
   end
 
   @spec trim_title(String.t()) :: String.t()
