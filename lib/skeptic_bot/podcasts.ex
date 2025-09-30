@@ -135,6 +135,20 @@ defmodule SkepticBot.Podcasts do
     Repo.transaction(transformation, timeout: :infinity)
   end
 
+  @spec get_full_episode_transcriptions(id()) ::
+          {:ok, [episode_transcription()]} | {:error, any()}
+  def get_full_episode_transcriptions(episode_id) do
+    transformation = fn ->
+      EpisodeTranscription
+      |> where([et], et.podcast_episode_id == ^episode_id)
+      |> order_by([et], asc: et.timestamp)
+      |> Repo.stream()
+      |> Enum.to_list()
+    end
+
+    Repo.transaction(transformation, timeout: :infinity)
+  end
+
   @doc """
   Updates a podcast_episode.
 

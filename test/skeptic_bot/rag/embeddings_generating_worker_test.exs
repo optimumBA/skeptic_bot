@@ -41,6 +41,48 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
       assert updated_episode.embedding
     end
 
+    test "generates transcription embeddings for new episodes", %{
+      embedding: embedding,
+      episode: episode
+    } do
+      {:ok, episode_transcriptions} = Podcasts.get_full_episode_transcriptions(episode.id)
+      assert Enum.all?(episode_transcriptions, fn et -> is_nil(et.embedding) end)
+
+      expect(MockEmbedder, :generate, 2, fn _text ->
+        {:ok, [embedding]}
+      end)
+
+      assert :ok =
+               perform_job(EmbeddingsGeneratingWorker, %{
+                 "id" => episode.id,
+                 "status" => "new"
+               })
+
+      {:ok, updated_episode_transcriptions} = Podcasts.get_full_episode_transcriptions(episode.id)
+      refute Enum.all?(updated_episode_transcriptions, fn et -> is_nil(et.embedding) end)
+    end
+
+    test "does not generate transcription embeddings for existing episodes", %{
+      embedding: embedding,
+      episode: episode
+    } do
+      {:ok, episode_transcriptions} = Podcasts.get_full_episode_transcriptions(episode.id)
+      assert Enum.all?(episode_transcriptions, fn et -> is_nil(et.embedding) end)
+
+      expect(MockEmbedder, :generate, fn _text ->
+        {:ok, [embedding]}
+      end)
+
+      assert :ok =
+               perform_job(EmbeddingsGeneratingWorker, %{
+                 "id" => episode.id,
+                 "status" => "existing"
+               })
+
+      {:ok, updated_episode_transcriptions} = Podcasts.get_full_episode_transcriptions(episode.id)
+      assert Enum.all?(updated_episode_transcriptions, fn et -> is_nil(et.embedding) end)
+    end
+
     @tag :capture_log
     test "returns an error when an episode does not exist" do
       assert {:error, "Episode not found"} =

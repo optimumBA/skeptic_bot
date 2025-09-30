@@ -57,7 +57,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
         capture_log(fn ->
           perform_job(SummaryGeneratingWorker, %{
             "id" => @id,
-            "episode_status" => "existing"
+            "episode_status" => "new"
           })
         end)
 

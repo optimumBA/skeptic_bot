@@ -39,7 +39,7 @@ defmodule SkepticBot.Rag.SummaryGenerator do
       Also provide a teaser of the content in 300 words or less.
       The teaser should not REVEAL a lot of details and should strive to arouse CURIOSITY from the reader.
       The teaser should be very ENGAGING and unique enough that it will immediately entice the reader to listen to the podcast episode.
-      NOTHING ELSE apart from the CONTENT I pass to you should be used to generate both the summary and the teaser.
+      Use ONLY the CONTENT that I pass to you and NOTHING ELSE to generate both the summary and the teaser.
       Please return your response in the following format with the TEASER coming first
       then the SUMMARY coming second separated by $&$ signs.
 
