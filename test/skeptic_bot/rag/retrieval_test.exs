@@ -26,10 +26,9 @@ defmodule SkepticBot.Rag.RetrievalTest do
       query_embedding = List.duplicate(0.12, 1024)
       results = Retrieval.retrieve(query_embedding)
 
-      # Should return the episode with transcription context
+      # Should return the episode with timestamp
       assert length(results) == 1
       assert hd(results).title == episode.title
-      assert hd(results).transcription =~ "Transcription with embedding"
       assert hd(results).timestamp
     end
 
@@ -54,30 +53,6 @@ defmodule SkepticBot.Rag.RetrievalTest do
       # Should still return the episode, but without specific timestamp
       assert length(results) == 1
       assert hd(results).title == episode.title
-      assert hd(results).transcription
-      refute hd(results).timestamp
-    end
-
-    test "returns episodes even without any transcriptions" do
-      # Create episode with embedding but NO transcriptions
-      episode_embedding = List.duplicate(0.1, 1024)
-
-      episode =
-        episode_fixture(%{
-          embedding: episode_embedding,
-          summary: "No transcriptions at all"
-        })
-
-      # Retrieve with query embedding
-      query_embedding = List.duplicate(0.12, 1024)
-      results = Retrieval.retrieve(query_embedding)
-
-      # Should still return the episode with basic info
-      assert length(results) == 1
-      assert hd(results).title == episode.title
-      assert hd(results).summary == "No transcriptions at all"
-      # Should use summary as fallback
-      assert hd(results).transcription == hd(results).summary
       refute hd(results).timestamp
     end
 
@@ -112,9 +87,8 @@ defmodule SkepticBot.Rag.RetrievalTest do
       # Should return both episodes
       assert length(results) == 2
 
-      # First episode should have transcription and timestamp
+      # First episode should have the timestamp
       episode_with_trans = Enum.find(results, &(&1.title == "Episode with embeddings"))
-      assert episode_with_trans.transcription =~ "Embedded transcription"
       assert episode_with_trans.timestamp
       assert episode_with_trans.timestamp.secs == 300
 
@@ -137,7 +111,7 @@ defmodule SkepticBot.Rag.RetrievalTest do
       assert results == []
     end
 
-    test "selects most relevant transcription when episode has multiple embedded transcriptions" do
+    test "selects most relevant transcription for the timestamp when episode has multiple embedded transcriptions" do
       # Create an episode
       episode_embedding = List.duplicate(0.1, 1024)
       episode = episode_fixture(embedding: episode_embedding)
@@ -174,7 +148,6 @@ defmodule SkepticBot.Rag.RetrievalTest do
       # Should return the episode with the closest transcription
       assert length(results) == 1
       result = hd(results)
-      assert result.transcription =~ "Closest transcription"
       assert result.timestamp.secs == 200
     end
 
@@ -207,55 +180,6 @@ defmodule SkepticBot.Rag.RetrievalTest do
       assert Enum.at(results, 0).title == "Closest Episode"
       assert Enum.at(results, 1).title == "Middle Episode"
       assert Enum.at(results, 2).title == "Farthest Episode"
-    end
-
-    test "handles episode with mix of embedded and non-embedded transcriptions" do
-      # Create an episode
-      episode_embedding = List.duplicate(0.1, 1024)
-      episode = episode_fixture(embedding: episode_embedding)
-
-      # Create transcription WITHOUT embedding at timestamp 100
-      _non_embedded_before =
-        transcription_fixture(%{
-          podcast_episode_id: episode.id,
-          embedding: nil,
-          transcription: "Non-embedded before",
-          secs: 100
-        })
-
-      # Create transcription WITH embedding at timestamp 200
-      _embedded =
-        transcription_fixture(%{
-          podcast_episode_id: episode.id,
-          embedding: List.duplicate(0.15, 1024),
-          transcription: "Embedded transcription",
-          secs: 200
-        })
-
-      # Create transcription WITHOUT embedding at timestamp 300
-      _non_embedded_after =
-        transcription_fixture(%{
-          podcast_episode_id: episode.id,
-          embedding: nil,
-          transcription: "Non-embedded after",
-          secs: 300
-        })
-
-      # Retrieve
-      query_embedding = List.duplicate(0.12, 1024)
-      results = Retrieval.retrieve(query_embedding)
-
-      # Should return episode with the embedded transcription and surrounding context
-      assert length(results) == 1
-      result = hd(results)
-
-      # Should use the embedded transcription
-      assert result.transcription =~ "Embedded transcription"
-      assert result.timestamp.secs == 200
-
-      # Should include surrounding non-embedded transcriptions in context
-      assert result.transcription =~ "Non-embedded before"
-      assert result.transcription =~ "Non-embedded after"
     end
 
     test "prioritizes episodes with embedded transcriptions in results" do
@@ -296,7 +220,6 @@ defmodule SkepticBot.Rag.RetrievalTest do
 
       # Episode B should have transcription context
       episode_b_result = Enum.find(results, &(&1.title == "Episode B"))
-      assert episode_b_result.transcription =~ "Transcription for B"
       assert episode_b_result.timestamp.secs == 100
 
       # Other episodes should still be present

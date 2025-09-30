@@ -32,7 +32,8 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
 
       assert :ok =
                perform_job(EmbeddingsGeneratingWorker, %{
-                 "id" => episode.id
+                 "id" => episode.id,
+                 "status" => "new"
                })
 
       updated_episode = Podcasts.get_episode(episode.id)
@@ -44,7 +45,8 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
     test "returns an error when an episode does not exist" do
       assert {:error, "Episode not found"} =
                perform_job(EmbeddingsGeneratingWorker, %{
-                 "id" => @id
+                 "id" => @id,
+                 "status" => "new"
                })
     end
 
@@ -52,7 +54,8 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
       log =
         capture_log(fn ->
           perform_job(EmbeddingsGeneratingWorker, %{
-            "id" => @id
+            "id" => @id,
+            "status" => "new"
           })
         end)
 
@@ -69,7 +72,8 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
 
       assert {:error, "failed to connect"} =
                perform_job(EmbeddingsGeneratingWorker, %{
-                 "id" => episode.id
+                 "id" => episode.id,
+                 "status" => "new"
                })
 
       episode = Podcasts.get_episode(episode.id)

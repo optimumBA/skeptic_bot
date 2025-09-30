@@ -12,7 +12,6 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
 
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Episode
-  alias SkepticBot.Rag
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Rag.SummaryGenerator
 
@@ -28,9 +27,10 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
     with %Episode{} = episode <- Podcasts.get_episode(id),
          {:ok, {teaser, summary}} <-
            SummaryGenerator.generate_teaser_and_summary(episode),
-         {:ok, updated_episode} <-
+         {:ok, _updated_episode} <-
            Podcasts.update_episode(episode, %{summary: summary, teaser: teaser}) do
-      maybe_enqueue_embedding_worker_job(status, updated_episode)
+      EmbeddingsGeneratingWorker.enqueue(%{"id" => episode.id, "status" => status})
+      :ok
     else
       nil ->
         Logger.error("Failed to process episode: #{id}, reason: Episode not found")
@@ -40,24 +40,6 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
         {:error, reason}
     end
-  end
-
-  defp maybe_enqueue_embedding_worker_job("existing", episode) do
-    with text <- "passage: " <> episode.title <> " " <> episode.summary,
-         {:ok, [embedding]} <-
-           Rag.Embedder.generate(text),
-         {:ok, _episode} <- Podcasts.update_episode(episode, %{embedding: embedding}) do
-      :ok
-    else
-      {:error, reason} ->
-        Logger.error("Failed to update episode embedding, reason: #{reason}")
-        {:error, reason}
-    end
-  end
-
-  defp maybe_enqueue_embedding_worker_job("new", episode) do
-    EmbeddingsGeneratingWorker.enqueue(%{"id" => episode.id})
-    :ok
   end
 
   @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}

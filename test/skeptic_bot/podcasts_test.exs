@@ -9,9 +9,9 @@ defmodule SkepticBot.PodcastsTest do
 
   @invalid_episode_attrs %{external_id: nil, title: nil}
   @valid_episode_attrs %{
-    summary: "Sample summary",
     episode_length: 4000,
     external_id: "test-123",
+    summary: "Sample summary",
     thumbnail: "/static/thumbnail.png",
     title: "Test Episode"
   }

@@ -19,19 +19,20 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
   @type episode_id :: String.t()
   @type episode_transcription :: Podcasts.EpisodeTranscription.t()
   @type job :: Oban.Job.t()
+  @type status :: String.t()
   @batch_size 32
 
   @impl Oban.Worker
   @spec perform(job()) :: :ok | {:error, String.t()}
-  def perform(%Oban.Job{args: %{"id" => id}}) do
-    generate_embeddings(id)
+  def perform(%Oban.Job{args: %{"id" => id, "status" => status}}) do
+    generate_embeddings(id, status)
   end
 
-  @spec generate_embeddings(episode_id()) :: :ok | {:error, String.t()}
-  defp generate_embeddings(episode_id) do
+  @spec generate_embeddings(episode_id(), status()) :: :ok | {:error, String.t()}
+  defp generate_embeddings(episode_id, status) do
     with {:ok, episode} <- fetch_episode(episode_id),
          {:ok, _result} <- generate_episode_embedding(episode),
-         {:ok, _count} <- generate_transcription_embeddings(episode_id) do
+         {:ok, _count} <- generate_transcription_embeddings(episode_id, status) do
       :ok
     else
       {:error, reason} ->
@@ -60,13 +61,18 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     end
   end
 
-  @spec generate_transcription_embeddings(episode_id()) :: {:ok, integer()} | {:error, any()}
-  defp generate_transcription_embeddings(episode_id) do
+  @spec generate_transcription_embeddings(episode_id(), status()) ::
+          {:ok, integer()} | {:error, any()}
+  defp generate_transcription_embeddings(episode_id, "new") do
     Podcasts.while_streaming_episode_transcriptions(
       episode_id,
       @batch_size,
       &process_transcription_batch/1
     )
+  end
+
+  defp generate_transcription_embeddings(_episode_id, "existing") do
+    {:ok, :no_count}
   end
 
   @spec process_transcription_batch([episode_transcription()]) :: :ok | {:error, any()}

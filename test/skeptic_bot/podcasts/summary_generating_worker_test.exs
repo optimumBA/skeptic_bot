@@ -8,7 +8,6 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.SummaryGeneratingWorker
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
-  alias SkepticBot.Rag.MockEmbedder
   alias SkepticBot.Rag.MockGenerator
 
   @id "a909da70-13b7-4717-b1c0-c2d001521dc3"
@@ -26,48 +25,19 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
   describe "perform/1" do
     setup [:create_episode]
 
-    test "generates a teaser and a summary and updates the embedding for existing episodes",
+    test "generates a teaser and a summary and enqueues an embedding_worker job for episodes",
          %{
            response: response,
            episode: episode
          } do
-      refute episode.embedding
-
-      embedding = embedding_fixture()
-
       expect(MockGenerator, :predict, fn _messages, _output_mode ->
         {:ok, response}
-      end)
-
-      expect(MockEmbedder, :generate, fn _text ->
-        {:ok, [embedding]}
       end)
 
       assert :ok =
                perform_job(SummaryGeneratingWorker, %{
                  "id" => episode.id,
                  "episode_status" => "existing"
-               })
-
-      updated_episode = Podcasts.get_episode(episode.id)
-      assert updated_episode.teaser == "A Sam Tripoli episode teaser"
-      assert updated_episode.summary == "A Sam Tripoli episode summary"
-      assert updated_episode.embedding
-    end
-
-    test "generates a teaser and a summary and enqueues an embedding_worker job for new episodes",
-         %{
-           response: response,
-           episode: episode
-         } do
-      expect(MockGenerator, :predict, fn _messages, _output_mode ->
-        {:ok, response}
-      end)
-
-      assert :ok =
-               perform_job(SummaryGeneratingWorker, %{
-                 "id" => episode.id,
-                 "episode_status" => "new"
                })
 
       updated_episode = Podcasts.get_episode(episode.id)
@@ -80,27 +50,6 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
           "id" => episode.id
         }
       )
-    end
-
-    @tag :capture_log
-    test "returns an error message when embedding generation fails for existing episodes",
-         %{
-           response: response,
-           episode: episode
-         } do
-      expect(MockGenerator, :predict, fn _messages, _output_mode ->
-        {:ok, response}
-      end)
-
-      expect(MockEmbedder, :generate, fn _text ->
-        {:error, "Could not produce episode embeddings"}
-      end)
-
-      assert {:error, "Could not produce episode embeddings"} =
-               perform_job(SummaryGeneratingWorker, %{
-                 "id" => episode.id,
-                 "episode_status" => "existing"
-               })
     end
 
     test "logs an error when teaser generation fails" do

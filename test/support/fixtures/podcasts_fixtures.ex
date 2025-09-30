@@ -42,9 +42,9 @@ defmodule SkepticBot.PodcastsFixtures do
         episode_length: :rand.uniform(3000),
         external_id: Ecto.UUID.generate(),
         podcast_id: podcast.id,
+        summary: "Sample summary",
         thumbnail: "cover1.svg",
-        title: "Test Episode",
-        summary: "Sample summary"
+        title: "Test Episode"
       })
       |> Podcasts.create_episode()
 
