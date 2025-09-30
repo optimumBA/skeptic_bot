@@ -56,6 +56,31 @@ defmodule SkepticBot.Rag.RetrievalTest do
       refute hd(results).timestamp
     end
 
+    test "only returns episodes with a summary field" do
+      # Create episode with embedding
+      episode_embedding = List.duplicate(0.1, 1024)
+      episode = episode_fixture(embedding: episode_embedding)
+      _episode_2 = episode_fixture(embedding: episode_embedding, summary: nil)
+
+      # Create transcription WITHOUT embedding
+      _transcription =
+        transcription_fixture(%{
+          podcast_episode_id: episode.id,
+          embedding: nil,
+          transcription: "Transcription without embedding",
+          secs: 0
+        })
+
+      # Retrieve with query embedding
+      query_embedding = List.duplicate(0.12, 1024)
+      results = Retrieval.retrieve(query_embedding)
+
+      # Should still return the episode, but without specific timestamp
+      assert length(results) == 1
+      assert hd(results).title == episode.title
+      refute hd(results).timestamp
+    end
+
     test "handles mix of episodes with and without transcription embeddings" do
       # Create first episode with embedded transcription
       episode1 =
