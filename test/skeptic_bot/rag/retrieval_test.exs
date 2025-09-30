@@ -75,7 +75,6 @@ defmodule SkepticBot.Rag.RetrievalTest do
       query_embedding = List.duplicate(0.12, 1024)
       results = Retrieval.retrieve(query_embedding)
 
-      # Should still return the episode, but without specific timestamp
       assert length(results) == 1
       assert hd(results).title == episode.title
       refute hd(results).timestamp
