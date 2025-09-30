@@ -71,9 +71,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     )
   end
 
-  defp generate_transcription_embeddings(_episode_id, "existing") do
-    {:ok, :no_count}
-  end
+  defp generate_transcription_embeddings(_episode_id, "existing"), do: {:ok, :no_count}
 
   @spec process_transcription_batch([episode_transcription()]) :: :ok | {:error, any()}
   defp process_transcription_batch(episode_transcriptions) do
