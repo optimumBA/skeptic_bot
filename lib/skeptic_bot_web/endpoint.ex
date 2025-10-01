@@ -22,7 +22,7 @@ defmodule SkepticBotWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :skeptic_bot,
-    gzip: false,
+    gzip: not code_reloading?,
     only: SkepticBotWeb.static_paths()
 
   if Code.ensure_loaded?(Tidewave) do
