@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600;700&display=swap');
 
 @import 'tailwindcss';
 
@@ -56,6 +56,12 @@
     transform: translateY(-6px);
     opacity: 1;
   }
+}
+
+.montserrat-alternates-regular {
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .montserrat-alternates-medium {

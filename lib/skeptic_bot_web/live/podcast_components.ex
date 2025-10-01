@@ -94,7 +94,7 @@ defmodule SkepticBotWeb.PodcastComponents do
           </div>
         </section>
         <div class="divider"></div>
-        <div class="text-sm w-[88%] montserrat-alternates-medium">
+        <div class="text-sm w-[88%]">
           {trim_description(@description)}
         </div>
       </div>
