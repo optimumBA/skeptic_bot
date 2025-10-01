@@ -1,10 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600;700&display=swap');
 
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import 'tailwindcss';
 
-@keyframes bounce {
+/* Content sources for Tailwind v4 */
+@source "../css";
+@source "../js";
+@source "../../lib/skeptic_bot_web";
+
+/* A Tailwind plugin that makes "hero-#{ICON}" classes available.
+   The heroicons installation itself is managed by your mix.exs */
+@plugin "../vendor/heroicons";
+
+/* Custom theme configuration */
+@theme {
+  --breakpoint-xs: 30rem;
+  --breakpoint-2xs: 33.75rem;
+  --breakpoint-sm: 40rem;
+  --breakpoint-2sm: 43.75rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-2md: 56.25rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 68.75rem;
+  --breakpoint-2xl: 76.25rem;
+
+  /* Custom colors */
+  --color-custom-black: #1f1f1f;
+  --color-custom-white: #ffffff;
+  --color-custom-gray: #c7c7c7;
+  --color-base-content: #000000;
+  --color-primary: #cd4631;
+  --color-primary-content: #000000;
+  --color-secondary: #4d4d4d;
+}
+
+/* Add variants based on LiveView classes */
+@custom-variant phx-click-loading (.phx-click-loading&, .phx-click-loading &);
+@custom-variant phx-submit-loading (.phx-submit-loading&, .phx-submit-loading &);
+@custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
+
+/* Make LiveView wrapper divs transparent for layout */
+[data-phx-session],
+[data-phx-teleported-src] {
+  display: contents;
+}
+
+/* This file is for your main application CSS */
+
+@keyframes bounce-loader {
   0%,
   100% {
     transform: translateY(0);
@@ -14,6 +56,12 @@
     transform: translateY(-6px);
     opacity: 1;
   }
+}
+
+.montserrat-alternates-regular {
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .montserrat-alternates-medium {
@@ -57,7 +105,7 @@
 }
 
 .dot-animation {
-  animation: bounce 1s infinite ease-in-out;
+  animation: bounce-loader 1s infinite ease-in-out;
 }
 
 .delay-0 {
