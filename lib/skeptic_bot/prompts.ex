@@ -87,6 +87,7 @@ defmodule SkepticBot.Prompts do
   def get_related_questions(question_embedding, question_id) do
     UserQuestion
     |> where([uq], uq.id != ^question_id)
+    |> where([uq], not is_nil(uq.title))
     |> where(
       [uq],
       fragment(
