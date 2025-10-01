@@ -11,7 +11,6 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
     unique: [period: :infinity, states: Oban.Job.states()]
 
   alias SkepticBot.Podcasts
-  alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Rag.EmbeddingsGeneratingWorker
   alias SkepticBot.Rag.SummaryGenerator
 
@@ -24,7 +23,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
   def perform(%Oban.Job{
         args: %{"id" => id, "episode_status" => status}
       }) do
-    with %Episode{} = episode <- Podcasts.get_episode(id),
+    with {:ok, episode} <- fetch_episode(id),
          {:ok, {teaser, summary}} <-
            SummaryGenerator.generate_teaser_and_summary(episode),
          {:ok, _updated_episode} <-
@@ -32,13 +31,16 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
       EmbeddingsGeneratingWorker.enqueue(%{"id" => episode.id, "status" => status})
       :ok
     else
-      nil ->
-        Logger.error("Failed to process episode: #{id}, reason: Episode not found")
-        {:error, "Episode not found"}
-
       {:error, reason} ->
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
         {:error, reason}
+    end
+  end
+
+  defp fetch_episode(episode_id) do
+    case Podcasts.get_episode(episode_id) do
+      nil -> {:error, "Episode not found"}
+      episode -> {:ok, episode}
     end
   end
 

@@ -28,7 +28,6 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     generate_embeddings(id, status)
   end
 
-  @spec generate_embeddings(episode_id(), status()) :: :ok | {:error, String.t()}
   defp generate_embeddings(episode_id, status) do
     with {:ok, episode} <- fetch_episode(episode_id),
          {:ok, _result} <- generate_episode_embedding(episode),
@@ -44,7 +43,6 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     end
   end
 
-  @spec fetch_episode(episode_id()) :: {:ok, episode()} | {:error, String.t()}
   defp fetch_episode(episode_id) do
     case Podcasts.get_episode(episode_id) do
       nil -> {:error, "Episode not found"}
@@ -52,7 +50,6 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     end
   end
 
-  @spec generate_episode_embedding(episode()) :: {:ok, episode()} | {:error, any()}
   defp generate_episode_embedding(episode) do
     text = "passage: " <> episode.title <> " " <> (episode.summary || "")
 
@@ -61,8 +58,6 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     end
   end
 
-  @spec generate_transcription_embeddings(episode_id(), status()) ::
-          {:ok, integer()} | {:error, any()}
   defp generate_transcription_embeddings(episode_id, "new") do
     Podcasts.while_streaming_episode_transcriptions(
       episode_id,
@@ -73,7 +68,6 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
 
   defp generate_transcription_embeddings(_episode_id, "existing"), do: {:ok, :no_count}
 
-  @spec process_transcription_batch([episode_transcription()]) :: :ok | {:error, any()}
   defp process_transcription_batch(episode_transcriptions) do
     texts = Enum.map(episode_transcriptions, &("passage: " <> &1.transcription))
 
@@ -85,8 +79,6 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     end
   end
 
-  @spec update_transcription_embedding({episode_transcription(), embedding()}) ::
-          :ok | {:error, any()}
   defp update_transcription_embedding({episode_transcription, embedding}) do
     case Podcasts.update_episode_transcription(episode_transcription, %{embedding: embedding}) do
       {:ok, _updated} -> :ok
