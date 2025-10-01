@@ -15,7 +15,7 @@ defmodule SkepticBot.Podcasts do
   @type episode :: Episode.t()
   @type episode_transcription :: EpisodeTranscription.t()
   @type external_id :: String.t()
-  @type id :: String.t()
+  @type id :: Ecto.UUID.t()
   @type podcast :: Podcast.t()
   @type podcast_name :: String.t()
 
@@ -130,20 +130,6 @@ defmodule SkepticBot.Podcasts do
       |> Repo.stream()
       |> Stream.map(& &1.transcription)
       |> Enum.join("\n")
-    end
-
-    Repo.transaction(transformation, timeout: :infinity)
-  end
-
-  @spec get_full_episode_transcriptions(id()) ::
-          {:ok, [episode_transcription()]} | {:error, any()}
-  def get_full_episode_transcriptions(episode_id) do
-    transformation = fn ->
-      EpisodeTranscription
-      |> where([et], et.podcast_episode_id == ^episode_id)
-      |> order_by([et], asc: et.timestamp)
-      |> Repo.stream()
-      |> Enum.to_list()
     end
 
     Repo.transaction(transformation, timeout: :infinity)

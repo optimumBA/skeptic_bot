@@ -23,7 +23,6 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
   @batch_size 32
 
   @impl Oban.Worker
-  @spec perform(job()) :: :ok | {:error, String.t()}
   def perform(%Oban.Job{args: %{"id" => id, "status" => status}}) do
     generate_embeddings(id, status)
   end

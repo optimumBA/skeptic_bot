@@ -19,7 +19,6 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
   @type job :: Oban.Job.t()
 
   @impl Oban.Worker
-  @spec perform(job()) :: :ok | {:error, String.t()}
   def perform(%Oban.Job{
         args: %{"id" => id, "episode_status" => status}
       }) do

@@ -45,7 +45,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
       embedding: embedding,
       episode: episode
     } do
-      {:ok, episode_transcriptions} = Podcasts.get_full_episode_transcriptions(episode.id)
+      {:ok, episode_transcriptions} = get_full_episode_transcriptions(episode.id)
       assert Enum.all?(episode_transcriptions, fn et -> is_nil(et.embedding) end)
 
       expect(MockEmbedder, :generate, 2, fn _text ->
@@ -58,7 +58,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
                  "status" => "new"
                })
 
-      {:ok, updated_episode_transcriptions} = Podcasts.get_full_episode_transcriptions(episode.id)
+      {:ok, updated_episode_transcriptions} = get_full_episode_transcriptions(episode.id)
       refute Enum.all?(updated_episode_transcriptions, fn et -> is_nil(et.embedding) end)
     end
 
@@ -66,7 +66,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
       embedding: embedding,
       episode: episode
     } do
-      {:ok, episode_transcriptions} = Podcasts.get_full_episode_transcriptions(episode.id)
+      {:ok, episode_transcriptions} = get_full_episode_transcriptions(episode.id)
       assert Enum.all?(episode_transcriptions, fn et -> is_nil(et.embedding) end)
 
       expect(MockEmbedder, :generate, fn _text ->
@@ -79,7 +79,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
                  "status" => "existing"
                })
 
-      {:ok, updated_episode_transcriptions} = Podcasts.get_full_episode_transcriptions(episode.id)
+      {:ok, updated_episode_transcriptions} = get_full_episode_transcriptions(episode.id)
       assert Enum.all?(updated_episode_transcriptions, fn et -> is_nil(et.embedding) end)
     end
 

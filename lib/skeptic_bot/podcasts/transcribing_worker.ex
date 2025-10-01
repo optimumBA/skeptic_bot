@@ -17,7 +17,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
   require Logger
 
   @type audio_url :: String.t()
-  @type id :: String.t()
+  @type id :: Ecto.UUID.t()
   @type job :: Oban.Job.t()
 
   @impl Oban.Worker
