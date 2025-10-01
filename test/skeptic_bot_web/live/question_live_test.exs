@@ -289,7 +289,7 @@ defmodule SkepticBotWeb.QuestionLiveTest do
                ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
     end
 
-    test "does not display the related questions that don't have a title", %{
+    test "does not display the related questions that don't have a title or a description", %{
       conn: conn,
       embedding: embedding,
       question: question
@@ -306,9 +306,17 @@ defmodule SkepticBotWeb.QuestionLiveTest do
         title: nil
       )
 
+      question_fixture(
+        description: nil,
+        embedding: offset_embedding_fixture(embedding),
+        episodes: [],
+        title: "A question that has a title but no description"
+      )
+
       {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
 
       assert html =~ "Related Questions"
+      refute html =~ "A question that has a title but no description"
 
       refute html =~
                ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
