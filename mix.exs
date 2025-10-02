@@ -144,8 +144,7 @@ defmodule SkepticBot.MixProject do
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind skeptic_bot", "esbuild skeptic_bot"],
       "assets.deploy": [
-        "compile",
-        "tailwind skeptic_bot --minify",
+        "tailwind skeptic_bot",
         "esbuild skeptic_bot --minify",
         "phx.digest"
       ],
