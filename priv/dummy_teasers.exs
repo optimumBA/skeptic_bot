@@ -9,7 +9,7 @@ Logger.debug("Updating all episodes dummy teaser",
 )
 
 teaser =
-  "Nelson Mandela, South Africa’s first Black president, symbolised freedom, resilience, and reconciliation, leading the fight against apartheid and inspiring."
+  "Nelson Mandela, South Africa’s first Black president, symbolised freedom, resilience, and reconciliation leading the fight against."
 
 Repo.update_all(Episode, set: [teaser: teaser])
 

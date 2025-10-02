@@ -47,11 +47,11 @@ defmodule SkepticBotWeb.PodcastComponents do
     ~H"""
     <div class="flex flex-col gap-2">
       <a href={episode_url(@episode.external_id, @timestamp, @episode.podcast.name)}>
-        <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative mobile-scroll-child">
+        <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative mobile-scroll-child 2sm:w-[24rem]">
           <div class="w-full h-full rounded-xl overflow-hidden">
             <img src={@episode.thumbnail} alt="Cover 2" class="w-full h-full object-cover" />
           </div>
-          <div class="w-[19.6875rem] h-[8.2rem] absolute bottom-0 left-0 rounded-b-xl blur-episode">
+          <div class="w-[19.6875rem] h-[8.2rem] absolute bottom-0 left-0 rounded-b-xl blur-episode 2sm:w-[24rem]">
           </div>
 
           {get_episode_vector(@random)}
@@ -67,7 +67,9 @@ defmodule SkepticBotWeb.PodcastComponents do
         </section>
       </a>
 
-      <div class="text-sm leading-5">{@episode.teaser}</div>
+      <div class="text-sm leading-5 2sm:text-base">
+        {@episode.teaser}
+      </div>
     </div>
     """
   end
