@@ -146,5 +146,4 @@
   mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
   backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
 }
