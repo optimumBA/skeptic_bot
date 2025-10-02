@@ -18,7 +18,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
       <div id="question-live">
         <div
           class="mx-auto mt-16 px-5 mb-6 flex flex-col gap-10 md:gap-14"
-          style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 18.8rem)"}
+          style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 20.8rem)"}
         >
           <section class="w-max flex gap-4 items-center cursor-pointer" phx-click={JS.navigate("/")}>
             <div><img src={~p"/images/home/back_icon.svg"} alt="Superscript Image Question" /></div>
@@ -26,7 +26,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           </section>
 
           <section class={[
-            "relative",
+            "relative mx-auto md:max-w-[90%]",
             !@title && "hidden"
           ]}>
             <p class="text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold 2sm:text-center">
