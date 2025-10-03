@@ -289,6 +289,39 @@ defmodule SkepticBotWeb.QuestionLiveTest do
                ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
     end
 
+    test "does not display the related questions that don't have a title or a description", %{
+      conn: conn,
+      embedding: embedding,
+      question: question
+    } do
+      create_multiple_episodes(2, embedding)
+
+      embedding = Pgvector.to_list(question.embedding)
+
+      question_fixture(
+        description:
+          "Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davis's own admissions in interviews and a memoir, he was in the car from which the fatal shots were fired and allegedly handed the gun to the shooter. While the exact individual who pulled the trigger has not been definitively confirmed in court, Davis’s arrest has provided the strongest legal and investigative breakthrough in the case to date.",
+        embedding: offset_embedding_fixture(embedding),
+        episodes: [],
+        title: nil
+      )
+
+      question_fixture(
+        description: nil,
+        embedding: offset_embedding_fixture(embedding),
+        episodes: [],
+        title: "A question that has a title but no description"
+      )
+
+      {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
+
+      assert html =~ "Related Questions"
+      refute html =~ "A question that has a title but no description"
+
+      refute html =~
+               ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
+    end
+
     test "updates after completing response", %{
       conn: conn,
       embedding: embedding,
