@@ -4,14 +4,19 @@ defmodule SkepticBot.PodcastsFixtures do
   entities via the `SkepticBot.Podcasts` context.
   """
 
+  import Ecto.Query
+
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Podcasts.EpisodeTranscription
   alias SkepticBot.Podcasts.Podcast
+  alias SkepticBot.Repo
 
   @valid_l2_distance_offset 0.58
 
   @type embedding :: [float()]
+  @type episode_transcription :: EpisodeTranscription.t()
+  @type id :: Ecto.UUID.t()
   @type offset :: float()
   @type podcast_name :: String.t()
   @type response :: String.t()
@@ -39,10 +44,10 @@ defmodule SkepticBot.PodcastsFixtures do
     {:ok, episode} =
       attrs
       |> Enum.into(%{
-        description: "Sample description",
         episode_length: :rand.uniform(3000),
         external_id: Ecto.UUID.generate(),
         podcast_id: podcast.id,
+        summary: "Sample summary",
         thumbnail: "cover1.svg",
         title: "Test Episode"
       })
@@ -79,5 +84,19 @@ defmodule SkepticBot.PodcastsFixtures do
       |> Podcasts.create_episode_transcription()
 
     episode_transcription
+  end
+
+  @spec get_full_episode_transcriptions(id()) ::
+          {:ok, [episode_transcription()]} | {:error, any()}
+  def get_full_episode_transcriptions(episode_id) do
+    transformation = fn ->
+      EpisodeTranscription
+      |> where([et], et.podcast_episode_id == ^episode_id)
+      |> order_by([et], asc: et.timestamp)
+      |> Repo.stream()
+      |> Enum.to_list()
+    end
+
+    Repo.transaction(transformation, timeout: :infinity)
   end
 end

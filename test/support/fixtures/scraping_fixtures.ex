@@ -9,133 +9,114 @@ defmodule SkepticBot.ScrapingFixtures do
     %{
       "data" => [
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Tin Foil Hat",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a909da70-13b7-4717-b1c0-c2d001521dc3"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Cash Daddies 2",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a909da70-13b7-4727-b1c0-c2d001521dc3"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "CashDaddies",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da70-13b7-4717-b1c0-c2d001521dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Doom Scrollin",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a909da80-14b7-4717-b1c0-c2d001521dc3"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Doomscrollin",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a909da80-14b7-4718-b1c0-c2s001521dc3"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Union of the Unwanted",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da81-12b7-4717-b1h0-c2d011521dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "The Union of The Unwanted",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da81-12b7-4717-b1h0-c2d011521dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Zero #178: Deadly",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Broken Sim",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12c7-4717-b1h0-c2d063991dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "BS Clips",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12c7-4717-b1h0-c2d063981dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Bad Advice",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Black Crack Robots:  Sam Tripoli's First Crowd Work Special",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12b7-4717-boh0-c2d013581dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "OnlyConspiracies",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Punch Drunk Sports",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Saturday Night Deep Dives",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Gay Heckler Gets Annihilated By Comic!",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Deep Conspiracy Rewinds",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Why is Everybody Gettin Quiet?",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",
           "uuid" => "a908da82-12b7-4717-b1h0-c2d013581dc4"
         },
         %{
-          "description" => "Is this a suitable description?",
           "duration" => 3000,
           "name" => "Comic Crushes Cougar Heckler!",
           "thumbnailPath" => "/static/thumbnails/79e38851-0b10-46d5-80c5-cedc007cbf1e.jpg",

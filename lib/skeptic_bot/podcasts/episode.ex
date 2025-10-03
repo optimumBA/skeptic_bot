@@ -10,11 +10,12 @@ defmodule SkepticBot.Podcasts.Episode do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "podcast_episodes" do
-    field :description, :string
     field :embedding, Pgvector.Ecto.Vector
     field :episode_length, :integer
     field :external_id, :string
     belongs_to :podcast, SkepticBot.Podcasts.Podcast
+    field :summary, :string
+    field :teaser, :string
     field :thumbnail, :string
     field :timestamp, EctoInterval, virtual: true
     field :title, :string
@@ -27,11 +28,12 @@ defmodule SkepticBot.Podcasts.Episode do
   def changeset(episode, attrs) do
     episode
     |> cast(attrs, [
-      :description,
       :embedding,
       :episode_length,
       :external_id,
       :podcast_id,
+      :summary,
+      :teaser,
       :thumbnail,
       :title
     ])

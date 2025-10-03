@@ -80,7 +80,6 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     unless Podcasts.episode_exists?(episode["uuid"]) do
       {:ok, %Podcasts.Episode{} = episode} =
         Podcasts.create_episode(%{
-          "description" => episode["description"],
           "episode_length" => episode["duration"],
           "external_id" => episode["uuid"],
           "podcast_id" => podcast.id,

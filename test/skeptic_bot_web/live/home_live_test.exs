@@ -71,7 +71,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
         {:ok, [embedding]}
       end)
 
-      expect(Rag.MockGenerator, :predict, fn _messages ->
+      expect(Rag.MockGenerator, :predict, fn _messages, _output_mode ->
         {:ok, "Prediction process was successful"}
       end)
 
@@ -102,7 +102,7 @@ defmodule SkepticBotWeb.HomeLiveTest do
         {:ok, [search_embedding]}
       end)
 
-      stub(Rag.MockGenerator, :predict, fn _messages ->
+      stub(Rag.MockGenerator, :predict, fn _messages, _output_mode ->
         {:ok, "Prediction process was successful"}
       end)
 

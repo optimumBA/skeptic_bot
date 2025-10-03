@@ -15,7 +15,7 @@ defmodule SkepticBot.Podcasts do
   @type episode :: Episode.t()
   @type episode_transcription :: EpisodeTranscription.t()
   @type external_id :: String.t()
-  @type id :: String.t()
+  @type id :: Ecto.UUID.t()
   @type podcast :: Podcast.t()
   @type podcast_name :: String.t()
 

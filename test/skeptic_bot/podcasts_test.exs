@@ -9,9 +9,9 @@ defmodule SkepticBot.PodcastsTest do
 
   @invalid_episode_attrs %{external_id: nil, title: nil}
   @valid_episode_attrs %{
-    description: "Sample description",
     episode_length: 4000,
     external_id: "test-123",
+    summary: "Sample summary",
     thumbnail: "/static/thumbnail.png",
     title: "Test Episode"
   }
@@ -35,7 +35,7 @@ defmodule SkepticBot.PodcastsTest do
       attrs = Map.put(@valid_episode_attrs, :podcast_id, podcast.id)
 
       assert {:ok, %Episode{} = episode} = Podcasts.create_episode(attrs)
-      assert episode.description == "Sample description"
+      assert episode.summary == "Sample summary"
       assert episode.title == "Test Episode"
       assert episode.external_id == "test-123"
     end
@@ -95,11 +95,11 @@ defmodule SkepticBot.PodcastsTest do
     setup [:create_episode]
 
     test "with valid data updates an episode", %{episode: episode} do
-      update_attrs = %{description: "a new description", title: "updated title"}
+      update_attrs = %{summary: "a new summary", title: "updated title"}
 
       assert {:ok, %Episode{} = updated_episode} = Podcasts.update_episode(episode, update_attrs)
       assert updated_episode.title == "updated title"
-      assert updated_episode.description == "a new description"
+      assert updated_episode.summary == "a new summary"
     end
 
     test "with invalid data returns error changeset", %{episode: episode} do

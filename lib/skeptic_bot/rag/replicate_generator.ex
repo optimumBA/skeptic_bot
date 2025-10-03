@@ -21,7 +21,7 @@ defmodule SkepticBot.Rag.ReplicateGenerator do
   def handle_output(output), do: output
 
   @impl Generator
-  def predict(messages) do
+  def predict(messages, output_mode) do
     input = %{
       length_penalty: 1.0,
       max_tokens: 512,
@@ -34,7 +34,7 @@ defmodule SkepticBot.Rag.ReplicateGenerator do
 
     SkepticBot.ReplicateClient.start_prediction(
       __MODULE__,
-      :processing_and_completed,
+      output_mode,
       @model,
       input
     )
