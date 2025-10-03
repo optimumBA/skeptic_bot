@@ -107,7 +107,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         </section>
       </a>
 
-      <div class="text-sm leading-5 2sm:text-base">
+      <div class="text-sm leading-6 2sm:text-base">
         {@episode.teaser}
       </div>
     </div>

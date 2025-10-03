@@ -96,30 +96,6 @@ defmodule SkepticBotWeb.HomeLive.Index do
                 icon_path={~p"/images/home/latest_podcast_icon.svg"}
                 title="Latest Podcasts"
               />
-
-              <section class="ml-5 montserrat-alternates-bold text-2xl">
-                Latest Podcasts
-              </section>
-              <section class="pb-6 relative">
-                <section class="ml-5 mb-12 pt-6 pr-2 relative">
-                  <div class="flex gap-4 mobile-scroll-parent" id="latest-episodes-carousel">
-                    <%= for episode <- @latest_episodes do %>
-                      <PodcastComponents.episode_card
-                        episode={episode}
-                        random={
-                          Enum.at(
-                            @latest_episodes_vectors,
-                            Enum.find_index(@latest_episodes, fn x -> x == episode end)
-                          )
-                        }
-                        timestamp={
-                          if episode.timestamp, do: to_string(episode.timestamp.secs), else: "0"
-                        }
-                      />
-                    <% end %>
-                  </div>
-                </section>
-              </section>
             </section>
           </section>
         </div>

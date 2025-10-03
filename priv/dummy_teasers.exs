@@ -9,7 +9,7 @@ Logger.debug("Updating all episodes dummy teaser",
 )
 
 teaser =
-  "Nelson Mandela, South Africa’s first Black president, symbolised freedom, resilience, and reconciliation leading the fight against."
+  "What if ancient giants once stalked the earth with bizarre features? Prepare for secrets, symbols, and a wild historical ride."
 
 Repo.update_all(Episode, set: [teaser: teaser])
 

@@ -74,7 +74,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           />
         </section>
 
-        <section class="bg-[#FFF5F5] pt-20 pb-16">
+        <section class="bg-[#FFF5F5] pt-8 pb-16">
           <section
             class="mx-auto"
             style={"max-width: calc(#{@visible_episodes} * 24.8rem)"}
