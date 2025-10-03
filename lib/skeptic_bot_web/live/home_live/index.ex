@@ -22,7 +22,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
         <div class="h-screen flex relative">
           <section>
             <div class={[
-              "w-[38%] absolute top-[-4%] left-[-10%] z-30 xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[18%] xl:w-[14rem] xl:top-[1rem]",
+              "w-[32%] absolute top-[-8%] left-[-10%] z-30 xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[18%] xl:w-[14rem] xl:top-[1rem]",
               @loading && "hidden"
             ]}>
               <img
@@ -32,7 +32,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               />
             </div>
             <div class={[
-              "w-[30%] absolute top-[10%] left-[4%] xs:w-[30%] 2xs:w-[27%] 2xs:top-[13%] sm:top-[10%] md:w-[20%] md:top-[11%] 2md:top-[8%] xl:w-[15rem] xl:top-auto xl:top-[12rem] xl:left-[2.8rem]",
+              "w-[24%] absolute top-[4%] left-[4%] xs:w-[30%] 2xs:w-[27%] 2xs:top-[13%] sm:top-[10%] md:w-[20%] md:top-[11%] 2md:top-[8%] xl:w-[15rem] xl:top-auto xl:top-[12rem] xl:left-[2.8rem]",
               @loading && "hidden"
             ]}>
               <img
@@ -43,7 +43,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             </div>
 
             <div class={[
-              "w-[14%] absolute top-[19%] right-[1rem] xs:w-[13%] 2xs:w-[18%] 2xs:top-[6%] md:w-[10%] md:top-[9%]",
+              "w-[12%] absolute top-[9%] right-[1rem] xs:w-[13%] 2xs:w-[18%] 2xs:top-[6%] md:w-[10%] md:top-[9%]",
               @loading && "hidden"
             ]}>
               <img
@@ -53,15 +53,15 @@ defmodule SkepticBotWeb.HomeLive.Index do
               />
             </div>
           </section>
-          <section class="w-full mt-64 border border-green-400">
-            <section class="w-[93%] mx-auto flex flex-col gap-5 md:w-[70%] border border-blue-400">
+          <section class="w-full mt-36 flex flex-col gap-6">
+            <section class="w-[93%] mx-auto flex flex-col gap-4 md:w-[70%]">
               <section class="text-6xl mx-auto montserrat-alternates-bold tracking-4 md:text-7xl 2xl:text-8xl">
                 Skeptic.<span class="text-primary montserrat-alternates-bold">bot</span>
               </section>
               <div class={[
                 @loading && "hidden"
               ]}>
-                <section class="w-[50%] mb-8 mx-auto text-secondary text-center">
+                <section class="w-[50%] mb-6 mx-auto text-secondary text-center">
                   Questions everything
                 </section>
                 <section class="w-full mx-auto xs:w-[95%] 2xs:w-[80%] sm:w-[80%] md:w-[96%] lg:w-[80%] xl:w-[60%]">
@@ -92,7 +92,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
                 Latest Podcasts
               </section>
               <section class="pb-6 relative">
-                <section class="ml-5 mb-12 pt-12 pr-2 relative">
+                <section class="ml-5 mb-12 pt-6 pr-2 relative">
                   <div class="flex gap-4 mobile-scroll-parent" id="related-episodes-carousel">
                     <%= for episode <- @latest_episodes do %>
                       <PodcastComponents.episode_card
