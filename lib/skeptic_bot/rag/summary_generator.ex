@@ -36,7 +36,7 @@ defmodule SkepticBot.Rag.SummaryGenerator do
       The summary should be VERY DETAILED. For example, if the speakers are saying that a particular action was done, the reader of this summary
       should know who did that action, where it occurred and the potential consequences of that action. Mention the speakers but only in the beginning of this summary.
       The reader of the summary should be THOROUGHLY INFORMED, have a clear picture of what the speakers are saying and not have to seek FURTHER INFORMATION.
-      Also provide a teaser of the content in 300 words or less.
+      Also provide a teaser of the content in 20 words or less.
       The teaser should not REVEAL a lot of details and should strive to arouse CURIOSITY from the reader.
       The teaser should be very ENGAGING and unique enough that it will immediately entice the reader to listen to the podcast episode.
       Use ONLY the CONTENT that I pass to you and NOTHING ELSE to generate both the summary and the teaser.
@@ -75,8 +75,8 @@ defmodule SkepticBot.Rag.SummaryGenerator do
       |> String.split("$&$", parts: 2)
       |> Enum.map(fn text -> String.trim(text) end)
 
-    <<"Teaser:", processed_teaser::binary>> = teaser
-    <<"Summary:", processed_summary::binary>> = summary
+    <<"Teaser: ", processed_teaser::binary>> = teaser
+    <<"Summary: ", processed_summary::binary>> = summary
 
     {processed_teaser, processed_summary}
   end
