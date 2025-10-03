@@ -18,7 +18,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
       <div id="question-live">
         <div
           class="mx-auto mt-16 px-5 mb-6 flex flex-col gap-10 md:gap-14"
-          style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 18.8rem)"}
+          style={"max-width: calc(#{@visible_episodes} * 18.8rem)"}
         >
           <section class="w-max flex gap-4 items-center cursor-pointer" phx-click={JS.navigate("/")}>
             <div><img src={~p"/images/home/back_icon.svg"} alt="Superscript Image Question" /></div>
@@ -41,7 +41,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
         <section
           class="px-5 mx-auto mt-6 mb-10"
-          style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 20.8rem)"}
+          style={"max-width: calc(#{@visible_episodes} * 20.8rem)"}
         >
           <p class="text-secondary leading-8 lg:text-center">
             {@description}
@@ -59,7 +59,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
         <section
           class="mx-auto"
-          style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 20.8rem)"}
+          style={"max-width: calc(#{@visible_episodes} * 20.8rem)"}
         >
           <section class="ml-5 montserrat-alternates-bold text-2xl">
             Related Podcasts
@@ -110,7 +110,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         <section class="bg-[#FFF5F5] pt-20 pb-16">
           <section
             class="mx-auto"
-            style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 20.8rem)"}
+            style={"max-width: calc(#{@visible_episodes} * 20.8rem)"}
           >
             <section class="ml-5 mb-10 montserrat-alternates-bold text-2xl">
               Related Questions
