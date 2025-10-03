@@ -147,3 +147,7 @@
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
   backdrop-filter: blur(15px);
 }
+
+.latest-podcast-gradient {
+  background-image: linear-gradient(#fff5f5, white);
+}

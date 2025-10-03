@@ -24,7 +24,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
         <div class="h-screen flex relative">
           <section>
             <div class={[
-              "w-[32%] absolute top-[-8%] left-[-10%] z-30 xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[18%] xl:w-[14rem] xl:top-[1rem]",
+              "w-[8rem] absolute top-[-4rem] left-[-2rem] z-30 xs:w-[9rem] md:w-[11rem] lg:w-[12rem] xl:top-[-2rem] xl:left-0",
               @loading && "hidden"
             ]}>
               <img
@@ -34,7 +34,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               />
             </div>
             <div class={[
-              "w-[24%] absolute top-[4%] left-[4%] xs:w-[30%] 2xs:w-[27%] 2xs:top-[13%] sm:top-[10%] md:w-[20%] md:top-[11%] 2md:top-[8%] xl:w-[15rem] xl:top-auto xl:top-[12rem] xl:left-[2.8rem]",
+              "w-[7rem] absolute top-[2rem] left-[0.8rem] xs:w-[8rem] xs:top-[2.8rem] md:w-[10rem] md:top-[4.6rem] lg:left-[1.2rem] lg:w-[12rem] lg:top-[5rem] xl:w-[13rem] xl:top-[7.4rem] xl:left-[2.2rem]",
               @loading && "hidden"
             ]}>
               <img
@@ -86,16 +86,18 @@ defmodule SkepticBotWeb.HomeLive.Index do
               </div>
             </section>
 
-            <section
-              class="mx-auto mt-4 pt-4"
-              style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 24.8rem)"}
-            >
-              <PodcastComponents.episode_card_carousel
-                episode_vectors={@latest_episodes_vectors}
-                episodes={@latest_episodes}
-                icon_path={~p"/images/home/latest_podcast_icon.svg"}
-                title="Latest Podcasts"
-              />
+            <section class="latest-podcast-gradient">
+              <section
+                class="mx-auto mt-4 pt-4"
+                style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 24.8rem)"}
+              >
+                <PodcastComponents.episode_card_carousel
+                  episode_vectors={@latest_episodes_vectors}
+                  episodes={@latest_episodes}
+                  icon_path={~p"/images/home/latest_podcast_icon.svg"}
+                  title="Latest Podcasts"
+                />
+              </section>
             </section>
           </section>
         </div>
