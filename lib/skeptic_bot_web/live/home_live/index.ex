@@ -86,7 +86,10 @@ defmodule SkepticBotWeb.HomeLive.Index do
               </div>
             </section>
 
-            <section class="latest-podcast-gradient">
+            <section class={[
+              "latest-podcast-gradient",
+              @loading && "hidden"
+            ]}>
               <section
                 class="mx-auto mt-4 pt-4"
                 style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 24.8rem)"}
