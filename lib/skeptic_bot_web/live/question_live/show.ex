@@ -40,7 +40,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         </div>
 
         <section
-          class="px-5 mx-auto mt-6 mb-10"
+          class="px-5 mx-auto mt-6 mb-12"
           style={"max-width: calc(#{@visible_episodes} * 24.8rem)"}
         >
           <p class="text-secondary leading-8 lg:text-center">
@@ -61,50 +61,17 @@ defmodule SkepticBotWeb.QuestionLive.Show do
           class="mx-auto"
           style={"max-width: calc(#{@visible_episodes} * 24.8rem)"}
         >
-          <section class="ml-5 montserrat-alternates-bold text-2xl">
-            Related Podcasts
-          </section>
-          <section class="pb-6 relative">
-            <section class="ml-5 mb-12 pt-12 pr-2 relative">
-              <div class="flex gap-4 mobile-scroll-parent" id="related-episodes-carousel">
-                <%= for episode <- @related_episodes do %>
-                  <PodcastComponents.episode_card
-                    episode={episode}
-                    random={
-                      Enum.at(
-                        @related_episodes_vectors,
-                        Enum.find_index(@related_episodes, fn x -> x == episode end)
-                      )
-                    }
-                    timestamp={if episode.timestamp, do: to_string(episode.timestamp.secs), else: "0"}
-                  />
-                <% end %>
-              </div>
-            </section>
-          </section>
+          <PodcastComponents.episode_card_carousel
+            episode_vectors={@related_episodes_vectors}
+            episodes={@related_episodes}
+            title="Related Podcasts"
+          />
 
-          <section class="ml-5 mt-2 montserrat-alternates-bold text-2xl">
-            Other Podcasts
-          </section>
-
-          <section class="pb-16 relative">
-            <section class="ml-5 mb-12 pr-2 pt-12 relative">
-              <div class="flex gap-4 mobile-scroll-parent" id="other-episodes-carousel">
-                <%= for episode <- @other_episodes do %>
-                  <PodcastComponents.episode_card
-                    episode={episode}
-                    random={
-                      Enum.at(
-                        @other_episodes_vectors,
-                        Enum.find_index(@other_episodes, fn x -> x == episode end)
-                      )
-                    }
-                    timestamp="0"
-                  />
-                <% end %>
-              </div>
-            </section>
-          </section>
+          <PodcastComponents.episode_card_carousel
+            episode_vectors={@other_episodes_vectors}
+            episodes={@other_episodes}
+            title="Other Podcasts"
+          />
         </section>
 
         <section class="bg-[#FFF5F5] pt-20 pb-16">

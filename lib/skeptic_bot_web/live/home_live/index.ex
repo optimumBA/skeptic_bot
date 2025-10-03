@@ -9,6 +9,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
   alias SkepticBotWeb.HomeLive
   alias SkepticBotWeb.PodcastComponents
 
+  @episode_limit 6
+  @vector_numbers [1, 2, 3, 4, 5]
   @visible_episodes 3
 
   @impl Phoenix.LiveView
@@ -88,6 +90,13 @@ defmodule SkepticBotWeb.HomeLive.Index do
               class="mx-auto mt-4 pt-4"
               style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 24.8rem)"}
             >
+              <PodcastComponents.episode_card_carousel
+                episode_vectors={@latest_episodes_vectors}
+                episodes={@latest_episodes}
+                icon_path={~p"/images/home/latest_podcast_icon.svg"}
+                title="Latest Podcasts"
+              />
+
               <section class="ml-5 montserrat-alternates-bold text-2xl">
                 Latest Podcasts
               </section>
@@ -97,6 +106,12 @@ defmodule SkepticBotWeb.HomeLive.Index do
                     <%= for episode <- @latest_episodes do %>
                       <PodcastComponents.episode_card
                         episode={episode}
+                        random={
+                          Enum.at(
+                            @latest_episodes_vectors,
+                            Enum.find_index(@latest_episodes, fn x -> x == episode end)
+                          )
+                        }
                         timestamp={
                           if episode.timestamp, do: to_string(episode.timestamp.secs), else: "0"
                         }
@@ -117,9 +132,16 @@ defmodule SkepticBotWeb.HomeLive.Index do
   def mount(_params, _session, socket) do
     latest_episodes = Podcasts.get_latest_episodes(3)
 
+    latest_episodes_vectors =
+      @vector_numbers
+      |> Enum.shuffle()
+      |> Stream.cycle()
+      |> Enum.take(@episode_limit)
+
     {:ok,
      socket
      |> assign(:latest_episodes, latest_episodes)
+     |> assign(:latest_episodes_vectors, latest_episodes_vectors)
      |> assign(:loading, false)
      |> assign(:question, %UserQuestion{})
      |> assign(:visible_episodes, @visible_episodes)

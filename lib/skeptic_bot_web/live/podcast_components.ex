@@ -38,8 +38,47 @@ defmodule SkepticBotWeb.PodcastComponents do
     @podcast_nephilimdeathsquad
   ]
 
+  attr :episode_vectors, :list, required: true
+  attr :episodes, :list, required: true
+  attr :icon_path, :string, default: nil
+  attr :title, :string, required: true
+
+  @spec episode_card_carousel(assigns()) :: rendered()
+  def episode_card_carousel(assigns) do
+    ~H"""
+    <section class="ml-5 montserrat-alternates-bold text-2xl flex items-center gap-2">
+      <div class={[
+        !@icon_path && "hidden"
+      ]}>
+        <img src={@icon_path} alt="title image" class="w-full h-full object-cover" />
+      </div>
+      <div>
+        {@title}
+      </div>
+    </section>
+    <section class="pb-4 relative">
+      <section class="ml-5 mb-6 pt-8 pr-2 relative">
+        <div class="flex gap-4 mobile-scroll-parent">
+          <%= for episode <- @episodes do %>
+            <.episode_card
+              episode={episode}
+              random={
+                Enum.at(
+                  @episode_vectors,
+                  Enum.find_index(@episodes, fn x -> x == episode end)
+                )
+              }
+              timestamp={if episode.timestamp, do: to_string(episode.timestamp.secs), else: "0"}
+            />
+          <% end %>
+        </div>
+      </section>
+    </section>
+    """
+  end
+
   attr :episode, :map, required: true
-  attr :random, :integer, default: nil
+  attr :random, :integer, required: true
   attr :timestamp, :string, required: true
 
   @spec episode_card(assigns()) :: rendered()
@@ -54,9 +93,7 @@ defmodule SkepticBotWeb.PodcastComponents do
           <div class="w-[19.6875rem] h-[8.2rem] absolute bottom-0 left-0 rounded-b-xl blur-episode 2sm:w-[24rem]">
           </div>
 
-          <%= if @random do %>
-            {get_episode_vector(@random)}
-          <% end %>
+          {get_episode_vector(@random)}
 
           <div class="absolute bottom-[2.5rem] left-[1rem] text-xl montserrat-alternates-bold text-custom-white">
             {trim_title(@episode.title)}
