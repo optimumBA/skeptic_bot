@@ -53,7 +53,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               />
             </div>
           </section>
-          <section class="w-full mt-36 flex flex-col gap-6">
+          <section class="w-full mt-36">
             <section class="w-[93%] mx-auto flex flex-col gap-4 md:w-[70%]">
               <section class="text-6xl mx-auto montserrat-alternates-bold tracking-4 md:text-7xl 2xl:text-8xl">
                 Skeptic.<span class="text-primary montserrat-alternates-bold">bot</span>
@@ -85,7 +85,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             </section>
 
             <section
-              class="mx-auto"
+              class="mx-auto mt-4 pt-4"
               style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 24.8rem)"}
             >
               <section class="ml-5 montserrat-alternates-bold text-2xl">
@@ -93,7 +93,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               </section>
               <section class="pb-6 relative">
                 <section class="ml-5 mb-12 pt-6 pr-2 relative">
-                  <div class="flex gap-4 mobile-scroll-parent" id="related-episodes-carousel">
+                  <div class="flex gap-4 mobile-scroll-parent" id="latest-episodes-carousel">
                     <%= for episode <- @latest_episodes do %>
                       <PodcastComponents.episode_card
                         episode={episode}
