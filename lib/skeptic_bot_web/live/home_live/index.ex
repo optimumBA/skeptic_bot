@@ -24,7 +24,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
         <div class="h-screen flex relative">
           <section>
             <div class={[
-              "w-[8rem] absolute top-[-4rem] left-[-2rem] z-30 xs:w-[9rem] md:w-[11rem] lg:w-[12rem] xl:top-[-2rem] xl:left-0",
+              "w-[8rem] absolute top-[-4rem] left-[-2rem] z-30 xs:w-[9rem] md:w-[11rem] md:top-[-7rem] lg:w-[12rem] xl:top-[-2rem] xl:left-0",
               @loading && "hidden"
             ]}>
               <img
@@ -34,7 +34,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               />
             </div>
             <div class={[
-              "w-[7rem] absolute top-[2rem] left-[0.8rem] xs:w-[8rem] xs:top-[2.8rem] md:w-[10rem] md:top-[4.6rem] lg:left-[1.2rem] lg:w-[12rem] lg:top-[5rem] xl:w-[13rem] xl:top-[7.4rem] xl:left-[2.2rem]",
+              "w-[7rem] absolute top-[2rem] left-[0.8rem] xs:w-[8rem] xs:top-[2.8rem] md:w-[10rem] md:top-[1.8rem] lg:left-[1.2rem] lg:w-[12rem] lg:top-[2rem] xl:w-[13rem] xl:top-[7.4rem] xl:left-[2.2rem]",
               @loading && "hidden"
             ]}>
               <img
@@ -45,7 +45,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             </div>
 
             <div class={[
-              "w-[12%] absolute top-[9%] right-[1rem] xs:w-[13%] 2xs:w-[18%] 2xs:top-[6%] md:w-[10%] md:top-[9%]",
+              "w-[3rem] absolute top-[8%] right-[1rem] 2xs:w-[4rem] md:w-[5rem] md:top-[15%] 2md:top-[28%]",
               @loading && "hidden"
             ]}>
               <img
