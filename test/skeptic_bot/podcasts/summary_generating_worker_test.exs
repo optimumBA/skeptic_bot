@@ -16,7 +16,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorkerTest do
 
   defp create_episode(_attrs) do
     response =
-      "Teaser:A Sam Tripoli episode teaser $&$ Summary:A Sam Tripoli episode summary"
+      "Teaser: A Sam Tripoli episode teaser$&$Summary: A Sam Tripoli episode summary"
 
     episode = episode_fixture()
     %{episode: episode, response: response}
