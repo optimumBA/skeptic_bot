@@ -39,7 +39,7 @@ defmodule SkepticBotWeb.PodcastComponents do
   ]
 
   attr :episode, :map, required: true
-  attr :random, :integer, required: true
+  attr :random, :integer, default: nil
   attr :timestamp, :string, required: true
 
   @spec episode_card(assigns()) :: rendered()
@@ -54,7 +54,10 @@ defmodule SkepticBotWeb.PodcastComponents do
           <div class="w-[19.6875rem] h-[8.2rem] absolute bottom-0 left-0 rounded-b-xl blur-episode 2sm:w-[24rem]">
           </div>
 
-          {get_episode_vector(@random)}
+          <%= if @random do %>
+            {get_episode_vector(@random)}
+          <% end %>
+
           <div class="absolute bottom-[2.5rem] left-[1rem] text-xl montserrat-alternates-bold text-custom-white">
             {trim_title(@episode.title)}
           </div>

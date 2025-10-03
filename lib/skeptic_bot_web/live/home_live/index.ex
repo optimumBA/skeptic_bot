@@ -1,11 +1,15 @@
 defmodule SkepticBotWeb.HomeLive.Index do
   use SkepticBotWeb, :live_view
 
+  alias SkepticBot.Podcasts
   alias SkepticBot.PredictionHandler
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Rag
   alias SkepticBotWeb.HomeLive
+  alias SkepticBotWeb.PodcastComponents
+
+  @visible_episodes 3
 
   @impl Phoenix.LiveView
   def render(assigns) do
@@ -15,10 +19,10 @@ defmodule SkepticBotWeb.HomeLive.Index do
         "bg-[#FFF5F5]",
         @loading && "bg-[#FFFFFF]"
       ]}>
-        <div class="h-screen flex items-center relative">
-          <section class="pt-20 md:pt-0">
+        <div class="h-screen flex relative">
+          <section>
             <div class={[
-              "w-[38%] absolute top-[2%] left-0 z-30 xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[18%] xl:w-[14rem] xl:top-[1rem]",
+              "w-[38%] absolute top-[-4%] left-[-10%] z-30 xs:w-[30%] 2xs:w-[34%] md:w-[25%] lg:w-[18%] xl:w-[14rem] xl:top-[1rem]",
               @loading && "hidden"
             ]}>
               <img
@@ -28,7 +32,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               />
             </div>
             <div class={[
-              "w-[34%] absolute bottom-[16%] left-[4%] xs:w-[30%] 2xs:w-[27%] 2xs:bottom-[13%] sm:bottom-[10%] md:w-[20%] md:bottom-[11%] 2md:bottom-[8%] xl:w-[15rem] xl:bottom-auto xl:top-[12rem] xl:left-[2.8rem]",
+              "w-[30%] absolute top-[10%] left-[4%] xs:w-[30%] 2xs:w-[27%] 2xs:top-[13%] sm:top-[10%] md:w-[20%] md:top-[11%] 2md:top-[8%] xl:w-[15rem] xl:top-auto xl:top-[12rem] xl:left-[2.8rem]",
               @loading && "hidden"
             ]}>
               <img
@@ -39,7 +43,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
             </div>
 
             <div class={[
-              "w-[24%] absolute bottom-[8%] right-[1.3rem] xs:w-[18%] 2xs:w-[18%] 2xs:bottom-[6%] md:w-[10%] md:bottom-[9%]",
+              "w-[14%] absolute top-[19%] right-[1rem] xs:w-[13%] 2xs:w-[18%] 2xs:top-[6%] md:w-[10%] md:top-[9%]",
               @loading && "hidden"
             ]}>
               <img
@@ -49,36 +53,59 @@ defmodule SkepticBotWeb.HomeLive.Index do
               />
             </div>
           </section>
-          <section class="w-[93%] mx-auto flex flex-col gap-8 md:w-[70%]">
-            <section class="text-6xl mx-auto montserrat-alternates-bold tracking-4 md:text-7xl 2xl:text-8xl">
-              Skeptic.<span class="text-primary montserrat-alternates-bold">bot</span>
+          <section class="w-full mt-64 border border-green-400">
+            <section class="w-[93%] mx-auto flex flex-col gap-5 md:w-[70%] border border-blue-400">
+              <section class="text-6xl mx-auto montserrat-alternates-bold tracking-4 md:text-7xl 2xl:text-8xl">
+                Skeptic.<span class="text-primary montserrat-alternates-bold">bot</span>
+              </section>
+              <div class={[
+                @loading && "hidden"
+              ]}>
+                <section class="w-[50%] mb-8 mx-auto text-secondary text-center">
+                  Questions everything
+                </section>
+                <section class="w-full mx-auto xs:w-[95%] 2xs:w-[80%] sm:w-[80%] md:w-[96%] lg:w-[80%] xl:w-[60%]">
+                  <HomeLive.Components.form_component form={@form} />
+                </section>
+              </div>
+              <div
+                id="loading-elements"
+                class={[
+                  "w-[80%] mx-auto",
+                  !@loading && "hidden"
+                ]}
+              >
+                <section class="text-secondary text-center montserrat-alternates-semibold mb-6">
+                  is almost done second guessing
+                </section>
+                <section>
+                  <HomeLive.Components.loading_component />
+                </section>
+              </div>
             </section>
-            <div class={[
-              @loading && "hidden"
-            ]}>
-              <section class="w-[50%] mb-10 mx-auto text-secondary text-center">
-                Questions everything
-              </section>
 
-              <section class="w-full mx-auto xs:w-[95%] 2xs:w-[80%] sm:w-[80%] md:w-[96%] lg:w-[80%] xl:w-[60%]">
-                <HomeLive.Components.form_component form={@form} />
-              </section>
-            </div>
-
-            <div
-              id="loading-elements"
-              class={[
-                "w-[80%] mx-auto",
-                !@loading && "hidden"
-              ]}
+            <section
+              class="mx-auto"
+              style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 24.8rem)"}
             >
-              <section class="text-secondary text-center montserrat-alternates-semibold mb-6">
-                is almost done second guessing
+              <section class="ml-5 montserrat-alternates-bold text-2xl">
+                Latest Podcasts
               </section>
-              <section>
-                <HomeLive.Components.loading_component />
+              <section class="pb-6 relative">
+                <section class="ml-5 mb-12 pt-12 pr-2 relative">
+                  <div class="flex gap-4 mobile-scroll-parent" id="related-episodes-carousel">
+                    <%= for episode <- @latest_episodes do %>
+                      <PodcastComponents.episode_card
+                        episode={episode}
+                        timestamp={
+                          if episode.timestamp, do: to_string(episode.timestamp.secs), else: "0"
+                        }
+                      />
+                    <% end %>
+                  </div>
+                </section>
               </section>
-            </div>
+            </section>
           </section>
         </div>
       </div>
@@ -88,10 +115,14 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
+    latest_episodes = Podcasts.get_latest_episodes(3)
+
     {:ok,
      socket
+     |> assign(:latest_episodes, latest_episodes)
      |> assign(:loading, false)
      |> assign(:question, %UserQuestion{})
+     |> assign(:visible_episodes, @visible_episodes)
      |> assign_form()}
   end
 
