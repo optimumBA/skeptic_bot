@@ -21,7 +21,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
         "bg-[#FFF5F5]",
         @loading && "bg-[#FFFFFF]"
       ]}>
-        <div class="h-screen flex relative">
+        <div class="flex relative">
           <section>
             <div class={[
               "w-[8rem] absolute top-[-4rem] left-[-2rem] z-30 xs:w-[9rem] md:w-[11rem] md:top-[-7rem] lg:w-[12rem] xl:top-[-2rem] xl:left-0",
