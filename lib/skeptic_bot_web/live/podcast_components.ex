@@ -111,7 +111,7 @@ defmodule SkepticBotWeb.PodcastComponents do
         </section>
       </a>
 
-      <div class="text-sm leading-6 2sm:text-base">
+      <div class="w-[19.6875rem] shrink-0 text-sm leading-6 2sm:w-[24rem] 2sm:text-base">
         {@episode.teaser}
       </div>
     </div>
