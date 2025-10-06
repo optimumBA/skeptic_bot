@@ -152,7 +152,10 @@
   background-image: linear-gradient(#fff5f5, white);
 }
 
-.zoom-in-episode:hover {
-  transition: transform 0.4s ease;
+.zoom-in-episode img {
+  transition: transform 0.5s ease-in-out;
+}
+
+.zoom-in-episode img:hover {
   transform: scale(1.2);
 }

@@ -84,14 +84,14 @@ defmodule SkepticBotWeb.PodcastComponents do
   @spec episode_card(assigns()) :: rendered()
   def episode_card(assigns) do
     ~H"""
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-4 transition-[font-weight] duration-500 ease-in-out hover:font-[500]">
       <a href={episode_url(@episode.external_id, @timestamp, @episode.podcast.name)}>
         <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative mobile-scroll-child 2sm:w-[24rem]">
-          <div class="w-full h-full rounded-xl overflow-hidden">
+          <div class="w-full h-full rounded-xl overflow-hidden zoom-in-episode">
             <img
               src={@episode.thumbnail}
               alt="Cover 2"
-              class="w-full h-full object-cover zoom-in-episode"
+              class="w-full h-full object-cover"
             />
           </div>
           <div class="w-[19.6875rem] h-[8.2rem] absolute bottom-0 left-0 rounded-b-xl blur-episode 2sm:w-[24rem]">

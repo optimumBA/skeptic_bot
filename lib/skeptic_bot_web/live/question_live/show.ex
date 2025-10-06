@@ -33,7 +33,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
               {@title}
             </p>
 
-            <div class="hidden absolute top-[-2.1rem] left-[-0.8rem] md:block">
+            <div class="hidden absolute top-[-2rem] left-[-2rem] md:block">
               <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
             </div>
           </section>
