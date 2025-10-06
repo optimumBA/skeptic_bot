@@ -27,7 +27,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             </section>
 
             <section class={[
-              "relative mx-auto md:max-w-[90%]",
+              "relative mx-auto md:max-w-[70%]",
               !@title && "hidden"
             ]}>
               <p class="text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold 2sm:text-center">
@@ -40,7 +40,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
             </section>
           </div>
 
-          <section class="px-5 mx-auto mt-6 mb-12">
+          <section class="px-5 mx-auto mt-6 mb-12 md:max-w-[85%]">
             <p class="text-secondary leading-8 lg:text-center">
               {@description}
             </p>
