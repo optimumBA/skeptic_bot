@@ -84,14 +84,14 @@ defmodule SkepticBotWeb.PodcastComponents do
   @spec episode_card(assigns()) :: rendered()
   def episode_card(assigns) do
     ~H"""
-    <div class="flex flex-col gap-4 transition-[font-weight] duration-500 ease-in-out hover:font-[500]">
+    <div class="flex flex-col gap-4 transition-[font-weight] duration-300 ease-in-out zoom-in-episode hover:font-[500]">
       <a href={episode_url(@episode.external_id, @timestamp, @episode.podcast.name)}>
         <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative mobile-scroll-child 2sm:w-[24rem]">
-          <div class="w-full h-full rounded-xl overflow-hidden zoom-in-episode">
+          <div class="w-full h-full rounded-xl overflow-hidden">
             <img
               src={@episode.thumbnail}
               alt="Cover 2"
-              class="w-full h-full object-cover"
+              class="w-full h-full object-cover zoomed-image"
             />
           </div>
           <div class="w-[19.6875rem] h-[8.2rem] absolute bottom-0 left-0 rounded-b-xl blur-episode 2sm:w-[24rem]">
@@ -99,7 +99,7 @@ defmodule SkepticBotWeb.PodcastComponents do
 
           {get_episode_vector(@random)}
 
-          <div class="absolute bottom-[2.5rem] left-[1rem] text-xl montserrat-alternates-bold text-custom-white">
+          <div class="absolute bottom-[2.5rem] left-[1rem] text-xl montserrat-alternates-bold text-custom-white pointer-events-none">
             {trim_title(@episode.title)}
           </div>
           <div class="absolute bottom-[1rem] left-[1.2rem] flex gap-2 montserrat-alternates-semibold text-custom-white">
