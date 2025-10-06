@@ -88,7 +88,11 @@ defmodule SkepticBotWeb.PodcastComponents do
       <a href={episode_url(@episode.external_id, @timestamp, @episode.podcast.name)}>
         <section class="w-[19.6875rem] h-[19.6875rem] shrink-0 relative mobile-scroll-child 2sm:w-[24rem]">
           <div class="w-full h-full rounded-xl overflow-hidden">
-            <img src={@episode.thumbnail} alt="Cover 2" class="w-full h-full object-cover" />
+            <img
+              src={@episode.thumbnail}
+              alt="Cover 2"
+              class="w-full h-full object-cover zoom-in-episode"
+            />
           </div>
           <div class="w-[19.6875rem] h-[8.2rem] absolute bottom-0 left-0 rounded-b-xl blur-episode 2sm:w-[24rem]">
           </div>
