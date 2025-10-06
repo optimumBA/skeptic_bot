@@ -17,62 +17,58 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     <Layouts.app flash={@flash}>
       <div id="question-live">
         <div
-          class="mx-auto mt-16 px-5 mb-6 flex flex-col gap-10 md:gap-14"
-          style={"max-width: calc(#{@visible_episodes} * 24.8rem)"}
-        >
-          <section class="w-max flex gap-4 items-center cursor-pointer" phx-click={JS.navigate("/")}>
-            <div><img src={~p"/images/home/back_icon.svg"} alt="Superscript Image Question" /></div>
-            <div class="text-custom-black montserrat-alternates-semibold">Back to homepage</div>
-          </section>
-
-          <section class={[
-            "relative mx-auto md:max-w-[90%]",
-            !@title && "hidden"
-          ]}>
-            <p class="text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold 2sm:text-center">
-              {@title}
-            </p>
-
-            <div class="hidden absolute top-[-2rem] left-[-2rem] md:block">
-              <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
-            </div>
-          </section>
-        </div>
-
-        <section
-          class="px-5 mx-auto mt-6 mb-12"
-          style={"max-width: calc(#{@visible_episodes} * 24.8rem)"}
-        >
-          <p class="text-secondary leading-8 lg:text-center">
-            {@description}
-          </p>
-          <div
-            id="loading-elements"
-            class={[
-              "my-20",
-              !@loading && "hidden"
-            ]}
-          >
-            <HomeLive.Components.loading_component />
-          </div>
-        </section>
-
-        <section
           class="mx-auto"
           style={"max-width: calc(#{@visible_episodes} * 24.8rem)"}
         >
-          <PodcastComponents.episode_card_carousel
-            episode_vectors={@related_episodes_vectors}
-            episodes={@related_episodes}
-            title="Related Podcasts"
-          />
+          <div class="mt-16 px-5 mb-6 flex flex-col gap-10 md:gap-14">
+            <section class="w-max flex gap-4 items-center cursor-pointer" phx-click={JS.navigate("/")}>
+              <div><img src={~p"/images/home/back_icon.svg"} alt="Superscript Image Question" /></div>
+              <div class="text-custom-black montserrat-alternates-semibold">Back to homepage</div>
+            </section>
 
-          <PodcastComponents.episode_card_carousel
-            episode_vectors={@other_episodes_vectors}
-            episodes={@other_episodes}
-            title="Other Podcasts"
-          />
-        </section>
+            <section class={[
+              "relative mx-auto md:max-w-[90%]",
+              !@title && "hidden"
+            ]}>
+              <p class="text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold 2sm:text-center">
+                {@title}
+              </p>
+
+              <div class="hidden absolute top-[-2rem] left-[-2rem] md:block">
+                <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
+              </div>
+            </section>
+          </div>
+
+          <section class="px-5 mx-auto mt-6 mb-12">
+            <p class="text-secondary leading-8 lg:text-center">
+              {@description}
+            </p>
+            <div
+              id="loading-elements"
+              class={[
+                "my-20",
+                !@loading && "hidden"
+              ]}
+            >
+              <HomeLive.Components.loading_component />
+            </div>
+          </section>
+
+          <section>
+            <PodcastComponents.episode_card_carousel
+              episode_vectors={@related_episodes_vectors}
+              episodes={@related_episodes}
+              title="Related Podcasts"
+            />
+
+            <PodcastComponents.episode_card_carousel
+              episode_vectors={@other_episodes_vectors}
+              episodes={@other_episodes}
+              title="Other Podcasts"
+            />
+          </section>
+        </div>
 
         <section class="bg-[#FFF5F5] pt-8 pb-16">
           <section
