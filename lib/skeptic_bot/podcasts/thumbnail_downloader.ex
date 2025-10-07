@@ -13,12 +13,23 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   @type reason :: String.t()
   @type url :: String.t()
 
+  @podcast_cashdaddies "Cash Daddies"
+  @podcast_doomscrollin "Doom Scrollin"
   @podcast_tinfoilhat "Tin Foil Hat"
-  @tinfoil_base_thumbnail_url "https://vid.samtripoli.com"
+  @podcast_unionoftheunwanted "Union of the Unwanted"
+  @podcast_zerowithsamtripoli "Zero with Sam Tripoli"
+  @podcast_samtripoliwebsite [
+    @podcast_cashdaddies,
+    @podcast_doomscrollin,
+    @podcast_tinfoilhat,
+    @podcast_unionoftheunwanted,
+    @podcast_zerowithsamtripoli
+  ]
+  @samtripoliwebsite_base_thumbnail_url "https://vid.samtripoli.com"
 
   @spec store_thumbnail(episode(), podcast_name()) :: :ok | {:error, reason()}
-  def store_thumbnail(episode, @podcast_tinfoilhat) do
-    thumbnail_url = @tinfoil_base_thumbnail_url <> episode.thumbnail
+  def store_thumbnail(episode, podcast) when podcast in @podcast_samtripoliwebsite do
+    thumbnail_url = @samtripoliwebsite_base_thumbnail_url <> episode.thumbnail
     download_and_store_thumbnail(episode, thumbnail_url)
   end
 
