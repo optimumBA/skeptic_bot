@@ -13,7 +13,7 @@ defmodule UpdateSamEpisodesWithThumbnail do
       ansi_color: :green
     )
 
-    ids = ThumbnailDownloader.return_sam_podcasts_ids()
+    ids = ThumbnailDownloader.return_sam_podcast_ids()
 
     transformation = fn ->
       Episode

@@ -27,8 +27,8 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   ]
   @samtripoliwebsite_base_thumbnail_url "https://vid.samtripoli.com"
 
-  @spec return_sam_podcasts_ids :: [String.t()]
-  def return_sam_podcasts_ids,
+  @spec return_sam_podcast_ids :: [String.t()]
+  def return_sam_podcast_ids,
     do:
       Enum.map(@podcast_samtripoliwebsite, fn name ->
         Podcasts.get_podcast_by_name(name).id
