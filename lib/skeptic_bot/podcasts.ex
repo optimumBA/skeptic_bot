@@ -16,6 +16,7 @@ defmodule SkepticBot.Podcasts do
   @type episode_transcription :: EpisodeTranscription.t()
   @type external_id :: String.t()
   @type id :: Ecto.UUID.t()
+  @type limit :: integer()
   @type podcast :: Podcast.t()
   @type podcast_name :: String.t()
 
@@ -105,6 +106,15 @@ defmodule SkepticBot.Podcasts do
 
   @spec get_episode_by_external_id(external_id()) :: episode() | nil
   def get_episode_by_external_id(external_id), do: Repo.get_by(Episode, external_id: external_id)
+
+  @spec get_latest_episodes(limit()) :: [episode()]
+  def get_latest_episodes(limit) do
+    Episode
+    |> order_by([e], desc: e.inserted_at)
+    |> limit(^limit)
+    |> Repo.all()
+    |> Repo.preload(:podcast)
+  end
 
   @spec get_podcast(id()) :: podcast() | nil
   def get_podcast(id), do: Repo.get(Podcast, id)

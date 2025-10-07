@@ -146,4 +146,21 @@
   mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%);
   backdrop-filter: blur(15px);
+  pointer-events: none;
+}
+
+.latest-podcast-gradient {
+  background-image: linear-gradient(#fff5f5, white);
+}
+
+.zoom-in-episode .zoomed-image {
+  transition: transform 0.3s ease-in-out;
+}
+
+.zoom-in-episode:hover .zoomed-image {
+  transform: scale(1.2);
+}
+
+.max-content-width {
+  max-width: 74.4rem;
 }

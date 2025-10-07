@@ -9,109 +9,65 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   @episode_limit 6
   @vector_numbers [1, 2, 3, 4, 5]
-  @visible_episodes 3
 
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
       <div id="question-live">
-        <div
-          class="mx-auto mt-16 px-5 mb-6 flex flex-col gap-10 md:gap-14"
-          style={"max-width: calc(#{@visible_episodes} * 18.8rem)"}
-        >
-          <section class="w-max flex gap-4 items-center cursor-pointer" phx-click={JS.navigate("/")}>
-            <div><img src={~p"/images/home/back_icon.svg"} alt="Superscript Image Question" /></div>
-            <div class="text-custom-black montserrat-alternates-semibold">Back to homepage</div>
+        <div class="max-content-width mx-auto">
+          <div class="mt-16 px-5 mb-6 flex flex-col gap-10 md:gap-14">
+            <section class="w-max flex gap-4 items-center cursor-pointer" phx-click={JS.navigate("/")}>
+              <div><img src={~p"/images/home/back_icon.svg"} alt="Superscript Image Question" /></div>
+              <div class="text-custom-black montserrat-alternates-semibold">Back to homepage</div>
+            </section>
+
+            <section class={[
+              "relative mx-auto md:max-w-[70%]",
+              !@title && "hidden"
+            ]}>
+              <p class="text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold 2sm:text-center">
+                {@title}
+              </p>
+
+              <div class="hidden absolute top-[-2rem] left-[-2rem] md:block">
+                <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
+              </div>
+            </section>
+          </div>
+
+          <section class="px-5 mx-auto mt-6 mb-12 md:max-w-[85%]">
+            <p class="text-secondary leading-8 lg:text-center">
+              {@description}
+            </p>
+            <div
+              id="loading-elements"
+              class={[
+                "my-20",
+                !@loading && "hidden"
+              ]}
+            >
+              <HomeLive.Components.loading_component />
+            </div>
           </section>
 
-          <section class={[
-            "relative",
-            !@title && "hidden"
-          ]}>
-            <p class="text-[2rem] sm:text-[3.75rem] leading-[1.2] montserrat-alternates-bold 2sm:text-center">
-              {@title}
-            </p>
+          <section>
+            <PodcastComponents.episode_card_carousel
+              episode_vectors={@related_episodes_vectors}
+              episodes={@related_episodes}
+              title="Related Podcasts"
+            />
 
-            <div class="hidden absolute top-[-2.1rem] left-[-0.8rem] md:block">
-              <img src={~p"/images/home/top_letter.svg"} alt="Superscript Image Question" />
-            </div>
+            <PodcastComponents.episode_card_carousel
+              episode_vectors={@other_episodes_vectors}
+              episodes={@other_episodes}
+              title="Other Podcasts"
+            />
           </section>
         </div>
 
-        <section
-          class="px-5 mx-auto mt-6 mb-10"
-          style={"max-width: calc(#{@visible_episodes} * 20.8rem)"}
-        >
-          <p class="text-secondary leading-8 lg:text-center">
-            {@description}
-          </p>
-          <div
-            id="loading-elements"
-            class={[
-              "my-20",
-              !@loading && "hidden"
-            ]}
-          >
-            <HomeLive.Components.loading_component />
-          </div>
-        </section>
-
-        <section
-          class="mx-auto"
-          style={"max-width: calc(#{@visible_episodes} * 20.8rem)"}
-        >
-          <section class="ml-5 montserrat-alternates-bold text-2xl">
-            Related Podcasts
-          </section>
-          <section class="pb-6 relative">
-            <section class="ml-5 mb-12 pt-12 pr-2 relative">
-              <div class="flex gap-4 mobile-scroll-parent" id="related-episodes-carousel">
-                <%= for episode <- @related_episodes do %>
-                  <PodcastComponents.episode_card
-                    episode={episode}
-                    random={
-                      Enum.at(
-                        @related_episodes_vectors,
-                        Enum.find_index(@related_episodes, fn x -> x == episode end)
-                      )
-                    }
-                    timestamp={if episode.timestamp, do: to_string(episode.timestamp.secs), else: "0"}
-                  />
-                <% end %>
-              </div>
-            </section>
-          </section>
-
-          <section class="ml-5 mt-2 montserrat-alternates-bold text-2xl">
-            Other Podcasts
-          </section>
-
-          <section class="pb-16 relative">
-            <section class="ml-5 mb-12 pr-2 pt-12 relative">
-              <div class="flex gap-4 mobile-scroll-parent" id="other-episodes-carousel">
-                <%= for episode <- @other_episodes do %>
-                  <PodcastComponents.episode_card
-                    episode={episode}
-                    random={
-                      Enum.at(
-                        @other_episodes_vectors,
-                        Enum.find_index(@other_episodes, fn x -> x == episode end)
-                      )
-                    }
-                    timestamp="0"
-                  />
-                <% end %>
-              </div>
-            </section>
-          </section>
-        </section>
-
-        <section class="bg-[#FFF5F5] pt-20 pb-16">
-          <section
-            class="mx-auto"
-            style={"max-width: calc(#{@visible_episodes} * 20.8rem)"}
-          >
+        <section class="bg-[#FFF5F5] pt-8 pb-16">
+          <section class="max-content-width mx-auto">
             <section class="ml-5 mb-10 montserrat-alternates-bold text-2xl">
               Related Questions
             </section>
@@ -145,8 +101,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:ok,
      socket
      |> assign(:other_episodes_vectors, other_episodes_vectors)
-     |> assign(:related_episodes_vectors, related_episodes_vectors)
-     |> assign(:visible_episodes, @visible_episodes)}
+     |> assign(:related_episodes_vectors, related_episodes_vectors)}
   end
 
   @impl Phoenix.LiveView
