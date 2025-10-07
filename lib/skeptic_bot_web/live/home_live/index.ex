@@ -89,7 +89,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               "latest-podcast-gradient",
               @loading && "hidden"
             ]}>
-              <section class="max-content-width mx-auto mt-4 pt-4">
+              <section class="max-content-width mx-auto mt-4 pt-8">
                 <PodcastComponents.episode_card_carousel
                   episode_vectors={@latest_episodes_vectors}
                   episodes={@latest_episodes}

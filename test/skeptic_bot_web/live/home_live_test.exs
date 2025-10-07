@@ -158,5 +158,41 @@ defmodule SkepticBotWeb.HomeLiveTest do
       assert render(view) =~
                "An error occurred while processing your prompt. Please try again."
     end
+
+    test "shows 3 latest episodes on the home page provided they all have teasers", %{conn: conn} do
+      episode_fixture(%{
+        episode_length: 3000,
+        teaser: "Consistency truly is key to mastering any skill over time and effort"
+      })
+
+      episode_fixture(%{
+        episode_length: 1200,
+        teaser: "American Ponzi with Lee Camp and Sam Tripoli",
+        title: "How I got married"
+      })
+
+      episode_fixture(%{
+        episode_length: 1200,
+        teaser: nil,
+        title: "Is Joe Biden dead?"
+      })
+
+      episode_fixture(%{
+        episode_length: 1200,
+        teaser: "He lives in California",
+        title: "Joe Biden is alive"
+      })
+
+      {:ok, _view, html} = live(conn, ~p"/")
+
+      assert html =~ ~r|How I got married\s+</div>|
+      assert html =~ ~r|American Ponzi with Lee Camp and Sam Tripoli\s+</div>|
+      refute html =~ ~r|Is Joe Biden dead?\s+</div>|
+      assert html =~ ~r|Joe Biden is alive\s+</div>|
+      assert html =~ ~r|He lives in California\s+</div>|
+
+      assert html =~
+               ~r|Consistency truly is key to mastering any skill over time and effort\s+</div>|
+    end
   end
 end

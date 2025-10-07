@@ -322,6 +322,60 @@ defmodule SkepticBotWeb.QuestionLiveTest do
                ~r|Tupac Shakur was killed in a drive-by shooting in Las Vegas on September 7, 1996, and died six days later. For decades, the case remained officially unsolved, but in 2023, Duane “Keffe D” Davis — a former gang member — was arrested and charged with murder. According to investigators and Davi...\s+</div>|
     end
 
+    test "does not display the podcast episodes that don't have a teaser", %{
+      conn: conn,
+      embedding: embedding
+    } do
+      episode =
+        episode_fixture(
+          %{
+            embedding: embedding,
+            teaser: "He lives in California",
+            title: "Everybody loves Christmas"
+          },
+          "Cash Daddies"
+        )
+
+      episode_2 =
+        episode_fixture(
+          %{
+            embedding: embedding,
+            teaser: "Elon Musk and Tesla",
+            title: "Consistency truly is key to mastering any skill over time and effort"
+          },
+          "Tin Foil Hat"
+        )
+
+      episode_3 =
+        episode_fixture(
+          %{
+            embedding: embedding,
+            teaser: nil,
+            title: "Sam Tripoli and Eddie Bravo"
+          },
+          "Candace"
+        )
+
+      question =
+        question_fixture(
+          embedding: embedding,
+          episodes: [
+            %{episode_id: episode.id, timestamp: %{secs: 45, months: 0, days: 0}},
+            %{episode_id: episode_2.id, timestamp: %{secs: 30, months: 0, days: 0}},
+            %{episode_id: episode_3.id, timestamp: %{secs: 20, months: 0, days: 0}}
+          ],
+          title: "American Ponzi with Lee Camp and Sam Tripoli"
+        )
+
+      {:ok, _view, html} = live(conn, ~p"/questions/#{question.id}")
+
+      assert html =~ ~r|Everybody loves Christmas\s+</div>|
+      assert html =~ ~r|He lives in California\s+</div>|
+      assert html =~ ~r|Elon Musk and Tesla\s+</div>|
+      assert html =~ ~r|Consistency truly is key to mastering any skill over time an...\s+</div>|
+      refute html =~ ~r|Sam Tripoli and Eddie Bravo\s+</div>|
+    end
+
     test "updates after completing response", %{
       conn: conn,
       embedding: embedding,
