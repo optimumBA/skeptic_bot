@@ -27,6 +27,13 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   ]
   @samtripoliwebsite_base_thumbnail_url "https://vid.samtripoli.com"
 
+  @spec return_sam_podcasts_ids :: [String.t()]
+  def return_sam_podcasts_ids,
+    do:
+      Enum.map(@podcast_samtripoliwebsite, fn name ->
+        Podcasts.get_podcast_by_name(name).id
+      end)
+
   @spec store_thumbnail(episode(), podcast_name()) :: :ok | {:error, reason()}
   def store_thumbnail(episode, podcast) when podcast in @podcast_samtripoliwebsite do
     thumbnail_url = @samtripoliwebsite_base_thumbnail_url <> episode.thumbnail
