@@ -160,3 +160,7 @@
 .zoom-in-episode:hover .zoomed-image {
   transform: scale(1.2);
 }
+
+.max-content-width {
+  max-width: 74.4rem;
+}

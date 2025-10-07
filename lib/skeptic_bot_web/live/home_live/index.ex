@@ -11,7 +11,6 @@ defmodule SkepticBotWeb.HomeLive.Index do
 
   @episode_limit 6
   @vector_numbers [1, 2, 3, 4, 5]
-  @visible_episodes 3
 
   @impl Phoenix.LiveView
   def render(assigns) do
@@ -90,10 +89,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
               "latest-podcast-gradient",
               @loading && "hidden"
             ]}>
-              <section
-                class="mx-auto mt-4 pt-4"
-                style={"max-width: calc(" <> to_string(@visible_episodes) <>" * 24.8rem)"}
-              >
+              <section class="max-content-width mx-auto mt-4 pt-4">
                 <PodcastComponents.episode_card_carousel
                   episode_vectors={@latest_episodes_vectors}
                   episodes={@latest_episodes}
@@ -125,7 +121,6 @@ defmodule SkepticBotWeb.HomeLive.Index do
      |> assign(:latest_episodes_vectors, latest_episodes_vectors)
      |> assign(:loading, false)
      |> assign(:question, %UserQuestion{})
-     |> assign(:visible_episodes, @visible_episodes)
      |> assign_form()}
   end
 

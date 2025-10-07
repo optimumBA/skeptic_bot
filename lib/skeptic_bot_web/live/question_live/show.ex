@@ -9,17 +9,13 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
   @episode_limit 6
   @vector_numbers [1, 2, 3, 4, 5]
-  @visible_episodes 3
 
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
       <div id="question-live">
-        <div
-          class="mx-auto"
-          style={"max-width: calc(#{@visible_episodes} * 24.8rem)"}
-        >
+        <div class="max-content-width mx-auto">
           <div class="mt-16 px-5 mb-6 flex flex-col gap-10 md:gap-14">
             <section class="w-max flex gap-4 items-center cursor-pointer" phx-click={JS.navigate("/")}>
               <div><img src={~p"/images/home/back_icon.svg"} alt="Superscript Image Question" /></div>
@@ -71,10 +67,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
         </div>
 
         <section class="bg-[#FFF5F5] pt-8 pb-16">
-          <section
-            class="mx-auto"
-            style={"max-width: calc(#{@visible_episodes} * 24.8rem)"}
-          >
+          <section class="max-content-width mx-auto">
             <section class="ml-5 mb-10 montserrat-alternates-bold text-2xl">
               Related Questions
             </section>
@@ -108,8 +101,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     {:ok,
      socket
      |> assign(:other_episodes_vectors, other_episodes_vectors)
-     |> assign(:related_episodes_vectors, related_episodes_vectors)
-     |> assign(:visible_episodes, @visible_episodes)}
+     |> assign(:related_episodes_vectors, related_episodes_vectors)}
   end
 
   @impl Phoenix.LiveView
