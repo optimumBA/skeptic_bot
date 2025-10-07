@@ -64,6 +64,7 @@ defmodule SkepticBot.Prompts do
 
     Episode
     |> where([e], fragment("? <-> ? <= ?", e.embedding, ^question_embedding, @episode_threshold))
+    |> where([e], not is_nil(e.teaser))
     |> order_by([e], asc: l2_distance(e.embedding, ^question_embedding))
     |> limit(^limit)
     |> Repo.all()
@@ -77,6 +78,7 @@ defmodule SkepticBot.Prompts do
   @spec get_other_episodes(embedding(), integer()) :: [episode()]
   def get_other_episodes(question_embedding, limit) do
     Episode
+    |> where([e], not is_nil(e.teaser))
     |> order_by([e], desc: l2_distance(e.embedding, ^question_embedding))
     |> limit(^limit)
     |> Repo.all()

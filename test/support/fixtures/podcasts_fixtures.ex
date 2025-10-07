@@ -49,6 +49,7 @@ defmodule SkepticBot.PodcastsFixtures do
         podcast_id: podcast.id,
         summary: "Sample summary",
         thumbnail: "cover1.svg",
+        teaser: "A normal short teaser",
         title: "Test Episode"
       })
       |> Podcasts.create_episode()
