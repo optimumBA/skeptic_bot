@@ -30,6 +30,7 @@ defmodule SkepticBot.BrokenSimulation.Scraper do
       {_port, {:data, msg}} ->
         case format_message(msg) do
           {_title, _duration, _thumbnail, _webpage_url} = episode ->
+            Logger.info(msg)
             process_broken_simulation_episode(episode, channel, podcast)
 
           _error ->

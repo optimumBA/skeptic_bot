@@ -7,6 +7,8 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Storage.StorageProvider
 
+  require Logger
+
   @type episode :: Episode.t()
   @type path :: String.t()
   @type podcast_name :: String.t()
@@ -19,6 +21,7 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   @spec store_thumbnail(episode(), podcast_name()) :: :ok | {:error, reason()}
   def store_thumbnail(episode, @podcast_tinfoilhat) do
     thumbnail_url = @tinfoil_base_thumbnail_url <> episode.thumbnail
+    Logger.info(thumbnail_url)
     download_and_store_thumbnail(episode, thumbnail_url)
   end
 
