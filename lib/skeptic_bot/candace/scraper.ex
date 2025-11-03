@@ -16,8 +16,9 @@ defmodule SkepticBot.Candace.Scraper do
   def scrape do
     date = get_yesterday_date()
     ChannelClient.get_channel_data_from_port(date, @candace_channel_one)
-    Process.send_after(self(), {:channel_two, date, @candace_channel_two}, 5000)
+    ChannelClient.get_channel_data_from_port(date, @candace_channel_two)
     podcast = Podcasts.get_podcast_by_name(@podcast)
     wait_for_episodes(@candace_channel_one, podcast)
+    wait_for_episodes(@candace_channel_two, podcast)
   end
 end

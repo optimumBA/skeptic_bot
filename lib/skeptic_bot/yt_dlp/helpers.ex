@@ -4,7 +4,6 @@ defmodule SkepticBot.YtDlp.Helpers do
   """
 
   alias SkepticBot.Podcasts.Podcast
-  alias SkepticBot.YtDlp.ChannelClient
   alias SkepticBot.YtDlp.EpisodeProcessor
 
   require Logger
@@ -15,7 +14,7 @@ defmodule SkepticBot.YtDlp.Helpers do
   @spec get_yesterday_date :: String.t()
   def get_yesterday_date do
     NaiveDateTime.utc_now()
-    |> NaiveDateTime.add(-2, :day)
+    |> NaiveDateTime.add(-1, :day)
     |> Calendar.strftime("%Y%m%d")
   end
 
@@ -37,12 +36,8 @@ defmodule SkepticBot.YtDlp.Helpers do
 
         wait_for_episodes(channel, podcast)
 
-      {:channel_two, date, channel} ->
-        ChannelClient.get_channel_data_from_port(date, channel)
-        Logger.info("Wachana na hii story")
-
       {:close_port, port} ->
-        Logger.info("Closed the port")
+        Logger.info("Closed the port for channel #{channel}")
 
         case Port.info(port) do
           nil ->
