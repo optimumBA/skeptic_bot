@@ -11,16 +11,20 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
 
   # Relevant episodes are contained in the videos page for Broken Simulation
   @broken_simulation_channel "https://www.youtube.com/@SamTripoli/videos"
-  @candace_channel "https://www.youtube.com/@RealCandaceO/streams"
+  @candace_channel_one "https://www.youtube.com/@RealCandaceO/streams"
+  @candace_channel_two "https://www.youtube.com/@RealCandaceO/videos"
   @deepwaters_channel "https://www.youtube.com/@deepwaterscsc/videos"
   @eddie_rokfin_channel "https://rokfin.com/eddiebravo"
   @eddie_rumble_channel "https://rumble.com/c/eddiebravo/videos?e9s=src_v1_sa%2Csrc_v1_sa_o"
-  @nephilim_death_squad_channel "https://www.youtube.com/@NephilimDeathSquad/streams"
+  @nephilim_death_squad_channel_one "https://www.youtube.com/@NephilimDeathSquad/streams"
+  @nephilim_death_squad_channel_two "https://www.youtube.com/@NephilimDeathSquad/videos"
   @yt_channels [
     @broken_simulation_channel,
-    @candace_channel,
+    @candace_channel_one,
+    @candace_channel_two,
     @deepwaters_channel,
-    @nephilim_death_squad_channel
+    @nephilim_death_squad_channel_one,
+    @nephilim_death_squad_channel_two
   ]
 
   @type channel :: String.t()

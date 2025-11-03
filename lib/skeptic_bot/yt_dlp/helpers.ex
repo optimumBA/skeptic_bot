@@ -22,6 +22,8 @@ defmodule SkepticBot.YtDlp.Helpers do
   def wait_for_episodes(channel, podcast) do
     receive do
       {_port, {:data, msg}} ->
+        Logger.info(msg)
+
         case format_message(msg) do
           {_title, _duration, _thumbnail, _webpage_url} = episode ->
             process_episode(episode, channel, podcast)
