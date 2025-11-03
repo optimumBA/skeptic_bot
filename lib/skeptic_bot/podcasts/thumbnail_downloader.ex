@@ -15,8 +15,26 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   @type reason :: String.t()
   @type url :: String.t()
 
+  @podcast_cashdaddies "Cash Daddies"
+  @podcast_doomscrollin "Doom Scrollin"
   @podcast_tinfoilhat "Tin Foil Hat"
-  @tinfoil_base_thumbnail_url "https://vid.samtripoli.com"
+  @podcast_unionoftheunwanted "Union of the Unwanted"
+  @podcast_zerowithsamtripoli "Zero with Sam Tripoli"
+  @podcast_samtripoliwebsite [
+    @podcast_cashdaddies,
+    @podcast_doomscrollin,
+    @podcast_tinfoilhat,
+    @podcast_unionoftheunwanted,
+    @podcast_zerowithsamtripoli
+  ]
+  @samtripoliwebsite_base_thumbnail_url "https://vid.samtripoli.com"
+
+  @spec return_sam_podcast_ids :: [String.t()]
+  def return_sam_podcast_ids,
+    do:
+      Enum.map(@podcast_samtripoliwebsite, fn name ->
+        Podcasts.get_podcast_by_name(name).id
+      end)
 
   @spec store_thumbnail(episode(), podcast_name()) :: :ok | {:error, reason()}
   def store_thumbnail(episode, @podcast_tinfoilhat) do

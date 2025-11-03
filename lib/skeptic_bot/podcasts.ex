@@ -110,6 +110,7 @@ defmodule SkepticBot.Podcasts do
   @spec get_latest_episodes(limit()) :: [episode()]
   def get_latest_episodes(limit) do
     Episode
+    |> where([e], not is_nil(e.teaser))
     |> order_by([e], desc: e.inserted_at)
     |> limit(^limit)
     |> Repo.all()
