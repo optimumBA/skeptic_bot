@@ -21,7 +21,6 @@ defmodule SkepticBot.NephilimDeathSquad.ScraperTest do
         "Eminem Drops A Diss Track Ep 24~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBIi"
 
       port = Port.open({:spawn, "echo #{msg}"}, [:binary])
-      port_2 = Port.open({:spawn, "echo #{msg}"}, [:binary])
 
       msg_2 =
         "Eminem Drops A Diss Track Ep 25~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBI4"
@@ -29,14 +28,9 @@ defmodule SkepticBot.NephilimDeathSquad.ScraperTest do
       send(self(), {port, {:data, msg_2}})
 
       Process.send_after(self(), {:close_port, port}, 100)
-      Process.send_after(self(), {:close_port, port_2}, 100)
 
       expect(MockChannelClient, :get_channel_data_from_port, fn _date, _channel ->
         port
-      end)
-
-      expect(MockChannelClient, :get_channel_data_from_port, fn _date, _channel ->
-        port_2
       end)
 
       Scraper.scrape()
