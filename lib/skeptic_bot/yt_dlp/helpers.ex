@@ -37,7 +37,7 @@ defmodule SkepticBot.YtDlp.Helpers do
         wait_for_episodes(channel, podcast)
 
       {:close_port, port} ->
-        Logger.info("Closed the port")
+        Logger.info("Closed the port for channel #{channel}")
 
         case Port.info(port) do
           nil ->

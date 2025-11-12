@@ -48,7 +48,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
       }) do
     with {:ok, audio_url} <- process_with_flame(id, video_url, podcast),
          %Episode{} = episode <- Podcasts.get_episode(id),
-         :ok <- ThumbnailDownloader.store_thumbnail(episode, podcast) do
+         :ok <- maybe_download_thumbnail(episode.thumbnail, episode, podcast) do
       TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
       :ok
     else
@@ -140,6 +140,16 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
     result
   end
+
+  defp maybe_download_thumbnail(
+         <<"https://skeptic-bot.fly.storage.tigris.dev/", _remainder_thumbnail::binary>>,
+         _episode,
+         _podcast
+       ),
+       do: :ok
+
+  defp maybe_download_thumbnail(_thumbnail, episode, podcast),
+    do: ThumbnailDownloader.store_thumbnail(episode, podcast)
 
   @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}
   def enqueue(attrs) do
