@@ -4,6 +4,8 @@ defmodule SkepticBot.Release do
   installed.
   """
 
+  alias SkepticBot.Workers.SitemapGeneratorWorker
+
   @type response :: {:ok, fun(), any()}
 
   @app :skeptic_bot
@@ -45,6 +47,20 @@ defmodule SkepticBot.Release do
           end
         end)
     end
+  end
+
+  @doc """
+  Enqueues sitemap generation job.
+  This ensures the sitemap is available after deployment on ephemeral filesystems.
+  """
+  @spec generate_sitemap() :: :ok | {:error, String.t()}
+  def generate_sitemap do
+    load_app()
+    Application.ensure_all_started(@app)
+
+    %{}
+    |> SitemapGeneratorWorker.new(schedule_in: 60)
+    |> Oban.insert()
   end
 
   defp repos do

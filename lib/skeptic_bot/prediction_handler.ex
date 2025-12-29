@@ -10,6 +10,7 @@ defmodule SkepticBot.PredictionHandler do
   alias SkepticBot.Prompts.QuestionsBroadcast
   alias SkepticBot.Prompts.UserQuestion
   alias SkepticBot.Rag
+  alias SkepticBot.Workers.SitemapGeneratorWorker
 
   @type context :: list()
   @type question :: UserQuestion.t()
@@ -72,12 +73,15 @@ defmodule SkepticBot.PredictionHandler do
     question = state[prediction_id]
     [title, description] = get_title_and_description(output)
 
-    Prompts.update_question(question, %{description: description, title: title})
+    {:ok, updated_question} =
+      Prompts.update_question(question, %{description: description, title: title})
 
     QuestionsBroadcast.broadcast_title_and_description(
       question.id,
       {:prediction_complete, {title, description}}
     )
+
+    enqueue_sitemap_generation(updated_question)
 
     send(__MODULE__, {:unregister_prediction, prediction_id})
 
@@ -88,5 +92,11 @@ defmodule SkepticBot.PredictionHandler do
     output
     |> Enum.join()
     |> String.split("$&$", parts: 2)
+  end
+
+  defp enqueue_sitemap_generation(question) do
+    %{"question_id" => question.id}
+    |> SitemapGeneratorWorker.new()
+    |> Oban.insert()
   end
 end
