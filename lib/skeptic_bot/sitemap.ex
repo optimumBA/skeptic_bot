@@ -35,7 +35,7 @@ defmodule SkepticBot.Sitemap do
   Generates a full sitemap with all questions.
   Returns {:ok, path} on success or {:error, reason} on failure.
   """
-  @spec generate_full() :: {:ok, String.t()} | {:error, String.t()}
+  @spec generate_full :: {:ok, String.t()} | {:error, String.t()}
   def generate_full do
     with sitemap_dir <- Path.join([:code.priv_dir(:skeptic_bot), "static"]),
          :ok <- File.mkdir_p(sitemap_dir),

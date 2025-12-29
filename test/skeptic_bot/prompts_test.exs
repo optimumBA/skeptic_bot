@@ -106,6 +106,21 @@ defmodule SkepticBot.PromptsTest do
     end
   end
 
+  describe "list_questions/1" do
+    test "returns all the questions in the database" do
+      _question = question_fixture()
+      questions = Prompts.list_questions()
+
+      assert length(questions) == 1
+    end
+
+    test "returns an empty list if there are no questions in the database" do
+      questions = Prompts.list_questions()
+
+      assert questions == []
+    end
+  end
+
   describe "get_related_questions/2" do
     test "returns a list of questions" do
       embedding = embedding_fixture()
