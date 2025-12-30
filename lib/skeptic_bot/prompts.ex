@@ -85,11 +85,10 @@ defmodule SkepticBot.Prompts do
     |> Repo.preload(:podcast)
   end
 
-  @spec list_questions(integer()) :: [question()]
-  def list_questions(limit \\ 10_000) do
+  @spec list_questions :: [question()]
+  def list_questions do
     UserQuestion
     |> where([uq], not is_nil(uq.title) and not is_nil(uq.description))
-    |> limit(^limit)
     |> Repo.all()
   end
 
