@@ -96,11 +96,11 @@ defmodule SkepticBot.PredictionHandlerTest do
       send(PredictionHandler, {:register_prediction, prediction_id, question})
       send(PredictionHandler, {:prediction_completed, prediction_id, output})
 
-      updated_question = Prompts.get_question(question.id)
+      Process.sleep(200)
 
       assert_enqueued(
         worker: SitemapGeneratorWorker,
-        args: %{"question_id" => updated_question.id},
+        args: %{"question_id" => question.id},
         queue: "seo_sitemap"
       )
     end
