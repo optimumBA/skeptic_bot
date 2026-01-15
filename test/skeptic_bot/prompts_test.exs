@@ -110,7 +110,7 @@ defmodule SkepticBot.PromptsTest do
     test "returns all the questions in the database" do
       _question = question_fixture()
 
-      assert length(Prompts.list_questions()) == 1
+      assert [_question] = Prompts.list_questions()
     end
 
     test "returns an empty list if there are no questions in the database" do

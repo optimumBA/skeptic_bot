@@ -8,7 +8,9 @@ defmodule SkepticBot.Sitemap do
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion
 
+  @type path :: String.t()
   @type question :: UserQuestion.t()
+  @type reason :: String.t()
 
   @doc """
   Generates or updates the sitemap.
@@ -16,7 +18,7 @@ defmodule SkepticBot.Sitemap do
   When called without arguments, it generates a new sitemap with all questions.
   Returns {:ok, path} on success or {:error, reason} on failure.
   """
-  @spec generate(question()) :: {:ok, String.t()} | {:error, String.t()}
+  @spec generate(question()) :: {:ok, path()} | {:error, reason()}
   def generate(question) do
     with sitemap_dir <- Path.join([:code.priv_dir(:skeptic_bot), "static"]),
          :ok <- File.mkdir_p(sitemap_dir),
@@ -35,7 +37,7 @@ defmodule SkepticBot.Sitemap do
   Generates a full sitemap with all questions.
   Returns {:ok, path} on success or {:error, reason} on failure.
   """
-  @spec generate_full :: {:ok, String.t()} | {:error, String.t()}
+  @spec generate_full :: {:ok, path()} | {:error, reason()}
   def generate_full do
     with sitemap_dir <- Path.join([:code.priv_dir(:skeptic_bot), "static"]),
          :ok <- File.mkdir_p(sitemap_dir),
