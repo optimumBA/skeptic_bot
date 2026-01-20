@@ -56,4 +56,4 @@ else
 fi
 
 echo "Running migrations..."
-exec ./skeptic_bot eval 'SkepticBot.Release.migrate && SkepticBot.Release.seed'
+exec ./skeptic_bot eval 'SkepticBot.Release.migrate && SkepticBot.Release.seed && SkepticBot.Release.generate_sitemap'

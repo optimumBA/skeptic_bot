@@ -8,6 +8,7 @@ defmodule SkepticBot.PredictionHandlerTest do
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.QuestionsBroadcast
   alias SkepticBot.Repo
+  alias SkepticBot.Workers.SitemapGeneratorWorker
 
   defp create_question(_attrs) do
     output = ["The", " tit", "le", "$", "&$", "The", " des", "crip", "tion"]
@@ -81,6 +82,27 @@ defmodule SkepticBot.PredictionHandlerTest do
 
       question = Prompts.get_question(question.id)
       assert question.title == "The title"
+    end
+
+    test "enqueues a sitemap job after updating the question",
+         %{
+           output: output,
+           prediction_id: prediction_id,
+           question: question
+         } do
+      gen_server_pid = Process.whereis(PredictionHandler)
+      Sandbox.allow(Repo, self(), gen_server_pid)
+
+      send(PredictionHandler, {:register_prediction, prediction_id, question})
+      send(PredictionHandler, {:prediction_completed, prediction_id, output})
+
+      Process.sleep(200)
+
+      assert_enqueued(
+        worker: SitemapGeneratorWorker,
+        args: %{"question_id" => question.id},
+        queue: "seo_sitemap"
+      )
     end
   end
 end
