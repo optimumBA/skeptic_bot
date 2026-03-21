@@ -47,47 +47,47 @@ if System.get_env("SCRAPE") do
     ]
 end
 
-replicate_api_token =
-  System.get_env("REPLICATE_API_TOKEN") ||
-    raise """
-    environment variable REPLICATE_API_TOKEN is missing.
-    """
+if config_env() != :test do
+  replicate_api_token =
+    System.get_env("REPLICATE_API_TOKEN") ||
+      raise """
+      environment variable REPLICATE_API_TOKEN is missing.
+      """
 
-replicate_webhook_secret =
-  System.get_env("REPLICATE_WEBHOOK_SECRET") ||
-    raise """
-    environment variable REPLICATE_WEBHOOK_SECRET is missing.
-    """
+  replicate_webhook_secret =
+    System.get_env("REPLICATE_WEBHOOK_SECRET") ||
+      raise """
+      environment variable REPLICATE_WEBHOOK_SECRET is missing.
+      """
 
-config :skeptic_bot, :replicate,
-  api_token: replicate_api_token,
-  webhook_secret: replicate_webhook_secret
+  config :skeptic_bot, :replicate,
+    api_token: replicate_api_token,
+    webhook_secret: replicate_webhook_secret
 
-config :skeptic_bot, :embedding_generation, dimensions: 1024
+  tigris_access_key_id =
+    System.get_env("TIGRIS_ACCESS_KEY_ID") ||
+      raise """
+      environment variable TIGRIS_ACCESS_KEY_ID is missing.
+      """
 
-tigris_access_key_id =
-  System.get_env("TIGRIS_ACCESS_KEY_ID") ||
-    raise """
-    environment variable TIGRIS_ACCESS_KEY_ID is missing.
-    """
+  tigris_bucket =
+    System.get_env("TIGRIS_BUCKET") ||
+      raise """
+      environment variable TIGRIS_BUCKET is missing.
+      For example: skeptic-bot
+      """
 
-tigris_bucket =
-  System.get_env("TIGRIS_BUCKET") ||
-    raise """
-    environment variable TIGRIS_BUCKET is missing.
-    For example: skeptic-bot
-    """
+  tigris_secret_access_key =
+    System.get_env("TIGRIS_SECRET_ACCESS_KEY") ||
+      raise """
+      environment variable TIGRIS_SECRET_ACCESS_KEY is missing.
+      """
 
-tigris_secret_access_key =
-  System.get_env("TIGRIS_SECRET_ACCESS_KEY") ||
-    raise """
-    environment variable TIGRIS_SECRET_ACCESS_KEY is missing.
-    """
-
-config :skeptic_bot, :tigris_storage,
-  access_key_id: tigris_access_key_id,
-  bucket: tigris_bucket,
-  secret_access_key: tigris_secret_access_key
+  config :skeptic_bot, :tigris_storage,
+    access_key_id: tigris_access_key_id,
+    bucket: tigris_bucket,
+    secret_access_key: tigris_secret_access_key
+end
 
 youtube_cookie_file_path =
   Path.join([:code.priv_dir(:skeptic_bot), "youtube_cookies.txt"])
