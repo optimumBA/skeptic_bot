@@ -25,7 +25,7 @@ defmodule SkepticBot.Podcasts.YtDlpDownloader do
              "#{audio_path}",
              video_url
            ],
-           env: [],
+           env: [{"PYTHONUTF8", "1"}],
            stderr_to_stdout: true
          ) do
       {_success_message_logs, 0} ->
