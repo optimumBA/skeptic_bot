@@ -152,12 +152,12 @@ defmodule SkepticBot.Podcasts do
   ## Examples
 
       iex> {:ok, episode} = Podcasts.create_episode()
-      ...> 
+      ...>
       ...> result =
       ...>   Podcasts.update_episode(episode, %{
       ...>     transcription: "updated transcription"
       ...>   })
-      ...> 
+      ...>
       ...> with {:ok, %Podcasts.Episode{}} <- result, do: :ok
       :ok
 
@@ -175,12 +175,12 @@ defmodule SkepticBot.Podcasts do
   ## Examples
 
       iex> {:ok, episode_transcription} = Podcasts.create_episode_transcription()
-      ...> 
+      ...>
       ...> result =
       ...>   Podcasts.update_episode_transcription(episode_transcription, %{
       ...>     transcription: "updated transcription"
       ...>   })
-      ...> 
+      ...>
       ...> with {:ok, %Podcasts.EpisodeTranscription{}} <- result, do: :ok
       :ok
 

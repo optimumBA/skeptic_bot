@@ -31,10 +31,13 @@ defmodule SkepticBot.YtDlp.Helpers do
               "The episode for the channel: #{channel} in podcast: #{podcast.name} failed to download. Reason: #{msg}"
             )
 
-            Appsignal.send_error(%RuntimeError{
-              message:
-                "Episode download failed for channel: #{channel} in podcast: #{podcast.name}. Reason: #{msg}"
-            })
+            Appsignal.send_error(
+              %RuntimeError{
+                message:
+                  "Episode download failed for channel: #{channel} in podcast: #{podcast.name}. Reason: #{msg}"
+              },
+              []
+            )
 
             :ok
         end

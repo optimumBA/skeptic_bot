@@ -59,9 +59,10 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
       {:error, reason} ->
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
 
-        Appsignal.send_error(%RuntimeError{
-          message: "Episode #{id} processing failed: #{reason}"
-        })
+        Appsignal.send_error(
+          %RuntimeError{message: "Episode #{id} processing failed: #{reason}"},
+          []
+        )
 
         {:error, reason}
     end

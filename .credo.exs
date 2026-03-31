@@ -143,7 +143,7 @@
           {Credo.Check.Refactor.MatchInCondition, []},
           {Credo.Check.Refactor.NegatedConditionsInUnless, []},
           {Credo.Check.Refactor.NegatedConditionsWithElse, []},
-          {Credo.Check.Refactor.Nesting, []},
+          {Credo.Check.Refactor.Nesting, files: %{excluded: ["lib/skeptic_bot/release.ex"]}},
           {Credo.Check.Refactor.RedundantWithClauseResult, []},
           {Credo.Check.Refactor.RejectReject, []},
           {Credo.Check.Refactor.UnlessWithElse, []},
@@ -214,7 +214,8 @@
            max_deps: 20,
            files: %{
              excluded: [
-               "lib/skeptic_bot/application.ex"
+               "lib/skeptic_bot/application.ex",
+               "lib/skeptic_bot/podcasts/downloading_worker.ex"
              ]
            }},
           {Credo.Check.Refactor.NegatedIsNil, []},

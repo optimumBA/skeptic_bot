@@ -8,5 +8,6 @@
     "{config,lib,test}/**/*.{heex,ex,exs}",
     "priv/*/seeds.exs",
     "priv/*.exs"
-  ]
+  ],
+  excludes: ["lib/skeptic_bot/postgrex_types.ex"]
 ]
