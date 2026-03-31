@@ -57,17 +57,24 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
 
   defp get_video_length(duration, channel)
        when channel in @yt_channels do
-    String.to_integer(duration)
+    case Integer.parse(duration) do
+      {integer, _remainder} -> integer
+      :error -> 0
+    end
   end
 
   defp get_video_length(duration, @eddie_rokfin_channel) do
-    duration
-    |> String.to_float()
-    |> round()
+    case Float.parse(duration) do
+      {float, _remainder} -> round(float)
+      :error -> 0
+    end
   end
 
   defp get_video_length(duration, @eddie_rumble_channel) do
-    String.to_integer(duration)
+    case Integer.parse(duration) do
+      {integer, _remainder} -> integer
+      :error -> 0
+    end
   end
 
   defp get_external_id(webpage_url, channel)
