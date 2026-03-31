@@ -42,7 +42,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   @type job :: Oban.Job.t()
 
   @impl Oban.Worker
-  @spec perform(job()) :: :ok | {:error, String.t()}
+  @spec perform(job()) :: :ok | {:snooze, non_neg_integer()} | {:error, String.t()}
   def perform(%Oban.Job{
         args: %{"id" => id, "podcast" => podcast, "video_url" => video_url}
       }) do
@@ -55,6 +55,10 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
       nil ->
         Logger.error("Failed to download thumbnail for episode: #{id}")
         {:error, "Episode not found"}
+
+      {:error, reason} when is_binary(reason) and reason =~ "429" ->
+        Logger.warning("Episode #{id} rate limited (429), snoozing for 1 hour")
+        {:snooze, 3600}
 
       {:error, reason} ->
         Logger.error("Failed to process episode: #{id}, reason: #{reason}")
