@@ -34,7 +34,7 @@ defmodule SkepticBot.YtDlp.YtDlpChannelClient do
     cookie_file = Application.get_env(:skeptic_bot, :youtube_cookie_file_path)
 
     cmd =
-      "PYTHONUTF8=1 yt-dlp --cache-dir #{System.tmp_dir!()} --date #{date} --cookies #{cookie_file} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" #{channel}"
+      "env PYTHONUTF8=1 yt-dlp --cache-dir #{System.tmp_dir!()} --date #{date} --cookies #{cookie_file} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" #{channel}"
 
     port = Port.open({:spawn, cmd}, [:binary, :stderr_to_stdout, :exit_status])
     Process.send_after(self(), {:close_port, port}, :timer.minutes(1))
