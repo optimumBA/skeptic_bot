@@ -24,42 +24,50 @@ defmodule SkepticBot.YtDlp.Helpers do
   defp wait_for_episodes(channel, podcast, errors) do
     receive do
       {_port, {:data, msg}} ->
-        case format_message(msg) do
-          {_title, _duration, _thumbnail, _webpage_url} = episode ->
-            process_episode(episode, channel, podcast)
-            wait_for_episodes(channel, podcast, errors)
-
-          _error ->
-            wait_for_episodes(channel, podcast, [msg | errors])
-        end
+        handle_episode_message(msg, channel, podcast, errors)
 
       {:close_port, port} ->
         Logger.info("Closed the port for channel #{channel}")
+        report_errors_if_any(errors, channel, podcast)
+        close_port_if_open(port)
+        :ok
+    end
+  end
 
-        if errors != [] do
-          reason = errors |> Enum.reverse() |> Enum.join()
+  defp handle_episode_message(msg, channel, podcast, errors) do
+    case format_message(msg) do
+      {_title, _duration, _thumbnail, _webpage_url} = episode ->
+        process_episode(episode, channel, podcast)
+        wait_for_episodes(channel, podcast, errors)
 
-          Logger.error(
-            "The episode for the channel: #{channel} in podcast: #{podcast.name} failed to download. Reason: #{reason}"
-          )
+      _error ->
+        wait_for_episodes(channel, podcast, [msg | errors])
+    end
+  end
 
-          Appsignal.send_error(
-            %RuntimeError{
-              message:
-                "Episode download failed for channel: #{channel} in podcast: #{podcast.name}. Reason: #{reason}"
-            },
-            []
-          )
-        end
+  defp report_errors_if_any([], _channel, _podcast), do: :ok
 
-        case Port.info(port) do
-          nil ->
-            :ok
+  defp report_errors_if_any(errors, channel, podcast) do
+    reversed = Enum.reverse(errors)
+    reason = Enum.join(reversed)
 
-          _port_info ->
-            Port.close(port)
-            :ok
-        end
+    Logger.error(
+      "The episode for the channel: #{channel} in podcast: #{podcast.name} failed to download. Reason: #{reason}"
+    )
+
+    Appsignal.send_error(
+      %RuntimeError{
+        message:
+          "Episode download failed for channel: #{channel} in podcast: #{podcast.name}. Reason: #{reason}"
+      },
+      []
+    )
+  end
+
+  defp close_port_if_open(port) do
+    case Port.info(port) do
+      nil -> :ok
+      _port_info -> Port.close(port)
     end
   end
 

@@ -52,24 +52,29 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
       TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
       :ok
     else
-      nil ->
-        Logger.error("Failed to download thumbnail for episode: #{id}")
-        {:error, "Episode not found"}
+      nil -> handle_episode_not_found(id)
+      {:error, reason} -> handle_processing_error(id, reason)
+    end
+  end
 
-      {:error, reason} ->
-        if is_binary(reason) and String.contains?(reason, "429") do
-          Logger.warning("Episode #{id} rate limited (429), snoozing for 1 hour")
-          {:snooze, 3600}
-        else
-          Logger.error("Failed to process episode: #{id}, reason: #{inspect(reason)}")
+  defp handle_episode_not_found(id) do
+    Logger.error("Failed to download thumbnail for episode: #{id}")
+    {:error, "Episode not found"}
+  end
 
-          Appsignal.send_error(
-            %RuntimeError{message: "Episode #{id} processing failed: #{inspect(reason)}"},
-            []
-          )
+  defp handle_processing_error(id, reason) do
+    if is_binary(reason) and String.contains?(reason, "429") do
+      Logger.warning("Episode #{id} rate limited (429), snoozing for 1 hour")
+      {:snooze, 3600}
+    else
+      Logger.error("Failed to process episode: #{id}, reason: #{inspect(reason)}")
 
-          {:error, reason}
-        end
+      Appsignal.send_error(
+        %RuntimeError{message: "Episode #{id} processing failed: #{inspect(reason)}"},
+        []
+      )
+
+      {:error, reason}
     end
   end
 
