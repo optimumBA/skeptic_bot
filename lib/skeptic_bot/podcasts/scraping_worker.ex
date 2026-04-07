@@ -5,7 +5,7 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
   """
 
   use Oban.Worker,
-    max_attempts: 3,
+    max_attempts: 1,
     queue: :scraping
 
   alias SkepticBot.LookIntoIt.Scraper
