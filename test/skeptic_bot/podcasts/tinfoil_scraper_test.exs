@@ -16,6 +16,18 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
   setup :verify_on_exit!
 
+  defp empty_response do
+    {:ok, %Req.Response{status: 200, body: %{"data" => []}}}
+  end
+
+  defp expect_additional_channel_scrapes do
+    # scrape_additional_channels/0 scrapes 4 channels: brokensimulation, cashdaddies, doomscrollin, unionoftheunwanted
+    expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
+    expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
+    expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
+    expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
+  end
+
   defp create_body(_attrs) do
     body = body_fixture()
     _podcast_2 = podcast_fixture(name: "Doom Scrollin")
@@ -47,14 +59,10 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       end)
 
       expect(MockHttpClient, :make_request, fn _url ->
-        {:ok,
-         %Req.Response{
-           status: 200,
-           body: %{
-             "data" => []
-           }
-         }}
+        {:ok, %Req.Response{status: 200, body: %{"data" => []}}}
       end)
+
+      expect_additional_channel_scrapes()
 
       TinfoilScraper.scrape()
 
@@ -75,14 +83,10 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       end)
 
       expect(MockHttpClient, :make_request, fn _url ->
-        {:ok,
-         %Req.Response{
-           status: 200,
-           body: %{
-             "data" => []
-           }
-         }}
+        {:ok, %Req.Response{status: 200, body: %{"data" => []}}}
       end)
+
+      expect_additional_channel_scrapes()
 
       TinfoilScraper.scrape()
 
@@ -97,14 +101,10 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
     test "does not enqueue a downloading job if there are no episodes in the return data" do
       expect(MockHttpClient, :make_request, fn _url ->
-        {:ok,
-         %Req.Response{
-           status: 200,
-           body: %{
-             "data" => []
-           }
-         }}
+        {:ok, %Req.Response{status: 200, body: %{"data" => []}}}
       end)
+
+      expect_additional_channel_scrapes()
 
       TinfoilScraper.scrape()
 
@@ -117,6 +117,87 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
       end)
 
       TinfoilScraper.scrape()
+
+      refute_enqueued(worker: DownloadingWorker)
+    end
+  end
+
+  describe "scrape_channel/3" do
+    @channel_external_id "b101ef71-24c8-5828-c2d1-d3e112632ed4"
+    @channel_video_url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/b101ef71-24c8-5828-c2d1-d3e112632ed4-0-fragmented.mp4"
+
+    defp channel_body_fixture do
+      %{
+        "data" => [
+          %{
+            "duration" => 1800,
+            "name" => "Broken Simulation Episode 1",
+            "thumbnailPath" => "/static/thumbnails/abc.jpg",
+            "uuid" => @channel_external_id
+          }
+        ]
+      }
+    end
+
+    setup do
+      _podcast = podcast_fixture(name: "Broken Simulation")
+      :ok
+    end
+
+    test "enqueues a downloading job for a channel episode that does not already exist" do
+      refute Podcasts.episode_exists?(@channel_external_id)
+
+      expect(MockHttpClient, :make_request, fn _url ->
+        {:ok, %Req.Response{status: 200, body: channel_body_fixture()}}
+      end)
+
+      expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
+
+      TinfoilScraper.scrape_channel("brokensimulation", "Broken Simulation")
+
+      assert_enqueued(
+        worker: DownloadingWorker,
+        args: %{
+          podcast: "Broken Simulation",
+          video_url: @channel_video_url
+        }
+      )
+    end
+
+    test "does not enqueue a downloading job for a channel episode that already exists" do
+      _episode = episode_fixture(external_id: @channel_external_id)
+
+      expect(MockHttpClient, :make_request, fn _url ->
+        {:ok, %Req.Response{status: 200, body: channel_body_fixture()}}
+      end)
+
+      expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
+
+      TinfoilScraper.scrape_channel("brokensimulation", "Broken Simulation")
+
+      refute_enqueued(
+        worker: DownloadingWorker,
+        args: %{
+          podcast: "Broken Simulation",
+          video_url: @channel_video_url
+        }
+      )
+    end
+
+    test "does not enqueue a downloading job if there are no episodes in the channel" do
+      expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
+
+      TinfoilScraper.scrape_channel("brokensimulation", "Broken Simulation")
+
+      refute_enqueued(worker: DownloadingWorker)
+    end
+
+    test "does not enqueue a downloading job if the channel HTTP request is unsuccessful" do
+      expect(MockHttpClient, :make_request, fn _url ->
+        {:error, "Could not make request"}
+      end)
+
+      TinfoilScraper.scrape_channel("brokensimulation", "Broken Simulation")
 
       refute_enqueued(worker: DownloadingWorker)
     end

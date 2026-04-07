@@ -21,6 +21,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   @podcast_tinfoilhat "Tin Foil Hat"
   @podcast_unionoftheunwanted "Union of the Unwanted"
   @podcast_zerowithsamtripoli "Zero with Sam Tripoli"
+  @channel_url "https://vid.samtripoli.com/api/v1/video-channels/<channel>/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
   @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
   @video_url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/<external_id>-0-fragmented.mp4"
 
@@ -41,9 +42,36 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
         end)
 
         if Enum.empty?(body["data"]) do
-          :ok
+          scrape_additional_channels()
         else
           scrape(start + 100)
+        end
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  @spec scrape_channel(String.t(), String.t(), start()) :: :ok | {:error, any()}
+  def scrape_channel(channel, podcast_name, start \\ 0) do
+    url =
+      @channel_url
+      |> String.replace("<channel>", channel)
+      |> String.replace("<start>", Integer.to_string(start))
+
+    case HttpClient.make_request(url) do
+      {:ok, %Req.Response{status: 200, body: body}} ->
+        podcasts = get_podcasts()
+        podcast = podcasts[podcast_name]
+
+        Enum.each(body["data"], fn episode ->
+          maybe_download_episode(episode, podcast)
+        end)
+
+        if Enum.empty?(body["data"]) do
+          :ok
+        else
+          scrape_channel(channel, podcast_name, start + 100)
         end
 
       {:error, reason} ->
@@ -74,6 +102,13 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
       {:error, reason} ->
         {:error, reason}
     end
+  end
+
+  defp scrape_additional_channels do
+    scrape_channel("brokensimulation", @podcast_brokensimulation)
+    scrape_channel("cashdaddies", @podcast_cashdaddies)
+    scrape_channel("doomscrollin", @podcast_doomscrollin)
+    scrape_channel("unionoftheunwanted", @podcast_unionoftheunwanted)
   end
 
   defp maybe_download_episode(episode, podcast) do
