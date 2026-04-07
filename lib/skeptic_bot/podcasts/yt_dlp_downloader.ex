@@ -10,6 +10,9 @@ defmodule SkepticBot.Podcasts.YtDlpDownloader do
   @impl Downloader
   def download(video_url, audio_path) do
     cookie_file = Application.get_env(:skeptic_bot, :youtube_cookie_file_path)
+    proxy = Application.get_env(:skeptic_bot, :ytdlp_proxy)
+
+    proxy_args = if proxy, do: ["--proxy", proxy], else: []
 
     case System.cmd(
            "yt-dlp",
@@ -17,14 +20,17 @@ defmodule SkepticBot.Podcasts.YtDlpDownloader do
              "--cache-dir",
              System.tmp_dir!(),
              "--cookies",
-             cookie_file,
-             "-x",
-             "--audio-format",
-             "mp3",
-             "-o",
-             "#{audio_path}",
-             video_url
-           ],
+             cookie_file
+           ] ++
+             proxy_args ++
+             [
+               "-x",
+               "--audio-format",
+               "mp3",
+               "-o",
+               "#{audio_path}",
+               video_url
+             ],
            env: [{"PYTHONUTF8", "1"}],
            stderr_to_stdout: true
          ) do

@@ -92,7 +92,9 @@ end
 youtube_cookie_file_path =
   Path.join([:code.priv_dir(:skeptic_bot), "youtube_cookies.txt"])
 
-config :skeptic_bot, youtube_cookie_file_path: youtube_cookie_file_path
+config :skeptic_bot,
+  youtube_cookie_file_path: youtube_cookie_file_path,
+  ytdlp_proxy: System.get_env("YTDLP_PROXY")
 
 if config_env() == :prod do
   encoded_cookie_file =

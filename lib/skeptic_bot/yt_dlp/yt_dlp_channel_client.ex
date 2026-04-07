@@ -32,9 +32,11 @@ defmodule SkepticBot.YtDlp.YtDlpChannelClient do
   @impl ChannelClient
   def get_channel_data_from_port(date, channel) do
     cookie_file = Application.get_env(:skeptic_bot, :youtube_cookie_file_path)
+    proxy = Application.get_env(:skeptic_bot, :ytdlp_proxy)
+    proxy_flag = if proxy, do: " --proxy #{proxy}", else: ""
 
     cmd =
-      "env PYTHONUTF8=1 yt-dlp --retries 0 --fragment-retries 0 --extractor-retries 0 --cache-dir #{System.tmp_dir!()} --date #{date} --cookies #{cookie_file} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" #{channel}"
+      "env PYTHONUTF8=1 yt-dlp --retries 0 --fragment-retries 0 --extractor-retries 0 --cache-dir #{System.tmp_dir!()}#{proxy_flag} --date #{date} --cookies #{cookie_file} --print \"%(title)s~~%(duration)s~~%(thumbnail)s~~%(webpage_url)s\" #{channel}"
 
     port = Port.open({:spawn, cmd}, [:binary, :stderr_to_stdout, :exit_status])
     Process.send_after(self(), {:close_port, port}, :timer.minutes(1))
