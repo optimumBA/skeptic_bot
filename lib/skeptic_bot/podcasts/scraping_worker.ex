@@ -8,7 +8,6 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
     max_attempts: 1,
     queue: :scraping
 
-  alias SkepticBot.LookIntoIt.Scraper
   alias SkepticBot.Podcasts.TinfoilScraper
 
   require Logger
@@ -20,7 +19,6 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
   def perform(_job) do
     Logger.info("Starting scheduled podcast scraping")
     TinfoilScraper.scrape()
-    Scraper.scrape()
     SkepticBot.BrokenSimulation.Scraper.scrape()
     SkepticBot.Candace.Scraper.scrape()
     SkepticBot.DeepWaters.Scraper.scrape()
