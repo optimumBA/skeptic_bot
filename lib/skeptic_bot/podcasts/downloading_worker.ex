@@ -56,19 +56,20 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
         Logger.error("Failed to download thumbnail for episode: #{id}")
         {:error, "Episode not found"}
 
-      {:error, reason} when is_binary(reason) and reason =~ "429" ->
-        Logger.warning("Episode #{id} rate limited (429), snoozing for 1 hour")
-        {:snooze, 3600}
-
       {:error, reason} ->
-        Logger.error("Failed to process episode: #{id}, reason: #{reason}")
+        if is_binary(reason) and String.contains?(reason, "429") do
+          Logger.warning("Episode #{id} rate limited (429), snoozing for 1 hour")
+          {:snooze, 3600}
+        else
+          Logger.error("Failed to process episode: #{id}, reason: #{inspect(reason)}")
 
-        Appsignal.send_error(
-          %RuntimeError{message: "Episode #{id} processing failed: #{reason}"},
-          []
-        )
+          Appsignal.send_error(
+            %RuntimeError{message: "Episode #{id} processing failed: #{inspect(reason)}"},
+            []
+          )
 
-        {:error, reason}
+          {:error, reason}
+        end
     end
   end
 
