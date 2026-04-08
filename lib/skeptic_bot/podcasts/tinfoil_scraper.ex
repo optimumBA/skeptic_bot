@@ -23,7 +23,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   @podcast_zerowithsamtripoli "Zero with Sam Tripoli"
   @channel_url "https://vid.samtripoli.com/api/v1/video-channels/<channel>/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
   @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
-  @video_url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/<external_id>-0-fragmented.mp4"
+  @video_url "https://vid.samtripoli.com/w/<external_id>"
 
   @spec get_url() :: String.t()
   def get_url, do: @url

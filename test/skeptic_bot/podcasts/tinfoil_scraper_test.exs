@@ -12,7 +12,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
   @external_id "a909da70-13b7-4717-b1c0-c2d001521dc3"
   @podcast "Tin Foil Hat"
-  @video_url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/a909da70-13b7-4717-b1c0-c2d001521dc3-0-fragmented.mp4"
+  @video_url "https://vid.samtripoli.com/w/a909da70-13b7-4717-b1c0-c2d001521dc3"
 
   setup :verify_on_exit!
 
@@ -124,7 +124,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
   describe "scrape_channel/3" do
     @channel_external_id "b101ef71-24c8-5828-c2d1-d3e112632ed4"
-    @channel_video_url "https://vid.samtripoli.com/download/streaming-playlists/hls/videos/b101ef71-24c8-5828-c2d1-d3e112632ed4-0-fragmented.mp4"
+    @channel_video_url "https://vid.samtripoli.com/w/b101ef71-24c8-5828-c2d1-d3e112632ed4"
 
     defp channel_body_fixture do
       %{
