@@ -13,15 +13,15 @@ defmodule SkepticBot.Podcasts.YtDlpDownloader do
     proxy = Application.get_env(:skeptic_bot, :ytdlp_proxy)
 
     proxy_args = if proxy, do: ["--proxy", proxy], else: []
+    cookie_args = if youtube_url?(video_url), do: ["--cookies", cookie_file], else: []
 
     case System.cmd(
            "yt-dlp",
            [
              "--cache-dir",
-             System.tmp_dir!(),
-             "--cookies",
-             cookie_file
+             System.tmp_dir!()
            ] ++
+             cookie_args ++
              proxy_args ++
              [
                "-x",
@@ -44,4 +44,7 @@ defmodule SkepticBot.Podcasts.YtDlpDownloader do
     e ->
       {:error, "Download error: #{Exception.message(e)}"}
   end
+
+  defp youtube_url?(url),
+    do: String.contains?(url, "youtube.com") or String.contains?(url, "youtu.be")
 end
