@@ -12,7 +12,7 @@ defmodule SkepticBot.Podcasts.YtDlpDownloader do
     cookie_file = Application.get_env(:skeptic_bot, :youtube_cookie_file_path)
     proxy = Application.get_env(:skeptic_bot, :ytdlp_proxy)
 
-    proxy_args = if proxy, do: ["--proxy", proxy], else: []
+    proxy_args = if proxy && youtube_url?(video_url), do: ["--proxy", proxy], else: []
     cookie_args = if youtube_url?(video_url), do: ["--cookies", cookie_file], else: []
 
     case System.cmd(
