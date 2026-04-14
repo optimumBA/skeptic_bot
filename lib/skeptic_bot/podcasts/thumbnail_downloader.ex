@@ -13,12 +13,14 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   @type reason :: String.t()
   @type url :: String.t()
 
+  @podcast_brokensimulation "Broken Simulation"
   @podcast_cashdaddies "Cash Daddies"
   @podcast_doomscrollin "Doom Scrollin"
   @podcast_tinfoilhat "Tin Foil Hat"
   @podcast_unionoftheunwanted "Union of the Unwanted"
   @podcast_zerowithsamtripoli "Zero with Sam Tripoli"
   @podcast_samtripoliwebsite [
+    @podcast_brokensimulation,
     @podcast_cashdaddies,
     @podcast_doomscrollin,
     @podcast_tinfoilhat,
