@@ -15,7 +15,6 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   alias SkepticBot.Podcasts.Downloader
   alias SkepticBot.Podcasts.Episode
   alias SkepticBot.Podcasts.ThumbnailDownloader
-  alias SkepticBot.Podcasts.Transcoder
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.StorageProvider
 
@@ -98,19 +97,16 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   defp process(id, url, name) when name in @podcast_samtripoliwebsite do
     tmp_dir = System.tmp_dir!()
-    video_path = Path.join(tmp_dir, "#{id}.mp4")
-    audio_path = Path.join(tmp_dir, "#{id}.mp3")
+    audio_path = Path.join(tmp_dir, "#{id}_.mp3")
 
-    File.rm(video_path)
     File.rm(audio_path)
 
-    video_path
+    audio_path
     |> Path.dirname()
     |> File.mkdir_p!()
 
     result =
-      with {:ok, _video_path} <- Downloader.download(url, video_path, :req),
-           :ok <- Transcoder.transcode_video(video_path, audio_path),
+      with {:ok, _audio_path} <- Downloader.download(url, audio_path, :yt_dlp),
            {:ok, url} <- StorageProvider.upload_file(audio_path, "audio/mpeg") do
         {:ok, url}
       else
@@ -119,7 +115,6 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
           {:error, reason}
       end
 
-    File.rm(video_path)
     File.rm(audio_path)
 
     result

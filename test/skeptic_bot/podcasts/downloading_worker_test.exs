@@ -6,7 +6,6 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
 
   alias SkepticBot.Podcasts.DownloadingWorker
   alias SkepticBot.Podcasts.MockDownloader
-  alias SkepticBot.Podcasts.MockTranscoder
   alias SkepticBot.Podcasts.TranscribingWorker
   alias SkepticBot.Storage.MockStorageProvider
 
@@ -26,18 +25,14 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
     setup [:create_episode]
 
     test "enqueues a transcribing job if downloading Sam's podcasts is successful", %{id: id} do
-      expect(MockDownloader, :download, fn _url, _video_path ->
+      expect(MockDownloader, :download, fn _url, _audio_path ->
         {:ok,
-         "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3.mp4"}
+         "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3_.mp3"}
       end)
 
       expect(MockDownloader, :download, fn _thumbnail_url, _thumbnail_path ->
         {:ok,
          "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3.jpg"}
-      end)
-
-      expect(MockTranscoder, :transcode_video, fn _video_path, _audio_path ->
-        :ok
       end)
 
       expect(MockStorageProvider, :upload_file, fn _audio_path, _content_type ->
@@ -106,27 +101,6 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
       end)
 
       assert {:error, "HTTP error: status 500"} =
-               perform_job(DownloadingWorker, %{
-                 id: id,
-                 podcast: @podcast_tinfoilhat,
-                 video_url: @video_url
-               })
-
-      refute_enqueued(worker: TranscribingWorker)
-    end
-
-    @tag :capture_log
-    test "does not enqueue a transcribing job if trancoding process is unsuccessful", %{id: id} do
-      expect(MockDownloader, :download, fn _url, _video_path ->
-        {:ok,
-         "/var/folders/2w/T/012eb1cb-5b41-405f-bcab-7a5236eee471a909da70-13b7-4717-b1c0-c2d001521dc3.mp4"}
-      end)
-
-      expect(MockTranscoder, :transcode_video, fn _video_path, _audio_path ->
-        {:error, "Transcoding failed with exit code: 1"}
-      end)
-
-      assert {:error, "Transcoding failed with exit code: 1"} =
                perform_job(DownloadingWorker, %{
                  id: id,
                  podcast: @podcast_tinfoilhat,
