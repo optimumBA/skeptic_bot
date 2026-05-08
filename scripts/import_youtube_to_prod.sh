@@ -63,11 +63,11 @@ with open(sql_file, "w") as f:
         # Insert episode and enqueue DownloadingWorker job in one go using a CTE
         f.write(
             f"WITH inserted AS (\n"
-            f"  INSERT INTO episodes (podcast_id, external_id, title, episode_length, thumbnail, url, inserted_at, updated_at)\n"
-            f"  SELECT p.id, '{video_id}', '{title}', {episode_length}, '{thumbnail}', '{url}', NOW(), NOW()\n"
+            f"  INSERT INTO podcast_episodes (id, podcast_id, external_id, title, episode_length, thumbnail, inserted_at, updated_at)\n"
+            f"  SELECT gen_random_uuid(), p.id, '{video_id}', '{title}', {episode_length}, '{thumbnail}', NOW(), NOW()\n"
             f"  FROM podcasts p\n"
             f"  WHERE p.name = '{podcast_name}'\n"
-            f"    AND NOT EXISTS (SELECT 1 FROM episodes e WHERE e.external_id = '{video_id}')\n"
+            f"    AND NOT EXISTS (SELECT 1 FROM podcast_episodes e WHERE e.external_id = '{video_id}')\n"
             f"  LIMIT 1\n"
             f"  RETURNING id\n"
             f")\n"
@@ -97,7 +97,7 @@ echo ""
 echo "Row counts after import:"
 ssh root@46.225.1.182 "su - combobulate -s /bin/bash -c \
   \"psql postgresql://combobulate:postgres@localhost/skeptic_bot -c \
-    \\\"SELECT p.name, COUNT(*) FROM episodes e \
+    \\\"SELECT p.name, COUNT(*) FROM podcast_episodes e \
        JOIN podcasts p ON p.id = e.podcast_id \
        WHERE p.name IN ('Candace', 'Deep Waters', 'Nephilim Death Squad') \
        GROUP BY p.name ORDER BY p.name;\\\"\""
