@@ -87,6 +87,15 @@ config :skeptic_bot, :downloading_runner,
 
 config :skeptic_bot, :embedding_generation, dimensions: 1024
 
+# Retain the fully-mounted dead-render socket so the WebSocket connect can
+# resume it instead of mounting a second time (avoids the double mount).
+# Connection-only work (PubSub subscriptions) must live in on_connect/1,
+# since mount/3 and handle_params/3 are reused (not re-run) on a resumed connect.
+config :phoenix_live_view, :resume,
+  enabled: true,
+  ttl: 5_000,
+  max_children: 10_000
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

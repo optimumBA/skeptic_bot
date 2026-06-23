@@ -5,6 +5,8 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   import SkepticBot.PodcastsFixtures
   import SkepticBot.PromptsFixtures
 
+  alias SkepticBot.Prompts.QuestionsBroadcast
+
   defp create_question(%{conn: conn}) do
     embedding = embedding_fixture()
 
@@ -403,6 +405,75 @@ defmodule SkepticBotWeb.QuestionLiveTest do
       send(view.pid, {:prediction_complete, {"New Title", "New Description"}})
 
       assert has_element?(view, ~s{div#loading-elements.hidden})
+    end
+
+    test "subscribes to the current question's broadcast topic on connect", %{
+      conn: conn,
+      embedding: embedding,
+      question: question
+    } do
+      create_multiple_episodes(2, embedding)
+      {:ok, view, _html} = live(conn, ~p"/questions/#{question.id}")
+
+      # Broadcasting through PubSub (rather than send/2 to the pid) is what proves
+      # on_connect/1 subscribed to the correct topic. The other tests send straight
+      # to view.pid and never exercise the subscription wiring.
+      QuestionsBroadcast.broadcast_title_and_description(
+        question.id,
+        {:prediction_result, {"Broadcasted Title", "Broadcasted Description"}}
+      )
+
+      html = render(view)
+      assert html =~ "Broadcasted Title"
+      assert html =~ "Broadcasted Description"
+    end
+
+    test "navigating to another question unsubscribes the old one and subscribes the new one",
+         %{conn: conn, embedding: embedding, question: question_a} do
+      create_multiple_episodes(2, embedding)
+
+      question_b =
+        question_fixture(
+          description:
+            "A sufficiently long description so the related question card is rendered for question B.",
+          embedding: offset_embedding_fixture(Pgvector.to_list(question_a.embedding)),
+          episodes: [],
+          title: "Question B title"
+        )
+
+      {:ok, view_a, _html} = live(conn, ~p"/questions/#{question_a.id}")
+      ref = Process.monitor(view_a.pid)
+
+      # JS.navigate on the related-question card issues a live_redirect to the same
+      # LiveView module, which fully remounts: a brand new process replaces this one.
+      result =
+        view_a
+        |> element("div[phx-click]", question_b.title)
+        |> render_click()
+
+      {:ok, view_b, html_b} = follow_redirect(result, conn)
+
+      # The old LiveView process terminates, so PubSub auto-unsubscribes question A
+      # (it monitors the subscriber pid). No manual unsubscribe needed.
+      assert_receive {:DOWN, ^ref, :process, _pid, _reason}
+      assert html_b =~ "Question B title"
+
+      # on_connect/1 on the new process subscribed to question B's topic.
+      QuestionsBroadcast.broadcast_title_and_description(
+        question_b.id,
+        {:prediction_result, {"Question B Updated", "Question B new description"}}
+      )
+
+      assert render(view_b) =~ "Question B Updated"
+
+      # And a broadcast on the old question A topic must not reach the new view —
+      # the old subscription died with the old process.
+      QuestionsBroadcast.broadcast_title_and_description(
+        question_a.id,
+        {:prediction_result, {"Stale Question A", "Should not appear"}}
+      )
+
+      refute render(view_b) =~ "Stale Question A"
     end
 
     test "handles questions with episodes but no transcription embeddings", %{

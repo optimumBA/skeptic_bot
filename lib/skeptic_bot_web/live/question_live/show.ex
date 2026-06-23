@@ -89,7 +89,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   end
 
   @impl Phoenix.LiveView
-  def mount(_params, _session, socket) do
+  def mount(%{"id" => id}, _session, socket) do
     related_episodes_vectors =
       @vector_numbers
       |> Enum.shuffle()
@@ -100,14 +100,25 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:ok,
      socket
+     |> assign(:question_id, id)
      |> assign(:other_episodes_vectors, other_episodes_vectors)
      |> assign(:related_episodes_vectors, related_episodes_vectors)}
+  end
+
+  # Connection-only work lives here: mount/3 is skipped on a resumed connect, and
+  # handle_params/3 (where this used to live behind connected?/1) is reused, not
+  # re-run. on_connect/1 fires once per live connection. The id comes from mount,
+  # which always runs with the route params and whose result is spliced into the
+  # resumed socket.
+  @impl Phoenix.LiveView
+  def on_connect(socket) do
+    QuestionsBroadcast.subscribe(socket.assigns.question_id)
+    {:ok, socket}
   end
 
   @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _uri, socket) do
     question = Prompts.get_question(id)
-    if connected?(socket), do: QuestionsBroadcast.subscribe(question.id)
 
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
