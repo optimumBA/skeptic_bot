@@ -100,10 +100,9 @@ pair; controller-render tests alone do not exercise the handshake. The two
 identical guarded download-processing branches now share one implementation,
 retaining every previously supported podcast name and existing error handling.
 
-Prediction-handler tests run serially because they share a named GenServer.
-After a completion broadcast, they synchronize with the handler before checking
-jobs or releasing the SQL sandbox; the broadcast precedes sitemap insertion.
-This replaces the fixed sleep and prevents background DB work outliving its test.
+Prediction-handler tests use unnamed supervised processes per test with explicit
+SQL sandbox allowances and run asynchronously. Registration and completion update
+the instance state directly; assertions synchronize before inspecting job state.
 
 The baseline gate and its coverage settings remain intact. This repair does not
 import experimental discovery/library/membership features or introduce KogenCredo.

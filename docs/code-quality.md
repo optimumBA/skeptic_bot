@@ -29,10 +29,10 @@ when checks move between libraries.
 ## Project settings and reviewed boundaries
 
 - Custom DataCase and ConnCase templates inherit async state in the test-state
-  checks. PredictionHandler tests share a named app process; downloader tests
-  share FLAME/mock state; sitemap-worker tests change a shared file and its
-  permissions. These three existing serial files have explicit reasons and
-  exact `serial_allowed` entries; the remaining suites remain async.
+  checks. PredictionHandler tests use an unnamed supervised process per test
+  and run async. Downloader tests share FLAME/mock state; sitemap-worker tests
+  change a shared file and its permissions. Only those two serial files have
+  explicit reasons and exact `serial_allowed` entries.
 - JSON/wire codecs are the Replicate client and webhook handlers, Tinfoil scraper,
   transcription adapter/worker, yt-dlp episode adapter and webhook verification
   plug. String keys are part of their external payload contracts. Other core

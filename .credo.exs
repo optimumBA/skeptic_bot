@@ -414,7 +414,6 @@
           {KogenCredo.Check.Warning.TestModuleShape,
            [
              serial_allowed: [
-               "test/skeptic_bot/prediction_handler_test.exs",
                "test/skeptic_bot/podcasts/downloading_worker_test.exs",
                "test/skeptic_bot/workers/sitemap_generator_worker_test.exs"
              ]

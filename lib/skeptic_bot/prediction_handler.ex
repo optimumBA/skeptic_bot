@@ -34,9 +34,7 @@ defmodule SkepticBot.PredictionHandler do
   def handle_call({:params, context, question}, _from, state) do
     {:ok, prediction_id} = Rag.predict_query(context, question.query)
 
-    send(__MODULE__, {:register_prediction, prediction_id, question})
-
-    {:reply, :ok, state}
+    {:reply, :ok, Map.put(state, prediction_id, question)}
   end
 
   @impl GenServer
@@ -84,9 +82,7 @@ defmodule SkepticBot.PredictionHandler do
 
     enqueue_sitemap_generation(updated_question)
 
-    send(__MODULE__, {:unregister_prediction, prediction_id})
-
-    {:noreply, state}
+    {:noreply, Map.delete(state, prediction_id)}
   end
 
   defp get_title_and_description(output) do
