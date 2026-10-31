@@ -30,16 +30,14 @@
 - Custom fixture modules under `test/support/fixtures/` (not ExMachina, despite the dependency being present).
 - Mox for all external services (Embedder, Generator, Downloader, Transcoder, Transcriber, StorageProvider, HttpClient, ChannelClient).
 - `Oban.Testing` for job assertions.
-- `async: true` for DataCase tests; `async: false` for Oban worker tests.
+- Prefer `async: true` with per-test supervised processes and SQL sandbox allowances; reserve serial tests for shared resources.
 - Embedding fixtures: `List.duplicate(float, 1024)`. Use `offset_embedding_fixture/2` for controlled L2 distance.
 
 ## CI Pipeline
 
-Run via `make ci`:
-
-1. `MIX_ENV=test mix compile` — pre-warm.
-2. `mix ci` — `deps.unlock --check-unused`, `deps.audit`, `hex.audit`, `sobelow`, `format --check-formatted`, `npx prettier -c .`, `credo --strict`, `optimum.heex_check`, `dialyzer`, `test --cover --warnings-as-errors`.
-3. `MIX_ENV=test mix ecto.rollback --all --quiet` — DB cleanup.
+Run `make ci` with the pinned runtimes; see the [README](../README.md#checks).
+It runs audits, linting, type checks and covered tests, then rolls back the test
+migrations. [Code quality](../docs/code-quality.md) documents the lint settings.
 
 ## Development Server
 
@@ -85,38 +83,3 @@ Run via `make ci`:
 - **Scraping gated by `SCRAPE`**: cron queues only run when `SCRAPE` is set.
 - **Strategy pattern everywhere**: call through the behaviour module, not the concrete implementation — required for Mox tests.
 - **Worker chain**: Download -> Transcribe -> Summarize -> Embed. Never skip steps.
-
-## Main dependency maintenance (2026-10-31)
-
-The main-branch CI repair updates audited dependencies, including Bandit, Plug,
-PlugCrypto, Phoenix, Phoenix.HTML, HPAX, LazyHTML, Mint, Postgrex, Req and Swoosh.
-Decimal 3 overrides the retained AppSignal fork's stale Decimal 2 constraint;
-that fork has no Decimal API calls in `lib/`. Both AppSignal and LiveView Git
-fork revisions remain unchanged. Req stays in the compatible 0.6 series.
-
-The old Bandit/Plug handshake pins are replaced together. Verify a real HTTP
-request, WebSocket upgrade and warm resumed LiveView join after changing this
-pair; controller-render tests alone do not exercise the handshake. The two
-identical guarded download-processing branches now share one implementation,
-retaining every previously supported podcast name and existing error handling.
-
-Prediction-handler tests use unnamed supervised processes per test with explicit
-SQL sandbox allowances and run asynchronously. Registration and completion update
-the instance state directly; assertions synchronize before inspecting job state.
-
-The baseline gate and its coverage settings remain intact. This repair does not
-import experimental discovery/library/membership features or introduce KogenCredo.
-Run the pinned full gate as described in the root README; its final rollback
-removes test tables, so migrate the same isolated database before a subsequent
-connectivity probe. Keep execution receipts and local probe tooling outside the
-source checkout and iCloud.
-
-## Credo adoption (2026-10-31)
-
-[Code quality policy](../docs/code-quality.md) owns the released KogenCredo and
-OptimumCredo integration, exact policy boundaries and regression coverage.
-`make ci` retains the original gates and additionally scans standalone HEEx.
-The source uses matchable missing-record errors in worker jobs; external adapter
-error strings retain their existing contracts. Streaming DB operations and scraper
-receives have finite deadlines. See the code-quality owner before changing checks
-or declaring zero findings from a library's default no-op configuration.

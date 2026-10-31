@@ -67,22 +67,11 @@ Run the complete project gate before committing with the pinned mise runtimes:
 mise exec -- env MIX_ENV=test make ci
 ```
 
-The gate includes dependency audits, formatting, Credo, Dialyzer, covered tests
-and a rollback of all test migrations. Keep `SCRAPE` unset and remove integration
-credentials after mise loads `.env`; use mocks and a local test database. Set
-`MIX_TEST_PARTITION` consistently for every command when isolating a CI run from
-other local tests. Install the declared Prettier tools with
-`npm install --save-dev prettier prettier-plugin-toml` if they are missing.
+Use a local test database with `SCRAPE` unset and integration credentials removed
+from the environment. The gate rolls back all test migrations.
 
-If local database creation fails because `template1` uses SQL_ASCII, create only
-the intended test database from `template0` with UTF-8 encoding; do not alter the
-shared templates or reset a development/production database.
-
-For a coverage report, run `mix coveralls` or `mix coveralls.html`. Generate the
-Elixir documentation with `mix docs --formatter html --open`.
-
-[Code quality policy](docs/code-quality.md) owns the KogenCredo/OptimumCredo split,
-project-specific settings, template scan and upgrade checks.
+See [code quality](docs/code-quality.md) for lint policy and
+[development](context/development.md) for test setup.
 
 ## License and product identity
 
