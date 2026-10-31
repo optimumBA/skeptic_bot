@@ -24,12 +24,12 @@ linked back to the source material.
 - FFmpeg (`brew install ffmpeg` on macOS).
 - Elixir, Erlang and Node versions from [`.tool-versions`](.tool-versions),
   installed with [mise](https://mise.jdx.dev) or equivalent tools.
-- PostgreSQL.
+- PostgreSQL with pgvector.
 
 ### Start the application
 
 1. Install the required runtimes with `mise install`.
-2. Start PostgreSQL.
+2. Start PostgreSQL with pgvector.
 3. Copy [`.env.sample`](.env.sample) to `.env` and provide the integrations you
    intend to use.
 4. Run `mix setup`.
@@ -61,11 +61,22 @@ SkepticBot.Rag.generate("Who killed Tupac?")
 
 ## Checks
 
-Run the complete project gate before committing:
+Run the complete project gate before committing with the pinned mise runtimes:
 
 ```sh
-make ci
+mise exec -- env MIX_ENV=test make ci
 ```
+
+The gate includes dependency audits, formatting, Credo, Dialyzer, covered tests
+and a rollback of all test migrations. Keep `SCRAPE` unset and remove integration
+credentials after mise loads `.env`; use mocks and a local test database. Set
+`MIX_TEST_PARTITION` consistently for every command when isolating a CI run from
+other local tests. Install the declared Prettier tools with
+`npm install --save-dev prettier prettier-plugin-toml` if they are missing.
+
+If local database creation fails because `template1` uses SQL_ASCII, create only
+the intended test database from `template0` with UTF-8 encoding; do not alter the
+shared templates or reset a development/production database.
 
 For a coverage report, run `mix coveralls` or `mix coveralls.html`. Generate the
 Elixir documentation with `mix docs --formatter html --open`.

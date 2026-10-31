@@ -66,12 +66,14 @@ defmodule SkepticBot.MixProject do
   # Type `mix help deps` for examples and options.
   defp app_deps do
     [
+      # The retained AppSignal fork declares Decimal 2 but does not use its API.
+      {:decimal, "~> 3.0", override: true},
       {:flame, "~> 0.5"},
       {:langchain, "~> 0.3.0-rc.2"},
       {:mox, "~> 1.1", only: :test},
       {:oban, "~> 2.17"},
       {:pgvector, "~> 0.2.0"},
-      {:req, "~> 0.5"}
+      {:req, "~> 0.6.1"}
     ]
   end
 
@@ -111,10 +113,8 @@ defmodule SkepticBot.MixProject do
       # branch carries the compiled priv/static assets.
       {:phoenix_live_view,
        github: "almirsarajcic/phoenix_live_view", branch: "resume-built", override: true},
-      # Pin to 1.19.2: plug 1.19.3 backported (and 1.20.0 kept) a strict header
-      # validation that rejects the atom `:upgrade` value bandit sends during the
-      # WebSocket handshake, crashing every LiveView connect. Remove once fixed.
-      {:plug, "1.19.2", override: true},
+      # Current Bandit supports the strict header validation in patched Plug.
+      {:plug, "~> 1.20.3", override: true},
       {:phoenix_live_dashboard, "~> 0.8.3"},
       {:esbuild, "~> 0.10", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.3", runtime: Mix.env() == :dev},
@@ -131,10 +131,8 @@ defmodule SkepticBot.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      # Cap below 1.12: bandit 1.12.0 sends the atom `:upgrade` header during the
-      # WebSocket handshake (see the plug pin above). Belt-and-suspenders with the
-      # plug 1.19.2 pin. Remove once fixed upstream.
-      {:bandit, "~> 1.11.0"}
+      # Retain HTTP/2 and WebSocket security fixes without the old handshake pin.
+      {:bandit, "~> 1.14.1"}
     ]
   end
 

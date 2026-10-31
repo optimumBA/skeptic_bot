@@ -2,8 +2,8 @@
 
 ## Tech Stack
 
-- **Backend**: Elixir 1.18.3 / OTP 27.3.1, Phoenix 1.8.1, Bandit HTTP server.
-- **Frontend**: Phoenix LiveView 1.1.27, Tailwind CSS, esbuild.
+- **Backend**: Elixir 1.18.3 / OTP 27.3.1, Phoenix 1.8.16, Bandit 1.14.1 HTTP server.
+- **Frontend**: Phoenix LiveView `resume-built` fork (unchanged locked revision), Tailwind CSS, esbuild.
 - **Database**: PostgreSQL with pgvector extension (1024-dim vectors, IVFFlat index, 100 lists).
 - **Background Jobs**: Oban 2.19.4 with basic engine.
 - **Testing**: ExUnit with Mox (8 mock modules), custom fixtures, Oban.Testing.
@@ -85,3 +85,29 @@ Run via `make ci`:
 - **Scraping gated by `SCRAPE`**: cron queues only run when `SCRAPE` is set.
 - **Strategy pattern everywhere**: call through the behaviour module, not the concrete implementation — required for Mox tests.
 - **Worker chain**: Download -> Transcribe -> Summarize -> Embed. Never skip steps.
+
+## Main dependency maintenance (2026-10-31)
+
+The main-branch CI repair updates audited dependencies, including Bandit, Plug,
+PlugCrypto, Phoenix, Phoenix.HTML, HPAX, LazyHTML, Mint, Postgrex, Req and Swoosh.
+Decimal 3 overrides the retained AppSignal fork's stale Decimal 2 constraint;
+that fork has no Decimal API calls in `lib/`. Both AppSignal and LiveView Git
+fork revisions remain unchanged. Req stays in the compatible 0.6 series.
+
+The old Bandit/Plug handshake pins are replaced together. Verify a real HTTP
+request, WebSocket upgrade and warm resumed LiveView join after changing this
+pair; controller-render tests alone do not exercise the handshake. The two
+identical guarded download-processing branches now share one implementation,
+retaining every previously supported podcast name and existing error handling.
+
+Prediction-handler tests run serially because they share a named GenServer.
+After a completion broadcast, they synchronize with the handler before checking
+jobs or releasing the SQL sandbox; the broadcast precedes sitemap insertion.
+This replaces the fixed sleep and prevents background DB work outliving its test.
+
+The baseline gate and its coverage settings remain intact. This repair does not
+import experimental discovery/library/membership features or introduce KogenCredo.
+Run the pinned full gate as described in the root README; its final rollback
+removes test tables, so migrate the same isolated database before a subsequent
+connectivity probe. Keep execution receipts and local probe tooling outside the
+source checkout and iCloud.

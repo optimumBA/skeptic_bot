@@ -95,39 +95,15 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
       {:error, "FLAME processing failed: #{Exception.message(e)}"}
   end
 
-  defp process(id, url, name) when name in @podcast_samtripoliwebsite do
-    tmp_dir = System.tmp_dir!()
-    audio_path = Path.join(tmp_dir, "#{id}_.mp3")
-
-    File.rm(audio_path)
-
-    audio_path
-    |> Path.dirname()
-    |> File.mkdir_p!()
-
-    result =
-      with {:ok, _audio_path} <- Downloader.download(url, audio_path, :yt_dlp),
-           {:ok, url} <- StorageProvider.upload_file(audio_path, "audio/mpeg") do
-        {:ok, url}
-      else
-        {:error, reason} ->
-          Logger.error("process/3 failed with Reason: #{reason}")
-          {:error, reason}
-      end
-
-    File.rm(audio_path)
-
-    result
-  end
-
   defp process(id, url, podcast)
-       when podcast in [
-              @podcast_brokensimulation,
-              @podcast_candace,
-              @podcast_deepwaters,
-              @podcast_lookintoit,
-              @podcast_nephilimdeathsquad
-            ] do
+       when podcast in @podcast_samtripoliwebsite or
+              podcast in [
+                @podcast_brokensimulation,
+                @podcast_candace,
+                @podcast_deepwaters,
+                @podcast_lookintoit,
+                @podcast_nephilimdeathsquad
+              ] do
     tmp_dir = System.tmp_dir!()
     audio_path = Path.join(tmp_dir, "#{id}_.mp3")
 

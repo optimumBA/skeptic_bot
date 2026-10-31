@@ -1,5 +1,6 @@
 defmodule SkepticBot.PredictionHandlerTest do
-  use SkepticBot.DataCase, async: true
+  # These tests share the named PredictionHandler process.
+  use SkepticBot.DataCase, async: false
 
   import SkepticBot.PromptsFixtures
 
@@ -79,6 +80,7 @@ defmodule SkepticBot.PredictionHandlerTest do
       send(PredictionHandler, {:prediction_completed, prediction_id, output})
 
       assert_receive {:prediction_complete, {"The title", "The description"}}
+      :sys.get_state(PredictionHandler)
 
       question = Prompts.get_question(question.id)
       assert question.title == "The title"
@@ -96,7 +98,8 @@ defmodule SkepticBot.PredictionHandlerTest do
       send(PredictionHandler, {:register_prediction, prediction_id, question})
       send(PredictionHandler, {:prediction_completed, prediction_id, output})
 
-      Process.sleep(200)
+      assert_receive {:prediction_complete, {"The title", "The description"}}
+      :sys.get_state(PredictionHandler)
 
       assert_enqueued(
         worker: SitemapGeneratorWorker,
