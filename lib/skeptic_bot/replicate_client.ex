@@ -3,7 +3,10 @@ defmodule SkepticBot.ReplicateClient do
   Common functionality for Replicate API interactions.
   """
 
-  use SkepticBotWeb, :verified_routes
+  use Phoenix.VerifiedRoutes,
+    endpoint: SkepticBotWeb.Endpoint,
+    router: SkepticBotWeb.Router,
+    statics: []
 
   alias SkepticBot.WebhookHandler
 
@@ -11,9 +14,12 @@ defmodule SkepticBot.ReplicateClient do
 
   @callback get_type() :: String.t()
   @callback handle_output(any()) :: any()
+  @type params :: map()
+  @type status :: atom()
+  @type text :: String.t()
 
-  @spec start_prediction(module(), atom(), String.t(), map(), timeout()) ::
-          {:ok, any()} | {:error, String.t()}
+  @spec start_prediction(module(), status(), text(), params(), timeout()) ::
+          {:ok, any()} | {:error, text()}
   def start_prediction(module, output_mode, model, input, timeout \\ :timer.minutes(5)) do
     replicate_config = Application.fetch_env!(:skeptic_bot, :replicate)
     api_token = Keyword.fetch!(replicate_config, :api_token)

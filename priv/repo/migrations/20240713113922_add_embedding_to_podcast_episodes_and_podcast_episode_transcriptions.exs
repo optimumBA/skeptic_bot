@@ -1,6 +1,7 @@
 defmodule SkepticBot.Repo.Migrations.AddEmbeddingToPodcastEpisodesAndPodcastEpisodeTranscriptions do
   use Ecto.Migration
 
+  @spec change() :: term()
   def change do
     embedding_dimensions = Application.get_env(:skeptic_bot, :embedding_generation)[:dimensions]
 

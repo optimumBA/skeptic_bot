@@ -23,11 +23,14 @@ defmodule SkepticBot.Prompts do
   @type prompts_episode :: PodcastEpisode.t()
   @type question :: UserQuestion.t()
 
+  @type changeset :: Ecto.Changeset.t()
+  @type count :: integer()
+
   @spec get_question(id()) :: question() | nil
   def get_question(id), do: Repo.get(UserQuestion, id)
 
   @spec create_question(attrs()) ::
-          {:ok, question()} | {:error, Ecto.Changeset.t()}
+          {:ok, question()} | {:error, changeset()}
   def create_question(attrs \\ %{}) do
     %UserQuestion{}
     |> UserQuestion.changeset(attrs)
@@ -35,14 +38,14 @@ defmodule SkepticBot.Prompts do
   end
 
   @spec update_question(question(), attrs()) ::
-          {:ok, question()} | {:error, Ecto.Changeset.t()}
+          {:ok, question()} | {:error, changeset()}
   def update_question(question, attrs \\ %{}) do
     question
     |> UserQuestion.changeset(attrs)
     |> Repo.update()
   end
 
-  @spec change_question_query(question(), attrs()) :: Ecto.Changeset.t()
+  @spec change_question_query(question(), attrs()) :: changeset()
   def change_question_query(%UserQuestion{} = question, attrs \\ %{}) do
     UserQuestion.query_changeset(question, attrs)
   end
@@ -54,7 +57,7 @@ defmodule SkepticBot.Prompts do
     end)
   end
 
-  @spec get_related_episodes([prompts_episode()], embedding(), integer()) ::
+  @spec get_related_episodes([prompts_episode()], embedding(), count()) ::
           [episode()]
   def get_related_episodes(question_episodes, question_embedding, limit) do
     question_episodes_timestamps =
@@ -75,7 +78,7 @@ defmodule SkepticBot.Prompts do
     end)
   end
 
-  @spec get_other_episodes(embedding(), integer()) :: [episode()]
+  @spec get_other_episodes(embedding(), count()) :: [episode()]
   def get_other_episodes(question_embedding, limit) do
     Episode
     |> where([e], not is_nil(e.teaser))

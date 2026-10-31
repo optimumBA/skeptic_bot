@@ -17,12 +17,13 @@ defmodule SkepticBot.Rag.Retrieval do
 
   @spec retrieve(embedding()) :: [episode()]
   def retrieve(embedding) do
-    embedding
-    |> find_relevant_episodes()
-    |> Repo.all()
-    |> Stream.map(&find_most_relevant_transcription(&1, embedding))
-    |> Stream.map(&add_timestamp(&1))
-    |> Enum.to_list()
+    episodes =
+      embedding
+      |> find_relevant_episodes()
+      |> Repo.all()
+
+    transcriptions = find_relevant_transcriptions(episodes, embedding)
+    Enum.map(episodes, &add_timestamp({&1, Map.get(transcriptions, &1.id)}))
   end
 
   defp find_relevant_episodes(embedding) do
@@ -30,21 +31,27 @@ defmodule SkepticBot.Rag.Retrieval do
       select: e,
       where: fragment("? <-> ? <= ?", e.embedding, ^embedding, @episode_threshold),
       where: not is_nil(e.summary),
-      order_by: [asc: l2_distance(e.embedding, ^embedding)],
+      order_by: [asc: l2_distance(e.embedding, ^embedding), asc: e.id],
       limit: 6
     )
   end
 
-  defp find_most_relevant_transcription(%Podcasts.Episode{} = episode, embedding) do
-    most_relevant_transcription =
-      Podcasts.EpisodeTranscription
-      |> where([et], et.podcast_episode_id == ^episode.id)
-      |> where([et], not is_nil(et.embedding))
-      |> order_by([et], asc: l2_distance(et.embedding, ^embedding))
-      |> limit(1)
-      |> Repo.one()
+  defp find_relevant_transcriptions([], _embedding), do: %{}
 
-    {episode, most_relevant_transcription}
+  defp find_relevant_transcriptions(episodes, embedding) do
+    episode_ids = Enum.map(episodes, & &1.id)
+
+    from(et in Podcasts.EpisodeTranscription,
+      where: et.podcast_episode_id in ^episode_ids and not is_nil(et.embedding),
+      distinct: et.podcast_episode_id,
+      order_by: [
+        asc: et.podcast_episode_id,
+        asc: l2_distance(et.embedding, ^embedding),
+        asc: et.id
+      ]
+    )
+    |> Repo.all()
+    |> Map.new(&{&1.podcast_episode_id, &1})
   end
 
   defp add_timestamp({episode, nil}), do: Map.put(episode, :timestamp, nil)

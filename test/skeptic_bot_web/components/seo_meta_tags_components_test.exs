@@ -6,6 +6,8 @@ defmodule SkepticBotWeb.SeoMetaTagsComponentsTest do
   alias SkepticBotWeb.SeoMetaTagsComponents
 
   describe "seo_meta_tags/1" do
+    @describetag error_path_exemption:
+                   "The component renders defaults for absent attributes; it has no error return contract."
     test "renders meta tags with the values passed" do
       attributes = %{
         description: "Listen to the podcast episodes",

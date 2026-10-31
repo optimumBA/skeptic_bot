@@ -1,6 +1,7 @@
 defmodule SkepticBot.Repo.Migrations.AddPodcastIdToEpisodeTable do
   use Ecto.Migration
 
+  @spec change() :: term()
   def change do
     alter table(:podcast_episodes) do
       add :podcast_id,

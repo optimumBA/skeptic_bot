@@ -111,7 +111,7 @@ defmodule SkepticBotWeb.CoreComponents do
 
     ~H"""
     <div
-      :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
+      :if={message = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
       id={@id}
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
@@ -127,7 +127,7 @@ defmodule SkepticBotWeb.CoreComponents do
         <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
         {@title}
       </p>
-      <p class="mt-2 text-sm leading-5">{msg}</p>
+      <p class="mt-2 text-sm leading-5">{message}</p>
       <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
         <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
       </button>
@@ -254,9 +254,12 @@ defmodule SkepticBotWeb.CoreComponents do
   slot :inner_block
 
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    errors = Enum.map(field.errors, &translate_error(&1))
+
     assigns
-    |> assign(field: nil, id: assigns.id || field.id)
-    |> assign(:errors, Enum.map(field.errors, &translate_error(&1)))
+    |> assign(:errors, errors)
+    |> assign(:field, nil)
+    |> assign(:id, assigns.id || field.id)
     |> assign_new(:name, fn -> if assigns.multiple, do: field.name <> "[]", else: field.name end)
     |> assign_new(:value, fn -> field.value end)
     |> input()
@@ -283,7 +286,7 @@ defmodule SkepticBotWeb.CoreComponents do
         />
         {@label}
       </label>
-      <.error :for={msg <- @errors}>{msg}</.error>
+      <.error :for={message <- @errors}>{message}</.error>
     </div>
     """
   end
@@ -302,7 +305,7 @@ defmodule SkepticBotWeb.CoreComponents do
         <option :if={@prompt} value="">{@prompt}</option>
         {Phoenix.HTML.Form.options_for_select(@options, @value)}
       </select>
-      <.error :for={msg <- @errors}>{msg}</.error>
+      <.error :for={message <- @errors}>{message}</.error>
     </div>
     """
   end
@@ -322,7 +325,7 @@ defmodule SkepticBotWeb.CoreComponents do
         ]}
         {@rest}
       ><%= Phoenix.HTML.Form.normalize_value("textarea", @value) %></textarea>
-      <.error :for={msg <- @errors}>{msg}</.error>
+      <.error :for={message <- @errors}>{message}</.error>
     </div>
     """
   end
@@ -347,7 +350,7 @@ defmodule SkepticBotWeb.CoreComponents do
         ]}
         {@rest}
       />
-      <.error :for={msg <- @errors}>{msg}</.error>
+      <.error :for={message <- @errors}>{message}</.error>
     </div>
     """
   end
@@ -433,7 +436,7 @@ defmodule SkepticBotWeb.CoreComponents do
   def table(assigns) do
     assigns =
       with %{rows: %Phoenix.LiveView.LiveStream{}} <- assigns do
-        assign(assigns, row_id: assigns.row_id || fn {id, _item} -> id end)
+        assign(assigns, :row_id, assigns.row_id || fn {id, _item} -> id end)
       end
 
     ~H"""
@@ -611,7 +614,7 @@ defmodule SkepticBotWeb.CoreComponents do
   @doc """
   Translates an error message using gettext.
   """
-  def translate_error({msg, opts}) do
+  def translate_error({message, opts}) do
     # When using gettext, we typically pass the strings we want
     # to translate as a static argument:
     #
@@ -623,9 +626,9 @@ defmodule SkepticBotWeb.CoreComponents do
     # with our gettext backend as first argument. Translations are
     # available in the errors.po file (as we use the "errors" domain).
     if count = opts[:count] do
-      Gettext.dngettext(SkepticBotWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(SkepticBotWeb.Gettext, "errors", message, message, count, opts)
     else
-      Gettext.dgettext(SkepticBotWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(SkepticBotWeb.Gettext, "errors", message, opts)
     end
   end
 
@@ -633,6 +636,6 @@ defmodule SkepticBotWeb.CoreComponents do
   Translates the errors for a field from a keyword list of errors.
   """
   def translate_errors(errors, field) when is_list(errors) do
-    for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
+    for {^field, {message, opts}} <- errors, do: translate_error({message, opts})
   end
 end

@@ -10,8 +10,11 @@ defmodule SkepticBot.Rag do
 
   @type embedding :: [float()]
 
-  @spec generate_embedding(String.t()) ::
-          {:ok, {list(), embedding()}}
+  @type list_type :: list()
+  @type text :: String.t()
+
+  @spec generate_embedding(text()) ::
+          {:ok, {list_type(), embedding()}}
           | {:error, any()}
   def generate_embedding(query) do
     case Rag.Embedder.generate("query: " <> query) do
@@ -29,9 +32,9 @@ defmodule SkepticBot.Rag do
     end
   end
 
-  @spec predict_query(list(), String.t()) ::
-          {:ok, String.t()}
-          | {:error, String.t()}
+  @spec predict_query(list_type(), text()) ::
+          {:ok, text()}
+          | {:error, text()}
   def predict_query(context, query) do
     with prompt <- format_prompt(context, query),
          {:ok, response} <- Rag.Generator.predict(prompt, :processing_and_completed) do

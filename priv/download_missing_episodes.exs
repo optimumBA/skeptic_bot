@@ -1,4 +1,4 @@
-import SkepticBot.YtDlp.Helpers
+import SkepticBot.YtDlp.ScrapeSupport
 
 alias SkepticBot.Podcasts
 alias SkepticBot.YtDlp.ChannelClient

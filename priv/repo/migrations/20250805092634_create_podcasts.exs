@@ -1,6 +1,7 @@
 defmodule SkepticBot.Repo.Migrations.CreatePodcasts do
   use Ecto.Migration
 
+  @spec change() :: term()
   def change do
     create table(:podcasts, primary_key: false) do
       add :id, :binary_id, primary_key: true

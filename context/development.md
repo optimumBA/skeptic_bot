@@ -38,7 +38,7 @@
 Run via `make ci`:
 
 1. `MIX_ENV=test mix compile` — pre-warm.
-2. `mix ci` — `deps.unlock --check-unused`, `deps.audit`, `hex.audit`, `sobelow`, `format --check-formatted`, `npx prettier -c .`, `credo --strict`, `dialyzer`, `test --cover --warnings-as-errors`.
+2. `mix ci` — `deps.unlock --check-unused`, `deps.audit`, `hex.audit`, `sobelow`, `format --check-formatted`, `npx prettier -c .`, `credo --strict`, `optimum.heex_check`, `dialyzer`, `test --cover --warnings-as-errors`.
 3. `MIX_ENV=test mix ecto.rollback --all --quiet` — DB cleanup.
 
 ## Development Server
@@ -111,3 +111,13 @@ Run the pinned full gate as described in the root README; its final rollback
 removes test tables, so migrate the same isolated database before a subsequent
 connectivity probe. Keep execution receipts and local probe tooling outside the
 source checkout and iCloud.
+
+## Credo adoption (2026-10-31)
+
+[Code quality policy](../docs/code-quality.md) owns the released KogenCredo and
+OptimumCredo integration, exact policy boundaries and regression coverage.
+`make ci` retains the original gates and additionally scans standalone HEEx.
+The source uses matchable missing-record errors in worker jobs; external adapter
+error strings retain their existing contracts. Streaming DB operations and scraper
+receives have finite deadlines. See the code-quality owner before changing checks
+or declaring zero findings from a library's default no-op configuration.

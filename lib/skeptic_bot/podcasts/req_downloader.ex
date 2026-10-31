@@ -26,6 +26,6 @@ defmodule SkepticBot.Podcasts.ReqDownloader do
         {:error, "Request error: #{inspect(error)}"}
     end
   rescue
-    e -> {:error, "Download error: #{Exception.message(e)}"}
+    e in [File.Error, Req.TransportError] -> {:error, "Download error: #{Exception.message(e)}"}
   end
 end

@@ -27,7 +27,7 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
            SummaryGenerator.generate_teaser_and_summary(episode),
          {:ok, _updated_episode} <-
            Podcasts.update_episode(episode, %{summary: summary, teaser: teaser}) do
-      EmbeddingsGeneratingWorker.enqueue(%{"id" => episode.id, "status" => status})
+      EmbeddingsGeneratingWorker.enqueue(%{id: episode.id, status: status})
       :ok
     else
       {:error, reason} ->
@@ -38,12 +38,15 @@ defmodule SkepticBot.Podcasts.SummaryGeneratingWorker do
 
   defp fetch_episode(episode_id) do
     case Podcasts.get_episode(episode_id) do
-      nil -> {:error, "Episode not found"}
+      nil -> {:error, :episode_not_found}
       episode -> {:ok, episode}
     end
   end
 
-  @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}
+  @type changeset :: Ecto.Changeset.t()
+  @type params :: map()
+
+  @spec enqueue(params()) :: {:ok, job()} | {:error, changeset()}
   def enqueue(attrs) do
     attrs
     |> __MODULE__.new()

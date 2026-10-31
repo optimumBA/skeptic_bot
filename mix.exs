@@ -1,6 +1,9 @@
 defmodule SkepticBot.MixProject do
   use Mix.Project
 
+  @type opts :: keyword()
+
+  @spec project() :: opts()
   def project do
     [
       app: :skeptic_bot,
@@ -50,6 +53,7 @@ defmodule SkepticBot.MixProject do
   # Configuration for the OTP application.
   #
   # Type `mix help compile.app` for more information.
+  @spec application() :: opts()
   def application do
     [
       mod: {SkepticBot.Application, []},
@@ -59,7 +63,7 @@ defmodule SkepticBot.MixProject do
 
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
-  defp elixirc_paths(_), do: ["lib"]
+  defp elixirc_paths(_env), do: ["lib"]
 
   # Specifies your project dependencies.
   #
@@ -84,7 +88,7 @@ defmodule SkepticBot.MixProject do
        branch: "scope-working-directory-path",
        override: true},
       {:appsignal_phoenix, "~> 2.3"},
-      {:credo, "~> 1.7", only: :test, runtime: false},
+      {:credo, "~> 1.7 and >= 1.7.19", only: :test, runtime: false},
       {:dialyxir, "~> 1.4", only: :test, runtime: false},
       {:doctest_formatter, "~> 0.3", only: [:dev, :test], runtime: false},
       {:ex_doc, "~> 0.34", only: :dev, runtime: false},
@@ -92,8 +96,9 @@ defmodule SkepticBot.MixProject do
       {:excoveralls, "~> 0.18", only: :test},
       {:faker, "~> 0.18", only: :test},
       {:github_workflows_generator, "~> 0.1", only: :dev, runtime: false},
+      {:kogen_credo, "~> 0.1.0", only: :test, runtime: false},
       {:mix_audit, "~> 2.1", only: :test, runtime: false},
-      {:optimum_credo, "~> 0.1", only: :test, runtime: false},
+      {:optimum_credo, "~> 0.5.0", only: :test, runtime: false},
       {:sobelow, "~> 0.13", only: :test, runtime: false},
       {:tidewave, "~> 0.1", only: :dev}
     ]
@@ -169,6 +174,7 @@ defmodule SkepticBot.MixProject do
         "format --check-formatted",
         "cmd npx prettier -c .",
         "credo --strict --format oneline",
+        "cmd env MIX_ENV=test mix optimum.heex_check",
         "dialyzer --quiet-with-result",
         "test --cover --warnings-as-errors"
       ],

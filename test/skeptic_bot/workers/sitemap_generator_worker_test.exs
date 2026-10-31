@@ -1,9 +1,12 @@
 defmodule SkepticBot.Workers.SitemapGeneratorWorkerTest do
+  # Changes and removes the shared sitemap file and directory permissions.
   use SkepticBot.DataCase, async: false
 
   import SkepticBot.PromptsFixtures
 
   alias SkepticBot.Workers.SitemapGeneratorWorker
+
+  @moduletag serial: :file
 
   setup do
     on_exit(fn ->
@@ -23,7 +26,7 @@ defmodule SkepticBot.Workers.SitemapGeneratorWorkerTest do
     end
 
     test "handles non-existent question_id" do
-      assert {:error, "Question not found"} =
+      assert {:error, :question_not_found} =
                perform_job(SitemapGeneratorWorker, %{"question_id" => Ecto.UUID.generate()})
     end
 
@@ -34,7 +37,7 @@ defmodule SkepticBot.Workers.SitemapGeneratorWorkerTest do
       File.mkdir_p!(sitemap_dir)
       File.chmod!(sitemap_dir, 0o444)
 
-      assert {:error, _error_msg} =
+      assert {:error, _error_message} =
                perform_job(SitemapGeneratorWorker, %{question_id: question.id})
 
       # Restore permissions

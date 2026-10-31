@@ -15,7 +15,9 @@ defmodule SkepticBot.Prompts.PodcastEpisode do
     field :timestamp, EctoInterval
   end
 
-  @spec changeset(t(), attrs()) :: Ecto.Changeset.t()
+  @type changeset :: Ecto.Changeset.t()
+
+  @spec changeset(t(), attrs()) :: changeset()
   def changeset(episode, attrs) do
     episode
     |> cast(attrs, [:episode_id, :timestamp])

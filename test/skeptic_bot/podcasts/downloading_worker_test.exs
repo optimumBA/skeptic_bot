@@ -1,4 +1,5 @@
 defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
+  # Exercises fixed temporary audio paths and mock downloader state.
   use SkepticBot.DataCase, async: false
 
   import Mox
@@ -12,6 +13,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorkerTest do
   @podcast_lookintoit "Look Into It"
   @podcast_tinfoilhat "Tin Foil Hat"
   @video_url "site/some_video.mp4"
+
+  @moduletag serial: :mock_global
 
   setup :set_mox_from_context
   setup :verify_on_exit!

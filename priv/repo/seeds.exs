@@ -24,4 +24,6 @@ alias SkepticBot.Podcasts
   %{name: "Zero with Sam Tripoli"}
 ]
 |> Stream.reject(&Podcasts.get_podcast_by_name(&1.name))
-|> Enum.each(&Podcasts.create_podcast/1)
+|> Enum.each(fn attrs ->
+  {:ok, _podcast} = Podcasts.create_podcast(attrs)
+end)

@@ -3,8 +3,11 @@ defmodule SkepticBot.ScrapingFixtures do
   This module defines test helpers for creating
   entities used in the scraping process.
   """
+  @type list_type :: list()
+  @type params :: map()
+  @type text :: String.t()
 
-  @spec body_fixture :: map()
+  @spec body_fixture :: params()
   def body_fixture do
     %{
       "data" => [
@@ -126,17 +129,17 @@ defmodule SkepticBot.ScrapingFixtures do
     }
   end
 
-  @spec rokfin_channel_fixture :: String.t()
+  @spec rokfin_channel_fixture :: text()
   def rokfin_channel_fixture do
     "Episode #109$$6234.0$$https://rokfin.com/eyJidWNrZXQiOiJya2ZuLXBydsLzdmY$$https://rokfin.com/post/177589\n"
   end
 
-  @spec rumble_channel_fixture :: String.t()
+  @spec rumble_channel_fixture :: text()
   def rumble_channel_fixture do
     "Episode #109$$6234$$https://rumble.com/eyJidWNrZXQiOiJya2ZuLXBydsLzdmY$$https://rumble.com/177589\n"
   end
 
-  @spec chunks_fixture :: list()
+  @spec chunks_fixture :: list_type()
   def chunks_fixture do
     [
       %{

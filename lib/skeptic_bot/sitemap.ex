@@ -3,7 +3,10 @@ defmodule SkepticBot.Sitemap do
   Handles sitemap generation for SkepticBot.
   """
 
-  use SkepticBotWeb, :verified_routes
+  use Phoenix.VerifiedRoutes,
+    endpoint: SkepticBotWeb.Endpoint,
+    router: SkepticBotWeb.Router,
+    statics: []
 
   alias SkepticBot.Prompts
   alias SkepticBot.Prompts.UserQuestion

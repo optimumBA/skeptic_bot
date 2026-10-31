@@ -16,15 +16,15 @@ defmodule SkepticBot.DeepWaters.ScraperTest do
     test "enqueues a downloading job if it receives an episode from yt-dlp" do
       _podcast = podcast_fixture(name: @podcast)
 
-      msg =
+      message =
         "How I met my husband Ep 24~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBIi"
 
-      port = Port.open({:spawn, "echo #{msg}"}, [:binary])
+      port = Port.open({:spawn, "echo #{message}"}, [:binary])
 
-      msg_2 =
+      message_2 =
         "The Epstein Files Ep 25~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBI4"
 
-      send(self(), {port, {:data, msg_2}})
+      send(self(), {port, {:data, message_2}})
 
       Process.send_after(self(), {:close_port, port}, 100)
 

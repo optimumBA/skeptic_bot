@@ -36,10 +36,14 @@ defmodule SkepticBot.DataCase do
     :ok
   end
 
+  @type changeset :: Ecto.Changeset.t()
+  @type keyword_type :: Keyword.t()
+  @type params :: map()
+
   @doc """
   Sets up the sandbox based on the test tags.
   """
-  @spec setup_sandbox(Keyword.t() | map()) :: :ok
+  @spec setup_sandbox(keyword_type() | params()) :: :ok
   def setup_sandbox(tags) do
     pid = Sandbox.start_owner!(SkepticBot.Repo, shared: not tags[:async])
     on_exit(fn -> Sandbox.stop_owner(pid) end)
@@ -53,7 +57,7 @@ defmodule SkepticBot.DataCase do
       assert %{password: ["password is too short"]} = errors_on(changeset)
 
   """
-  @spec errors_on(Ecto.Changeset.t()) :: map()
+  @spec errors_on(changeset()) :: params()
   def errors_on(changeset) do
     Ecto.Changeset.traverse_errors(changeset, fn {message, opts} ->
       Regex.replace(~r"%{(\w+)}", message, fn _match, key ->

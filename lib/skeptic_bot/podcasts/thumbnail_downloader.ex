@@ -8,10 +8,8 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   alias SkepticBot.Storage.StorageProvider
 
   @type episode :: Episode.t()
-  @type path :: String.t()
   @type podcast_name :: String.t()
   @type reason :: String.t()
-  @type url :: String.t()
 
   @podcast_brokensimulation "Broken Simulation"
   @podcast_cashdaddies "Cash Daddies"
@@ -47,8 +45,8 @@ defmodule SkepticBot.Podcasts.ThumbnailDownloader do
   end
 
   defp download_and_store_thumbnail(episode, thumbnail_url) do
-    tmp_dir = System.tmp_dir!()
-    new_thumbnail_path = Path.join(tmp_dir, "#{episode.id}_#{episode.external_id}.jpg")
+    temporary_dir = System.tmp_dir!()
+    new_thumbnail_path = Path.join(temporary_dir, "#{episode.id}_#{episode.external_id}.jpg")
 
     result =
       with {:ok, path} <- Downloader.download(thumbnail_url, new_thumbnail_path, :req),

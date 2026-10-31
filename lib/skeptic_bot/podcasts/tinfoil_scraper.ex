@@ -5,6 +5,8 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   alias SkepticBot.Podcasts.DownloadingWorker
   alias SkepticBot.Podcasts.HttpClient
 
+  @start_placeholder "<start>"
+
   @type episode_id :: String.t()
   @type start :: integer()
 
@@ -24,6 +26,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   @channel_url "https://vid.samtripoli.com/api/v1/video-channels/<channel>/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
   @url "https://vid.samtripoli.com/api/v1/video-channels/tinfoilhat/videos?start=<start>&count=100&sort=-publishedAt&skipCount=false&nsfw=both"
   @video_url "https://vid.samtripoli.com/w/<external_id>"
+  @type params :: map()
 
   @spec get_url() :: String.t()
   def get_url, do: @url
@@ -32,7 +35,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
   def scrape(start \\ 0)
 
   def scrape(start) do
-    url = String.replace(@url, "<start>", Integer.to_string(start))
+    url = String.replace(@url, @start_placeholder, Integer.to_string(start))
 
     case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
@@ -57,7 +60,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     url =
       @channel_url
       |> String.replace("<channel>", channel)
-      |> String.replace("<start>", Integer.to_string(start))
+      |> String.replace(@start_placeholder, Integer.to_string(start))
 
     case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: body}} ->
@@ -81,7 +84,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
 
   @spec scrape_episode(episode_id(), start()) :: :ok | {:error, any()}
   def scrape_episode(uuid, start \\ 0) do
-    url = String.replace(@url, "<start>", Integer.to_string(start))
+    url = String.replace(@url, @start_placeholder, Integer.to_string(start))
 
     case HttpClient.make_request(url) do
       {:ok, %Req.Response{status: 200, body: %{"data" => []}}} ->
@@ -285,7 +288,7 @@ defmodule SkepticBot.Podcasts.TinfoilScraper do
     maybe_download_episode(episode, podcast)
   end
 
-  @spec get_podcasts :: map()
+  @spec get_podcasts :: params()
   def get_podcasts do
     podcast_list = [
       @podcast_brokensimulation,

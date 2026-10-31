@@ -7,11 +7,13 @@ defmodule SkepticBotWeb.Plugs.BodyReader do
   @type conn :: Plug.Conn.t()
   @type opts :: Keyword.t()
 
+  @type text :: String.t()
+
   @doc """
   Reads the body from the connection and stores it in the assigns.
   Returns the body and the updated connection.
   """
-  @spec read_body(conn(), opts()) :: {:ok, String.t(), conn()}
+  @spec read_body(conn(), opts()) :: {:ok, text(), conn()}
   def read_body(conn, opts) do
     {:ok, body, conn} = Plug.Conn.read_body(conn, opts)
     updated_conn = update_in(conn.assigns[:raw_body], &[body | &1 || []])

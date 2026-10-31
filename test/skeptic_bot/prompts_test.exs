@@ -107,6 +107,8 @@ defmodule SkepticBot.PromptsTest do
   end
 
   describe "list_questions/1" do
+    @describetag error_path_exemption:
+                   "Total read operation; the empty database boundary is tested below."
     test "returns all the questions in the database" do
       _question = question_fixture()
 

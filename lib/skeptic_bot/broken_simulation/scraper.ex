@@ -6,7 +6,7 @@ defmodule SkepticBot.BrokenSimulation.Scraper do
   alias SkepticBot.Podcasts.Podcast
   alias SkepticBot.YtDlp.ChannelClient
   alias SkepticBot.YtDlp.EpisodeProcessor
-  alias SkepticBot.YtDlp.Helpers
+  alias SkepticBot.YtDlp.ScrapeSupport
 
   require Logger
 
@@ -18,7 +18,7 @@ defmodule SkepticBot.BrokenSimulation.Scraper do
 
   @spec scrape :: :ok
   def scrape do
-    date = Helpers.get_yesterday_date()
+    date = ScrapeSupport.get_yesterday_date()
     ChannelClient.get_channel_data_from_port(date, @channel)
     podcast = Podcasts.get_podcast_by_name(@podcast)
     check_for_episodes(@channel, podcast)
@@ -27,14 +27,14 @@ defmodule SkepticBot.BrokenSimulation.Scraper do
   @spec check_for_episodes(channel(), podcast()) :: :ok
   def check_for_episodes(channel, podcast) do
     receive do
-      {_port, {:data, msg}} ->
-        case format_message(msg) do
+      {_port, {:data, message}} ->
+        case format_message(message) do
           {_title, _duration, _thumbnail, _webpage_url} = episode ->
             process_broken_simulation_episode(episode, channel, podcast)
 
           _error ->
             Logger.error(
-              "The episode for the channel: #{channel} in podcast: #{podcast.name} failed to download. Reason: #{msg}"
+              "The episode for the channel: #{channel} in podcast: #{podcast.name} failed to download. Reason: #{message}"
             )
 
             :ok
@@ -53,6 +53,9 @@ defmodule SkepticBot.BrokenSimulation.Scraper do
             Port.close(port)
             :ok
         end
+    after
+      :timer.minutes(30) ->
+        exit({:episode_stream_timeout, channel})
     end
   end
 
@@ -70,8 +73,8 @@ defmodule SkepticBot.BrokenSimulation.Scraper do
     :ok
   end
 
-  defp format_message(msg) do
-    msg
+  defp format_message(message) do
+    message
     |> String.trim("\n")
     |> String.split("~~")
     |> List.to_tuple()

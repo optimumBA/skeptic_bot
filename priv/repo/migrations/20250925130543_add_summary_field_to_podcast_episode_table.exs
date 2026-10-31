@@ -1,6 +1,7 @@
 defmodule SkepticBot.Repo.Migrations.AddSummaryFieldToPodcastEpisodeTable do
   use Ecto.Migration
 
+  @spec change() :: term()
   def change do
     alter table(:podcast_episodes) do
       remove :description, :text

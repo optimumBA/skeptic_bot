@@ -9,6 +9,8 @@ defmodule SkepticBot.YtDlp.EpisodeProcessorTest do
   @broken_simulation_channel "https://www.youtube.com/@SamTripoli/videos"
 
   describe "maybe_download_episode/3 video length parsing" do
+    @describetag error_path_exemption:
+                   "The NA duration fallback is the boundary covered by this parsing group."
     test "returns an integer episode_length for a valid duration string" do
       podcast = podcast_fixture(name: "Broken Simulation")
 
@@ -23,7 +25,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessorTest do
 
       created_episode = Podcasts.get_episode_by_external_id("abc123")
 
-      assert created_episode != nil
+      refute is_nil(created_episode)
       assert created_episode.episode_length == 3600
     end
 
@@ -41,7 +43,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessorTest do
 
       created_episode = Podcasts.get_episode_by_external_id("xyz789")
 
-      assert created_episode != nil
+      refute is_nil(created_episode)
       assert created_episode.episode_length == 0
     end
   end

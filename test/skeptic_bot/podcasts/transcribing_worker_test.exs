@@ -6,6 +6,7 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
   import SkepticBot.PodcastsFixtures
   import SkepticBot.ScrapingFixtures
 
+  alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.MockTranscriber
   alias SkepticBot.Podcasts.SummaryGeneratingWorker
   alias SkepticBot.Podcasts.TranscribingWorker
@@ -68,6 +69,23 @@ defmodule SkepticBot.Podcasts.TranscribingWorkerTest do
           "id" => episode.id
         }
       )
+    end
+
+    @tag :capture_log
+    test "returns invalid transcription errors without scheduling a summary", %{episode: episode} do
+      expect(MockTranscriber, :transcribe, fn _audio_url ->
+        {:ok,
+         [
+           %{"text" => "Valid first chunk", "timestamp" => [0.0, 1.0]},
+           %{"text" => "   ", "timestamp" => [1.0, 2.0]}
+         ]}
+      end)
+
+      assert {:error, %Ecto.Changeset{valid?: false}} =
+               perform_job(TranscribingWorker, %{audio_url: "random.mp3", id: episode.id})
+
+      assert {:ok, ""} = Podcasts.get_episode_transcriptions(episode.id)
+      refute_enqueued(worker: SummaryGeneratingWorker, args: %{"id" => episode.id})
     end
 
     test "logs an error message if it fails to delete a file from the storage provider", %{

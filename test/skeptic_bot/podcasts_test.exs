@@ -20,7 +20,7 @@ defmodule SkepticBot.PodcastsTest do
     transcription: nil
   }
   @valid_episode_transcription_attrs %{
-    timestamp: %{secs: :rand.uniform(3000), months: 0, days: 0},
+    timestamp: %{secs: 300, months: 0, days: 0},
     transcription: "Sample episode transcription"
   }
 

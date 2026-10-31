@@ -12,16 +12,17 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
   alias SkepticBot.Podcasts
   alias SkepticBot.Podcasts.SummaryGeneratingWorker
   alias SkepticBot.Podcasts.Transcriber
+  alias SkepticBot.Repo
   alias SkepticBot.Storage.StorageProvider
 
   require Logger
 
-  @type audio_url :: String.t()
-  @type id :: Ecto.UUID.t()
   @type job :: Oban.Job.t()
 
+  @type changeset :: Ecto.Changeset.t()
+  @type params :: map()
+
   @impl Oban.Worker
-  @spec perform(job()) :: :ok | {:error, String.t()}
   def perform(%Oban.Job{args: %{"id" => id, "audio_url" => audio_url}}) do
     case transcribe_episode(id, audio_url) do
       :ok ->
@@ -32,40 +33,55 @@ defmodule SkepticBot.Podcasts.TranscribingWorker do
             :ok
 
           {:error, reason} ->
-            Logger.error("Failed to delete audio file from Tigris: #{reason}")
+            Logger.error("Failed to delete audio file from Tigris: #{inspect(reason)}")
         end
 
         SummaryGeneratingWorker.enqueue(%{"id" => id, "episode_status" => "new"})
         :ok
 
       {:error, reason} ->
-        Logger.error("Failed to transcribe episode: #{reason}")
+        Logger.error("Failed to transcribe episode: #{inspect(reason)}")
         {:error, reason}
     end
   end
 
-  @spec transcribe_episode(id(), audio_url()) :: :ok | {:error, any()}
   defp transcribe_episode(id, audio_url) do
     case Transcriber.transcribe(audio_url) do
       {:ok, chunks} when is_list(chunks) ->
-        chunks
-        |> Stream.reject(fn %{"timestamp" => [start, _end]} -> is_nil(start) end)
-        |> Enum.each(fn %{"text" => text, "timestamp" => [start, _end]} ->
-          Podcasts.create_episode_transcription(%{
-            podcast_episode_id: id,
-            timestamp: %{months: 0, days: 0, secs: floor(start)},
-            transcription: String.trim(text)
-          })
-        end)
-
-        :ok
+        persist_transcriptions(id, chunks)
 
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}
+  defp persist_transcriptions(id, chunks) do
+    case Repo.transaction(fn -> insert_transcriptions(id, chunks) end) do
+      {:ok, :ok} -> :ok
+      {:error, changeset} -> {:error, changeset}
+    end
+  end
+
+  defp insert_transcriptions(id, chunks) do
+    chunks
+    |> Stream.reject(&missing_timestamp?/1)
+    |> Enum.each(&persist_transcription(id, &1))
+  end
+
+  defp missing_timestamp?(%{"timestamp" => [start, _end]}), do: is_nil(start)
+
+  defp persist_transcription(id, %{"text" => text, "timestamp" => [start, _end]}) do
+    case Podcasts.create_episode_transcription(%{
+           podcast_episode_id: id,
+           timestamp: %{months: 0, days: 0, secs: floor(start)},
+           transcription: String.trim(text)
+         }) do
+      {:ok, _transcription} -> :ok
+      {:error, changeset} -> Repo.rollback(changeset)
+    end
+  end
+
+  @spec enqueue(params()) :: {:ok, job()} | {:error, changeset()}
   def enqueue(attrs) do
     attrs
     |> __MODULE__.new()

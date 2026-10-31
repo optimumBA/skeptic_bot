@@ -14,11 +14,14 @@ defmodule SkepticBot.PromptsFixtures do
   @type episode :: Episode.t()
   @type question :: UserQuestion.t()
 
+  @type count :: integer()
+  @type params :: map()
+
   @doc """
   creates a question.
   """
 
-  @spec question_fixture(map()) :: question()
+  @spec question_fixture(params()) :: question()
   def question_fixture(attrs \\ %{}) do
     embedding = embedding_fixture()
 
@@ -39,7 +42,7 @@ defmodule SkepticBot.PromptsFixtures do
   @doc """
   creates multiple episodes.
   """
-  @spec create_multiple_episodes(integer(), embedding()) :: list(episode())
+  @spec create_multiple_episodes(count(), embedding()) :: list(episode())
   def create_multiple_episodes(number_of_episodes, embedding \\ nil) do
     for episode <- 1..number_of_episodes do
       episode =

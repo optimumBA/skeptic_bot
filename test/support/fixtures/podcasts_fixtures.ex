@@ -19,7 +19,10 @@ defmodule SkepticBot.PodcastsFixtures do
   @type id :: Ecto.UUID.t()
   @type offset :: float()
   @type podcast_name :: String.t()
-  @type response :: String.t()
+
+  @type episode :: Episode.t()
+  @type params :: map()
+  @type podcast :: Podcast.t()
 
   @doc """
   create an embedding.
@@ -37,7 +40,7 @@ defmodule SkepticBot.PodcastsFixtures do
   @doc """
   creates an episode.
   """
-  @spec episode_fixture(map(), podcast_name()) :: Episode.t()
+  @spec episode_fixture(params(), podcast_name()) :: episode()
   def episode_fixture(attrs \\ %{}, podcast_name \\ "Tin Foil Hat") do
     podcast = podcast_fixture(%{name: podcast_name})
 
@@ -57,7 +60,7 @@ defmodule SkepticBot.PodcastsFixtures do
     episode
   end
 
-  @spec podcast_fixture(map()) :: Podcast.t()
+  @spec podcast_fixture(params()) :: podcast()
   def podcast_fixture(attrs \\ %{}) do
     {:ok, podcast} =
       attrs
@@ -72,7 +75,7 @@ defmodule SkepticBot.PodcastsFixtures do
   @doc """
   creates a transcription.
   """
-  @spec transcription_fixture(map()) :: EpisodeTranscription.t()
+  @spec transcription_fixture(params()) :: EpisodeTranscription.t()
   def transcription_fixture(attrs \\ %{}) do
     {:ok, episode_transcription} =
       attrs
@@ -98,6 +101,6 @@ defmodule SkepticBot.PodcastsFixtures do
       |> Enum.to_list()
     end
 
-    Repo.transaction(transformation, timeout: :infinity)
+    Repo.transaction(transformation, timeout: :timer.seconds(30))
   end
 end

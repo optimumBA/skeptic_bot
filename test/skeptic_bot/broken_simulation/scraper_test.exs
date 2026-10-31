@@ -18,15 +18,15 @@ defmodule SkepticBot.BrokenSimulation.ScraperTest do
     test "enqueues a downloading job if it receives an episode from yt-dlp" do
       _podcast = podcast_fixture(name: @podcast)
 
-      msg =
+      message =
         "Broken Simulation Kelly Beef 24~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBIi"
 
-      port = Port.open({:spawn, "echo #{msg}"}, [:binary])
+      port = Port.open({:spawn, "echo #{message}"}, [:binary])
 
-      msg_2 =
+      message_2 =
         "Broken Simulation Kirk Ep 25~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBI4"
 
-      send(self(), {port, {:data, msg_2}})
+      send(self(), {port, {:data, message_2}})
 
       Process.send_after(self(), {:close_port, port}, 100)
 
@@ -56,10 +56,10 @@ defmodule SkepticBot.BrokenSimulation.ScraperTest do
     test "does not enqueue a downloading job if it receives an invalid episode from yt-dlp" do
       _podcast = podcast_fixture(name: @podcast)
 
-      msg =
+      message =
         "Cash Daddies Beef 24~~2500~~https://i.ytimg.com/vi/3CHfault.jpg~~https://www.youtube.com/watch?v=3CHHx4pkBIi"
 
-      port = Port.open({:spawn, "echo #{msg}"}, [:binary])
+      port = Port.open({:spawn, "echo #{message}"}, [:binary])
 
       Process.send_after(self(), {:close_port, port}, 100)
 
@@ -81,10 +81,10 @@ defmodule SkepticBot.BrokenSimulation.ScraperTest do
     test "logs an error message if yt-dlp scraping from the port returns an error or warning" do
       _podcast = podcast_fixture(name: @podcast)
 
-      msg =
+      message =
         "Warning! Please sign in to confirm your age."
 
-      port = Port.open({:spawn, "echo #{msg}"}, [:binary])
+      port = Port.open({:spawn, "echo #{message}"}, [:binary])
 
       Process.send_after(self(), {:close_port, port}, 100)
 

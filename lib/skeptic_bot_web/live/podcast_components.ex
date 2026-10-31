@@ -7,6 +7,7 @@ defmodule SkepticBotWeb.PodcastComponents do
 
   require Integer
 
+  @playback_start "?start="
   @type assigns :: map()
   @type rendered :: Phoenix.LiveView.Rendered.t()
 
@@ -42,6 +43,9 @@ defmodule SkepticBotWeb.PodcastComponents do
   attr :episodes, :list, required: true
   attr :icon_path, :string, default: nil
   attr :title, :string, required: true
+
+  @type count :: integer()
+  @type text :: String.t()
 
   @spec episode_card_carousel(assigns()) :: rendered()
   def episode_card_carousel(assigns) do
@@ -150,6 +154,11 @@ defmodule SkepticBotWeb.PodcastComponents do
       </div>
     </div>
     """
+  end
+
+  defp get_episode_vector(random) do
+    assigns = %{random: random}
+    absolute_vectors(assigns)
   end
 
   defp absolute_vectors(%{random: 1} = assigns) do
@@ -298,19 +307,14 @@ defmodule SkepticBotWeb.PodcastComponents do
     """
   end
 
-  defp get_episode_vector(random) do
-    assigns = %{random: random}
-    absolute_vectors(assigns)
-  end
-
   defp episode_url(external_id, timestamp, podcast) when podcast in @samtripoliwebsite_podcasts do
-    @episode_url_tinfoilhat <> external_id <> "?start=" <> timestamp
+    @episode_url_tinfoilhat <> external_id <> @playback_start <> timestamp
   end
 
   defp episode_url(external_id, timestamp, @podcast_lookintoit) do
     case Integer.parse(external_id) do
       {_integer, ""} ->
-        @episode_url_rokfin <> external_id <> "?start=" <> timestamp
+        @episode_url_rokfin <> external_id <> @playback_start <> timestamp
 
       _error ->
         @episode_url_rumble <> external_id <> "&start=" <> timestamp
@@ -318,14 +322,14 @@ defmodule SkepticBotWeb.PodcastComponents do
   end
 
   defp episode_url(external_id, timestamp, podcast) when podcast in @yt_podcasts do
-    @episode_url_youtube <> external_id <> "?start=" <> timestamp
+    @episode_url_youtube <> external_id <> @playback_start <> timestamp
   end
 
-  @spec trim_title(String.t()) :: String.t()
+  @spec trim_title(text()) :: text()
   def trim_title(<<title::binary-size(60), _rest::binary>>), do: title <> "..."
   def trim_title(title), do: title
 
-  @spec trim_description(String.t()) :: String.t()
+  @spec trim_description(text()) :: text()
   def trim_description(<<description::binary-size(300), _rest::binary>>), do: description <> "..."
   def trim_description(description), do: description
 
@@ -334,7 +338,7 @@ defmodule SkepticBotWeb.PodcastComponents do
 
   defp related_question_title_class(_question_index), do: "text-primary"
 
-  @spec get_time_from_seconds(integer()) :: String.t()
+  @spec get_time_from_seconds(count()) :: text()
   def get_time_from_seconds(seconds) when is_integer(seconds) and seconds >= 0 do
     hours = div(seconds, 3600)
     minutes = div(rem(seconds, 3600), 60)

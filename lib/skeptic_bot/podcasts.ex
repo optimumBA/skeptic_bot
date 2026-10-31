@@ -32,6 +32,8 @@ defmodule SkepticBot.Podcasts do
       {:error, %Ecto.Changeset{}}
 
   """
+  @type list_type :: list()
+
   @spec create_episode(attrs()) :: {:ok, episode()} | {:error, changeset()}
   def create_episode(attrs \\ %{}) do
     %Episode{}
@@ -111,7 +113,7 @@ defmodule SkepticBot.Podcasts do
   def get_latest_episodes(limit) do
     Episode
     |> where([e], not is_nil(e.teaser))
-    |> order_by([e], desc: e.inserted_at)
+    |> order_by([e], desc: e.inserted_at, desc: e.id)
     |> limit(^limit)
     |> Repo.all()
     |> Repo.preload(:podcast)
@@ -143,7 +145,7 @@ defmodule SkepticBot.Podcasts do
       |> Enum.join("\n")
     end
 
-    Repo.transaction(transformation, timeout: :infinity)
+    Repo.transaction(transformation, timeout: :timer.minutes(30))
   end
 
   @doc """
@@ -208,7 +210,7 @@ defmodule SkepticBot.Podcasts do
       :ok
 
   """
-  @spec while_streaming_episode_transcriptions(id(), integer(), (list() -> any())) ::
+  @spec while_streaming_episode_transcriptions(id(), integer(), (list_type() -> any())) ::
           {:ok, integer()} | {:error, any()}
   def while_streaming_episode_transcriptions(episode_id, chunk_size, callback_fun) do
     transformation = fn ->
@@ -220,6 +222,6 @@ defmodule SkepticBot.Podcasts do
       |> Stream.run()
     end
 
-    Repo.transaction(transformation, timeout: :infinity)
+    Repo.transaction(transformation, timeout: :timer.minutes(30))
   end
 end

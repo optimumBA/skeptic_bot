@@ -1,10 +1,13 @@
 defmodule SkepticBotWeb.Telemetry do
   use Supervisor
+
   import Telemetry.Metrics
+
+  @type metrics :: Telemetry.Metrics.t()
 
   @spec start_link(any()) :: Supervisor.on_start()
   def start_link(arg) do
-    Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
+    Supervisor.start_link(__MODULE__, arg, name: Keyword.get(arg, :name, __MODULE__))
   end
 
   @impl Supervisor
@@ -20,8 +23,12 @@ defmodule SkepticBotWeb.Telemetry do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
-  @spec metrics() :: [Telemetry.Metrics.t()]
+  @spec metrics() :: [metrics()]
   def metrics do
+    phoenix_metrics() ++ database_metrics() ++ vm_metrics()
+  end
+
+  defp phoenix_metrics do
     [
       # Phoenix Metrics
       summary("phoenix.endpoint.start.system_time",
@@ -51,8 +58,12 @@ defmodule SkepticBotWeb.Telemetry do
       summary("phoenix.channel_handled_in.duration",
         tags: [:event],
         unit: {:native, :millisecond}
-      ),
+      )
+    ]
+  end
 
+  defp database_metrics do
+    [
       # Database Metrics
       summary("skeptic_bot.repo.query.total_time",
         unit: {:native, :millisecond},
@@ -74,8 +85,12 @@ defmodule SkepticBotWeb.Telemetry do
         unit: {:native, :millisecond},
         description:
           "The time the connection spent waiting before being checked out for the query"
-      ),
+      )
+    ]
+  end
 
+  defp vm_metrics do
+    [
       # VM Metrics
       summary("vm.memory.total", unit: {:byte, :kilobyte}),
       summary("vm.total_run_queue_lengths.total"),

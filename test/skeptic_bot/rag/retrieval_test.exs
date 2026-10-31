@@ -6,6 +6,42 @@ defmodule SkepticBot.Rag.RetrievalTest do
   alias SkepticBot.Rag.Retrieval
 
   describe "retrieve/1" do
+    @describetag error_path_exemption:
+                   "Total retrieval query; unmatched and missing-transcription boundaries are covered below."
+    test "fetches relevant transcriptions with two queries for multiple episodes" do
+      embedding = List.duplicate(0.1, 1024)
+      episodes = for _index <- 1..3, do: episode_fixture(embedding: embedding)
+
+      expected_ids =
+        episodes
+        |> Enum.map(& &1.id)
+        |> Enum.sort()
+
+      owner = self()
+      marker = make_ref()
+      handler = {__MODULE__, marker}
+
+      :ok =
+        :telemetry.attach(
+          handler,
+          [:skeptic_bot, :repo, :query],
+          fn _event, _measurements, metadata, _config ->
+            if self() == owner and String.starts_with?(metadata.query, "SELECT") do
+              send(owner, {:retrieval_query, marker})
+            end
+          end,
+          nil
+        )
+
+      on_exit(fn -> :telemetry.detach(handler) end)
+
+      assert episodes = Retrieval.retrieve(embedding)
+      assert Enum.map(episodes, & &1.id) == expected_ids
+      assert_receive {:retrieval_query, ^marker}
+      assert_receive {:retrieval_query, ^marker}
+      refute_receive {:retrieval_query, ^marker}
+    end
+
     test "returns episodes with transcription embeddings and builds context" do
       # Create episode with embedding
       episode_embedding = List.duplicate(0.1, 1024)

@@ -15,7 +15,10 @@ defmodule SkepticBot.Podcasts.Podcast do
     timestamps(type: :utc_datetime)
   end
 
-  @spec changeset(t(), map()) :: Ecto.Changeset.t()
+  @type changeset :: Ecto.Changeset.t()
+  @type params :: map()
+
+  @spec changeset(t(), params()) :: changeset()
   def changeset(episode, attrs) do
     episode
     |> cast(attrs, [:name])

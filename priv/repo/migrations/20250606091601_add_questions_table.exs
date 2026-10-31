@@ -1,6 +1,7 @@
 defmodule SkepticBot.Repo.Migrations.AddQuestionsTable do
   use Ecto.Migration
 
+  @spec change() :: term()
   def change do
     create table(:user_questions, primary_key: false) do
       add :id, :binary_id, primary_key: true

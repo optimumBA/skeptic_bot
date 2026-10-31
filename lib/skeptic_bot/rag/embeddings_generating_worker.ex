@@ -14,12 +14,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
 
   require Logger
 
-  @type embedding :: [float()]
-  @type episode :: Podcasts.Episode.t()
-  @type episode_id :: String.t()
-  @type episode_transcription :: Podcasts.EpisodeTranscription.t()
   @type job :: Oban.Job.t()
-  @type status :: String.t()
   @batch_size 32
 
   @impl Oban.Worker
@@ -44,7 +39,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
 
   defp fetch_episode(episode_id) do
     case Podcasts.get_episode(episode_id) do
-      nil -> {:error, "Episode not found"}
+      nil -> {:error, :episode_not_found}
       episode -> {:ok, episode}
     end
   end
@@ -74,7 +69,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
       episode_transcriptions
       |> Enum.zip(List.wrap(embeddings))
       |> Enum.map(&update_transcription_embedding/1)
-      |> Enum.find({:error, "Failed to update transcription"}, &match?({:error, _reason}, &1))
+      |> Enum.find({:error, :transcription_update_failed}, &match?({:error, _reason}, &1))
     end
   end
 
@@ -85,7 +80,10 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorker do
     end
   end
 
-  @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}
+  @type changeset :: Ecto.Changeset.t()
+  @type params :: map()
+
+  @spec enqueue(params()) :: {:ok, job()} | {:error, changeset()}
   def enqueue(attrs) do
     attrs
     |> __MODULE__.new()

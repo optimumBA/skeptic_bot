@@ -81,6 +81,9 @@ shared templates or reset a development/production database.
 For a coverage report, run `mix coveralls` or `mix coveralls.html`. Generate the
 Elixir documentation with `mix docs --formatter html --open`.
 
+[Code quality policy](docs/code-quality.md) owns the KogenCredo/OptimumCredo split,
+project-specific settings, template scan and upgrade checks.
+
 ## License and product identity
 
 The source code is licensed under the [Apache License 2.0](LICENSE). The license

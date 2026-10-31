@@ -62,7 +62,7 @@ defmodule SkepticBot.SitemapTest do
         |> String.to_charlist()
         |> :xmerl_scan.string()
 
-      assert element != nil
+      refute is_nil(element)
     end
 
     test "handles file system errors" do
@@ -99,7 +99,7 @@ defmodule SkepticBot.SitemapTest do
 
       File.chmod!(path, 0o444)
 
-      assert {:error, "Failed to update sitemap file: " <> _error_msg} =
+      assert {:error, "Failed to update sitemap file: " <> _error_message} =
                Sitemap.generate(question)
 
       File.chmod!(path, 0o755)
@@ -107,6 +107,8 @@ defmodule SkepticBot.SitemapTest do
   end
 
   describe "XML pattern matching" do
+    @describetag error_path_exemption:
+                   "This group checks successful XML output; filesystem errors are covered in the error handling group."
     test "updates existing question entry correctly" do
       question = question_fixture()
 

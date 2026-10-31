@@ -11,10 +11,11 @@ defmodule SkepticBot.WebhookHandler do
   @type prediction_id :: String.t()
 
   @registry_name SkepticBot.PredictionRegistry
+  @type process_id :: pid()
 
   @spec start_link(any()) :: GenServer.on_start()
-  def start_link(_opts) do
-    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, nil, name: Keyword.get(opts, :name, __MODULE__))
   end
 
   @impl GenServer
@@ -22,8 +23,8 @@ defmodule SkepticBot.WebhookHandler do
     {:ok, %{}}
   end
 
-  @spec register_for_prediction(prediction_id(), pid()) ::
-          {:ok, pid()} | {:error, {:already_registered, pid()}}
+  @spec register_for_prediction(prediction_id(), process_id()) ::
+          {:ok, process_id()} | {:error, {:already_registered, process_id()}}
   def register_for_prediction(prediction_id, pid) do
     Registry.register(@registry_name, prediction_id, pid)
   end

@@ -23,6 +23,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
     @nephilim_death_squad_channel
   ]
 
+  @type changeset :: Ecto.Changeset.t()
   @type channel :: String.t()
   @type duration :: String.t()
   @type episode :: {title(), duration(), thumbnail(), webpage_url()}
@@ -33,7 +34,7 @@ defmodule SkepticBot.YtDlp.EpisodeProcessor do
   @type webpage_url :: String.t()
 
   @spec maybe_download_episode(episode(), channel(), podcast()) ::
-          {:ok, job()} | {:error, Ecto.Changeset.t()} | nil
+          {:ok, job()} | {:error, changeset()} | nil
   def maybe_download_episode({title, duration, thumbnail, webpage_url}, channel, podcast) do
     external_id = get_external_id(webpage_url, channel)
 

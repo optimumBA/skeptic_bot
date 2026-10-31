@@ -40,15 +40,17 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   @type job :: Oban.Job.t()
 
+  @type changeset :: Ecto.Changeset.t()
+  @type params :: map()
+
   @impl Oban.Worker
-  @spec perform(job()) :: :ok | {:snooze, non_neg_integer()} | {:error, String.t()}
   def perform(%Oban.Job{
         args: %{"id" => id, "podcast" => podcast, "video_url" => video_url}
       }) do
     with {:ok, audio_url} <- process_with_flame(id, video_url, podcast),
          %Episode{} = episode <- Podcasts.get_episode(id),
          :ok <- maybe_download_thumbnail(episode.thumbnail, episode, podcast) do
-      TranscribingWorker.enqueue(%{"id" => id, "audio_url" => audio_url})
+      TranscribingWorker.enqueue(%{id: id, audio_url: audio_url})
       :ok
     else
       nil -> handle_episode_not_found(id)
@@ -58,7 +60,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
 
   defp handle_episode_not_found(id) do
     Logger.error("Failed to download thumbnail for episode: #{id}")
-    {:error, "Episode not found"}
+    {:error, :episode_not_found}
   end
 
   defp handle_processing_error(id, reason) do
@@ -89,10 +91,6 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
       {:ok, audio_url} -> {:ok, audio_url}
       {:error, reason} -> {:error, reason}
     end
-  rescue
-    e ->
-      Logger.error("FLAME process failed: #{Exception.message(e)}")
-      {:error, "FLAME processing failed: #{Exception.message(e)}"}
   end
 
   defp process(id, url, podcast)
@@ -104,8 +102,8 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
                 @podcast_lookintoit,
                 @podcast_nephilimdeathsquad
               ] do
-    tmp_dir = System.tmp_dir!()
-    audio_path = Path.join(tmp_dir, "#{id}_.mp3")
+    temporary_dir = System.tmp_dir!()
+    audio_path = Path.join(temporary_dir, "#{id}_.mp3")
 
     File.rm(audio_path)
 
@@ -138,7 +136,7 @@ defmodule SkepticBot.Podcasts.DownloadingWorker do
   defp maybe_download_thumbnail(_thumbnail, episode, podcast),
     do: ThumbnailDownloader.store_thumbnail(episode, podcast)
 
-  @spec enqueue(map()) :: {:ok, job()} | {:error, Ecto.Changeset.t()}
+  @spec enqueue(params()) :: {:ok, job()} | {:error, changeset()}
   def enqueue(attrs) do
     attrs
     |> __MODULE__.new()

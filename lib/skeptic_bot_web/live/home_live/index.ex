@@ -12,6 +12,8 @@ defmodule SkepticBotWeb.HomeLive.Index do
   @episode_limit 6
   @vector_numbers [1, 2, 3, 4, 5]
 
+  @prompt_error "An error occurred while processing your prompt. Please try again."
+
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
@@ -181,7 +183,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
          put_flash(
            socket,
            :error,
-           "An error occurred while processing your prompt. Please try again."
+           @prompt_error
          )}
     end
   end
@@ -193,7 +195,7 @@ defmodule SkepticBotWeb.HomeLive.Index do
      put_flash(
        socket,
        :error,
-       "An error occurred while processing your prompt. Please try again."
+       @prompt_error
      )}
   end
 
@@ -210,11 +212,18 @@ defmodule SkepticBotWeb.HomeLive.Index do
       query: query
     }
 
-    {:ok, question} = Prompts.create_question(question_attrs)
-
-    :ok = PredictionHandler.make_llm_request(podcast_episodes, question)
-
-    {:noreply, push_navigate(socket, to: ~p"/questions/#{question.id}")}
+    with {:ok, question} <- Prompts.create_question(question_attrs),
+         :ok <- PredictionHandler.make_llm_request(podcast_episodes, question) do
+      {:noreply, push_navigate(socket, to: ~p"/questions/#{question.id}")}
+    else
+      {:error, _reason} ->
+        {:noreply,
+         put_flash(
+           socket,
+           :error,
+           @prompt_error
+         )}
+    end
   end
 
   @impl Phoenix.LiveView

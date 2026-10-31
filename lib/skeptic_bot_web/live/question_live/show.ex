@@ -100,8 +100,8 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
     {:ok,
      socket
-     |> assign(:question_id, id)
      |> assign(:other_episodes_vectors, other_episodes_vectors)
+     |> assign(:question_id, id)
      |> assign(:related_episodes_vectors, related_episodes_vectors)}
   end
 

@@ -48,7 +48,9 @@ defmodule SkepticBotWeb.Endpoint do
     event_prefix: [:phoenix, :endpoint],
     log: {__MODULE__, :log_level, []}
 
-  @spec log_level(map()) :: false | :info
+  @type params :: map()
+
+  @spec log_level(params()) :: false | :info
   def log_level(%{path_info: ["health" | _rest]}), do: false
   def log_level(_conn), do: :info
 

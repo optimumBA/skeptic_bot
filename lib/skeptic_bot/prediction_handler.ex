@@ -16,8 +16,8 @@ defmodule SkepticBot.PredictionHandler do
   @type question :: UserQuestion.t()
 
   @spec start_link(any()) :: GenServer.on_start()
-  def start_link(_opts) do
-    GenServer.start_link(__MODULE__, nil, name: __MODULE__)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, nil, name: Keyword.get(opts, :name, __MODULE__))
   end
 
   @impl GenServer
@@ -59,7 +59,8 @@ defmodule SkepticBot.PredictionHandler do
           {:prediction_result, {title, description}}
         )
       else
-        _error -> :ok
+        nil -> :ok
+        [_invalid_output] -> :ok
       end
 
     {:noreply, state}
@@ -95,7 +96,7 @@ defmodule SkepticBot.PredictionHandler do
   end
 
   defp enqueue_sitemap_generation(question) do
-    %{"question_id" => question.id}
+    %{question_id: question.id}
     |> SitemapGeneratorWorker.new()
     |> Oban.insert()
   end

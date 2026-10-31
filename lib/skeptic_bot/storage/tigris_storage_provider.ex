@@ -8,11 +8,10 @@ defmodule SkepticBot.Storage.TigrisStorageProvider do
 
   @behaviour StorageProvider
 
-  @type reason :: String.t()
-
   @timeout :timer.minutes(5)
+  @type request :: Req.Request.t()
 
-  @spec new() :: Req.Request.t()
+  @spec new() :: request()
   def new do
     config = Application.fetch_env!(:skeptic_bot, :tigris_storage)
     bucket = Keyword.fetch!(config, :bucket)
@@ -65,7 +64,7 @@ defmodule SkepticBot.Storage.TigrisStorageProvider do
         {:error, "Failed to upload file. Status: #{status}"}
     end
   rescue
-    e ->
+    e in [File.Error, Req.TransportError] ->
       Logger.error("Error uploading file to Tigris: #{Exception.message(e)}")
       {:error, "Upload failed: #{Exception.message(e)}"}
   end
@@ -94,7 +93,7 @@ defmodule SkepticBot.Storage.TigrisStorageProvider do
         {:error, "Failed to delete file. Status: #{status}"}
     end
   rescue
-    e ->
+    e in [File.Error, Req.TransportError] ->
       Logger.error("Error uploading file to Tigris: #{Exception.message(e)}")
       {:error, "Deletion failed: #{Exception.message(e)}"}
   end

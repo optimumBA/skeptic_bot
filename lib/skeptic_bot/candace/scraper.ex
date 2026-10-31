@@ -3,7 +3,7 @@ defmodule SkepticBot.Candace.Scraper do
   Scrapes Candace Owens' episodes from YouTube then downloads them
   """
 
-  import SkepticBot.YtDlp.Helpers
+  import SkepticBot.YtDlp.ScrapeSupport
 
   alias SkepticBot.Podcasts
   alias SkepticBot.YtDlp.ChannelClient

@@ -85,7 +85,7 @@ defmodule SkepticBot.Rag.EmbeddingsGeneratingWorkerTest do
 
     @tag :capture_log
     test "returns an error when an episode does not exist" do
-      assert {:error, "Episode not found"} =
+      assert {:error, :episode_not_found} =
                perform_job(EmbeddingsGeneratingWorker, %{
                  "id" => @id,
                  "status" => "new"

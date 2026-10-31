@@ -31,7 +31,7 @@ defmodule EctoInterval do
     secs = to_integer(secs)
     {:ok, %{months: months, days: days, secs: secs}}
   rescue
-    _reason -> :error
+    _reason in [ArgumentError, FunctionClauseError] -> :error
   end
 
   defp to_integer(arg) when is_binary(arg) do

@@ -1,4 +1,4 @@
-defmodule SkepticBot.YtDlp.Helpers do
+defmodule SkepticBot.YtDlp.ScrapeSupport do
   @moduledoc """
   Helper functions for scraping episodes from ytdlp
   """
@@ -23,25 +23,28 @@ defmodule SkepticBot.YtDlp.Helpers do
 
   defp wait_for_episodes(channel, podcast, errors) do
     receive do
-      {_port, {:data, msg}} ->
-        handle_episode_message(msg, channel, podcast, errors)
+      {_port, {:data, message}} ->
+        handle_episode_message(message, channel, podcast, errors)
 
       {:close_port, port} ->
         Logger.info("Closed the port for channel #{channel}")
         report_errors_if_any(errors, channel, podcast)
         close_port_if_open(port)
         :ok
+    after
+      :timer.minutes(30) ->
+        exit({:episode_stream_timeout, channel})
     end
   end
 
-  defp handle_episode_message(msg, channel, podcast, errors) do
-    case format_message(msg) do
+  defp handle_episode_message(message, channel, podcast, errors) do
+    case format_message(message) do
       {_title, _duration, _thumbnail, _webpage_url} = episode ->
         process_episode(episode, channel, podcast)
         wait_for_episodes(channel, podcast, errors)
 
       _error ->
-        wait_for_episodes(channel, podcast, [msg | errors])
+        wait_for_episodes(channel, podcast, [message | errors])
     end
   end
 
@@ -76,8 +79,8 @@ defmodule SkepticBot.YtDlp.Helpers do
     :ok
   end
 
-  defp format_message(msg) do
-    msg
+  defp format_message(message) do
+    message
     |> String.trim("\n")
     |> String.split("~~")
     |> List.to_tuple()

@@ -3,7 +3,7 @@ defmodule SkepticBot.NephilimDeathSquad.Scraper do
   Scrapes Nephilim Death Squad episodes from YouTube then downloads them
   """
 
-  import SkepticBot.YtDlp.Helpers
+  import SkepticBot.YtDlp.ScrapeSupport
 
   alias SkepticBot.Podcasts
   alias SkepticBot.YtDlp.ChannelClient

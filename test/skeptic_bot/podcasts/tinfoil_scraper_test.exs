@@ -16,16 +16,16 @@ defmodule SkepticBot.Podcasts.TinfoilScraperTest do
 
   setup :verify_on_exit!
 
-  defp empty_response do
-    {:ok, %Req.Response{status: 200, body: %{"data" => []}}}
-  end
-
   defp expect_additional_channel_scrapes do
     # scrape_additional_channels/0 scrapes 4 channels: brokensimulation, cashdaddies, doomscrollin, unionoftheunwanted
     expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
     expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
     expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
     expect(MockHttpClient, :make_request, fn _url -> empty_response() end)
+  end
+
+  defp empty_response do
+    {:ok, %Req.Response{status: 200, body: %{"data" => []}}}
   end
 
   defp create_body(_attrs) do

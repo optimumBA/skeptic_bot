@@ -37,7 +37,9 @@ defmodule SkepticBotWeb.ConnCase do
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 
-  @spec with_retries(fun(), integer()) :: true | no_return()
+  @type count :: integer()
+
+  @spec with_retries(fun(), count()) :: true | no_return()
   def with_retries(assert_fun, tries) do
     assert_fun.()
   rescue

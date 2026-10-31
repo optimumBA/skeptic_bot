@@ -14,7 +14,7 @@ defmodule SkepticBot.Workers.SitemapGeneratorWorker do
         Sitemap.generate(question)
 
       nil ->
-        {:error, "Question not found"}
+        {:error, :question_not_found}
     end
   end
 

@@ -11,6 +11,8 @@ defmodule SkepticBot.PredictionHandlerTest do
   alias SkepticBot.Repo
   alias SkepticBot.Workers.SitemapGeneratorWorker
 
+  @moduletag serial: :named_process
+
   defp create_question(_attrs) do
     output = ["The", " tit", "le", "$", "&$", "The", " des", "crip", "tion"]
     prediction_id = "zdfjhri745"

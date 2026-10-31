@@ -23,7 +23,9 @@ defmodule SkepticBot.Prompts.UserQuestion do
     embeds_many :episodes, PodcastEpisode, on_replace: :delete
   end
 
-  @spec changeset(t(), attrs()) :: Ecto.Changeset.t()
+  @type changeset :: Ecto.Changeset.t()
+
+  @spec changeset(t(), attrs()) :: changeset()
   def changeset(question, attrs) do
     question
     |> cast(attrs, [:description, :embedding, :query, :title])
@@ -35,7 +37,7 @@ defmodule SkepticBot.Prompts.UserQuestion do
     |> cast_embed(:episodes)
   end
 
-  @spec query_changeset(t(), attrs()) :: Ecto.Changeset.t()
+  @spec query_changeset(t(), attrs()) :: changeset()
   def query_changeset(question, attrs) do
     question
     |> cast(attrs, [:query])

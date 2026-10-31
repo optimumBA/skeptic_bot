@@ -9,6 +9,8 @@ defmodule SkepticBot.Release do
   @type response :: {:ok, fun(), any()}
 
   @app :skeptic_bot
+  @type repo :: Ecto.Repo.t()
+  @type text :: String.t()
 
   @spec migrate() :: [response()]
   def migrate do
@@ -20,7 +22,7 @@ defmodule SkepticBot.Release do
     end
   end
 
-  @spec rollback(Ecto.Repo.t(), any()) :: response()
+  @spec rollback(repo(), any()) :: response()
   def rollback(repo, version) do
     load_app()
 
@@ -53,7 +55,7 @@ defmodule SkepticBot.Release do
   Enqueues sitemap generation job.
   This ensures the sitemap is available after deployment on ephemeral filesystems.
   """
-  @spec generate_sitemap() :: :ok | {:error, String.t()}
+  @spec generate_sitemap() :: :ok | {:error, text()}
   def generate_sitemap do
     load_app()
     Application.ensure_all_started(@app)

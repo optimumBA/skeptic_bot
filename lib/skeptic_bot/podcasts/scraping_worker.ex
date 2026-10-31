@@ -12,10 +12,7 @@ defmodule SkepticBot.Podcasts.ScrapingWorker do
 
   require Logger
 
-  @type job :: Oban.Job.t()
-
   @impl Oban.Worker
-  @spec perform(job()) :: :ok | {:error, any()}
   def perform(_job) do
     Logger.info("Starting scheduled podcast scraping")
     TinfoilScraper.scrape()
