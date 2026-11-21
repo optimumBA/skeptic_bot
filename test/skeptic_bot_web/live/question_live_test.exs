@@ -18,6 +18,18 @@ defmodule SkepticBotWeb.QuestionLiveTest do
   describe "/questions/:id/" do
     setup [:create_question]
 
+    test "serves a saved question without related episodes", %{conn: conn, question: question} do
+      html =
+        conn
+        |> get(~p"/questions/#{question.id}")
+        |> html_response(200)
+
+      assert html =~ question.title
+      assert html =~ question.description
+      refute html =~ "Related Podcasts"
+      refute html =~ "Other Podcasts"
+    end
+
     test "displays the question query, related episodes and other episodes", %{
       conn: conn,
       embedding: embedding

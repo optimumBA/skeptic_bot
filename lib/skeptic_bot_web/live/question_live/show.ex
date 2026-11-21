@@ -53,12 +53,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
 
           <section>
             <PodcastComponents.episode_card_carousel
+              :if={@related_episodes != []}
               episode_vectors={@related_episodes_vectors}
               episodes={@related_episodes}
               title="Related Podcasts"
             />
 
             <PodcastComponents.episode_card_carousel
+              :if={@other_episodes != []}
               episode_vectors={@other_episodes_vectors}
               episodes={@other_episodes}
               title="Other Podcasts"
@@ -123,10 +125,14 @@ defmodule SkepticBotWeb.QuestionLive.Show do
     related_episodes =
       Prompts.get_related_episodes(question.episodes, question.embedding, @episode_limit)
 
-    [most_related_episode | _other_related_episodes] = related_episodes
+    {other_episodes, image_url} =
+      case related_episodes do
+        [episode | _remaining_episodes] ->
+          {Prompts.get_other_episodes(episode.embedding, @episode_limit), episode.thumbnail}
 
-    other_episodes =
-      Prompts.get_other_episodes(most_related_episode.embedding, @episode_limit)
+        [] ->
+          {[], nil}
+      end
 
     related_questions =
       question.embedding
@@ -143,7 +149,7 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:related_questions, related_questions)
      |> assign(:title, question.title)
      |> assign_loading_state(question)
-     |> assign_seo_attributes(question, most_related_episode)}
+     |> assign_seo_attributes(question, image_url)}
   end
 
   defp assign_loading_state(socket, %UserQuestion{title: nil} = _question),
@@ -152,10 +158,10 @@ defmodule SkepticBotWeb.QuestionLive.Show do
   defp assign_loading_state(socket, _question),
     do: assign(socket, :loading, false)
 
-  defp assign_seo_attributes(socket, question, episode) do
+  defp assign_seo_attributes(socket, question, image_url) do
     attributes = %{
       description: question.description,
-      image_url: get_image_url(episode),
+      image_url: image_url,
       type: "article",
       url: url(~p"/questions/#{question.id}")
     }
@@ -177,9 +183,5 @@ defmodule SkepticBotWeb.QuestionLive.Show do
      |> assign(:description, description)
      |> assign(:loading, false)
      |> assign(:title, title)}
-  end
-
-  defp get_image_url(episode) do
-    episode.thumbnail
   end
 end
